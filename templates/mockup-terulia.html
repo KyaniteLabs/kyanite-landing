@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tertulia With Saints — Cozy Catholic Book Surprises</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: #3D2B1F;
+  background: #FFF9F0;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; font-family: inherit; }
+h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 500; }
+
+/* ── Floral Pattern Background ── */
+.floral-bg {
+  background-color: #7B8FA8;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5c-2 3-5 5-8 4-2 3-2 7 0 10 3 1 6-1 8-4 2 3 5 5 8 4 2-3 2-7 0-10-3-1-6 1-8 4zm0 40c-2 3-5 5-8 4-2 3-2 7 0 10 3 1 6-1 8-4 2 3 5 5 8 4 2-3 2-7 0-10-3-1-6 1-8 4zM10 25c-3 2-5 5-4 8-3 2-7 2-10 0-1-3 1-6 4-8-3-2-5-5-4-8 3-2 7-2 10 0 1 3-1 6-4 8zm40 0c-3 2-5 5-4 8-3 2-7 2-10 0-1-3 1-6 4-8-3-2-5-5-4-8 3-2 7-2 10 0 1 3-1 6-4 8z' fill='%23ffffff' fill-opacity='0.08' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+/* ── Announcement Bar ── */
+.announcement-bar {
+  background: #7B8FA8;
+  color: #FFF9F0;
+  text-align: center;
+  padding: 10px 16px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+.announcement-bar a { text-decoration: underline; }
+
+/* ── Navigation ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #FFFFFF;
+  border-bottom: 1px solid rgba(61,43,31,0.08);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #3D2B1F;
+  white-space: nowrap;
+}
+.nav-logo span { color: #7B8FA8; font-style: italic; }
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #6B5744;
+}
+.nav-links a:hover { color: #7B8FA8; }
+.cart-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #7B8FA8;
+  color: #FFF9F0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 50px;
+  transition: all 0.2s;
+}
+.cart-btn:hover { background: #5a6f8a; transform: translateY(-1px); }
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  font-size: 1.5rem;
+  color: #3D2B1F;
+  padding: 4px;
+}
+
+/* ── Hero with Rotating Taglines ── */
+.hero {
+  background: linear-gradient(135deg, #FFF9F0 0%, #F5EDE0 100%);
+  padding: 100px 24px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(123,143,168,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tagline-rotate {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #7B8FA8;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  min-height: 24px;
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.1;
+  color: #3D2B1F;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.hero h1 em {
+  font-style: italic;
+  color: #7B8FA8;
+  font-family: 'Playfair Display', serif;
+}
+.hero-sub {
+  font-size: 1.15rem;
+  color: #6B5744;
+  max-width: 540px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+.btn-primary {
+  display: inline-block;
+  background: #3D2B1F;
+  color: #FFF9F0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 16px 40px;
+  border-radius: 50px;
+  letter-spacing: 0.04em;
+  transition: all 0.25s;
+}
+.btn-primary:hover { background: #7B8FA8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(123,143,168,0.3); }
+.btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: #3D2B1F;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 16px 40px;
+  border-radius: 50px;
+  border: 2px solid #3D2B1F;
+  letter-spacing: 0.04em;
+  transition: all 0.25s;
+  margin-left: 12px;
+}
+.btn-secondary:hover { background: #3D2B1F; color: #FFF9F0; }
+
+/* ── Social Proof Bar ── */
+.social-proof-bar {
+  background: #FFFFFF;
+  border-top: 1px solid rgba(61,43,31,0.08);
+  border-bottom: 1px solid rgba(61,43,31,0.08);
+  padding: 20px 24px;
+  text-align: center;
+}
+.social-proof-bar p {
+  font-size: 0.9rem;
+  color: #6B5744;
+}
+.social-proof-bar .stars {
+  color: #D4A853;
+  letter-spacing: 2px;
+}
+
+/* ── Section Styles ── */
+.section-title {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #7B8FA8;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: #3D2B1F;
+  margin-bottom: 12px;
+}
+.section-title h2 em {
+  font-style: italic;
+  color: #7B8FA8;
+}
+.section-title p {
+  color: #9B8B7A;
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ── Story Highlights (Instagram Style) ── */
+.highlights-section {
+  background: #FFFFFF;
+  padding: 60px 24px;
+}
+.highlights-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.highlight-item {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.highlight-item:hover { transform: translateY(-4px); }
+.highlight-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F5EDE0, #FFF9F0);
+  border: 3px solid #7B8FA8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.highlight-circle::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: #D4A853;
+  animation: rotate 8s linear infinite;
+}
+@keyframes rotate { to { transform: rotate(360deg); } }
+.highlight-item span {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #3D2B1F;
+  letter-spacing: 0.05em;
+}
+
+/* ── Trending Products ── */
+.trending-section {
+  background: #FFF9F0;
+  padding: 80px 24px;
+}
+.trending-scroll {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+}
+.trending-scroll::-webkit-scrollbar { height: 6px; }
+.trending-scroll::-webkit-scrollbar-track { background: #F5EDE0; border-radius: 3px; }
+.trending-scroll::-webkit-scrollbar-thumb { background: #7B8FA8; border-radius: 3px; }
+.product-card {
+  min-width: 280px;
+  max-width: 300px;
+  scroll-snap-align: start;
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(61,43,31,0.06);
+  transition: all 0.3s;
+}
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(61,43,31,0.12);
+}
+.product-img {
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  font-size: 4rem;
+}
+.product-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: #7B8FA8;
+  color: #FFF9F0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 50px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.product-body {
+  padding: 20px;
+}
+.product-body h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #3D2B1F;
+}
+.product-body .theme {
+  font-size: 0.8rem;
+  color: #9B8B7A;
+  margin-bottom: 12px;
+}
+.product-body .price {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #3D2B1F;
+}
+.bg-bvm { background: linear-gradient(135deg, #E8C8C8 0%, #F5EDE0 50%, #B8C8DB 100%); }
+.bg-saints { background: linear-gradient(135deg, #FDF3E7 0%, #B8C8DB 50%, #7B8FA8 100%); }
+.bg-advent { background: linear-gradient(135deg, #C5D5C0 0%, #F5EDE0 50%, #E8C8C8 100%); }
+.bg-faith { background: linear-gradient(135deg, #B8C8DB 0%, #E8C8C8 50%, #FDF3E7 100%); }
+.bg-formation { background: linear-gradient(135deg, #FDF3E7 0%, #C5D5C0 50%, #B8C8DB 100%); }
+.bg-surprise { background: linear-gradient(135deg, #B8C8DB 0%, #E8C8C8 50%, #7B8FA8 100%); }
+
+/* ── Feature Cards (Value Props) ── */
+.features-section {
+  background: #FFFFFF;
+  padding: 80px 24px;
+}
+.features-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.feature-card {
+  text-align: center;
+  padding: 40px 24px;
+  border: 1px solid rgba(61,43,31,0.08);
+  border-radius: 16px;
+  transition: all 0.3s;
+}
+.feature-card:hover {
+  border-color: #7B8FA8;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(123,143,168,0.1);
+}
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+.feature-card h3 {
+  font-size: 1.1rem;
+  color: #3D2B1F;
+  margin-bottom: 12px;
+}
+.feature-card p {
+  font-size: 0.9rem;
+  color: #6B5744;
+  line-height: 1.6;
+}
+
+/* ── Spotlight / Unboxing Section ── */
+.spotlight-section {
+  background: linear-gradient(135deg, #F5EDE0 0%, #FFF9F0 100%);
+  padding: 100px 24px;
+}
+.spotlight-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+.spotlight-visual {
+  aspect-ratio: 1;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #7B8FA8 0%, #B8C8DB 50%, #E8C8C8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(123,143,168,0.2);
+}
+.spotlight-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0c-1 2-3 3-5 3-1 2-1 5 0 7 2 1 4-1 5-3 1 2 3 3 5 3 1-2 1-5 0-7-2-1-4 1-5 3z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+.spotlight-content h2 {
+  font-size: 2.2rem;
+  color: #3D2B1F;
+  margin-bottom: 20px;
+}
+.spotlight-content h2 em {
+  color: #7B8FA8;
+  font-style: italic;
+}
+.spotlight-content p {
+  color: #6B5744;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+.includes-list {
+  list-style: none;
+  margin: 24px 0;
+}
+.includes-list li {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #3D2B1F;
+}
+.includes-list li::before {
+  content: '✦';
+  color: #7B8FA8;
+  font-weight: bold;
+}
+
+/* ── Reviews Carousel ── */
+.reviews-section {
+  background: #FFFFFF;
+  padding: 80px 24px;
+}
+.reviews-carousel {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+.review-card {
+  background: #FDF3E7;
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  display: none;
+}
+.review-card.active { display: block; animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.review-stars {
+  color: #D4A853;
+  font-size: 1.3rem;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+.review-card blockquote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #3D2B1F;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.review-author {
+  font-weight: 600;
+  color: #3D2B1F;
+}
+.review-theme {
+  font-size: 0.85rem;
+  color: #7B8FA8;
+  margin-top: 4px;
+}
+.review-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+.review-nav button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #E8E3DE;
+  transition: all 0.2s;
+}
+.review-nav button.active { background: #7B8FA8; }
+
+/* ── QR Code Section ── */
+.qr-section {
+  background: #7B8FA8;
+  padding: 80px 24px;
+  position: relative;
+}
+.qr-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5c-2 3-5 5-8 4-2 3-2 7 0 10 3 1 6-1 8-4 2 3 5 5 8 4 2-3 2-7 0-10-3-1-6 1-8 4zm0 40c-2 3-5 5-8 4-2 3-2 7 0 10 3 1 6-1 8-4 2 3 5 5 8 4 2-3 2-7 0-10-3-1-6 1-8 4zM10 25c-3 2-5 5-4 8-3 2-7 2-10 0-1-3 1-6 4-8-3-2-5-5-4-8 3-2 7-2 10 0 1 3-1 6-4 8zm40 0c-3 2-5 5-4 8-3 2-7 2-10 0-1-3 1-6 4-8-3-2-5-5-4-8 3-2 7-2 10 0 1 3-1 6-4 8z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+.qr-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.qr-content h2 {
+  font-size: 2.2rem;
+  color: #FFF9F0;
+  margin-bottom: 16px;
+}
+.qr-content h2 em { font-style: italic; color: #D4A853; }
+.qr-content p {
+  color: rgba(255,249,240,0.9);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.qr-code-box {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+.qr-placeholder {
+  width: 200px;
+  height: 200px;
+  background: #F5EDE0;
+  border-radius: 12px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+}
+.qr-code-box p {
+  color: #6B5744;
+  font-size: 0.85rem;
+  margin: 0;
+}
+.promo-code {
+  display: inline-block;
+  background: #D4A853;
+  color: #3D2B1F;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 50px;
+  margin-top: 16px;
+}
+
+/* ── Shop by Theme ── */
+.themes-section {
+  background: #FFF9F0;
+  padding: 80px 24px;
+}
+.themes-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.theme-card {
+  background: #FFFFFF;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(61,43,31,0.06);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.theme-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(61,43,31,0.1);
+}
+.theme-img {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+.theme-body {
+  padding: 20px;
+  text-align: center;
+}
+.theme-body h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  color: #3D2B1F;
+}
+.theme-body p {
+  font-size: 0.85rem;
+  color: #9B8B7A;
+  margin-bottom: 12px;
+}
+.theme-body .price {
+  font-weight: 700;
+  color: #3D2B1F;
+  font-size: 1.1rem;
+}
+
+/* ── Newsletter ── */
+.newsletter-section {
+  background: #3D2B1F;
+  padding: 80px 24px;
+}
+.newsletter-inner {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+.newsletter-inner h2 {
+  font-size: 2rem;
+  color: #FFF9F0;
+  margin-bottom: 12px;
+}
+.newsletter-inner h2 em { color: #7B8FA8; font-style: italic; }
+.newsletter-inner p {
+  color: rgba(255,249,240,0.7);
+  margin-bottom: 28px;
+  font-size: 1rem;
+}
+.newsletter-form {
+  display: flex;
+  gap: 12px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.newsletter-form input {
+  flex: 1;
+  padding: 16px 20px;
+  border: 1.5px solid rgba(255,249,240,0.15);
+  border-radius: 50px;
+  background: rgba(255,249,240,0.05);
+  color: #FFF9F0;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.newsletter-form input::placeholder { color: rgba(255,249,240,0.4); }
+.newsletter-form input:focus { border-color: #7B8FA8; }
+.newsletter-form button {
+  padding: 16px 32px;
+  background: #7B8FA8;
+  color: #FFF9F0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border-radius: 50px;
+  transition: all 0.25s;
+}
+.newsletter-form button:hover { background: #5a6f8a; transform: translateY(-1px); }
+
+/* ── Footer ── */
+.footer {
+  background: #2A1F17;
+  color: #FFF9F0;
+  padding: 60px 24px 32px;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-brand h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+.footer-brand h3 span { color: #7B8FA8; font-style: italic; }
+.footer-brand p {
+  font-size: 0.9rem;
+  color: rgba(255,249,240,0.6);
+  line-height: 1.7;
+  max-width: 300px;
+}
+.footer-col h4 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #B8C8DB;
+  margin-bottom: 16px;
+}
+.footer-col a {
+  display: block;
+  color: rgba(255,249,240,0.6);
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  transition: color 0.2s;
+}
+.footer-col a:hover { color: #FFF9F0; }
+.footer-bottom {
+  border-top: 1px solid rgba(255,249,240,0.08);
+  padding-top: 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255,249,240,0.4);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .mobile-menu-btn { display: block; }
+  .btn-secondary { margin-left: 0; margin-top: 12px; }
+  .features-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .spotlight-grid { grid-template-columns: 1fr; }
+  .qr-grid { grid-template-columns: 1fr; text-align: center; }
+  .themes-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .hero { padding: 60px 20px 50px; }
+  .highlights-grid { gap: 24px; }
+  .highlight-circle { width: 70px; height: 70px; font-size: 1.5rem; }
+  .themes-grid { grid-template-columns: 1fr; max-width: 340px; margin: 0 auto; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form button { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ ANNOUNCEMENT BAR ══════════ -->
+<div class="announcement-bar">
+  📬 Free shipping on orders $50+ · Hand-wrapped with prayer in Arizona · 🏜️
+</div>
+
+<!-- ══════════ NAVIGATION ══════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Tertulia <span>With Saints</span></a>
+    <ul class="nav-links">
+      <li><a href="#highlights">Stories</a></li>
+      <li><a href="#trending">Shop</a></li>
+      <li><a href="#themes">Themes</a></li>
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <button class="cart-btn">🛒 <span id="cart-count">0</span></button>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tagline-rotate" id="hero-tagline">Wrapped in Prayer</div>
+    <h1>A Cozy Surprise<br><em>Wrapped in Prayer</em></h1>
+    <p class="hero-sub">Beautifully wrapped Catholic books with prayer cards, bookmarks, stickers & dried flowers — the perfect treat for yourself or a loved one.</p>
+    <a href="#trending" class="btn-primary">Shop Blind Date Books</a>
+    <a href="#about" class="btn-secondary">Our Story</a>
+  </div>
+</section>
+
+<!-- ══════════ SOCIAL PROOF ══════════ -->
+<div class="social-proof-bar">
+  <p><span class="stars">★★★★★</span> 4.9/5 from 140+ happy readers · Made with 🙏 in Arizona</p>
+</div>
+
+<!-- ══════════ INSTAGRAM HIGHLIGHTS ══════════ -->
+<section class="highlights-section" id="highlights">
+  <div class="section-title">
+    <div class="section-label">Follow Our Journey</div>
+    <h2>Stories From <em>@tertuliawithsaints</em></h2>
+  </div>
+  <div class="highlights-grid">
+    <div class="highlight-item">
+      <div class="highlight-circle">✝️</div>
+      <span>Way of the ✝️</span>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-circle">📦</div>
+      <span>Unboxing</span>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-circle">📖</div>
+      <span>Before Reading</span>
+    </div>
+    <div class="highlight-item">
+      <div class="highlight-circle">🙏</div>
+      <span>Prayer</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ TRENDING PRODUCTS ══════════ -->
+<section class="trending-section" id="trending">
+  <div class="section-title">
+    <div class="section-label">Trending Now</div>
+    <h2>Our Most-Loved <em>Wrapped Surprises</em></h2>
+    <p>Each one hand-wrapped with prayerful intention</p>
+  </div>
+  <div class="trending-scroll">
+    <div class="product-card">
+      <div class="product-img bg-bvm">
+        <span class="product-badge">Bestseller</span>
+        📖🕊️
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Blessed Mother</h3>
+        <p class="theme">BVM Collection</p>
+        <p class="price">$28.00</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img bg-saints">
+        📚🕯️
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Saints</h3>
+        <p class="theme">Saints Collection</p>
+        <p class="price">$26.00</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img bg-advent">
+        <span class="product-badge">Seasonal</span>
+        🎄⭐
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Advent & Christmas</h3>
+        <p class="theme">Advent/Christmas</p>
+        <p class="price">$31.00</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img bg-faith">
+        🙏💛
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Living The Faith</h3>
+        <p class="theme">Living The Faith</p>
+        <p class="price">$25.00</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img bg-formation">
+        📕🌱
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Faith Formation</h3>
+        <p class="theme">Faith Formation</p>
+        <p class="price">$23.00</p>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img bg-surprise">
+        <span class="product-badge">Fan Fave</span>
+        🎁✨
+      </div>
+      <div class="product-body">
+        <h3>Blind Date — Surprise Me!</h3>
+        <p class="theme">Surprise Collection</p>
+        <p class="price">$27.00</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FEATURES ══════════ -->
+<section class="features-section">
+  <div class="section-title">
+    <div class="section-label">Why Choose Tertulia</div>
+    <h2>More Than a Book. <em>A Spiritual Experience.</em></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🙏</span>
+      <h3>Curated with Prayer</h3>
+      <p>Every book is hand-selected and wrapped with prayerful intention. Each set is unique — ribbon, stickers, and accents vary.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📚</span>
+      <h3>No Duplicates, Ever</h3>
+      <p>Share your Goodreads or reading list with us and we'll never send a book you've already read. Every date is a genuine surprise.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🎁</span>
+      <h3>The Perfect Catholic Gift</h3>
+      <p>Ideal for Confirmation, RCIA, retreats, Advent, and anyone who loves to read and grow in faith.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SPOTLIGHT / UNBOXING ══════════ -->
+<section class="spotlight-section" id="about">
+  <div class="spotlight-grid">
+    <div class="spotlight-visual">
+      📦✨
+    </div>
+    <div class="spotlight-content">
+      <div class="section-label" style="text-align:left">The Original</div>
+      <h2>Blind Date With a <em>Book</em></h2>
+      <p>Our signature experience: a beautifully wrapped Catholic book, chosen just for you. Inside you'll find a curated read, a prayer card, a matching bookmark, stickers, and a small bouquet of dried flowers — all tied up with love.</p>
+      <ul class="includes-list">
+        <li>Hand-curated Catholic book (4.0+ rated)</li>
+        <li>Prayer card & matching bookmark</li>
+        <li>Waterproof vinyl stickers</li>
+        <li>Annotation tabs, pen & marker</li>
+        <li>Dried flowers bouquet</li>
+      </ul>
+      <a href="#themes" class="btn-primary">Choose Your Theme</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ REVIEWS CAROUSEL ══════════ -->
+<section class="reviews-section" id="reviews">
+  <div class="section-title">
+    <div class="section-label">What Our Friends Say</div>
+    <h2>Proof It <em>Matters</em></h2>
+  </div>
+  <div class="reviews-carousel">
+    <div class="review-card active">
+      <div class="review-stars">★★★★★</div>
+      <blockquote>"I ordered the BVM Blind Date for my sister's birthday and she absolutely loved it. The wrapping was gorgeous, the prayer card was so thoughtful, and the book was beautiful. We will definitely be ordering again!"</blockquote>
+      <div class="review-author">Maria G.</div>
+      <div class="review-theme">Texas · BVM Collection</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <blockquote>"This is the coziest book subscription I've ever tried. The dried flowers, the stickers, the little prayer card — it felt like a friend put it together just for me. I've already ordered three more!"</blockquote>
+      <div class="review-author">Claire R.</div>
+      <div class="review-theme">California · Surprise Collection</div>
+    </div>
+    <div class="review-card">
+      <div class="review-stars">★★★★★</div>
+      <blockquote>"I got the Surprise Me theme and was not disappointed. Such a beautiful, faith-filled experience from start to finish. The book was one I never would have picked up myself but ended up loving."</blockquote>
+      <div class="review-author">James T.</div>
+      <div class="review-theme">Ohio · Surprise Me</div>
+    </div>
+  </div>
+  <div class="review-nav">
+    <button class="active" onclick="showReview(0)"></button>
+    <button onclick="showReview(1)"></button>
+    <button onclick="showReview(2)"></button>
+  </div>
+</section>
+
+<!-- ══════════ QR CODE SECTION ══════════ -->
+<section class="qr-section">
+  <div class="qr-grid">
+    <div class="qr-content">
+      <h2>Shop On the <em>Go</em></h2>
+      <p>Scan the QR code to visit our shop instantly. Save us to your home screen for quick access to new themes and seasonal surprises.</p>
+      <p style="font-size:0.95rem;opacity:0.8;">Follow us @tertuliawithsaints for behind-the-scenes unboxings and prayerful reflections.</p>
+      <span class="promo-code">Use Code YAY10 for 10% Off</span>
+    </div>
+    <div class="qr-code-box">
+      <div class="qr-placeholder">📱</div>
+      <p>Scan to shop instantly</p>
+      <p style="font-size:0.75rem;margin-top:8px;">info@tertuliabookshop.com</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ SHOP BY THEME ══════════ -->
+<section class="themes-section" id="themes">
+  <div class="section-title">
+    <div class="section-label">Pick Your Path</div>
+    <h2>Shop by <em>Theme</em></h2>
+    <p>Find the perfect wrapped surprise for every heart</p>
+  </div>
+  <div class="themes-grid">
+    <div class="theme-card">
+      <div class="theme-img bg-bvm">🕊️</div>
+      <div class="theme-body">
+        <h3>Blessed Mother</h3>
+        <p>Marian devotion & apparitions</p>
+        <p class="price">From $28</p>
+      </div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-img bg-saints">✝️</div>
+      <div class="theme-body">
+        <h3>Saints</h3>
+        <p>Lives of the saints & wisdom</p>
+        <p class="price">From $26</p>
+      </div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-img bg-advent">🎄</div>
+      <div class="theme-body">
+        <h3>Advent & Christmas</h3>
+        <p>Prepare your heart</p>
+        <p class="price">From $31</p>
+      </div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-img bg-faith">💛</div>
+      <div class="theme-body">
+        <h3>Living The Faith</h3>
+        <p>Everyday Catholic life</p>
+        <p class="price">From $25</p>
+      </div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-img bg-formation">📖</div>
+      <div class="theme-body">
+        <h3>Faith Formation</h3>
+        <p>Apologetics & theology</p>
+        <p class="price">From $23</p>
+      </div>
+    </div>
+    <div class="theme-card">
+      <div class="theme-img bg-surprise">🎁</div>
+      <div class="theme-body">
+        <h3>Surprise Me!</h3>
+        <p>Let us choose for you</p>
+        <p class="price">From $27</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ NEWSLETTER ══════════ -->
+<section class="newsletter-section">
+  <div class="newsletter-inner">
+    <h2>Join Our <em>Little Tertulia</em></h2>
+    <p>Subscribe for new themes, prayerful reflections, and exclusive surprises delivered to your inbox. No spam — just faith and books.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thanks for subscribing! 🙏');">
+      <input type="email" placeholder="Your email address" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <h3>Tertulia <span>With Saints</span></h3>
+      <p>Cozy Catholic Book Surprises, hand-wrapped with prayer in Arizona. Every package is a little gathering of saints and a whole lot of love.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <a href="#">All Blind Date Books</a>
+      <a href="#">BVM Collection</a>
+      <a href="#">Saints Collection</a>
+      <a href="#">Gift Cards</a>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <a href="#">FAQ</a>
+      <a href="#">Shipping & Returns</a>
+      <a href="#">Contact Us</a>
+      <a href="#">Bulk Orders</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="https://instagram.com/tertuliawithsaints">Instagram</a>
+      <a href="#">Facebook</a>
+      <a href="#">Pinterest</a>
+      <a href="mailto:info@tertuliabookshop.com">Email</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Tertulia With Saints. All rights reserved. Made with 🙏 in Arizona</p>
+  </div>
+</footer>
+
+<script>
+// Rotating hero taglines
+const taglines = ['Wrapped in Prayer', 'A Surprise for Your Soul', 'Resisting the urge to keep them all 😂', 'Type BOOK for something perfect'];
+let taglineIndex = 0;
+setInterval(() => {
+  taglineIndex = (taglineIndex + 1) % taglines.length;
+  document.getElementById('hero-tagline').textContent = taglines[taglineIndex];
+}, 4000);
+
+// Reviews carousel
+let currentReview = 0;
+const reviews = document.querySelectorAll('.review-card');
+const dots = document.querySelectorAll('.review-nav button');
+
+function showReview(index) {
+  reviews.forEach((r, i) => {
+    r.classList.toggle('active', i === index);
+    dots[i].classList.toggle('active', i === index);
+  });
+  currentReview = index;
+}
+
+setInterval(() => {
+  showReview((currentReview + 1) % reviews.length);
+}, 6000);
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+
+</body>
+</html>

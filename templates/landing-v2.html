@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kyanite Labs — Proof-Backed Systems for AI Operators</title>
+  <meta name="description" content="VPS audits, agent governance, and internal tools for operators who care about leverage. Real work shown. Real systems built.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --surface3: #222230;
+      --border: #2a2a3c;
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --accent: #f59e0b;
+      --accent2: #fbbf24;
+      --success: #10b981;
+      --terminal-bg: #0d1117;
+      --terminal-green: #7ee787;
+      --terminal-amber: #ffa657;
+      --terminal-blue: #79c0ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Inter', -apple-system, sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
+      line-height: 1.6;
+    }
+    code, .mono { font-family: 'IBM Plex Mono', monospace; }
+    
+    /* Navigation */
+    nav { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      z-index: 100; 
+      padding: 0 2rem; 
+      height: 64px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between; 
+      background: rgba(10,10,15,0.95); 
+      backdrop-filter: blur(12px); 
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { 
+      font-weight: 800; 
+      font-size: 1.1rem; 
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo::before {
+      content: '◆';
+      color: var(--accent);
+    }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a { 
+      color: var(--muted); 
+      font-size: 0.875rem; 
+      font-weight: 500; 
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { 
+      background: var(--accent); 
+      color: #000 !important; 
+      padding: 8px 18px; 
+      border-radius: 6px; 
+      font-weight: 600 !important;
+    }
+    .nav-cta:hover { background: var(--accent2); }
+    
+    /* Hero */
+    .hero { 
+      min-height: 100vh; 
+      display: flex; 
+      align-items: center; 
+      padding: 120px 2rem 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-badge { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      background: rgba(245,158,11,0.1); 
+      border: 1px solid rgba(245,158,11,0.3); 
+      color: var(--accent2); 
+      padding: 6px 14px; 
+      border-radius: 6px; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      margin-bottom: 1.5rem;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .hero-badge::before { 
+      content: '●'; 
+      color: var(--success);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    
+    .hero h1 { 
+      font-size: clamp(2.2rem, 5vw, 3.5rem); 
+      font-weight: 800; 
+      letter-spacing: -0.03em; 
+      line-height: 1.1; 
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p { 
+      font-size: 1.1rem; 
+      color: var(--muted); 
+      margin-bottom: 2rem;
+      max-width: 540px;
+    }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 8px; 
+      padding: 14px 28px; 
+      border-radius: 6px; 
+      font-weight: 600; 
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary { 
+      background: var(--accent); 
+      color: #000;
+    }
+    .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+    .btn-secondary { 
+      background: var(--surface2); 
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--surface3); }
+    
+    /* Terminal Window */
+    .terminal-window {
+      background: var(--terminal-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .terminal-header {
+      background: var(--surface2);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .terminal-dot.red { background: #ff5f56; }
+    .terminal-dot.yellow { background: #ffbd2e; }
+    .terminal-dot.green { background: #27c93f; }
+    .terminal-title {
+      margin-left: 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .terminal-body {
+      padding: 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+    }
+    .terminal-line { margin-bottom: 4px; }
+    .terminal-prompt { color: var(--terminal-amber); }
+    .terminal-command { color: var(--text); }
+    .terminal-output { color: var(--terminal-green); }
+    .terminal-comment { color: var(--muted); }
+    .terminal-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--terminal-green);
+      animation: blink 1s infinite;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
+    
+    /* Sections */
+    section { padding: 96px 2rem; }
+    .container { max-width: 1120px; margin: 0 auto; }
+    .section-label { 
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem; 
+      font-weight: 600; 
+      letter-spacing: 0.1em; 
+      text-transform: uppercase; 
+      color: var(--accent); 
+      margin-bottom: 12px;
+    }
+    .section-title { 
+      font-size: clamp(1.8rem, 4vw, 2.6rem); 
+      font-weight: 800; 
+      letter-spacing: -0.025em; 
+      margin-bottom: 16px;
+    }
+    .section-sub { 
+      color: var(--muted); 
+      font-size: 1.05rem; 
+      max-width: 680px; 
+      margin-bottom: 48px;
+    }
+    
+    /* Services Grid */
+    .services-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+      gap: 20px; 
+    }
+    .service-card { 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 28px;
+      transition: all 0.25s;
+    }
+    .service-card:hover { 
+      border-color: var(--accent); 
+      transform: translateY(-4px);
+    }
+    .service-card h3 { 
+      font-size: 1.1rem; 
+      font-weight: 700; 
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .service-card h3::before {
+      content: '>';
+      color: var(--accent);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .service-card p { 
+      color: var(--muted); 
+      font-size: 0.92rem; 
+      line-height: 1.65;
+    }
+    
+    /* Proof Section */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+    }
+    .proof-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .proof-card-header {
+      background: var(--surface2);
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .proof-card-header .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    .proof-card-header h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .proof-card-body {
+      padding: 20px;
+    }
+    .proof-card-body code {
+      display: block;
+      background: var(--terminal-bg);
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--terminal-green);
+      overflow-x: auto;
+    }
+    .proof-card-body p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 12px;
+    }
+    
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      align-items: start;
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      position: relative;
+    }
+    .pricing-card.popular {
+      border-color: var(--accent);
+      box-shadow: 0 0 40px rgba(245,158,11,0.1);
+    }
+    .pricing-card.popular::before {
+      content: 'RECOMMENDED';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: #000;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 16px;
+      border-radius: 100px;
+      letter-spacing: 0.05em;
+    }
+    .pricing-tier {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .pricing-price {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .pricing-price span {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .pricing-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .pricing-card ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 24px;
+    }
+    .pricing-card li {
+      padding: 8px 0;
+      color: var(--text);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .pricing-card li::before {
+      content: '✓';
+      color: var(--success);
+      font-weight: 700;
+    }
+    
+    /* Recent Work */
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+    .work-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s;
+    }
+    .work-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+    }
+    .work-preview {
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .work-card-body {
+      padding: 24px;
+    }
+    .work-card-body h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .work-card-body p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+    .work-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .work-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--surface2);
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: var(--muted);
+    }
+    
+    /* Contact */
+    .contact-form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-family: 'IBM Plex Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    
+    /* Footer */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 48px 2rem;
+    }
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .footer-brand { max-width: 360px; }
+    .footer-brand p { color: var(--muted); margin-top: 12px; font-size: 0.9rem; }
+    .footer-links { display: flex; gap: 60px; flex-wrap: wrap; }
+    .footer-col h4 {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--accent); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p, .footer-bottom a {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-decoration: none;
+    }
+    
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .work-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">Kyanite Labs</div>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#services">Services</a>
+    <a href="#proof">Proof</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/shop">Shop</a>
+    <a href="/offers/vps-ai-ops-audit/intake" class="nav-cta">Start Audit →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid container">
+    <div>
+      <div class="hero-badge">Systems Online</div>
+      <h1>Proof-backed systems for <span>AI operators</span> who care about leverage.</h1>
+      <p>VPS audits, agent governance, internal tools, and self-hosted infrastructure. We diagnose before we prescribe, show real terminal output instead of slides, and bias toward work that compounds.</p>
+      <div class="hero-actions">
+        <a href="/offers/vps-ai-ops-audit/intake" class="btn btn-primary">Start VPS Audit — $750</a>
+        <a href="#work" class="btn btn-secondary">See Recent Work</a>
+      </div>
+    </div>
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-dot red"></div>
+        <div class="terminal-dot yellow"></div>
+        <div class="terminal-dot green"></div>
+        <div class="terminal-title">kyanite@live-stack: ~</div>
+      </div>
+      <div class="terminal-body">
+        <div class="terminal-line">
+          <span class="terminal-prompt">$</span>
+          <span class="terminal-command"> docker ps --format "table {{.Names}}\t{{.Status}}"</span>
+        </div>
+        <div class="terminal-line terminal-output">NAMES              STATUS</div>
+        <div class="terminal-line terminal-output">hermes-agent       Up 6 days</div>
+        <div class="terminal-line terminal-output">paperclip          Up 6 days (healthy)</div>
+        <div class="terminal-line terminal-output">traefik            Up 6 days</div>
+        <div class="terminal-line terminal-output">postgres           Up 6 days</div>
+        <div class="terminal-line">
+          <span class="terminal-prompt">$</span>
+          <span class="terminal-command"> ./audit-exposure.sh</span>
+        </div>
+        <div class="terminal-line terminal-output" style="color: var(--terminal-amber);">[!] Paperclip: no auth detected on /admin</div>
+        <div class="terminal-line terminal-output" style="color: var(--success);">[✓] R2R: properly noindexed</div>
+        <div class="terminal-line terminal-output" style="color: var(--success);">[✓] Landing: public route confirmed</div>
+        <div class="terminal-line">
+          <span class="terminal-prompt">$</span>
+          <span class="terminal-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="container">
+    <div class="section-label">Recent Work</div>
+    <h2 class="section-title">Systems built. Not speculated.</h2>
+    <p class="section-sub">Real client work. Real infrastructure. Real results.</p>
+    <div class="work-grid">
+      <div class="work-card">
+        <div class="work-preview">📦✝️</div>
+        <div class="work-card-body">
+          <h3>Tertulia With Saints</h3>
+          <p>Handmade Shopify theme for Catholic book subscription service. Kraft paper aesthetic, periwinkle palette, artisan product cards.</p>
+          <div class="work-tags">
+            <span class="work-tag">Shopify</span>
+            <span class="work-tag">Artisan Design</span>
+            <span class="work-tag">E-commerce</span>
+          </div>
+          <a href="/mockup/tertulia" class="btn btn-secondary" style="margin-top: 16px; width: 100%; justify-content: center;">View Mockup</a>
+        </div>
+      </div>
+      <div class="work-card">
+        <div class="work-preview">🤖</div>
+        <div class="work-card-body">
+          <h3>Hermes Agent Platform</h3>
+          <p>AI operator harness with checkpoint/rollback, guard rails, and revenue OS. Self-hosted on KVM4 with full governance.</p>
+          <div class="work-tags">
+            <span class="work-tag">AI Agents</span>
+            <span class="work-tag">Governance</span>
+            <span class="work-tag">VPS</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="section-label">Services</div>
+    <h2 class="section-title">Audit. Build. Compound.</h2>
+    <p class="section-sub">Three modes of engagement. Each designed for systems that already matter.</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <h3>Audit</h3>
+        <p>Exposure mapping, deployment drift detection, auth posture review, and prioritized remediation. You get a before/after proof table and a clear path forward.</p>
+      </div>
+      <div class="service-card">
+        <h3>Build</h3>
+        <p>Landing pages, internal tools, agent workflows, automations. Scoped after diagnosis. Built for durable ownership, not just rapid demos.</p>
+      </div>
+      <div class="service-card">
+        <h3>Compound</h3>
+        <p>Ongoing governance, drift detection, operator reporting, and iterative improvement. For stacks already worth protecting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proof" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Proof</div>
+    <h2 class="section-title">Terminal output, not slide decks.</h2>
+    <p class="section-sub">Real commands run on live infrastructure. This is the kind of work Kyanite delivers.</p>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <div class="status-dot"></div>
+          <h3>Exposure Tightened</h3>
+        </div>
+        <div class="proof-card-body">
+          <code>$ chmod 600 /app/secrets/*<br>$ chown -R app:app /app/data<br>$ ufw deny from 203.0.113.0/24</code>
+          <p>Secret permissions corrected. Attack surface reduced. Direct host binds pushed to loopback.</p>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <div class="status-dot"></div>
+          <h3>Governance Mapped</h3>
+        </div>
+        <div class="proof-card-body">
+          <code>$ ./harness.sh health<br>[✓] postgres: healthy<br>[✓] redis: healthy<br>[!] cron: stale assumptions</code>
+          <p>Source-of-truth registry created. Dead cron jobs pruned. Backup verification added.</p>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-header">
+          <div class="status-dot"></div>
+          <h3>Revenue OS Deployed</h3>
+        </div>
+        <div class="proof-card-body">
+          <code>$ python3 ops/revenue_intake.py<br>Saved: intake_20260413_001234.json<br>Telegram: notification sent</code>
+          <p>Intake-to-cash pipeline built. Offers tracked. Proof ranked by evidence.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Pricing</div>
+    <h2 class="section-title">Clear entry point. Earned expansion.</h2>
+    <p class="section-sub">Start with the audit. Build and compound when the system proves it's worth it.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card popular">
+        <div class="pricing-tier">Audit</div>
+        <div class="pricing-price">$750 <span>starting</span></div>
+        <p class="pricing-desc">VPS + AI Ops audit. You get exposure findings, drift map, governance review, and a prioritized remediation path.</p>
+        <ul>
+          <li>Public/private exposure analysis</li>
+          <li>Auth and secret posture review</li>
+          <li>Source-of-truth registry</li>
+          <li>Before/after proof table</li>
+          <li>Telegram-delivered findings</li>
+        </ul>
+        <a href="/offers/vps-ai-ops-audit/intake" class="btn btn-primary" style="width: 100%; justify-content: center;">Start Audit</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">Build</div>
+        <div class="pricing-price">Custom <span>scoped</span></div>
+        <p class="pricing-desc">Implementation after fit read or audit. Landing pages, tools, automations, agent workflows.</p>
+        <ul>
+          <li>Scoped from real diagnosis</li>
+          <li>Durable ownership designed in</li>
+          <li>Not rapid prototyping theater</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary" style="width: 100%; justify-content: center;">Discuss Build</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-tier">Compound</div>
+        <div class="pricing-price">Retainer <span>monthly</span></div>
+        <p class="pricing-desc">Ongoing governance, drift detection, operator reporting. For systems worth protecting.</p>
+        <ul>
+          <li>Monthly maintenance review</li>
+          <li>Prioritized next actions</li>
+          <li>Live stack health dashboard</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary" style="width: 100%; justify-content: center;">Talk Retainer</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="background: var(--surface); border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Contact</div>
+    <h2 class="section-title">Start with context.</h2>
+    <p class="section-sub">Send the stack, the pain, and the outcome that matters. If it's not a fit, we'll say so.</p>
+    <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent. We will review and reply if there is a real fit.');">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" placeholder="Alex Chen" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="alex@company.com" required>
+      </div>
+      <div class="form-group">
+        <label>What's the situation?</label>
+        <textarea placeholder="What's live? What's hurting? What have you tried? What outcome actually matters?" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Send →</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">Kyanite Labs</div>
+        <p>Proof-backed systems for AI operators. No fake authority. No borrowed trust. Just terminal output and working infrastructure.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Work</h4>
+          <a href="#work">Recent Projects</a>
+          <a href="#services">Services</a>
+          <a href="#proof">Proof</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="/offers/vps-ai-ops-audit/intake">Audit Intake</a>
+          <a href="/shop">Shop</a>
+          <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Kyanite Labs</p>
+      <p>Systems online.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

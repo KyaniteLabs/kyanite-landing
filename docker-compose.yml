@@ -1,0 +1,30 @@
+services:
+  kyanite-landing:
+    build: .
+    container_name: kyanite-landing
+    restart: unless-stopped
+    volumes:
+    - ./app.py:/app/app.py:ro
+    - ./templates:/app/templates:ro
+    - ./products:/app/products:ro
+    - /opt/live-sources/hermes-data/revenue:/app/revenue
+    - /opt/live-sources/hermes-data/ops:/app/ops:ro
+    networks:
+    - proxy-net
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.kyanite.rule=Host(`kyanitelabs.tech`)
+    - traefik.http.routers.kyanite.entrypoints=websecure
+    - traefik.http.routers.kyanite.tls=true
+    - traefik.http.routers.kyanite.tls.certresolver=letsencrypt
+    - traefik.http.services.kyanite.loadbalancer.server.port=3002
+    - traefik.docker.network=proxy-net
+    ports:
+    - 127.0.0.1:3002:3002
+    environment:
+      ENABLE_SHOP_DB: '0'
+      CERAFICA_STRIPE_KEY: ${CERAFICA_STRIPE_KEY}
+      CERAFICA_WEBHOOK_SECRET: ${CERAFICA_WEBHOOK_SECRET}
+networks:
+  proxy-net:
+    external: true
