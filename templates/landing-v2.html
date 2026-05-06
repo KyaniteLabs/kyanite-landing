@@ -168,7 +168,7 @@
     .nav-logo {
       display: flex; align-items: center; gap: .6rem;
       font-weight: 800; font-size: 1.05rem; color: var(--text);
-      letter-spacing: -0.02em; text-decoration: none;
+      letter-spacing: 0; text-decoration: none;
     }
     .nav-logo img { width: 28px; height: 28px; border-radius: var(--radius-sm); object-fit: cover; box-shadow: 0 0 18px var(--glow-cyan), 0 0 16px var(--glow-hot); }
     .nav-logo .dot { color: var(--cyan); }
@@ -208,7 +208,7 @@
 
     /* ── Container ────────────────────────────── */
 
-    .container { max-width: 1120px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+    .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
 
     /* ── Hero ────────────────────────────── */
 
@@ -256,10 +256,15 @@
 
     .hero h1 {
       font-size: clamp(2.4rem, 6vw, 4.2rem);
-      font-weight: 800; letter-spacing: -0.03em; line-height: 1.08;
+      font-weight: 800; letter-spacing: 0; line-height: 1.08;
       margin-bottom: 1.5rem; position: relative; z-index: 1;
       background: var(--prism-text);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      max-width: 920px;
+      margin-left: auto;
+      margin-right: auto;
+      overflow-wrap: break-word;
+      text-wrap: balance;
     }
 
     .hero p {
@@ -353,7 +358,7 @@
     }
     .section-title {
       text-align: center; font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 800; letter-spacing: -0.025em; margin-bottom: 16px;
+      font-weight: 800; letter-spacing: 0; margin-bottom: 16px;
     }
     .section-sub {
       text-align: center; color: var(--muted); font-size: 1.05rem;
@@ -381,7 +386,7 @@
     }
     .conversion-panel h2 {
       font-size: clamp(1.8rem, 4vw, 3rem);
-      line-height: 1.12; letter-spacing: -0.03em;
+      line-height: 1.12; letter-spacing: 0;
       max-width: 760px; margin-bottom: 16px;
     }
     .conversion-panel p { color: var(--text2); max-width: 760px; font-size: 1rem; }
@@ -496,7 +501,7 @@
       font-size: .78rem; font-weight: 700; letter-spacing: .12em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
     }
-    .pricing-price { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .pricing-price { font-size: 2.2rem; font-weight: 800; letter-spacing: 0; margin-bottom: 8px; }
     .pricing-price span { font-size: .95rem; font-weight: 500; color: var(--muted); }
     .pricing-desc { color: var(--muted); font-size: .9rem; margin-bottom: 22px; min-height: 56px; line-height: 1.6; }
     .pricing-actions { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
@@ -622,7 +627,9 @@
       .nav-links { display: none; }
       .hamburger { display: flex; }
       .hero { padding: 100px 1.25rem 60px; }
-      .hero h1 { font-size: 2.2rem; }
+      .hero .container { min-width: 0; }
+      .hero h1 { font-size: clamp(2rem, 10vw, 2.35rem); }
+      .hero p { max-width: 100%; }
       .hero-brand { margin-top: 1.5rem; }
       .hero-proof { grid-template-columns: 1fr; }
       section { padding: 72px 0; }
@@ -639,6 +646,8 @@
     }
 
     @media (max-width: 480px) {
+      .hero-actions { max-width: 280px; margin-left: auto; margin-right: auto; flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
       .projects-grid { grid-template-columns: 1fr; }
     }
 
