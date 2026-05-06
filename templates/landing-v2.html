@@ -221,11 +221,12 @@
 
     .hero {
       min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 120px 2rem 80px;
+      text-align: left; padding: 120px 2rem 80px;
       position: relative; overflow: hidden;
       background:
-        linear-gradient(180deg, rgba(5,7,11,0.82) 0%, rgba(5,7,11,0.74) 44%, var(--void) 100%),
-        url('../static/brand/website_hero_dark_1920x1080.png') center/cover no-repeat;
+        linear-gradient(90deg, rgba(5,7,11,0.96) 0%, rgba(5,7,11,0.88) 36%, rgba(5,7,11,0.52) 66%, rgba(5,7,11,0.72) 100%),
+        linear-gradient(180deg, rgba(5,7,11,0.44) 0%, rgba(5,7,11,0.2) 48%, var(--void) 100%),
+        url('../static/brand/hero_crystal_workbench_1672x941.png') center/cover no-repeat;
     }
 
     .hero::before {
@@ -267,8 +268,8 @@
       margin-bottom: 1.5rem; position: relative; z-index: 1;
       background: var(--prism-text);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-      max-width: 920px;
-      margin-left: auto;
+      max-width: 700px;
+      margin-left: 0;
       margin-right: auto;
       overflow-wrap: break-word;
     }
@@ -276,22 +277,22 @@
 
     .hero p {
       font-size: clamp(1rem, 1.8vw, 1.15rem); color: var(--text2);
-      max-width: 720px; margin: 0 auto 1rem; line-height: 1.75;
+      max-width: 620px; margin: 0 auto 1rem 0; line-height: 1.75;
       position: relative; z-index: 1;
     }
 
     .hero-note {
       color: var(--muted); font-size: .95rem;
-      max-width: 680px; margin: 0 auto 2.5rem;
+      max-width: 580px; margin: 0 auto 2.5rem 0;
       position: relative; z-index: 1;
     }
 
-    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+    .hero-actions { display: flex; gap: 12px; justify-content: flex-start; flex-wrap: wrap; position: relative; z-index: 1; }
 
     .hero-proof {
       display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px;
-      width: min(760px, 100%);
-      margin: 1.45rem auto 0;
+      width: min(680px, 100%);
+      margin: 1.45rem auto 0 0;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
@@ -305,29 +306,6 @@
       color: var(--text2); font-size: .82rem; font-weight: 700;
     }
     .hero-proof strong { color: var(--cyan); }
-
-    .hero-brand {
-      position: relative; z-index: 1;
-      width: min(680px, 100%);
-      margin: 2rem auto 0;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      background: var(--glass);
-      box-shadow: 0 24px 80px var(--shadow), 0 0 44px var(--glow-cyan), inset 0 1px 0 rgba(255,255,255,0.05);
-    }
-    .hero-brand::before {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(90deg, rgba(38,230,255,0.16), transparent 24%, transparent 76%, rgba(255,47,109,0.16));
-      mix-blend-mode: screen;
-    }
-    .hero-brand img {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 3 / 1;
-      object-fit: cover;
-    }
 
     /* ── Buttons ────────────────────────────── */
 
@@ -633,14 +611,17 @@
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
       .hamburger { display: flex; }
-      .hero { padding: 100px 1.25rem 60px; }
+      .hero {
+        text-align: center;
+        padding: 100px 1.25rem 60px;
+        background-position: center, center, 62% center;
+      }
       .hero .container { min-width: 0; }
-      .hero h1 { font-size: clamp(1.8rem, 9vw, 2.25rem); }
-      .hero p { max-width: 100%; }
-      .hero-actions { max-width: 280px; margin-left: auto; margin-right: auto; flex-direction: column; align-items: stretch; }
+      .hero h1 { font-size: clamp(1.8rem, 9vw, 2.25rem); margin-left: auto; margin-right: auto; }
+      .hero p, .hero-note { max-width: 100%; margin-left: auto; margin-right: auto; }
+      .hero-actions { max-width: 280px; margin-left: auto; margin-right: auto; flex-direction: column; align-items: stretch; justify-content: center; }
       .hero-actions .btn { width: 100%; justify-content: center; }
-      .hero-brand { margin-top: 1.5rem; }
-      .hero-proof { grid-template-columns: 1fr; }
+      .hero-proof { grid-template-columns: 1fr; margin-left: auto; margin-right: auto; }
       section { padding: 72px 0; }
       .container { padding: 0 1.25rem; }
       .conversion-grid, .faq-grid { grid-template-columns: 1fr; }
@@ -655,13 +636,13 @@
     }
 
     @media (max-width: 560px) {
-      .hero .container { max-width: 270px; padding-left: 0; padding-right: 0; }
+      .hero .container { max-width: 340px; padding-left: 0; padding-right: 0; }
       .hero-badge { width: 100%; justify-content: center; text-align: center; font-size: .72rem; padding-left: 10px; padding-right: 10px; }
       .hero h1 { font-size: 1.62rem; line-height: 1.12; }
       .hero p { font-size: .95rem; line-height: 1.65; }
       .hero-note { font-size: .9rem; }
       .hero-actions { max-width: 100%; }
-      .hero-proof, .hero-brand { width: 100%; }
+      .hero-proof { width: 100%; }
     }
 
     @media (max-width: 480px) {
@@ -738,9 +719,6 @@
         <span><strong>Domain software</strong> with real user context</span>
         <span><strong>Launch packaging</strong> for humans and AI search</span>
       </div>
-      <figure class="hero-brand" aria-label="Kyanite Labs brand artwork">
-        <img src="../static/brand/website_header_dark_2400x800.png" alt="Kyanite Labs neon operator-stack banner" width="2400" height="800" fetchpriority="high">
-      </figure>
     </div>
   </section>
 
