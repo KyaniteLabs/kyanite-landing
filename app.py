@@ -69,6 +69,11 @@ PUBLIC_PROJECTS = [
         "url": "https://github.com/KyaniteLabs/Innerscape",
         "description": "TypeScript personal growth OS for journaling, habits, body tracking, and knowledge workflows.",
     },
+    {
+        "name": "kyanitelabs.github.io",
+        "url": "https://github.com/KyaniteLabs/kyanitelabs.github.io",
+        "description": "Public source repository for the Kyanite Labs website.",
+    },
 ]
 
 
