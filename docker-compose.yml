@@ -7,6 +7,7 @@ services:
     - ./app.py:/app/app.py:ro
     - ./templates:/app/templates:ro
     - ./products:/app/products:ro
+    - ./static:/app/static:ro
     - /opt/live-sources/hermes-data/revenue:/app/revenue
     - /opt/live-sources/hermes-data/ops:/app/ops:ro
     networks:
