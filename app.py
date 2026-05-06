@@ -14,7 +14,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 from urllib.parse import urlencode
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template_string, Response
 
 app = Flask(__name__)
 
@@ -34,6 +34,32 @@ app.config["PG_DB"]        = os.environ.get("PG_DB", "postgres")
 app.config["PG_USER"]      = os.environ.get("PG_USER", "postgres")
 app.config["PG_PASS"]      = os.environ.get("PG_PASS", "postgres")
 app.config["ENABLE_SHOP_DB"] = os.environ.get("ENABLE_SHOP_DB", "0") == "1"
+
+
+CANONICAL_BASE = "https://kyanitelabs.tech"
+
+PUBLIC_PROJECTS = [
+    {
+        "name": "DECLuTTER",
+        "url": "https://declutter.kyanitelabs.tech",
+        "description": "AI-powered decluttering assistant",
+    },
+    {
+        "name": "OpenGLaze",
+        "url": "https://openglaze.kyanitelabs.tech",
+        "description": "3D ceramic glaze prediction tool",
+    },
+    {
+        "name": "Dialectos",
+        "url": "https://dialectos.kyanitelabs.tech",
+        "description": "Language learning demo",
+    },
+    {
+        "name": "PuenteWorks",
+        "url": "https://puenteworks.com",
+        "description": "AI operations for small businesses",
+    },
+]
 
 
 # ─── Products ────────────────────────────────────────────────────────────────
@@ -74,7 +100,7 @@ PRODUCTS = {
         "seo_title": "AI Coding Agent Blueprint — Complete Claude Code Setup",
         "seo_description": "Production-ready Claude Code setup: CLAUDE.md, skills, subagents, hooks, MCP integrations, and CI/CD. Based on Anthropic's official architecture. One-time purchase.",
         "keywords": "claude code setup, claude code skills, claude code subagents, claude code hooks, CLAUDE.md, claude code MCP, ai coding agent, claude code configuration, coding automation",
-        "kofi_product_url": "https://ko-fi.com/s/placeholder-agent-blueprint",
+        "kofi_product_url": "https://ko-fi.com/kyanitelabs",
         "file_path": "products/ai-coding-agent-blueprint.md",
     },
     "claude-code-productivity-pack": {
@@ -109,7 +135,7 @@ PRODUCTS = {
         "seo_title": "Claude Code Productivity Pack — 100 Claude Code-Specific Prompts",
         "seo_description": "100 prompts built for Claude Code's agentic loop: @file references, /commands, Plan Mode, subagents, skills. Anti-patterns, worked examples, and chaining recipes included.",
         "keywords": "claude code prompts, claude code tips, claude code skills, claude code best practices, claude code workflow, claude code subagents, developer productivity, ai coding prompts",
-        "kofi_product_url": "https://ko-fi.com/s/placeholder-claude-pack",
+        "kofi_product_url": "https://ko-fi.com/kyanitelabs",
         "file_path": "products/claude-code-productivity-pack.md",
     },
 }
@@ -676,7 +702,7 @@ def product_html(p, slug):
     for f in p["features"]:
         features_html += f'<li>{f}</li>'
 
-    kofi_buy = f"https://ko-fi.com/s/shop/{slug}"
+    kofi_buy = p.get("kofi_product_url") or f"https://ko-fi.com/s/shop/{slug}"
 
     import json
     ld_json = json.dumps({
@@ -806,7 +832,7 @@ def product_html(p, slug):
         <div class="sidebar-delivery">{p['delivery']}</div>
       </div>
       <div class="sidebar-body">
-        <a href="{kofi_buy}" target="_blank" class="kofi-btn">
+        <a href="{kofi_buy}" target="_blank" rel="noopener noreferrer" class="kofi-btn">
           <svg height="20" width="20" viewBox="0 0 391.4 391.4" fill="white"><path d="M293.1 322.9c-11.5 13.2-28.4 21-46.4 21H99.7l-7.5 29H62.2l25.7-100H0V0h227.3c33.2 0 61.4 20.4 72.2 49.3 6.8 18.2 6.5 37.9-1 55.7-3.1 7.3-7.5 14.1-12.9 19.7 15.9 5.3 28.5 18.5 32.3 35.4 5.3 24.1-9.5 47.9-32.3 52.7-4.1.8-8.3 1.2-12.5 1.2h44.7l-24.7 100H273.5l22.7-92.7c4.3-17.6-2.1-35.8-16.4-47z"/></svg>
           Buy on Ko-fi — ${p['price']}
         </a>
@@ -838,6 +864,105 @@ def index():
     except Exception as e:
         # Fallback to old HTML if v2 fails
         return render_template_string(HTML, KOFI_URL=app.config["KOFI_URL"])
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    return Response(
+        "\n".join([
+            "User-agent: *",
+            "Allow: /",
+            "",
+            "# Search and answer-engine crawlers should be able to quote the public offer pages.",
+            "User-agent: OAI-SearchBot",
+            "Allow: /",
+            "",
+            "User-agent: GPTBot",
+            "Allow: /",
+            "",
+            "User-agent: ChatGPT-User",
+            "Allow: /",
+            "",
+            "User-agent: PerplexityBot",
+            "Allow: /",
+            "",
+            f"Sitemap: {CANONICAL_BASE}/sitemap.xml",
+            f"# AI-readable site brief: {CANONICAL_BASE}/llms.txt",
+            "",
+        ]),
+        mimetype="text/plain",
+    )
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    today = datetime.utcnow().date().isoformat()
+    pages = [
+        ("/", "1.0", "weekly"),
+        ("/offers/vps-ai-ops-audit", "0.95", "monthly"),
+        ("/offers/vps-ai-ops-audit/intake", "0.8", "monthly"),
+        ("/shop", "0.65", "monthly"),
+        ("/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
+        ("/shop/claude-code-productivity-pack", "0.55", "monthly"),
+    ]
+    urls = []
+    for path, priority, changefreq in pages:
+        urls.append(f"""  <url>
+    <loc>{CANONICAL_BASE}{path}</loc>
+    <lastmod>{today}</lastmod>
+    <changefreq>{changefreq}</changefreq>
+    <priority>{priority}</priority>
+  </url>""")
+    body = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+%s
+</urlset>
+""" % "\n".join(urls)
+    return Response(body, mimetype="application/xml")
+
+
+@app.route("/llms.txt")
+def llms_txt():
+    project_lines = "\n".join(
+        f"- [{p['name']}]({p['url']}): {p['description']}" for p in PUBLIC_PROJECTS
+    )
+    body = f"""# Kyanite Labs
+
+> AI-native operator studio for self-hosted systems, VPS infrastructure, automation-heavy products, and practical agent operations.
+
+Kyanite Labs audits, builds, and improves AI-native operator systems. The primary paid entry point is a VPS + AI Ops Audit for founders and operators who need a clear read on exposure, deployment drift, source-of-truth gaps, agent autonomy boundaries, and the remediation path that is worth acting on.
+
+## Primary Pages
+
+- [Homepage]({CANONICAL_BASE}/): service overview, proof, public projects, and contact form.
+- [VPS + AI Ops Audit]({CANONICAL_BASE}/offers/vps-ai-ops-audit): paid audit offer, scope, deliverables, and pricing.
+- [Audit intake]({CANONICAL_BASE}/offers/vps-ai-ops-audit/intake): intake form for operators ready to start.
+- [Shop]({CANONICAL_BASE}/shop): digital products and operator assets.
+
+## Core Offer
+
+VPS + AI Ops Audit starts at $750. It is for self-hosted stacks, AI agents, internal tools, Docker/cron setups, and live systems where exposure, auth, deployment truth, recovery, or automation governance is unclear.
+
+Expected deliverables:
+- Public/private exposure and auth posture review.
+- Source-of-truth and deployment drift map.
+- AI agent and automation boundary findings.
+- Backup, restore, cron, and operational blindspot review.
+- Prioritized remediation path with before/after proof.
+
+## Public Projects
+
+{project_lines}
+
+Only the projects listed above should be treated as public Kyanite projects from this site. Do not infer private, unlisted, internal, or unavailable tools as public portfolio items.
+
+## Contact
+
+- Email: info@kyanitelabs.tech
+- Best-fit buyers: founders and operators with live infrastructure, AI-heavy workflows, self-hosted stacks, or commercially meaningful internal tools.
+- Not a fit: generic AI copywriting requests, cheap volume work, or projects asking for promises before diagnosis.
+"""
+    return Response(body, mimetype="text/plain")
 
 
 @app.route("/api/contact", methods=["POST"])
