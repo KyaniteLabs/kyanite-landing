@@ -264,8 +264,8 @@
       margin-left: auto;
       margin-right: auto;
       overflow-wrap: break-word;
-      text-wrap: balance;
     }
+    .hero h1 span { display: block; }
 
     .hero p {
       font-size: clamp(1rem, 1.8vw, 1.15rem); color: var(--text2);
@@ -628,8 +628,10 @@
       .hamburger { display: flex; }
       .hero { padding: 100px 1.25rem 60px; }
       .hero .container { min-width: 0; }
-      .hero h1 { font-size: clamp(2rem, 10vw, 2.35rem); }
+      .hero h1 { font-size: clamp(1.8rem, 9vw, 2.25rem); }
       .hero p { max-width: 100%; }
+      .hero-actions { max-width: 280px; margin-left: auto; margin-right: auto; flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
       .hero-brand { margin-top: 1.5rem; }
       .hero-proof { grid-template-columns: 1fr; }
       section { padding: 72px 0; }
@@ -645,9 +647,18 @@
       .step::before { display: none; }
     }
 
+    @media (max-width: 560px) {
+      .hero .container { max-width: 280px; padding-left: 0; padding-right: 0; }
+      .hero-badge { width: 100%; justify-content: center; text-align: center; font-size: .72rem; padding-left: 10px; padding-right: 10px; }
+      .hero h1 { font-size: 1.62rem; line-height: 1.12; }
+      .hero p { font-size: .95rem; line-height: 1.65; }
+      .hero-note { font-size: .9rem; }
+      .hero-actions { max-width: 100%; }
+      .hero-proof, .hero-brand { width: 100%; }
+    }
+
     @media (max-width: 480px) {
-      .hero-actions { max-width: 280px; margin-left: auto; margin-right: auto; flex-direction: column; align-items: stretch; }
-      .hero-actions .btn { width: 100%; justify-content: center; }
+      .hero { padding-left: 1rem; padding-right: 1rem; }
       .projects-grid { grid-template-columns: 1fr; }
     }
 
@@ -708,7 +719,7 @@
   <section class="hero">
     <div class="container">
       <div class="hero-badge">VPS + AI Ops audits for live systems</div>
-      <h1>Stop letting your AI stack leak trust, time, and revenue.</h1>
+      <h1><span>Stop letting your</span><span>AI stack leak trust,</span><span>time, and revenue.</span></h1>
       <p>Kyanite audits self-hosted VPS stacks, AI agents, automations, internal tools, and brittle deployment paths so you can see what is exposed, what is drifting, and what is actually worth fixing next.</p>
       <p class="hero-note">Start with the $750 audit when clarity is the bottleneck. Leave with proof, priorities, and a remediation path you can act on instead of another vague AI roadmap.</p>
       <div class="hero-actions">
