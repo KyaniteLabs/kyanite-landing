@@ -38,7 +38,7 @@
     a { color: var(--accent); text-decoration: none; }
     a:hover { color: var(--accent2); }
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,8,12,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; }
+    .nav-logo { font-weight: 800; font-size: 1.1rem; letter-spacing: 0; }
     .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 2rem; align-items: center; }
     .nav-links a { color: var(--muted); font-size: 0.875rem; font-weight: 500; }
@@ -54,18 +54,18 @@
     .product-emoji { font-size: 3.5rem; margin-bottom: 24px; }
     .product-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 12px; }
     .product-category { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-    .product-name { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 16px; }
+    .product-name { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; }
     .product-tagline { font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
     .product-description { font-size: 1rem; color: var(--text); line-height: 1.75; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
     .features-section {}
-    .features-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.01em; }
+    .features-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0; }
     .features-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
     .features-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9rem; color: var(--text); }
     .features-list li::before { content: ''; width: 20px; height: 20px; background: var(--green-bg); border-radius: 50%; flex-shrink: 0; margin-top: 2px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 11px; background-position: center; background-repeat: no-repeat; }
     .product-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 80px; }
     .sidebar-preview { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 40px; text-align: center; }
     .sidebar-emoji { font-size: 4rem; margin-bottom: 16px; }
-    .sidebar-price { font-size: 3rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 4px; }
+    .sidebar-price { font-size: 3rem; font-weight: 800; letter-spacing: 0; margin-bottom: 4px; }
     .sidebar-price span { font-size: 1rem; font-weight: 500; color: var(--muted); }
     .sidebar-delivery { font-size: 0.8rem; color: var(--green); display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 8px; }
     .sidebar-delivery::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
@@ -78,7 +78,7 @@
     .guarantee { margin-top: 16px; padding: 14px; background: var(--green-bg); border: 1px solid rgba(52,211,153,0.2); border-radius: var(--radius-sm); text-align: center; }
     .guarantee p { font-size: 0.75rem; color: var(--green); font-weight: 600; }
     .faq-section { margin-top: 60px; padding-top: 60px; border-top: 1px solid var(--border); }
-    .faq-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 28px; letter-spacing: -0.01em; }
+    .faq-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 28px; letter-spacing: 0; }
     .faq-list { display: flex; flex-direction: column; gap: 24px; }
     .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
     .faq-q { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
