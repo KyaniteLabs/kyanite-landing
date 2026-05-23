@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog / Lab Notes — KyaniteLabs Builds and Learning</title>
+  <meta name="description" content="Published KyaniteLabs notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Blog / Lab Notes — KyaniteLabs">
+  <meta property="og:description" content="Build logs, MCP video notes, agent-system essays, learning notes, and implementation field notes.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kyanitelabs.tech/blog">
+  <link rel="canonical" href="https://kyanitelabs.tech/blog">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Blog",
+        "@id": "https://kyanitelabs.tech/blog#blog",
+        "name": "KyaniteLabs Blog / Lab Notes",
+        "url": "https://kyanitelabs.tech/blog",
+        "description": "Published technical lab notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.",
+        "publisher": {"@type": "Organization", "name": "KyaniteLabs"}
+      },
+      {
+        "@type": "ItemList",
+        "name": "KyaniteLabs blog posts",
+        "itemListElement": [
+          {% for post in posts %}
+          {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "url": "https://kyanitelabs.tech/blog/{{ post.slug }}",
+            "name": "{{ post.title }}"
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260521-about-readable">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/#proof">Proof</a>
+        <a class="active" href="/blog">Blog</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
+        <a class="language-link" href="/es/blog" hreflang="es" lang="es">ES</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <div class="eyebrow">Blog // Lab Notes</div>
+        <h1>Published lab notes only.</h1>
+        <p><strong>KyaniteLabs publishes notes after there is a real build, lesson, product, or workflow to explain.</strong> The blog covers open-source AI tools, MCP systems, agentic media, developer learning, implementation notes, and the messy process behind the work.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="grid-3">
+          {% for post in posts %}
+          <a class="post-card fade-up" href="/blog/{{ post.slug }}">
+            <div class="post-meta"><span>{{ post.category }}</span><span>{{ post.primary_keyword }}</span></div>
+            <span class="post-title">{{ post.title }}</span>
+            <p>{{ post.excerpt }}</p>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">Public Proof Inputs</div>
+          <h2 class="section-title">The repos are proof before the pitch.</h2>
+          <p class="section-sub">Public repositories show what Kyanite builds, learns, breaks, fixes, and releases. The paid path helps people get those tools working in real environments.</p>
+        </div>
+        <div class="grid-4">
+          {% for project in public_projects %}
+          <a class="project-card fade-up" href="{{ project.url }}" target="_blank" rel="noopener noreferrer">
+            <span class="project-tag">{{ project.tag }}</span>
+            <span class="project-name">{{ project.name }}</span>
+            <p>{{ project.proof_role }}</p>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+          <p>Agent-native tools, public proof, and notes from the build floor.</p>
+        </div>
+        <div><h4>Blog</h4>{% for post in posts[:3] %}<a href="/blog/{{ post.slug }}">{{ post.title }}</a>{% endfor %}</div>
+        <div><h4>Work</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/implementation">Implementation Help</a></div>
+        <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
+      </div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+    </div>
+  </footer>
+
+  <script>
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
+  </script>
+</body>
+</html>

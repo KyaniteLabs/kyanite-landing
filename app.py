@@ -1,22 +1,26 @@
 """
-Kyanite Labs — Landing + Shop
+KyaniteLabs — Landing + Shop
 """
 import os
 import json
 import smtplib
 import subprocess
 import tempfile
-import psycopg2
-import psycopg2.extras
+try:
+    import psycopg2
+    import psycopg2.extras
+except ModuleNotFoundError:
+    psycopg2 = None
 import requests as http_requests
 from email.message import EmailMessage
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from datetime import datetime
+from datetime import UTC, datetime
 from urllib.parse import urlencode
-from flask import Flask, request, jsonify, render_template_string, Response
+from flask import Flask, request, jsonify, render_template_string, Response, redirect
 
 app = Flask(__name__)
+BASE_DIR = os.path.dirname(__file__)
 
 # Config from env
 app.config["SMTP_HOST"]    = os.environ.get("SMTP_HOST", "infra-smtp")
@@ -34,43 +38,646 @@ app.config["PG_DB"]        = os.environ.get("PG_DB", "postgres")
 app.config["PG_USER"]      = os.environ.get("PG_USER", "postgres")
 app.config["PG_PASS"]      = os.environ.get("PG_PASS", "postgres")
 app.config["ENABLE_SHOP_DB"] = os.environ.get("ENABLE_SHOP_DB", "0") == "1"
+app.config["ENABLE_CERAFICA_DB"] = os.environ.get("ENABLE_CERAFICA_DB", "0") == "1"
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
 
+
+def render_template_file(template_name, **context):
+    path = os.path.join(BASE_DIR, "templates", template_name)
+    with open(path, encoding="utf-8") as f:
+        return render_template_string(f.read(), **context)
+
 PUBLIC_PROJECTS = [
+    {
+        "name": "devarch-framework",
+        "url": "https://github.com/KyaniteLabs/devarch-framework",
+        "description": "Git repository archaeology framework for mining commit history, detecting signals, running 6 analysis vectors, and generating engineering reports.",
+        "tag": "Repo Intelligence",
+        "tile_code": "DF",
+        "language": "Python",
+        "updated": "2026-05-13",
+        "proof_role": "Shows Kyanite can turn development history into evidence, not vibes.",
+    },
     {
         "name": "mcp-video",
         "url": "https://github.com/KyaniteLabs/mcp-video",
-        "description": "Video editing MCP server, Python library, and CLI for AI agents.",
+        "description": "Video editing MCP server for AI agents with 87 FFmpeg and Hyperframes tools, Python client, and CLI.",
+        "tag": "Media MCP",
+        "tile_code": "MV",
+        "language": "Python",
+        "updated": "2026-05-13",
+        "proof_role": "The flagship proof that agents can operate timelines, effects, and repeatable media pipelines.",
     },
     {
         "name": "Epoch",
         "url": "https://github.com/KyaniteLabs/Epoch",
-        "description": "Time estimation MCP server for PERT, COCOMO, Monte Carlo, forecasting, and model-cost planning.",
+        "description": "Time estimation MCP server for PERT, COCOMO II, Monte Carlo, sprint forecasting, token-to-time mapping, cost estimation, and schedule risk tools.",
+        "tag": "Estimation MCP",
+        "tile_code": "EP",
+        "language": "TypeScript",
+        "updated": "2026-05-10",
+        "proof_role": "Turns planning uncertainty into agent-callable forecasting tools.",
     },
     {
         "name": "DialectOS",
         "url": "https://github.com/KyaniteLabs/DialectOS",
-        "description": "Spanish dialect localization and QA MCP server with glossary enforcement and quality gates.",
-    },
-    {
-        "name": "OpenGlaze",
-        "url": "https://github.com/KyaniteLabs/openglaze",
-        "description": "Open-source ceramic glaze calculator, UMF analyzer, and recipe manager.",
-    },
-    {
-        "name": "Dev Learning Archaeologist",
-        "url": "https://github.com/KyaniteLabs/dev-learning-archaeologist",
-        "description": "Git-history learning diagnostic that turns development evidence into a study plan.",
+        "description": "Spanish dialect localization MCP server and CLI across 25 regional variants with register control, structure preservation, and QA gates.",
+        "tag": "Localization MCP",
+        "tile_code": "DX",
+        "language": "TypeScript",
+        "updated": "2026-05-11",
+        "proof_role": "Makes Spanish launch quality inspectable instead of treating localization as generic translation.",
     },
     {
         "name": "Innerscape",
         "url": "https://github.com/KyaniteLabs/Innerscape",
-        "description": "TypeScript personal growth OS for journaling, habits, body tracking, and knowledge workflows.",
+        "description": "Personal growth OS in TypeScript for journaling, emotional check-ins, habits, goals, tasks, sleep logs, decluttering, and self-awareness workflows.",
+        "tag": "Personal OS",
+        "tile_code": "IN",
+        "language": "TypeScript",
+        "updated": "2026-05-10",
+        "proof_role": "Shows the same build-and-implementation pattern applied to intimate, data-rich workflows.",
+    },
+    {
+        "name": "openglaze",
+        "url": "https://github.com/KyaniteLabs/openglaze",
+        "description": "Free open-source ceramic glaze calculator, UMF analyzer, CTE estimator, recipe manager, and studio tool for potters and ceramic artists.",
+        "tag": "Domain Software",
+        "tile_code": "OG",
+        "language": "Python",
+        "updated": "2026-05-10",
+        "proof_role": "Proves Kyanite can ship useful software outside the generic AI-tool bubble.",
+    },
+    {
+        "name": "Dev Learning Archaeologist",
+        "url": "https://github.com/KyaniteLabs/dev-learning-archaeologist",
+        "description": "Forensic git-history learning diagnostic for AI-assisted developers that turns commit history into evidence-backed study plans and HTML reports.",
+        "tag": "Learning Diagnostics",
+        "tile_code": "DA",
+        "language": "Markdown / Reports",
+        "updated": "2026-05-10",
+        "proof_role": "Turns repo behavior into a readable diagnostic artifact.",
     },
 ]
 
+BLOG_POSTS = [
+    {
+        "slug": "agents-need-verifiable-tools",
+        "title": "Agents need verifiable tools, not better prompt theater",
+        "category": "MCP Implementation",
+        "date": "2026-05-23",
+        "read_time": "7 min",
+        "primary_keyword": "verifiable AI agent tools",
+        "seo_title": "verifiable AI agent tools and MCP implementation",
+        "meta_description": "AI agents need tools they can call, inspect, verify, and revise. KyaniteLabs builds MCP servers and implementation surfaces around that principle.",
+        "excerpt": "The useful agent pattern is not a prettier prompt. It is a tool surface the agent can call, inspect, verify, and revise.",
+        "body": """
+<p><strong>The useful agent pattern is not a prettier prompt. It is a tool surface the agent can call, inspect, verify, and revise.</strong> A prompt can suggest work. A tool can touch the artifact.</p>
+<p>That distinction is why Kyanite keeps building MCP servers, command-line tools, demos, and public proof surfaces. The agent needs a handle on the real operation: editing a video, estimating time, localizing Spanish variants, reading repo history, or checking a domain-specific calculation.</p>
+<p>If the system cannot verify what happened, the agent is still mostly guessing.</p>
+<h2>The tool contract is the product boundary</h2>
+<p>A good agent tool has a clear action, typed inputs, structured output, readable errors, and a small verification path. That sounds boring. It is also what separates a reusable capability from a one-off session.</p>
+<pre><code>call tool
+inspect output
+compare expectation
+revise next step</code></pre>
+<p>mcp-video proves the media version of this pattern. Epoch proves the estimation version. DialectOS proves the localization version. devarch-framework and Dev Learning Archaeologist prove the repo-history version. OpenGlaze proves that domain software still matters when the user is not living inside the AI-tool bubble.</p>
+<h2>Verification changes the conversation</h2>
+<p>Without verification, an agent can sound confident and still be wrong. With verification, the system can show a command, a file, a route, a report, a test, a screenshot, or a structured result. That does not make the work perfect. It makes the next correction possible.</p>
+<blockquote>The point of a Kyanite tool is not that an agent did something. The point is that a person can inspect what the agent did.</blockquote>
+<h2>What this means for implementation help</h2>
+<p>Paid implementation is not generic "AI consulting." It is help getting a tool into a real environment with the setup, docs, examples, support boundary, and handoff that make verification possible for the next user.</p>
+<p>That is the work most public demos skip. It is also where useful tools become something a team can actually use.</p>
+<h2>FAQ</h2>
+<h3>What makes an agent tool verifiable?</h3>
+<p>The user or agent can check the input, output, error state, artifact, and success condition without relying on a vague explanation.</p>
+<h3>Why use MCP?</h3>
+<p>MCP gives agents a standard way to call tools. The value still depends on the quality of the tool contract, docs, examples, and verification path.</p>
+""",
+    },
+    {
+        "slug": "repo-history-is-a-product-signal",
+        "title": "Repo history is a product signal",
+        "category": "Repo Intelligence",
+        "date": "2026-05-23",
+        "read_time": "6 min",
+        "primary_keyword": "repo archaeology for AI teams",
+        "seo_title": "repo archaeology as a product signal for AI teams",
+        "meta_description": "Repo history shows how a project actually changed, where it got stuck, and whether the proof surface matches the code.",
+        "excerpt": "A repo is not just storage. It is evidence of decisions, repairs, release behavior, naming drift, test gaps, and what the builder actually knows how to finish.",
+        "body": """
+<p><strong>A repo is not just storage. It is evidence of decisions, repairs, release behavior, naming drift, test gaps, and what the builder actually knows how to finish.</strong> That evidence matters more now because AI-assisted work can produce a lot of motion that looks productive from far away.</p>
+<p>Repo archaeology is the practice of reading that motion carefully. The question is not whether the commit graph is pretty. The question is what the history proves about the product.</p>
+<h2>What repo history can show</h2>
+<ul>
+  <li>Which parts of the system needed repeated repair.</li>
+  <li>Whether docs followed the code or drifted away from it.</li>
+  <li>Which tests appeared before launch and which appeared after regressions.</li>
+  <li>Whether public claims match current routes, releases, and README examples.</li>
+  <li>Where a project needs cleanup before a buyer, user, or contributor can trust it.</li>
+</ul>
+<p>This is why Kyanite includes devarch-framework and Dev Learning Archaeologist in the public proof surface. They turn invisible engineering behavior into a readable diagnostic artifact.</p>
+<h2>AI makes this more important, not less</h2>
+<p>AI agents can change more files faster. That is useful when the work is bounded and verified. It is dangerous when nobody can tell which changes mattered. Repo history becomes the receipt trail.</p>
+<blockquote>If a tool claims to be ready, the repo should help prove readiness instead of forcing the reader to trust the landing page.</blockquote>
+<h2>The commercial value</h2>
+<p>Repo archaeology helps with launch readiness, product audits, maintainer handoffs, learning diagnostics, and technical sales proof. It can show where the system is strong enough to publish and where the next paid implementation step should focus.</p>
+<p>That is expert work because it sits between engineering, product judgment, and public trust. The code matters. So does the story the code can honestly support.</p>
+""",
+    },
+    {
+        "slug": "implementation-help-is-product-surface",
+        "title": "Implementation help is part of the product surface",
+        "category": "AI Tool Implementation",
+        "date": "2026-05-23",
+        "read_time": "7 min",
+        "primary_keyword": "AI tool implementation support",
+        "seo_title": "AI tool implementation support for open-source tools",
+        "meta_description": "Open-source AI tools need implementation surfaces: install paths, examples, docs, proof, support boundaries, and handoff.",
+        "excerpt": "A useful open-source tool still needs a path from public repo to working environment. That path is product work, not an afterthought.",
+        "body": """
+<p><strong>A useful open-source tool still needs a path from public repo to working environment.</strong> That path is product work, not an afterthought.</p>
+<p>Most technical builders understand the code. Most buyers or users experience the surface around the code: install instructions, examples, screenshots, error handling, docs, demos, support boundaries, and the first successful run.</p>
+<p>When that surface is weak, the tool may be real and still feel unusable.</p>
+<h2>The implementation surface has jobs</h2>
+<ul>
+  <li>Explain the outcome in one sentence.</li>
+  <li>Show what the tool needs before it runs.</li>
+  <li>Give a smallest useful example.</li>
+  <li>Prove that the example worked.</li>
+  <li>Name what the tool does not do yet.</li>
+  <li>Offer a paid path when someone wants the result without doing every setup step alone.</li>
+</ul>
+<p>Kyanite's own site follows that pattern: public repos, products, blog posts, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, implementation intake, and a clear boundary that KyaniteLabs is the technical/product path inside PuenteWorks LLC.</p>
+<h2>Open source does not remove service work</h2>
+<p>Open source can reduce lock-in and prove capability. It does not automatically handle installation, adaptation, team training, environment differences, docs, examples, or maintenance decisions.</p>
+<blockquote>The repo proves the tool exists. Implementation help gets the tool into working hands.</blockquote>
+<h2>Why this is a real offer</h2>
+<p>Implementation help is sellable when the public tool is specific enough to trust and the setup path is painful enough that a serious user would rather buy help than burn a weekend. That is the lane for Kyanite: practical tools, public proof, and scoped help getting the result working.</p>
+""",
+    },
+    {
+        "slug": "why-mcp-video-matters",
+        "title": "Why mcp-video matters",
+        "category": "MCP / Video Automation",
+        "date": "2026-05-14",
+        "read_time": "5 min",
+        "primary_keyword": "video editing MCP server",
+        "seo_title": "video editing MCP server for AI agents",
+        "meta_description": "mcp-video is a video editing MCP server that gives AI agents direct handles on FFmpeg, Hyperframes, timelines, effects, and media pipelines.",
+        "excerpt": "mcp-video is a video editing MCP server that gives AI agents direct handles on timelines, effects, FFmpeg, and finished media.",
+        "body": """
+<p><strong>mcp-video is a video editing MCP server that lets AI agents operate real media pipelines instead of only writing prompts about them.</strong> The useful part is not the word "video"; it is that an agent gets callable handles for FFmpeg, Hyperframes, effects, inspection, and repeatable assembly.</p>
+<p>Most AI video workflows still depend on a strange handoff. The agent can plan the edit, describe the shot, maybe generate a prompt, and then a human has to do the actual assembly work somewhere else. That is not agent-native. That is a chatbot standing outside the studio window.</p>
+<h2>mcp-video gives the agent a timeline</h2>
+<p>The technical decision is to expose video operations as stable tools instead of one-off shell recipes. That choice accepts the cost of a larger public surface: arguments need validation, error messages need to be readable, and effects need names that survive more than one session.</p>
+<pre><code>mcp-video effect-glitch input.mp4 --output take-glitch.mp4
+mcp-video inspect take-glitch.mp4 --json
+mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
+<p>That interface is not decoration. It is the boundary that lets an agent inspect what happened, revise the next step, and keep the work reproducible.</p>
+<h2>The product pattern behind agent video automation</h2>
+<p>Kyanite looks for workflows that already exist in rough form, then turns them into surfaces an agent and a human can both use. For video, that means:</p>
+<ul>
+  <li>effects that can be invoked as tools instead of one-off experiments</li>
+  <li>command-line recipes that survive beyond a single session</li>
+  <li>media pipelines that can be tested, revised, and shipped</li>
+  <li>documentation good enough for a stranger to install the system</li>
+</ul>
+<p>That is the real implementation move: take the messy local ritual and make it legible.</p>
+<h2>Why MCP media tools are bigger than video</h2>
+<p>Video is one visible example of a broader agentic pattern. Agents need tools that touch real artifacts. A useful agent should be able to inspect a repo, assemble a video, run an estimation model, check a localization string, or package a launch surface.</p>
+<p>The more direct handles the agent has, the less the work feels like prompting and the more it feels like operating a system.</p>
+<h2>FAQ</h2>
+<h3>What is mcp-video?</h3>
+<p>mcp-video is a video editing MCP server, Python client, and CLI that exposes video inspection, effects, assembly, and FFmpeg-backed operations to AI agents.</p>
+<h3>Who should care?</h3>
+<p>Builders who want AI agents to produce inspectable media artifacts instead of only generating prompts, scripts, and editing instructions.</p>
+""",
+    },
+    {
+        "slug": "infinite-monkey-agentic-systems",
+        "title": "Infinite monkeys, LLMs, and the room around the machine",
+        "category": "Agent Systems",
+        "date": "2026-05-14",
+        "read_time": "6 min",
+        "primary_keyword": "agentic systems",
+        "seo_title": "agentic systems need probability architecture",
+        "meta_description": "Agentic systems are probability architecture: generation, filters, tools, evals, memory, and human taste around LLM probability machines.",
+        "excerpt": "The argument behind the video: output quality is not just probability. It is architecture, filters, and human taste.",
+        "body": """
+<p><strong>Agentic systems turn LLM probability into useful work by building the room around the model: tools, filters, memory, evals, and human taste.</strong> The model generates. The system decides what survives.</p>
+<p>The infinite monkey theorem is a useful metaphor until people stop too early. Randomness can produce anything in theory. In practice, the room matters. How many attempts are running? What gets filtered out? Who judges the output? What system remembers the good parts? What is the cost of another roll?</p>
+<blockquote>LLMs are probability machines. Products are probability architecture.</blockquote>
+<p>The difference between a toy demo and a useful AI system is not just a better model. It is the surrounding machinery: retrieval, tools, constraints, evals, review, memory, distribution, and human taste.</p>
+<h2>The filter is the product</h2>
+<p>Generation creates volume. Product work creates selection. That is why strong AI systems need more than prompts. They need rooms built around the model.</p>
+<ul>
+  <li>tools that let the model act on real artifacts</li>
+  <li>filters that reject bad output before it reaches users</li>
+  <li>human criteria that decide what good means</li>
+  <li>launch surfaces that make the system understandable</li>
+</ul>
+<h2>Agentic systems need explicit architecture</h2>
+<p>A useful architecture names the handoff points. The generation step can be cheap and messy; the selection step cannot be. If a system cannot explain why an output was accepted, it is gambling with prettier logs.</p>
+<pre><code>generate -> inspect -> score -> revise -> package -> publish
+           ^                          |
+           |________ evidence ________|</code></pre>
+<p>This is also why Kyanite leads with public proof. A repo, demo, video, or docs page makes the room visible. You can inspect the architecture instead of trusting the claim.</p>
+<h2>FAQ</h2>
+<h3>Are LLMs the same as random monkeys?</h3>
+<p>No. The analogy is about generation without judgment, not the exact mechanism. LLMs are sophisticated probability machines; useful products add judgment around them.</p>
+""",
+    },
+    {
+        "slug": "ai-tool-implementation-checklist",
+        "title": "What a working AI tool needs before people can use it",
+        "category": "Build Notes",
+        "date": "2026-05-14",
+        "read_time": "7 min",
+        "primary_keyword": "AI tool implementation",
+        "seo_title": "AI tool implementation checklist",
+        "meta_description": "A practical AI tool implementation checklist: install path, demos, docs, proof, support boundaries, and user-ready workflows.",
+        "excerpt": "A practical checklist for turning a working tool, workflow, or rough app into something other people can understand, install, and use.",
+        "body": """
+<p><strong>A working AI tool becomes useful to other people when the install path, demo, docs, examples, and support boundaries are clear.</strong> A working codebase is not automatically usable.</p>
+<p>A stranger has to understand what result it creates, how to try it, how to verify it works, and where to get help if they want that result without doing every setup step alone.</p>
+<p>Most technical projects fail commercially before anyone reaches the code. The surface is too vague.</p>
+<h2>The minimum useful surface</h2>
+<ul>
+  <li>A one-sentence promise that says what changes for the user</li>
+  <li>A demo, install path, or clear explanation of how the tool is delivered</li>
+  <li>Examples that show actual inputs and outputs</li>
+  <li>Tests, demos, screenshots, or logs that prove the system exists</li>
+  <li>Metadata that helps humans and AI assistants discover the project</li>
+  <li>A next step: try it, install it, read the build note, buy a product, or request implementation help</li>
+</ul>
+<h2>A tool needs proof, not adjectives</h2>
+<p>The page cannot say "ready" unless the surface shows instructions, examples, tests, release notes, screenshots, demos, or failure modes. The tradeoff is obvious: proof takes longer than copy, but proof keeps helping after the page is closed.</p>
+<pre><code>README promise
+install command
+minimal example
+verification command
+known limits
+implementation option</code></pre>
+<h2>What Kyanite sells</h2>
+<p>KyaniteLabs is the public proof surface where the tools, experiments, blog posts, and open-source products live. The paid path helps people install, adapt, understand, and hand off those tools in a real environment.</p>
+<blockquote>The goal is not generic consulting. The goal is getting useful tools into working hands.</blockquote>
+<p>Good implementation does not hide the mess. It turns the mess into a map.</p>
+""",
+    },
+    {
+        "slug": "mcp-server-implementation-checklist",
+        "title": "MCP server implementation checklist",
+        "category": "MCP Implementation",
+        "date": "2026-05-14",
+        "read_time": "8 min",
+        "primary_keyword": "MCP server implementation",
+        "seo_title": "MCP server implementation checklist",
+        "meta_description": "MCP server implementation means making an agent tool usable with install paths, schema clarity, examples, tests, docs, and public proof.",
+        "excerpt": "The checklist Kyanite uses to decide whether an MCP server is a toy, a usable tool, or something worth implementing.",
+        "body": """
+<p><strong>MCP server implementation means making an agent-facing tool usable enough that someone else can install it, understand its tools, verify it works, and decide whether to trust it.</strong> The hard part is not exposing functions. The hard part is making the tool surface durable enough for real users and real agents.</p>
+<p>An MCP server becomes useful when the protocol surface, docs, examples, tests, and release path all tell the same story.</p>
+<h2>The checklist starts with the tool contract</h2>
+<p>Every public tool needs a sharp boundary. Tool names should describe the action. Arguments should reject bad input early. Output should be structured enough for an agent to reason about without scraping prose.</p>
+<pre><code>{
+  "tool": "estimate_project_time",
+  "inputs": ["tasks", "confidence", "risk_model"],
+  "output": ["p50_days", "p90_days", "assumptions", "warnings"]
+}</code></pre>
+<p>The tradeoff is that explicit schemas slow down early experimentation. That cost is worth paying once the server is meant to leave your laptop.</p>
+<h2>The install path is part of the product</h2>
+<p>A strong MCP README answers 5 questions quickly:</p>
+<ul>
+  <li>What does this server let an agent do?</li>
+  <li>What does installation require?</li>
+  <li>Which client configs are supported?</li>
+  <li>What is the smallest useful example?</li>
+  <li>How do I know the server is working?</li>
+</ul>
+<p>That last question is where weak projects break. If verification depends on the maintainer explaining it in a chat, it is not productized yet.</p>
+<h2>Public proof compounds</h2>
+<p>mcp-video, Epoch, and DialectOS each prove a different part of the stack: media operations, estimation models, and localization QA. The shared pattern is the lab: a real workflow becomes an agent-callable capability with enough documentation and tests to survive inspection.</p>
+<h2>FAQ</h2>
+<h3>What makes an MCP server commercially useful?</h3>
+<p>It has to touch an expensive, repeated, or fragile workflow. If the server only wraps a trivial API call, the product is the API, not the MCP server.</p>
+""",
+    },
+    {
+        "slug": "repo-archaeology-proof-assets",
+        "title": "Repo archaeology turns history into proof",
+        "category": "Repo Intelligence",
+        "date": "2026-05-14",
+        "read_time": "7 min",
+        "primary_keyword": "repo archaeology",
+        "seo_title": "repo archaeology for AI-assisted teams",
+        "meta_description": "Repo archaeology mines commit history, patterns, and project evidence to create learning diagnostics, product proof, and engineering reports.",
+        "excerpt": "Why commit history is one of the strongest proof sources for learning diagnostics, implementation help, and engineering trust.",
+        "body": """
+<p><strong>Repo archaeology uses commit history as evidence for how a project was actually built, where it got stuck, and what the next intervention should be.</strong> It is useful because code history is harder to fake than a positioning paragraph.</p>
+<p>Kyanite's repo-intelligence work exists because AI-assisted teams generate a lot of motion. The question is which motion taught the system something, which motion created debt, and which motion can become public proof.</p>
+<h2>Commit history is a diagnostic surface</h2>
+<p>A repo carries behavioral evidence: repeated fixes, reverted directions, test gaps, naming churn, and stale public metadata. A good diagnostic does not shame the team for that. It turns the pattern into a map.</p>
+<pre><code>signals:
+  - repeated failure around release automation
+  - docs updated after code, not before
+  - tests added only after regressions
+  - public metadata lagging behind repo rename</code></pre>
+<p>The tradeoff is that history is noisy. Repo archaeology needs filters, not mysticism.</p>
+<h2>Why this matters for users</h2>
+<p>Users do not only need the current feature set. They need confidence that the tool can keep improving. Public history, issue handling, release notes, and verified fixes show maintenance behavior.</p>
+<p>That is why Dev Learning Archaeologist and devarch-framework belong on the Kyanite proof wall. They turn invisible engineering behavior into something a person can inspect.</p>
+<h2>FAQ</h2>
+<h3>Is repo archaeology only for learning diagnostics?</h3>
+<p>No. It is also useful for product audits, acquisition diligence, maintainer handoffs, launch readiness, and deciding which proof assets should be public.</p>
+""",
+    },
+    {
+        "slug": "ai-discovery-llms-txt-geo",
+        "title": "AI discovery needs more than a sitemap",
+        "category": "SEO / GEO",
+        "date": "2026-05-14",
+        "read_time": "6 min",
+        "primary_keyword": "AI discovery",
+        "seo_title": "AI discovery, llms.txt, and GEO for product sites",
+        "meta_description": "AI discovery needs sitemap coverage, llms.txt, structured data, direct-answer copy, FAQ sections, and clear public proof surfaces.",
+        "excerpt": "What Kyanite adds so search engines and AI assistants can understand the tools, products, proof, and support path.",
+        "body": """
+<p><strong>AI discovery works when a site gives crawlers and answer engines structured, quotable, current facts about what exists, who it helps, and what proof supports it.</strong> A sitemap is necessary. It is not enough.</p>
+<p>Generative Engine Optimization is mostly discipline. Say the answer early. Use real names. Add structured data. Keep public proof current. Make the commercial next step obvious.</p>
+<h2>The AI-readable stack</h2>
+<ul>
+  <li><code>/sitemap.xml</code> for canonical crawl coverage</li>
+  <li><code>/llms.txt</code> for answer-engine context</li>
+  <li><code>/ai-sitemap.json</code> for structured products, repos, and posts</li>
+  <li>JSON-LD for Organization, WebSite, Article, Service, Product, and FAQ entities</li>
+  <li>Direct-answer paragraphs at the top of pages and posts</li>
+</ul>
+<p>The tradeoff is maintenance. These files cannot be aspirational. If the repo list changes, the proof layer needs to change with it.</p>
+<h2>GEO is strongest when it is useful to humans too</h2>
+<p>Answer engines and human readers both reward the same thing: specific claims with clear evidence. "We build AI tools" is weak. "We build MCP servers, video automation, localization QA, repo diagnostics, and open-source tools backed by public KyaniteLabs repositories" is stronger because it can be checked.</p>
+<h2>FAQ</h2>
+<h3>What is GEO?</h3>
+<p>GEO, or Generative Engine Optimization, is structuring web content so AI answer engines can accurately summarize, cite, and route users to it.</p>
+""",
+    },
+]
+
+BLOG_POSTS_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS}
+LEGACY_BLOG_SLUGS = {
+    "productization-audit-field-guide": "ai-tool-implementation-checklist",
+    "mcp-server-productization-checklist": "mcp-server-implementation-checklist",
+}
+
+PROJECT_COPY_ES = {
+    "devarch-framework": {
+        "description": "Marco de arqueologia de repositorios para leer historial de commits, detectar señales, correr 6 vectores de analisis y generar reportes de ingenieria.",
+        "tag": "Inteligencia de repos",
+        "proof_role": "Muestra que Kyanite puede convertir historial de desarrollo en evidencia, no en intuicion.",
+    },
+    "mcp-video": {
+        "description": "Servidor MCP de edicion de video para agentes de IA con 87 herramientas de FFmpeg e Hyperframes, cliente Python y CLI.",
+        "tag": "MCP de medios",
+        "proof_role": "La prueba principal de que los agentes pueden operar timelines, efectos y pipelines repetibles de medios.",
+    },
+    "Epoch": {
+        "description": "Servidor MCP de estimacion de tiempo para PERT, COCOMO II, Monte Carlo, pronosticos de sprint, mapeo token-tiempo, costos y riesgo de calendario.",
+        "tag": "MCP de estimacion",
+        "proof_role": "Convierte la incertidumbre de planificacion en herramientas de pronostico que un agente puede llamar.",
+    },
+    "DialectOS": {
+        "description": "Servidor MCP y CLI de localizacion dialectal en español para 25 variantes regionales, con control de registro, preservacion de estructura y QA.",
+        "tag": "MCP de localizacion",
+        "proof_role": "Hace inspeccionable la calidad del español de lanzamiento en vez de tratar la localizacion como traduccion generica.",
+    },
+    "Innerscape": {
+        "description": "Sistema operativo personal en TypeScript para journaling, check-ins emocionales, habitos, metas, tareas, sueño, orden y autoconciencia.",
+        "tag": "OS personal",
+        "proof_role": "Aplica el mismo patron de construccion e implementacion a flujos intimos y ricos en datos.",
+    },
+    "openglaze": {
+        "description": "Calculadora open source gratuita para esmaltes ceramicos, analisis UMF, estimacion CTE, recetas y trabajo de estudio para ceramistas.",
+        "tag": "Software de dominio",
+        "proof_role": "Prueba que Kyanite puede crear software util fuera de la burbuja generica de herramientas de IA.",
+    },
+    "Dev Learning Archaeologist": {
+        "description": "Diagnostico forense de aprendizaje a partir del historial git para desarrolladores asistidos por IA, con planes de estudio y reportes HTML.",
+        "tag": "Diagnosticos de aprendizaje",
+        "proof_role": "Convierte comportamiento de repositorio en un artefacto diagnostico legible.",
+    },
+}
+
+PUBLIC_PROJECTS_ES = [
+    {**project, **PROJECT_COPY_ES.get(project["name"], {})}
+    for project in PUBLIC_PROJECTS
+]
+
+BLOG_COPY_ES = {
+    "agents-need-verifiable-tools": {
+        "title": "Los agentes necesitan herramientas verificables, no mejor teatro de prompts",
+        "category": "Implementacion MCP",
+        "seo_title": "herramientas verificables para agentes de IA e implementacion MCP",
+        "meta_description": "Los agentes de IA necesitan herramientas que puedan llamar, inspeccionar, verificar y revisar. KyaniteLabs construye servidores MCP y superficies de implementacion con ese principio.",
+        "excerpt": "El patron util no es un prompt mas bonito. Es una superficie de herramienta que el agente puede llamar, inspeccionar, verificar y revisar.",
+        "body": """
+<p><strong>El patron util no es un prompt mas bonito. Es una superficie de herramienta que el agente puede llamar, inspeccionar, verificar y revisar.</strong> Un prompt puede sugerir trabajo. Una herramienta puede tocar el artefacto.</p>
+<p>Por eso Kyanite construye servidores MCP, CLIs, demos y superficies publicas de prueba. El agente necesita un punto de agarre sobre la operacion real: editar video, estimar tiempo, localizar variantes de español, leer historial de repos o revisar calculos de dominio.</p>
+<p>Si el sistema no puede verificar lo que paso, el agente todavia esta adivinando demasiado.</p>
+<h2>El contrato de herramienta es la frontera del producto</h2>
+<p>Una buena herramienta para agentes tiene una accion clara, entradas tipadas, salida estructurada, errores legibles y una ruta pequeña de verificacion. Suena aburrido. Tambien separa una capacidad reusable de una sesion de una sola vez.</p>
+<pre><code>llamar herramienta
+inspeccionar salida
+comparar expectativa
+revisar siguiente paso</code></pre>
+<p>mcp-video prueba la version de medios. Epoch prueba la version de estimacion. DialectOS prueba la version de localizacion. devarch-framework y Dev Learning Archaeologist prueban la version de historial de repos. OpenGlaze prueba que el software de dominio sigue importando cuando el usuario no vive dentro de la burbuja de herramientas de IA.</p>
+<h2>La verificacion cambia la conversacion</h2>
+<p>Sin verificacion, un agente puede sonar seguro y estar equivocado. Con verificacion, el sistema puede mostrar un comando, archivo, ruta, reporte, prueba, captura o resultado estructurado. Eso no hace perfecto el trabajo. Hace posible la siguiente correccion.</p>
+<blockquote>La gracia de una herramienta Kyanite no es que un agente hizo algo. Es que una persona puede inspeccionar lo que hizo el agente.</blockquote>
+<h2>Que significa para la implementacion</h2>
+<p>La implementacion pagada no es consultoria generica de IA. Es ayuda para llevar una herramienta a un entorno real con setup, docs, ejemplos, limites de soporte y traspaso usable.</p>
+""",
+    },
+    "repo-history-is-a-product-signal": {
+        "title": "El historial del repo es una señal de producto",
+        "category": "Inteligencia de repos",
+        "seo_title": "arqueologia de repos como señal de producto para equipos de IA",
+        "meta_description": "El historial del repo muestra como cambio un proyecto, donde se atasco y si la superficie publica coincide con el codigo.",
+        "excerpt": "Un repo no es solo almacenamiento. Es evidencia de decisiones, reparaciones, releases, cambios de nombre, huecos de pruebas y oficio real.",
+        "body": """
+<p><strong>Un repo no es solo almacenamiento. Es evidencia de decisiones, reparaciones, releases, cambios de nombre, huecos de pruebas y oficio real.</strong> Esa evidencia importa mas ahora porque el trabajo asistido por IA puede producir mucho movimiento que desde lejos parece productividad.</p>
+<p>La arqueologia de repos lee ese movimiento con cuidado. La pregunta no es si el grafo de commits se ve bonito. La pregunta es que prueba el historial sobre el producto.</p>
+<h2>Que puede mostrar el historial</h2>
+<ul>
+  <li>Que partes del sistema necesitaron reparacion repetida.</li>
+  <li>Si la documentacion siguio al codigo o se separo.</li>
+  <li>Que pruebas existian antes del lanzamiento y cuales aparecieron despues de regresiones.</li>
+  <li>Si las promesas publicas coinciden con rutas, releases y ejemplos actuales.</li>
+  <li>Donde hay que limpiar antes de que un usuario, comprador o contribuidor confie.</li>
+</ul>
+<p>Por eso Kyanite incluye devarch-framework y Dev Learning Archaeologist en su superficie publica. Convierten comportamiento tecnico invisible en un diagnostico legible.</p>
+<h2>La IA lo vuelve mas importante</h2>
+<p>Los agentes pueden cambiar mas archivos mas rapido. Eso ayuda cuando el trabajo esta acotado y verificado. Es peligroso cuando nadie puede decir que cambios importaron. El historial se vuelve el recibo.</p>
+<blockquote>Si una herramienta dice estar lista, el repo debe ayudar a probarlo en vez de obligar a confiar en la landing page.</blockquote>
+""",
+    },
+    "implementation-help-is-product-surface": {
+        "title": "La ayuda de implementacion es parte de la superficie del producto",
+        "category": "Implementacion de herramientas de IA",
+        "seo_title": "soporte de implementacion para herramientas open source de IA",
+        "meta_description": "Las herramientas open source de IA necesitan superficies de implementacion: instalacion, ejemplos, docs, prueba, limites de soporte y traspaso.",
+        "excerpt": "Una herramienta open source util todavia necesita una ruta desde repo publico hasta entorno funcionando. Esa ruta es producto.",
+        "body": """
+<p><strong>Una herramienta open source util todavia necesita una ruta desde repo publico hasta entorno funcionando.</strong> Esa ruta es producto, no un detalle final.</p>
+<p>La mayoria de builders tecnicos entiende el codigo. La mayoria de usuarios vive la superficie alrededor del codigo: instalacion, ejemplos, capturas, errores, docs, demos, limites de soporte y primera ejecucion exitosa.</p>
+<p>Cuando esa superficie es debil, la herramienta puede ser real y aun sentirse inutilizable.</p>
+<h2>La superficie de implementacion tiene trabajos</h2>
+<ul>
+  <li>Explicar el resultado en una frase.</li>
+  <li>Mostrar que necesita la herramienta antes de correr.</li>
+  <li>Dar el ejemplo minimo util.</li>
+  <li>Probar que el ejemplo funciono.</li>
+  <li>Nombrar lo que la herramienta todavia no hace.</li>
+  <li>Ofrecer una ruta pagada cuando alguien quiere el resultado sin hacer todo el setup solo.</li>
+</ul>
+<p>El sitio de Kyanite sigue ese patron: repos publicos, productos, notas, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, intake de implementacion y un limite claro de que KyaniteLabs es la ruta tecnica dentro de PuenteWorks LLC.</p>
+<h2>Open source no elimina el trabajo de servicio</h2>
+<p>Open source puede reducir lock-in y probar capacidad. No maneja automaticamente instalacion, adaptacion, entrenamiento, diferencias de entorno, docs, ejemplos o mantenimiento.</p>
+<blockquote>El repo prueba que la herramienta existe. La implementacion lleva la herramienta a manos que la pueden usar.</blockquote>
+""",
+    },
+    "why-mcp-video-matters": {
+        "title": "Por que importa mcp-video",
+        "category": "MCP / Automatizacion de video",
+        "seo_title": "servidor MCP de edicion de video para agentes de IA",
+        "meta_description": "mcp-video es un servidor MCP de edicion de video que da a los agentes de IA acceso directo a FFmpeg, Hyperframes, timelines, efectos y pipelines de medios.",
+        "excerpt": "mcp-video da a los agentes de IA acceso directo a timelines, efectos, FFmpeg y medios terminados.",
+        "body": """
+<p><strong>mcp-video es un servidor MCP de edicion de video que permite a los agentes operar pipelines reales de medios en vez de solo escribir prompts sobre ellos.</strong> Lo importante no es la palabra video; es que el agente obtiene herramientas llamables para FFmpeg, Hyperframes, efectos, inspeccion y ensamblaje repetible.</p>
+<p>Muchos flujos de video con IA todavia dependen de un traspaso raro. El agente puede planear la edicion y describir el corte, pero un humano termina ensamblando todo en otra parte. Eso no es agent-native. Es un chatbot mirando el estudio desde afuera.</p>
+<h2>mcp-video le da al agente un timeline</h2>
+<p>La decision tecnica es exponer operaciones de video como herramientas estables, no como recetas de shell de una sola vez. Eso obliga a validar argumentos, escribir errores legibles y nombrar efectos que sobrevivan mas de una sesion.</p>
+<pre><code>mcp-video effect-glitch input.mp4 --output take-glitch.mp4
+mcp-video inspect take-glitch.mp4 --json
+mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
+<p>Esa interfaz no es decoracion. Es la frontera que permite inspeccionar lo ocurrido, revisar el siguiente paso y mantener el trabajo reproducible.</p>
+<h2>El patron de producto detras del video agentico</h2>
+<p>Kyanite busca flujos que ya existen de forma torpe y los convierte en superficies que un agente y una persona pueden usar. En video, eso significa efectos invocables, recetas que sobreviven, pipelines probables y documentacion suficiente para que alguien mas instale el sistema.</p>
+<h2>Por que las herramientas MCP de medios son mas grandes que el video</h2>
+<p>El video es una prueba visible de un patron mas amplio: los agentes necesitan tocar artefactos reales. Un agente util debe poder inspeccionar un repo, ensamblar un video, correr un modelo de estimacion, revisar localizacion o empaquetar una superficie de lanzamiento.</p>
+""",
+    },
+    "infinite-monkey-agentic-systems": {
+        "title": "Monos infinitos, LLMs y el cuarto alrededor de la maquina",
+        "category": "Sistemas agenticos",
+        "seo_title": "los sistemas agenticos necesitan arquitectura de probabilidad",
+        "meta_description": "Los sistemas agenticos son arquitectura de probabilidad: generacion, filtros, herramientas, evaluaciones, memoria y gusto humano alrededor de los LLMs.",
+        "excerpt": "El argumento detras del video: la calidad no es solo probabilidad. Es arquitectura, filtros y gusto humano.",
+        "body": """
+<p><strong>Los sistemas agenticos convierten la probabilidad de un LLM en trabajo util al construir el cuarto alrededor del modelo: herramientas, filtros, memoria, evaluaciones y gusto humano.</strong> El modelo genera. El sistema decide que sobrevive.</p>
+<p>El teorema del mono infinito funciona como metafora hasta que se usa de forma perezosa. La aleatoriedad puede producir cualquier cosa en teoria. En la practica importa el cuarto: cuantos intentos corren, que se filtra, quien juzga, que se recuerda y cuanto cuesta otro intento.</p>
+<blockquote>Los LLMs son maquinas de probabilidad. Los productos son arquitectura de probabilidad.</blockquote>
+<h2>El filtro es el producto</h2>
+<p>La generacion crea volumen. El trabajo de producto crea seleccion. Por eso los sistemas fuertes necesitan mas que prompts: necesitan herramientas, filtros, criterios humanos y superficies de lanzamiento que hagan el sistema entendible.</p>
+<h2>Los sistemas agenticos necesitan arquitectura explicita</h2>
+<p>Una arquitectura util nombra los puntos de traspaso. La generacion puede ser barata y desordenada; la seleccion no. Si un sistema no puede explicar por que acepto una salida, esta apostando con mejores logs.</p>
+<pre><code>generar -> inspeccionar -> puntuar -> revisar -> empaquetar -> publicar
+             ^                                      |
+             |____________ evidencia ______________|</code></pre>
+""",
+    },
+    "ai-tool-implementation-checklist": {
+        "title": "Lo que una herramienta de IA necesita antes de que alguien pueda usarla",
+        "category": "Notas de construccion",
+        "seo_title": "checklist de implementacion para herramientas de IA",
+        "meta_description": "Checklist practico para implementar herramientas de IA: instalacion, demos, docs, prueba, limites de soporte y flujos listos para usuarios.",
+        "excerpt": "Una guia practica para convertir una herramienta, flujo o app medio cruda en algo que otros puedan entender, instalar y usar.",
+        "body": """
+<p><strong>Una herramienta de IA se vuelve util para otras personas cuando la instalacion, demo, documentacion, ejemplos y limites de soporte son claros.</strong> Un codigo que funciona no es automaticamente un producto usable.</p>
+<p>Una persona nueva necesita entender que hace, por que importa, como probarlo, como verificar que funciona y donde pedir ayuda si quiere implementarlo sin hacer todo el montaje sola.</p>
+<h2>La superficie minima util</h2>
+<ul>
+  <li>Una promesa en una frase que diga que cambia para el usuario</li>
+  <li>Una demo, instalacion o explicacion clara de entrega</li>
+  <li>Ejemplos con entradas y salidas reales</li>
+  <li>Pruebas, capturas, logs o demos que demuestren que el sistema existe</li>
+  <li>Un siguiente paso claro: probar, instalar, leer, comprar o pedir implementacion</li>
+</ul>
+<h2>Una herramienta necesita evidencia, no adjetivos</h2>
+<p>La pagina no puede decir lista si no muestra instrucciones, ejemplos, pruebas, notas de version, capturas, demos o limites. La evidencia toma mas tiempo que el copy, pero sigue vendiendo despues de cerrar la pagina.</p>
+<h2>Lo que vende Kyanite</h2>
+<p>KyaniteLabs es el laboratorio creativo donde viven las herramientas, experimentos, productos open source y notas. La ruta pagada es implementacion y asesoria: setup, adaptacion, diseño de flujo, documentacion, entrenamiento e integracion.</p>
+""",
+    },
+    "mcp-server-implementation-checklist": {
+        "title": "Checklist de implementacion para servidores MCP",
+        "category": "Implementacion MCP",
+        "seo_title": "checklist de implementacion de servidores MCP",
+        "meta_description": "Implementar un servidor MCP significa hacerlo usable con instalacion, esquemas claros, ejemplos, pruebas, documentacion y prueba publica.",
+        "excerpt": "El checklist que Kyanite usa para distinguir un servidor MCP de juguete, una herramienta usable y algo que vale la pena implementar.",
+        "body": """
+<p><strong>Implementar un servidor MCP significa hacerlo suficientemente usable para que alguien mas pueda instalarlo, entender sus herramientas, verificar que funciona y decidir si puede confiar en el.</strong> Lo dificil no es exponer funciones; es crear una superficie duradera para usuarios y agentes reales.</p>
+<h2>El checklist empieza por el contrato de herramienta</h2>
+<p>Cada herramienta publica necesita una frontera clara. Los nombres deben decir la accion. Los argumentos deben rechazar entradas malas temprano. La salida debe estar lo bastante estructurada para que un agente razone sin raspar prosa.</p>
+<pre><code>{
+  "tool": "estimate_project_time",
+  "inputs": ["tasks", "confidence", "risk_model"],
+  "output": ["p50_days", "p90_days", "assumptions", "warnings"]
+}</code></pre>
+<h2>La instalacion es parte del producto</h2>
+<p>Un README fuerte responde rapido que hace el servidor, que requiere la instalacion, que clientes soporta, cual es el ejemplo minimo y como saber que funciona.</p>
+<h2>La evidencia publica se acumula</h2>
+<p>mcp-video, Epoch y DialectOS prueban partes distintas del stack: medios, estimacion y QA de localizacion. El patron compartido es el laboratorio: un flujo real se vuelve capacidad llamable por agentes con documentacion y pruebas suficientes para sobrevivir inspeccion.</p>
+""",
+    },
+    "repo-archaeology-proof-assets": {
+        "title": "La arqueologia de repos convierte historia en evidencia",
+        "category": "Inteligencia de repos",
+        "seo_title": "arqueologia de repos para equipos asistidos por IA",
+        "meta_description": "La arqueologia de repos mina commits, patrones y evidencia de proyecto para crear diagnosticos, prueba de producto y reportes de ingenieria.",
+        "excerpt": "Por que el historial de commits es una de las fuentes de prueba mas fuertes para diagnosticos, implementacion y confianza tecnica.",
+        "body": """
+<p><strong>La arqueologia de repos usa el historial de commits como evidencia de como se construyo un proyecto, donde se atasco y cual deberia ser la siguiente intervencion.</strong> Sirve porque la historia del codigo es mas dificil de fingir que un parrafo de posicionamiento.</p>
+<h2>El historial de commits es una superficie diagnostica</h2>
+<p>Un repo carga evidencia de comportamiento: arreglos repetidos, direcciones revertidas, huecos de pruebas, cambios de nombres y metadata publica atrasada. Un buen diagnostico no averguenza al equipo. Convierte el patron en mapa.</p>
+<pre><code>señales:
+  - fallas repetidas en automatizacion de releases
+  - documentacion actualizada despues del codigo
+  - pruebas agregadas solo despues de regresiones
+  - metadata publica atrasada respecto al nombre real</code></pre>
+<h2>Por que importa para usuarios</h2>
+<p>Los usuarios no solo necesitan la lista actual de features. Necesitan confianza en que la herramienta puede seguir mejorando. Historial publico, manejo de issues, notas de version y fixes verificados muestran comportamiento de mantenimiento.</p>
+""",
+    },
+    "ai-discovery-llms-txt-geo": {
+        "title": "El descubrimiento por IA necesita mas que un sitemap",
+        "category": "SEO / GEO",
+        "seo_title": "descubrimiento por IA, llms.txt y GEO para sitios de producto",
+        "meta_description": "El descubrimiento por IA necesita sitemap, llms.txt, datos estructurados, copy de respuesta directa, FAQ y superficies publicas de prueba.",
+        "excerpt": "Lo que Kyanite agrega para que buscadores y asistentes de IA entiendan herramientas, productos, prueba y rutas de soporte.",
+        "body": """
+<p><strong>El descubrimiento por IA funciona cuando un sitio entrega hechos estructurados, citables y actuales sobre que existe, a quien ayuda y que evidencia lo respalda.</strong> Un sitemap es necesario. No es suficiente.</p>
+<p>GEO, o Generative Engine Optimization, es sobre todo disciplina: decir la respuesta temprano, usar nombres reales, agregar datos estructurados, mantener prueba publica actualizada y hacer obvio el siguiente paso comercial.</p>
+<h2>El stack legible para IA</h2>
+<ul>
+  <li><code>/sitemap.xml</code> para cobertura canonica</li>
+  <li><code>/llms.txt</code> para contexto de motores de respuesta</li>
+  <li><code>/ai-sitemap.json</code> para productos, repos y posts estructurados</li>
+  <li>JSON-LD para Organization, WebSite, Article, Service, Product y FAQ</li>
+  <li>Parrafos de respuesta directa al inicio de paginas y posts</li>
+</ul>
+<h2>GEO es mas fuerte cuando tambien ayuda a humanos</h2>
+<p>Los motores de respuesta y los lectores premian lo mismo: afirmaciones especificas con evidencia clara. Decir construimos herramientas de IA es debil. Nombrar MCP servers, automatizacion de video, QA de localizacion, diagnosticos de repos y repos publicos es mas fuerte porque se puede revisar.</p>
+""",
+    },
+}
+
+BLOG_POSTS_ES = [
+    {**post, **BLOG_COPY_ES.get(post["slug"], {})}
+    for post in BLOG_POSTS
+]
+BLOG_POSTS_ES_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS_ES}
 
 # ─── Products ────────────────────────────────────────────────────────────────
 
@@ -150,10 +757,73 @@ PRODUCTS = {
     },
 }
 
+PRODUCT_COPY_ES = {
+    "ai-coding-agent-blueprint": {
+        "name": "Blueprint para agentes de codigo con IA",
+        "tagline": "Directorio .claude/ listo para produccion: CLAUDE.md, 4 skills, 2 subagentes, hooks, MCP e integracion CI/CD. Copiar, completar y enviar.",
+        "description": "Claude Code ya es el agente. Muchos desarrolladores lo instalan y lo usan como ChatGPT con acceso a archivos, perdiendo casi todo su poder. Este blueprint activa el sistema completo: memoria persistente con CLAUDE.md, skills para flujos reutilizables, subagentes para investigacion aislada, hooks para controles de calidad automaticos, MCP para servicios externos y equipos de agentes para sesiones paralelas. No es una plantilla. Es un sistema de trabajo.",
+        "category": "Claude Code",
+        "features": [
+            "CLAUDE.md de produccion con jerarquia de memoria",
+            "4 skills para Claude Code: feature-build, pr-review, debug y deploy",
+            "2 subagentes personalizados: security-reviewer y test-writer",
+            "Hooks para auto-lint y bloqueo de comandos destructivos",
+            "Reglas por ruta para frontend y backend",
+            "Setup MCP para GitHub, PostgreSQL, Figma, Notion y Slack",
+            "Deploy Docker con Claude Code CLI y GitHub Actions",
+            "Controles de costo, presupuesto y contexto",
+            "Patrones avanzados: writer/reviewer, fan-out, entrevista y plan mode",
+        ],
+        "delivery": "Descarga instantanea: guia Markdown con archivos listos para copiar",
+        "delivery_detail": "Se entrega por email de Ko-fi inmediatamente despues de comprar. Revisa spam si no aparece en unos minutos.",
+        "faq": [
+            {"q": "Que recibo exactamente?", "a": "Una estructura .claude/ completa para copiar a tu proyecto: CLAUDE.md, settings.json con hooks, 4 skills, 2 subagentes, reglas por ruta y una guia para MCP, Docker, CI/CD, costos y patrones avanzados."},
+            {"q": "Necesito ser experto en Claude Code?", "a": "No. La guia explica el sistema desde cero. Si ya usaste Claude Code, puedes montarlo."},
+            {"q": "En que se diferencia de recursos gratis?", "a": "Los docs explican piezas separadas. Este blueprint las conecta en un sistema coherente con memoria, skills, hooks, subagentes y controles."},
+            {"q": "Cuanto toma el setup?", "a": "Unos 30 minutos para copiar y ajustar archivos; 1 a 2 horas si tambien haces deploy con Docker y CI/CD."},
+            {"q": "Cual es la politica de reembolso?", "a": "Si no te sirve, escribe dentro de 30 dias y se reembolsa la compra."},
+        ],
+        "seo_title": "Blueprint para agentes de codigo con IA — setup completo de Claude Code",
+        "seo_description": "Setup de Claude Code listo para produccion: CLAUDE.md, skills, subagentes, hooks, MCP y CI/CD.",
+    },
+    "claude-code-productivity-pack": {
+        "name": "Pack de productividad para Claude Code",
+        "tagline": "100 prompts especificos para Claude Code con anti-patrones, ejemplos y manejo de contexto. No son prompts genericos: estan hechos para el loop agentico.",
+        "description": "Estos no son prompts de ChatGPT reciclados. Cada prompt usa capacidades reales de Claude Code: referencias @file, comandos, Plan Mode, subagentes, skills, hooks y el loop gather-act-verify. Incluye anti-patrones, prompts de manejo de contexto, recetas encadenadas y pasos de verificacion para que el trabajo no se quede en una respuesta bonita sin prueba.",
+        "category": "Claude Code",
+        "features": [
+            "100 prompts especificos para Claude Code",
+            "5 anti-patrones con correcciones",
+            "Seccion de manejo de contexto: /clear, /compact, /btw y subagentes",
+            "10 recetas que combinan skills, subagentes y hooks",
+            "Cada prompt incluye una verificacion",
+            "9 categorias: setup, arquitectura, implementacion, review, debug, tests, docs, DevOps y contexto",
+        ],
+        "delivery": "Descarga instantanea: Markdown organizado por categoria",
+        "delivery_detail": "Se entrega por email de Ko-fi inmediatamente despues de comprar. Revisa spam si no aparece en unos minutos.",
+        "faq": [
+            {"q": "En que se diferencia de listas gratis de prompts?", "a": "Las listas genericas dicen disena una API. Estos prompts dicen como leer archivos, entrar en Plan Mode, delegar a subagentes y verificar el resultado dentro de Claude Code."},
+            {"q": "Que son los anti-patrones?", "a": "Errores comunes como sesiones mezcladas, prompts vagos sin verificacion, CLAUDE.md inflado, exploracion infinita y correcciones sin limpiar contexto."},
+            {"q": "Que es una receta encadenada?", "a": "Un flujo de varios pasos que combina herramientas de Claude Code para seguridad, debug, review, pruebas o deploy."},
+            {"q": "Sirve para principiantes?", "a": "Si. Los prompts enseñan las capacidades al usarlas. Los usuarios avanzados obtienen flujos mas rapidos."},
+            {"q": "Cual es la politica de reembolso?", "a": "Si no te sirve, escribe dentro de 30 dias y se reembolsa la compra."},
+        ],
+        "seo_title": "Pack de productividad para Claude Code — 100 prompts especificos",
+        "seo_description": "100 prompts hechos para Claude Code: referencias @file, comandos, Plan Mode, subagentes, skills, anti-patrones y verificacion.",
+    },
+}
+
+PRODUCTS_ES = {
+    slug: {**product, **PRODUCT_COPY_ES.get(slug, {})}
+    for slug, product in PRODUCTS.items()
+}
+
 
 # ─── Database ────────────────────────────────────────────────────────────────
 
 def get_pg_conn():
+    if psycopg2 is None:
+        raise RuntimeError("psycopg2 is not installed in this runtime")
     return psycopg2.connect(
         host=app.config["PG_HOST"],
         port=app.config["PG_PORT"],
@@ -224,8 +894,8 @@ HTML = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kyanite Labs - Public AI Tools</title>
-  <meta name="description" content="Kyanite Labs builds and productizes public AI tools, MCP servers, domain software, and repo-native launch systems.">
+  <title>KyaniteLabs - Get AI Tools Working</title>
+  <meta name="description" content="KyaniteLabs provides open-source proof and paid implementation help for getting AI tools working in real environments.">
   <style>
     body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #05070b; color: #f3f8ff; min-height: 100vh; display: grid; place-items: center; }
     main { width: min(760px, calc(100% - 40px)); }
@@ -236,9 +906,10 @@ HTML = """<!DOCTYPE html>
 </head>
 <body>
   <main>
-    <h1>Kyanite turns weird AI workflows into usable tools.</h1>
-    <p>Public proof lives in the KyaniteLabs GitHub organization: MCP servers, agent tooling, domain software, localization QA, and repo-native launch systems.</p>
+    <h1>KyaniteLabs gets useful AI tools working in real environments.</h1>
+    <p>Public proof lives in the KyaniteLabs GitHub organization: MCP servers, agent tooling, domain software, localization QA, build notes, and open-source experiments people can inspect before asking for help.</p>
     <p><a href="https://github.com/KyaniteLabs">View public KyaniteLabs repositories</a> or email <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>.</p>
+    <p>KyaniteLabs is part of PuenteWorks LLC.</p>
   </main>
 </body>
 </html>
@@ -250,7 +921,7 @@ def product_html(p, slug):
     badge_html = ""
     if p["badge"]:
         c = p["badge_color"]
-        badge_html = f'<span class="product-badge" style="background:{c}20;color:{c};border:1px solid {c}40;">{p["badge"]}</span>'
+        badge_html = f'<span class="product-badge" style="color:{c};">{p["badge"]}</span>'
 
     features_html = ""
     for f in p["features"]:
@@ -265,7 +936,7 @@ def product_html(p, slug):
         "name": p["name"],
         "description": p.get("seo_description", p["tagline"]),
         "url": f"https://kyanitelabs.tech/shop/{slug}",
-        "brand": {"@type": "Brand", "name": "Kyanite Labs"},
+        "brand": {"@type": "Brand", "name": "KyaniteLabs"},
         "offers": {
             "@type": "Offer",
             "price": str(p["price"]),
@@ -277,7 +948,7 @@ def product_html(p, slug):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{p.get('seo_title', p['name'] + ' — Kyanite Labs Shop')}</title>
+  <title>{p.get('seo_title', p['name'] + ' — KyaniteLabs Shop')}</title>
   <meta name="description" content="{p.get('seo_description', p['tagline'])}">
   <meta name="keywords" content="{p.get('keywords', '')}">
   <meta name="robots" content="index, follow">
@@ -312,7 +983,7 @@ def product_html(p, slug):
     .product-layout {{ display: grid; grid-template-columns: 1fr 380px; gap: 60px; padding: 60px 0 100px; align-items: start; }}
     .product-main {{}}
     .product-emoji {{ font-size: 3.5rem; margin-bottom: 24px; }}
-    .product-badge {{ display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 12px; }}
+    .product-badge {{ display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 6px; border-bottom: 1px solid currentColor; margin-bottom: 12px; }}
     .product-category {{ font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }}
     .product-name {{ font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; }}
     .product-tagline {{ font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }}
@@ -348,7 +1019,7 @@ def product_html(p, slug):
 </head>
 <body>
 <nav>
-  <div class="nav-logo">Kyanite<span>.</span></div>
+  <div class="nav-logo">KyaniteLabs</div>
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/shop" class="active">Shop</a>
@@ -399,7 +1070,7 @@ def product_html(p, slug):
 
 <footer>
   <div class="container">
-    <p>&copy; 2026 Kyanite Labs. All rights reserved.</p>
+    <p>&copy; 2026 KyaniteLabs. All rights reserved.</p>
     <p><a href="/">Home</a> · <a href="/shop">Shop</a> · <a href="mailto:info@kyanitelabs.tech">Contact</a></p>
   </div>
 </footer>
@@ -408,16 +1079,501 @@ def product_html(p, slug):
 """
 
 
+ABOUT_COPY = {
+    "en": {
+        "lang": "en",
+        "path": "/about",
+        "alt_path": "/es/about",
+        "alt_label": "ES",
+        "meta_title": "About Simon Gonzalez de Cruz — KyaniteLabs",
+        "meta_description": "About Simon Gonzalez de Cruz, founder of KyaniteLabs: a creative development lab for MCP servers, agentic media systems, localization QA, estimation tools, repo diagnostics, domain software, and implementation help.",
+        "eyebrow": "About the builder",
+        "title": "A lab for tools that survive contact with real work.",
+        "lead": "I'm Simon Gonzalez de Cruz. KyaniteLabs is my creative development lab for MCP servers, AI media systems, localization QA, estimation tools, repo diagnostics, domain software, and the build notes that make the work inspectable.",
+        "portrait_alt": "Portrait of Simon Gonzalez de Cruz, founder of KyaniteLabs",
+        "portrait_label": "Simon Gonzalez de Cruz",
+        "portrait_meta": "Founder / builder / systems translator",
+        "body_title": "The lab grew out of the same habit that shaped my corporate work: find the broken handoff, make it visible, and leave behind a usable system.",
+        "body": [
+            "Before KyaniteLabs, I spent 12+ years in learning operations and enterprise training systems: Workday Learning for 8,000+ associates, SAP SuccessFactors, Cornerstone, global training programs, compliance reporting, Power Query and Power BI dashboards, and bilingual training delivery.",
+            "That background still shapes the lab. Tools have to be inspectable, documented, and usable by people who did not build them. A clever prototype is not enough; the handoff has to survive.",
+            "KyaniteLabs is where I turn that operational instinct toward weird, useful software: mcp-video for agentic video workflows, DialectOS for Spanish localization QA, Epoch for estimation, OpenGlaze for ceramic chemistry, devarch-framework for repo archaeology, and Innerscape for personal workflow systems.",
+            "PuenteWorks LLC is the legal and business container. PuenteWorks leads when the client problem is business workflow, scope, content, or approval rhythm. KyaniteLabs leads when the work needs a technical product surface: software, MCP tools, automation, docs, deployment, or repair."
+        ],
+        "builds_label": "Selected builds",
+        "builds_title": "Work people can inspect",
+        "builds": [
+            ("mcp-video", "87 FFmpeg and Hyperframes tools that let AI agents inspect, assemble, and transform video through a real tool surface instead of a vague prompt."),
+            ("DialectOS and Epoch", "Spanish dialect QA and estimation infrastructure for work where language quality and time judgment need explicit checks."),
+            ("OpenGlaze and devarch-framework", "Domain software and repo archaeology: ceramic chemistry, commit-history diagnostics, HTML reports, and evidence-backed handoff."),
+            ("Innerscape", "A personal workflow system for turning reflection, routines, and decision support into something structured enough to use.")
+        ],
+        "signal_label": "Operating memory",
+        "signal_title": "Enterprise discipline, lab proof.",
+        "signal_body": "The point is not novelty for its own sake. KyaniteLabs turns difficult workflows into artifacts that can be inspected, tested, documented, and handed to someone else.",
+        "principles_title": "What the lab optimizes for",
+        "principles": [
+            ("Real artifacts", "Agents should touch timelines, repos, locale files, estimation models, domain data, docs, and working code."),
+            ("Proof in public", "A repo, build note, demo, screenshot, test, or install path should back the claim."),
+            ("Domain respect", "Ceramic chemistry, Spanish dialects, video tools, time estimates, and learning systems deserve specific interfaces, not generic AI wrappers."),
+            ("Usable handoff", "The work should leave behind commands, examples, notes, or implementation paths that survive the original session.")
+        ],
+        "cta_title": "Bring a tool, workflow, or build that needs to become usable.",
+        "cta_body": "Best fit: Kyanite tools, MCP servers, agentic media workflows, localization QA, repo diagnostics, and technical product surfaces that need implementation help.",
+        "primary_cta": "Start implementation intake",
+        "secondary_cta": "Explore the builds",
+    },
+    "es": {
+        "lang": "es",
+        "path": "/es/about",
+        "alt_path": "/about",
+        "alt_label": "EN",
+        "meta_title": "Sobre Simon Gonzalez de Cruz — KyaniteLabs",
+        "meta_description": "Sobre Simon Gonzalez de Cruz, fundador de KyaniteLabs: laboratorio creativo para servidores MCP, sistemas de medios agenticos, QA de localizacion, estimacion, diagnostico de repos, software de dominio e implementacion.",
+        "eyebrow": "Sobre el builder",
+        "title": "Un laboratorio para herramientas que sobreviven al trabajo real.",
+        "lead": "Soy Simon Gonzalez de Cruz. KyaniteLabs es mi laboratorio creativo para servidores MCP, sistemas de medios con IA, QA de localizacion, estimacion, diagnostico de repos, software de dominio y notas de construccion que vuelven inspeccionable el trabajo.",
+        "portrait_alt": "Retrato de Simon Gonzalez de Cruz, fundador de KyaniteLabs",
+        "portrait_label": "Simon Gonzalez de Cruz",
+        "portrait_meta": "Fundador / builder / traductor de sistemas",
+        "body_title": "El laboratorio nacio del mismo habito que marco mi trabajo corporativo: encontrar el handoff roto, hacerlo visible y dejar un sistema usable.",
+        "body": [
+            "Antes de KyaniteLabs, pase mas de 12 anos en operaciones de aprendizaje y sistemas de capacitacion empresarial: Workday Learning para mas de 8,000 personas, SAP SuccessFactors, Cornerstone, programas globales de capacitacion, reportes de cumplimiento, dashboards con Power Query y Power BI, y capacitacion bilingue.",
+            "Ese fondo todavia define el laboratorio. Las herramientas tienen que ser inspeccionables, documentadas y usables por personas que no las construyeron. Un prototipo inteligente no basta; el handoff tiene que sobrevivir.",
+            "KyaniteLabs es donde llevo ese instinto operativo hacia software raro y util: mcp-video para flujos de video agenticos, DialectOS para QA de localizacion al espanol, Epoch para estimacion, OpenGlaze para quimica ceramica, devarch-framework para arqueologia de repos e Innerscape para sistemas personales de trabajo.",
+            "PuenteWorks LLC es el contenedor legal y comercial. PuenteWorks lidera cuando el problema del cliente es flujo de negocio, alcance, contenido o ritmo de aprobacion. KyaniteLabs lidera cuando el trabajo necesita una superficie tecnica de producto: software, herramientas MCP, automatizacion, docs, despliegue o reparacion."
+        ],
+        "builds_label": "Builds seleccionados",
+        "builds_title": "Trabajo que se puede inspeccionar",
+        "builds": [
+            ("mcp-video", "87 herramientas de FFmpeg y Hyperframes para que agentes de IA inspeccionen, armen y transformen video a traves de una superficie real, no un prompt vago."),
+            ("DialectOS y Epoch", "Infraestructura para QA de dialectos del espanol y estimacion cuando la calidad del lenguaje y el juicio de tiempo necesitan revision explicita."),
+            ("OpenGlaze y devarch-framework", "Software de dominio y arqueologia de repos: quimica ceramica, diagnosticos de historial git, reportes HTML y handoff respaldado por evidencia."),
+            ("Innerscape", "Un sistema personal de trabajo para convertir reflexion, rutinas y apoyo de decisiones en algo suficientemente estructurado para usarse.")
+        ],
+        "signal_label": "Memoria operativa",
+        "signal_title": "Disciplina empresarial, prueba de laboratorio.",
+        "signal_body": "La meta no es novedad por novedad. KyaniteLabs convierte flujos dificiles en artefactos que se pueden inspeccionar, probar, documentar y entregar a otra persona.",
+        "principles_title": "Lo que optimiza el laboratorio",
+        "principles": [
+            ("Artefactos reales", "Los agentes deben tocar timelines, repos, archivos de idioma, modelos de estimacion, datos de dominio, docs y codigo funcionando."),
+            ("Prueba publica", "Un repo, nota de construccion, demo, captura, prueba o ruta de instalacion debe respaldar la afirmacion."),
+            ("Respeto por el dominio", "Quimica ceramica, dialectos del espanol, herramientas de video, estimaciones y sistemas de aprendizaje merecen interfaces especificas, no wrappers genericos de IA."),
+            ("Handoff usable", "El trabajo debe dejar comandos, ejemplos, notas o rutas de implementacion que sobrevivan la sesion original.")
+        ],
+        "cta_title": "Trae una herramienta, flujo o build que necesita volverse usable.",
+        "cta_body": "Mejor fit: herramientas de Kyanite, servidores MCP, flujos de medios agenticos, QA de localizacion, diagnosticos de repos y superficies tecnicas de producto que necesitan implementacion.",
+        "primary_cta": "Enviar intake de implementacion",
+        "secondary_cta": "Explorar los builds",
+    },
+}
+
+COMMON_ES_REPLACEMENTS = {
+    "Skip to content": "Saltar al contenido",
+    "Tools": "Herramientas",
+    "Proof": "Prueba",
+    "Builds": "Builds",
+    "Blog": "Notas",
+    "Support": "Soporte",
+    "Shop": "Tienda",
+    "Contact": "Contacto",
+    "About": "Sobre mi",
+    "Home": "Inicio",
+    "Implementation Help": "Ayuda de implementacion",
+    "Implementation Intake": "Intake de implementacion",
+    "Implementation": "Implementacion",
+    "Creative dev lab": "Laboratorio creativo de desarrollo",
+    "Open-source tools, build notes, and learning in public.": "Herramientas open source, notas de construccion y aprendizaje en publico.",
+    "Explore the builds": "Explorar los builds",
+    "Get implementation help": "Pedir ayuda de implementacion",
+    "Read the blog": "Leer las notas",
+    "Public Proof": "Prueba publica",
+    "The repos are the lab notebook and the product shelf.": "Los repos son el cuaderno de laboratorio y la vitrina de producto.",
+    "Blog // Lab Notes": "Notas // Laboratorio",
+    "The thinking should be as public as the tools.": "El pensamiento debe ser tan publico como las herramientas.",
+    "Build. Learn. Publish.": "Construir. Aprender. Publicar.",
+    "Operating Model": "Modelo operativo",
+    "Products + Support": "Productos + soporte",
+    "Open-source first. Paid help when you want it implemented.": "Open source primero. Ayuda pagada cuando quieres implementarlo.",
+    "Bring the messy truth.": "Trae la verdad desordenada.",
+    "Your name": "Tu nombre",
+    "Email address": "Email",
+    "Context": "Contexto",
+    "Start the conversation": "Iniciar la conversacion",
+    "Sending...": "Enviando...",
+    "Message sent. Kyanite will review the context and reply if there is a real fit.": "Mensaje enviado. Kyanite revisara el contexto y respondera si hay buen fit.",
+    "Network error. Please email info@kyanitelabs.tech.": "Error de red. Escribe a info@kyanitelabs.tech.",
+    "Blog / Lab Notes": "Notas de laboratorio",
+    "Published lab notes only.": "Solo notas publicadas despues de construir.",
+    "Public Proof Inputs": "Entradas de prueba publica",
+    "The repos are the lab notebook.": "Los repos son el cuaderno de laboratorio.",
+    "Operator assets": "Activos de operador",
+    "Operator assets for agent-native teams.": "Activos de operador para equipos agent-native.",
+    "View details": "Ver detalles",
+    "What this is": "Que es",
+    "What's included": "Que incluye",
+    "Questions buyers ask": "Preguntas frecuentes",
+    "Instant download": "Descarga instantanea",
+    "Buy on Ko-fi": "Comprar en Ko-fi",
+    "Back to shop": "Volver a la tienda",
+    "30-day refund guarantee.": "Garantia de reembolso de 30 dias.",
+    "Paid implementation help": "Ayuda pagada de implementacion",
+    "Use the tools without doing every setup step alone.": "Usa las herramientas sin hacer cada paso de setup en soledad.",
+    "Start implementation intake": "Enviar intake de implementacion",
+    "Email Kyanite": "Escribir a Kyanite",
+    "What we check": "Que revisamos",
+    "What you get": "Que recibes",
+    "Exact Help": "Ayuda concreta",
+    "What Kyanite can help you do.": "Lo que Kyanite puede ayudarte a hacer.",
+    "Install and configure": "Instalar y configurar",
+    "Adapt the workflow": "Adaptar el flujo",
+    "Advise and hand off": "Asesorar y dejar handoff",
+    "Why this exists": "Por que existe",
+    "Kyanite already builds the tools.": "Kyanite ya construye las herramientas.",
+    "Best fit": "Mejor fit",
+    "Structured implementation intake": "Intake estructurado de implementacion",
+    "Tell Kyanite what you want help using.": "Dile a Kyanite que quieres ayuda para usar.",
+    "Name": "Nombre",
+    "Email": "Email",
+    "Company / Project": "Empresa / Proyecto",
+    "Kyanite tool / source / demo URL(s)": "Herramienta Kyanite / fuente / URL(s) de demo",
+    "Tool / workflow summary": "Resumen de herramienta / flujo",
+    "Biggest implementation pain": "Mayor dolor de implementacion",
+    "What would make this worth paying for?": "Que haria que esto valga la pena pagar?",
+    "Send implementation intake": "Enviar intake de implementacion",
+    "What happens next": "Que pasa despues",
+    "Kyanite reads the artifact before selling the fix.": "Kyanite lee el artefacto antes de vender la solucion.",
+    "Implementation intake sent. Kyanite will review it and follow up.": "Intake enviado. Kyanite lo revisara y dara seguimiento.",
+    "Something went wrong. Email info@kyanitelabs.tech.": "Algo salio mal. Escribe a info@kyanitelabs.tech.",
+    "Work with Kyanite": "Trabajar con Kyanite",
+    "Get help using the tool.": "Recibe ayuda para usar la herramienta.",
+    "Get the tool working.": "Haz funcionar la herramienta.",
+    "If this post describes a Kyanite tool or result you need in your real environment, implementation help is the paid path: setup, advising, docs, examples, and a usable handoff.": "Si esta nota describe una herramienta o resultado Kyanite que necesitas en tu entorno real, la ayuda de implementacion es la ruta pagada: setup, asesoria, docs, ejemplos y un handoff usable.",
+    "KyaniteLabs is the technical/product line and public proof surface inside PuenteWorks LLC. Kyanite only offers help that is grounded in its tools, products, and build practice.": "KyaniteLabs es la linea tecnica/producto y superficie de prueba publica dentro de PuenteWorks LLC. Kyanite solo ofrece ayuda basada en sus herramientas, productos y practica de construccion.",
+    "The repos are proof before the pitch.": "Los repos son prueba antes del pitch.",
+    "Public repositories show what Kyanite builds, learns, breaks, fixes, and releases. The paid path helps people get those tools working in real environments.": "Los repositorios publicos muestran lo que Kyanite construye, aprende, rompe, arregla y publica. La ruta pagada ayuda a que esas herramientas funcionen en entornos reales.",
+    "See implementation help": "Ver ayuda de implementacion",
+    "Brand boundary": "Limite de marca",
+    "More Lab Notes": "Mas notas de laboratorio",
+    "Keep following the system.": "Sigue el sistema.",
+    "All assets": "Todos los activos",
+    "Public repos": "Repos publicos",
+    "Project Conversation": "Conversacion de proyecto",
+    "Implementation and Advising": "Implementacion y asesoria",
+    "Open-source proof and paid implementation help for getting AI tools working in real environments.": "Prueba open source y ayuda pagada de implementacion para hacer funcionar herramientas de IA en entornos reales.",
+    "KyaniteLabs — Get AI Tools Working in Real Workflows": "KyaniteLabs — Herramientas de IA funcionando en flujos reales",
+    "KyaniteLabs — Get AI Tools Working": "KyaniteLabs — Herramientas de IA funcionando",
+    "KyaniteLabs helps builders and teams get open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in their real environment.": "KyaniteLabs ayuda a builders y equipos a hacer funcionar herramientas de IA open source, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de repos en su entorno real.",
+    "Open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics made usable in real workflows.": "Herramientas de IA open source, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de repos hechos usables en flujos reales.",
+    "Implementation Help — Get Kyanite Tools Working": "Ayuda de implementacion — Haz funcionar herramientas Kyanite",
+    "Paid implementation and advising that helps builders install, adapt, understand, and hand off KyaniteLabs tools in real workflows.": "Implementacion y asesoria pagada para instalar, adaptar, entender y entregar herramientas KyaniteLabs en flujos reales.",
+    "Get help turning KyaniteLabs tools into a working setup instead of doing every install, adaptation, and handoff step alone.": "Recibe ayuda para convertir herramientas KyaniteLabs en un setup funcional sin hacer cada paso de instalacion, adaptacion y handoff en soledad.",
+    "Paid outcome help": "Ayuda pagada para llegar al resultado",
+    "Get the tool working without doing every setup step alone.": "Haz funcionar la herramienta sin hacer cada paso de setup en soledad.",
+    "KyaniteLabs is the technical/product line inside PuenteWorks LLC.": "KyaniteLabs es la linea tecnica/producto dentro de PuenteWorks LLC.",
+    "Most Kyanite products are open source. Paid implementation helps you install the tool, adapt it to your environment, understand the tradeoffs, and leave with a usable handoff.": "La mayoria de los productos Kyanite son open source. La implementacion pagada te ayuda a instalar la herramienta, adaptarla a tu entorno, entender los tradeoffs y salir con un handoff usable.",
+    "What result you need from the Kyanite tool": "Que resultado necesitas de la herramienta Kyanite",
+    "Your machine, stack, constraints, and current blocker": "Tu maquina, stack, restricciones y bloqueo actual",
+    "Install path, examples, checks, and handoff needs": "Ruta de instalacion, ejemplos, checks y necesidades de handoff",
+    "A practical path to the working result": "Una ruta practica hacia el resultado funcionando",
+    "Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting belongs under PuenteWorks.": "Buen fit cuando quieres el resultado de una herramienta o flujo Kyanite sin hacer cada paso de setup, adaptacion y handoff en soledad. La consultoria mas amplia pertenece a PuenteWorks.",
+    "What Kyanite can help you get working.": "Lo que Kyanite puede ayudarte a hacer funcionar.",
+    "The goal is practical implementation, not strategy theater. You should leave closer to a tool you can actually use.": "La meta es implementacion practica, no teatro de estrategia. Debes salir mas cerca de una herramienta que realmente puedas usar.",
+    "Adapt it to the real workflow": "Adaptarlo al flujo real",
+    "Understand tradeoffs and hand off": "Entender tradeoffs y dejar handoff",
+    "Kyanite already builds the proof.": "Kyanite ya construye la prueba.",
+    "The paid support exists so people can reach the outcome faster, not just admire the repo.": "El apoyo pagado existe para que las personas lleguen al resultado mas rapido, no solo para admirar el repo.",
+    "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow working in their environment.": "Personas que quieren mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite funcionando en su entorno.",
+    "Tell KyaniteLabs what result you need from a tool, repo, media pipeline, localization QA pass, or diagnostic so the next step can be scoped.": "Dile a KyaniteLabs que resultado necesitas de una herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico para poder definir el siguiente paso.",
+    "Tell Kyanite what you need working.": "Dile a Kyanite que necesitas hacer funcionar.",
+    "This creates a structured implementation request for a real outcome. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether Kyanite can help you get the tool, repo, media pipeline, localization QA pass, or diagnostic working.": "Esto crea una solicitud estructurada de implementacion para un resultado real. No compra, publica ni compromete nada automaticamente. Da suficiente contexto para decidir si Kyanite puede ayudarte a hacer funcionar la herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico.",
+    "Kyanite reads the context before selling the fix.": "Kyanite lee el contexto antes de vender la solucion.",
+    "If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.": "Si encaja con la superficie de Kyanite, recibiras un siguiente paso concreto. Si pertenece a consultoria mas amplia de PuenteWorks, la respuesta lo enrutara ahi en vez de forzar un alcance tecnico.",
+    "Best with source, demo, docs, product notes, logs, or current blocker evidence.": "Funciona mejor con fuente, demo, docs, notas de producto, logs o evidencia del bloqueo actual.",
+    "KyaniteLabs — Creative Dev Lab for Open Source AI Tools": "KyaniteLabs — Laboratorio creativo para herramientas de IA open source",
+    "KyaniteLabs — Creative Dev Lab for Open Source AI Herramientas": "KyaniteLabs — Laboratorio creativo para herramientas de IA open source",
+    "KyaniteLabs — Creative Dev Lab for AI Tools": "KyaniteLabs — Laboratorio creativo para herramientas de IA",
+    "KyaniteLabs — Creative Dev Lab for AI Herramientas": "KyaniteLabs — Laboratorio creativo para herramientas de IA",
+    "Open-source AI tools, MCP servers, media systems, learning experiments, products, and build notes.": "Herramientas de IA open source, servidores MCP, sistemas de medios, experimentos de aprendizaje, productos y notas de construccion.",
+    "KyaniteLabs is Simon Gonzalez de Cruz's creative development lab for open-source AI tools, MCP servers, media systems, learning experiments, products, and build notes.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez de Cruz para herramientas de IA open source, servidores MCP, sistemas de medios, experimentos de aprendizaje, productos y notas de construccion.",
+    "What does Kyanite implementation help include?": "Que incluye la ayuda de implementacion de Kyanite?",
+    "It can include installing and configuring Kyanite tools, adapting workflows, advising on setup, writing docs and examples, and leaving a usable handoff.": "Puede incluir instalacion y configuracion de herramientas Kyanite, adaptacion de flujos, asesoria de setup, docs, ejemplos y un handoff usable.",
+    "Who is implementation help for?": "Para quien es la ayuda de implementacion?",
+    "It is for people who want help using or adapting Kyanite-built tools such as mcp-video, Epoch, DialectOS, openglaze, and developer-learning diagnostics.": "Es para personas que quieren ayuda usando o adaptando herramientas Kyanite como mcp-video, Epoch, DialectOS, openglaze y diagnosticos de aprendizaje.",
+    "Which Kyanite tool or workflow do you want help with? What are you trying to do with it?": "Con que herramienta o flujo de Kyanite quieres ayuda? Que quieres lograr con eso?",
+    "What is confusing, broken, too technical, undocumented, hard to install, or hard to adapt?": "Que es confuso, roto, demasiado tecnico, indocumentado, dificil de instalar o dificil de adaptar?",
+    "Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc.": "Herramienta instalada, flujo adaptado, docs, ejemplos, llamada de entrenamiento, plan de integracion, QA de localizacion, pipeline de medios, etc.",
+    "If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, Kyanite will say that instead of pretending.": "Si encaja con la superficie de Kyanite, recibiras un siguiente paso concreto. Si pertenece a una consultoria mas amplia de PuenteWorks, Kyanite lo dira en vez de fingir.",
+    "No automatic charge.": "Sin cobro automatico.",
+    "No public posting without permission.": "Nada se publica sin permiso.",
+    "Best with source, demo, docs, product notes, logs, or workflow evidence.": "Funciona mejor con fuente, demo, docs, notas de producto, logs o evidencia del flujo.",
+}
+
+LANDING_ES_REPLACEMENTS = {
+    "Implementation help for useful AI tools": "Ayuda de implementacion para herramientas de IA utiles",
+    "Get the build working without losing days to setup, integration, and handoff.": "Haz funcionar el build sin perder dias en setup, integracion y handoff.",
+    "KyaniteLabs turns open-source AI tools, MCP servers, media systems, localization QA, and repo diagnostics into usable working setups.": "KyaniteLabs convierte herramientas de IA open source, servidores MCP, sistemas de medios, QA de localizacion y diagnosticos de repos en setups funcionales y usables.",
+    "The public repos stay inspectable. The paid path helps you install, adapt, understand, and hand off the tool in your real environment.": "Los repos publicos siguen siendo inspeccionables. La ruta pagada te ayuda a instalar, adaptar, entender y entregar la herramienta en tu entorno real.",
+    "See working proof": "Ver prueba funcionando",
+    "Get it working": "Hacerlo funcionar",
+    "Working setup": "Setup funcionando",
+    "instead of repo archaeology": "en vez de arqueologia de repos",
+    "Clear handoff": "Handoff claro",
+    "after install and adaptation": "despues de instalacion y adaptacion",
+    "proof people can inspect": "prueba que se puede inspeccionar",
+    "Turn AI video tools into something you can actually run.": "Convierte herramientas de video con IA en algo que realmente puedas ejecutar.",
+    "Kyanite builds from real creative and technical bottlenecks: tools that edit video, estimate work, check localization quality, inspect repos, and leave docs/tests so the setup survives beyond the first chat.": "Kyanite construye desde bloqueos creativos y tecnicos reales: herramientas que editan video, estiman trabajo, revisan calidad de localizacion, inspeccionan repos y dejan docs/pruebas para que el setup sobreviva mas alla del primer chat.",
+    "stuck useful workflow": "flujo util bloqueado",
+    "constraints + taste + proof": "restricciones + gusto + prueba",
+    "MCP / CLI / app / docs": "MCP / CLI / app / docs",
+    "usable tool in context": "herramienta usable en contexto",
+    "Proof you can inspect before asking for help.": "Prueba que puedes inspeccionar antes de pedir ayuda.",
+    "The repos show what exists, what each tool does, and whether it is worth installing, adapting, or bringing into a paid implementation path.": "Los repos muestran que existe, que hace cada herramienta y si vale la pena instalarla, adaptarla o llevarla a una ruta pagada de implementacion.",
+    "The thinking should make the tool easier to trust.": "El pensamiento debe hacer que la herramienta sea mas facil de confiar.",
+    "Build logs, implementation notes, product decisions, and postmortems show where a tool works, where it is rough, and what it takes to use it well.": "Logs de construccion, notas de implementacion, decisiones de producto y postmortems muestran donde funciona una herramienta, donde esta rough y que hace falta para usarla bien.",
+    "Outcome Model": "Modelo de resultado",
+    "Make the useful thing usable.": "Hacer usable lo util.",
+    "The pattern is simple: start from a real bottleneck, build a tool around it, document the tradeoffs, and help people get the result working in their own context.": "El patron es simple: empezar con un bloqueo real, construir una herramienta alrededor, documentar los tradeoffs y ayudar a que la gente haga funcionar el resultado en su propio contexto.",
+    "Start from a real blocker": "Empezar con un bloqueo real",
+    "Video editing, estimation, localization, glaze math, repo learning, and personal systems become worth building only when they remove a real delay, risk, or confusion.": "Video, estimacion, localizacion, calculo de esmaltes, aprendizaje de repos y sistemas personales solo valen la pena cuando quitan una demora, riesgo o confusion real.",
+    "Make the result inspectable": "Hacer inspeccionable el resultado",
+    "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so a buyer can understand what they are getting.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que un comprador entienda que esta recibiendo.",
+    "Help people reach the outcome": "Ayudar a llegar al resultado",
+    "Keep the tools open where possible, then sell practical setup, adaptation, and advising when someone wants the result without doing every step alone.": "Mantener abiertas las herramientas cuando sea posible, y vender setup, adaptacion y asesoria practica cuando alguien quiere el resultado sin hacer cada paso en soledad.",
+    "Open-source proof. Paid help to reach the result faster.": "Prueba open source. Ayuda pagada para llegar al resultado mas rapido.",
+    "Paid work helps people get Kyanite tools, products, workflows, and artifacts installed, adapted, documented, and usable.": "El trabajo pagado ayuda a que herramientas, productos, flujos y artefactos de Kyanite queden instalados, adaptados, documentados y usables.",
+    "MCP servers, CLIs, domain tools, experiments, and build notes that help builders judge whether a tool can solve their problem before they pay for help.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que ayudan a builders a juzgar si una herramienta puede resolver su problema antes de pagar ayuda.",
+    "Repos, docs, examples, release notes, and demos that reduce guesswork": "Repos, docs, ejemplos, notas de release y demos que reducen conjeturas",
+    "Public proof before a paid implementation conversation": "Prueba publica antes de una conversacion de implementacion pagada",
+    "For people who want the outcome from a Kyanite tool without spending days on setup, adaptation, docs, or integration alone.": "Para personas que quieren el resultado de una herramienta Kyanite sin pasar dias en setup, adaptacion, docs o integracion en soledad.",
+    "Get the tool installed, configured, and checked": "Dejar la herramienta instalada, configurada y revisada",
+    "Adapt it to the workflow and tradeoffs that matter": "Adaptarla al flujo y tradeoffs que importan",
+    "A repeatable path for turning short-form clips into publishable video, captions, audio handoff, review loops, and durable proof assets.": "Una ruta repetible para convertir clips cortos en video publicable, captions, handoff de audio, ciclos de revision y activos de prueba durables.",
+    "Help finding and fixing Spanish that would confuse, flatten, or embarrass users across docs, app strings, support macros, or locale files.": "Ayuda para encontrar y corregir espanol que podria confundir, aplanar o avergonzar a usuarios en docs, textos de app, macros de soporte o archivos de locale.",
+    "A source-history diagnostic for AI-assisted developers who want to stop repeating the same mistakes and choose the next practice loop with evidence.": "Un diagnostico de historial de fuente para desarrolladores asistidos por IA que quieren dejar de repetir los mismos errores y elegir el siguiente ciclo de practica con evidencia.",
+    "Downloadable prompts, repo structures, Claude Code workflows, and implementation templates for builders who want fewer blank-page starts.": "Prompts descargables, estructuras de repo, flujos de Claude Code y plantillas de implementacion para builders que quieren menos comienzos desde pagina en blanco.",
+    "Bring the stuck result.": "Trae el resultado bloqueado.",
+    "Tool you need running, repo you need installed, video pipeline you need usable, Spanish QA you need trusted, diagnostic you need explained, or a build you need handed off. If it connects to Kyanite's tools and practice, bring the stuck result.": "Herramienta que necesitas ejecutar, repo que necesitas instalado, pipeline de video que necesitas usable, QA de espanol que necesitas confiar, diagnostico que necesitas explicar o build que necesitas entregar. Si conecta con las herramientas y practica de Kyanite, trae el resultado bloqueado.",
+    "Best for builders who want a Kyanite tool working in their real environment.": "Ideal para builders que quieren una herramienta Kyanite funcionando en su entorno real.",
+    "Which Kyanite tool or result do you want working? Include repo/demo URLs, your setup, current blocker, and what done would look like.": "Que herramienta o resultado Kyanite quieres hacer funcionar? Incluye URLs de repo/demo, tu setup, bloqueo actual y como se veria terminado.",
+    "KyaniteLabs is Simon Gonzalez de Cruz's creative development lab for building useful AI tools, MCP servers, media systems, domain software, and learning experiments.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez de Cruz para construir herramientas utiles de IA, servidores MCP, sistemas de medios, software de dominio y experimentos de aprendizaje.",
+    "Most of the work is open source. The paid path is implementation and advising when someone wants help using a Kyanite tool without doing all the setup themselves.": "La mayor parte del trabajo es open source. La ruta pagada es implementacion y asesoria cuando alguien quiere usar una herramienta de Kyanite sin hacer todo el setup por su cuenta.",
+    "MCP servers": "Servidores MCP",
+    "agents can actually call": "que los agentes pueden llamar",
+    "Build notes": "Notas de construccion",
+    "from real experiments": "de experimentos reales",
+    "Open source": "Open source",
+    "tools people can inspect": "herramientas inspeccionables",
+    "AI agents should edit video, not just talk about video.": "Los agentes de IA deberian editar video, no solo hablar de video.",
+    "Kyanite builds tools from real creative and technical workflows: MCP servers, Python libraries, CLIs, effect pipelines, demos, docs, and install layers that make the work usable outside the original machine.": "Kyanite construye herramientas a partir de flujos creativos y tecnicos reales: servidores MCP, librerias Python, CLIs, pipelines de efectos, demos, docs y capas de instalacion que hacen usable el trabajo fuera de la maquina original.",
+    "weird useful workflow": "flujo raro y util",
+    "learning + taste + proof": "aprendizaje + gusto + prueba",
+    "MCP / CLI / app / notes": "MCP / CLI / app / notas",
+    "public tool": "herramienta publica",
+    "Kyanite is build-first. The public repositories show what exists, what is being learned, and which tools are ready for people to inspect, install, adapt, or ask for help implementing.": "Kyanite empieza construyendo. Los repos publicos muestran que existe, que se esta aprendiendo y que herramientas estan listas para inspeccionar, instalar, adaptar o pedir ayuda para implementar.",
+    "Build logs, learning notes, agent-system essays, product notes, and postmortems. This is where the videos, repos, and experiments become durable public memory.": "Logs de construccion, notas de aprendizaje, ensayos sobre sistemas agenticos, notas de producto y postmortems. Aqui los videos, repos y experimentos se vuelven memoria publica durable.",
+    "The pattern is simple, but not soft: find a real workflow, build a tool around it, write down what happened, and keep improving in public.": "El patron es simple, pero no suave: encontrar un flujo real, construir una herramienta alrededor, escribir lo que paso y seguir mejorando en publico.",
+    "Build from real use": "Construir desde uso real",
+    "Make it inspectable": "Hacerlo inspeccionable",
+    "Help people use it": "Ayudar a que se use",
+    "KyaniteLabs is the build lab and technical/product line inside PuenteWorks LLC. The paid work here is implementation and advising around Kyanite tools, products, workflows, and artifacts.": "KyaniteLabs es el laboratorio de construccion y la linea tecnica/producto dentro de PuenteWorks LLC. El trabajo pagado aqui es implementacion y asesoria alrededor de herramientas, productos, flujos y artefactos de Kyanite.",
+    "Best for builders who want implementation help around Kyanite tools.": "Ideal para builders que quieren ayuda de implementacion alrededor de herramientas Kyanite.",
+    "Not a fit for generic consulting, empty lead-gen theater, or unrelated agency work.": "No es para consultoria generica, teatro de lead-gen o trabajo de agencia sin relacion.",
+    "PuenteWorks LLC is the legal/payment container; Kyanite is the technical lab.": "PuenteWorks LLC es el contenedor legal/de pago; Kyanite es el laboratorio tecnico.",
+}
+
+EXTRA_ES_REPLACEMENTS = {
+    "Ayuda de implementacion — KyaniteLabs Open Source Herramientas": "Ayuda de implementacion — Herramientas open source de KyaniteLabs",
+    "Notas de laboratorio — KyaniteLabs Builds and Learning": "Notas de laboratorio — Builds y aprendizaje de KyaniteLabs",
+    "Builds": "Builds",
+    "Public repositories": "Repositorios publicos",
+    "Repos publicositories": "Repositorios publicos",
+    "KyaniteLabs Open Source Herramientas": "Herramientas open source de KyaniteLabs",
+    "Laboratorio creativo de desarrollo for open-source AI tools, Servidores MCP, build notes, and implementation help.": "Laboratorio creativo para herramientas de IA open source, servidores MCP, notas de construccion y ayuda de implementacion.",
+    "Laboratorio creativo de desarrollo for open-source AI tools, Servidores MCP, media automation, learning notes, and implementation help.": "Laboratorio creativo para herramientas de IA open source, servidores MCP, automatizacion de medios, notas de aprendizaje e implementacion.",
+    "Laboratorio creativo de desarrollo for open-source AI tools, Servidores MCP, build notes, and implementacion help.": "Laboratorio creativo para herramientas de IA open source, servidores MCP, notas de construccion y ayuda de implementacion.",
+    "Laboratorio creativo de desarrollo for open-source AI tools, Servidores MCP, media automation, learning notes, and implementacion help.": "Laboratorio creativo para herramientas de IA open source, servidores MCP, automatizacion de medios, notas de aprendizaje e implementacion.",
+    "Agent-native tools, public proof, and notes from the build floor.": "Herramientas agent-native, prueba publica y notas desde el taller.",
+    "Agent-native tools, operator assets, and public product systems.": "Herramientas agent-native, activos de operador y sistemas publicos de producto.",
+    "Agent-native tools and operator assets grounded in real workflows.": "Herramientas agent-native y activos de operador basados en flujos reales.",
+    "KyaniteLabs is the creative build lab and technical/product line inside PuenteWorks LLC.": "KyaniteLabs es el laboratorio creativo de construccion y la linea tecnica/producto dentro de PuenteWorks LLC.",
+    "Most Kyanite products are open source. The paid path here is implementation and advising around those tools: install them, adapt them to your workflow, understand the tradeoffs, and leave with something usable.": "La mayoria de los productos Kyanite son open source. La ruta pagada aqui es implementacion y asesoria alrededor de esas herramientas: instalarlas, adaptarlas a tu flujo, entender los tradeoffs y salir con algo usable.",
+    "Which Kyanite tool or workflow you want to use": "Que herramienta o flujo de Kyanite quieres usar",
+    "Your machine, stack, constraints, and current blockers": "Tu maquina, stack, restricciones y bloqueos actuales",
+    "Install path, docs, examples, and handoff needs": "Ruta de instalacion, docs, ejemplos y necesidades de handoff",
+    "Whether advising, setup, adaptation, or a build sprint fits": "Si encaja asesoria, setup, adaptacion o sprint de construccion",
+    "What belongs to Kyanite vs. a separate PuenteWorks engagement": "Que pertenece a Kyanite y que requiere un engagement separado de PuenteWorks",
+    "A grounded implementation path": "Una ruta de implementacion aterrizada",
+    "Setup/adaptation notes and priority blockers": "Notas de setup/adaptacion y bloqueos prioritarios",
+    "Docs, examples, or handoff material where useful": "Docs, ejemplos o material de handoff cuando sirva",
+    "Advising on architecture, constraints, and tradeoffs": "Asesoria sobre arquitectura, restricciones y tradeoffs",
+    "Scope for deeper build work if the tool needs it": "Alcance para construccion mas profunda si la herramienta lo necesita",
+    "Paid path": "Ruta pagada",
+    "Good fit when you want help implementing a Kyanite tool or workflow instead of doing the setup and adaptation alone. Broader consulting belongs under PuenteWorks.": "Buen fit cuando quieres ayuda implementando una herramienta o flujo de Kyanite en vez de hacer el setup y la adaptacion en soledad. La consultoria mas amplia pertenece a PuenteWorks.",
+    "The goal is practical implementation, not strategy theater. You should leave closer to using the tool.": "El objetivo es implementacion practica, no teatro estrategico. Debes salir mas cerca de usar la herramienta.",
+    "Get a Kyanite tool running in your environment with the right dependencies, commands, configs, examples, and basic checks.": "Deja una herramienta Kyanite funcionando en tu entorno con dependencias, comandos, configs, ejemplos y checks basicos.",
+    "Map the tool to your real process: video pipeline, estimation workflow, localization QA, glaze studio work, or dev-learning diagnostics.": "Mapea la herramienta a tu proceso real: pipeline de video, estimacion, QA de localizacion, estudio de esmaltes o diagnosticos de aprendizaje.",
+    "Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation does not depend on a one-off chat.": "Entiende tradeoffs, siguientes pasos, limites y mantenimiento para que la implementacion no dependa de un chat aislado.",
+    "MCP video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The paid support exists so people can actually use the tools, not just admire the repo.": "Edicion de video por MCP, estimacion de tiempo, QA de localizacion en español, software de esmaltes ceramicos y diagnosticos de aprendizaje. El soporte pagado existe para que la gente use las herramientas, no solo admire el repo.",
+    "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow implemented.": "Personas que quieren implementar mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite.",
+    "Builders who want advising around setup, adaptation, docs, and next steps.": "Builders que quieren asesoria sobre setup, adaptacion, docs y siguientes pasos.",
+    "Not generic consulting. That belongs under PuenteWorks.": "No es consultoria generica. Eso pertenece a PuenteWorks.",
+    "KyaniteLabs publishes notes after there is a real build, lesson, product, or workflow to explain.": "KyaniteLabs publica notas cuando ya hay un build, aprendizaje, producto o flujo real que explicar.",
+    "The blog covers open-source AI tools, MCP systems, agentic media, developer learning, implementation notes, and the messy process behind the work.": "Las notas cubren herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, implementacion y el proceso desordenado detras del trabajo.",
+    "Published KyaniteLabs notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.": "Notas de KyaniteLabs sobre herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, productos e implementacion.",
+    "Published technical lab notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.": "Notas tecnicas de laboratorio sobre herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, productos e implementacion.",
+    "Repositories show what Kyanite builds, learns, breaks, fixes, and releases. The paid path is implementation help around those tools, not a generic consulting offer.": "Los repositorios muestran lo que Kyanite construye, aprende, rompe, arregla y publica. La ruta pagada es ayuda de implementacion alrededor de esas herramientas, no consultoria generica.",
+    "Repositorios publicos show what Kyanite builds, learns, breaks, fixes, and releases. The paid path is implementation help around those tools, not a generic consulting offer.": "Los repositorios muestran lo que Kyanite construye, aprende, rompe, arregla y publica. La ruta pagada es ayuda de implementacion alrededor de esas herramientas, no consultoria generica.",
+    "Prompts, repo structures, Claude Code workflows, and implementation templates. Not courses. Not vague prompt dumps. Small artifacts built for people who ship.": "Prompts, estructuras de repo, flujos de Claude Code y plantillas de implementacion. No cursos. No dumps vagos de prompts. Artefactos pequeños para gente que envia.",
+    "4 more included": "4 mas incluidos",
+    "1 more included": "1 mas incluido",
+    "agent-native tool protocol": "protocolo de herramienta agent-native",
+    "Open mcp-video": "Abrir mcp-video",
+    "Read the build note": "Leer la nota de construccion",
+    "AI tool implementation": "Implementacion de herramientas de IA",
+    "Public Herramientas": "Herramientas publicas",
+    "Public Tools": "Herramientas publicas",
+    "Servidores MCP, CLIs, domain tools, experiments, and build notes that you can inspect, install, fork, learn from, or use as starting points.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que puedes inspeccionar, instalar, bifurcar, estudiar o usar como punto de partida.",
+    "Repos, docs, examples, release notes, and demos": "Repos, docs, ejemplos, notas de version y demos",
+    "Built in public as the Kyanite portfolio and learning trail": "Construido en publico como portafolio y rastro de aprendizaje de Kyanite",
+    "Paid help": "Ayuda pagada",
+    "For people who want to use a Kyanite tool without doing all the setup, adaptation, docs, or workflow integration alone.": "Para personas que quieren usar una herramienta Kyanite sin hacer solas todo el setup, adaptacion, docs o integracion del flujo.",
+    "Install, configure, and adapt the tool": "Instalar, configurar y adaptar la herramienta",
+    "Map the workflow and advise on tradeoffs": "Mapear el flujo y asesorar sobre tradeoffs",
+    "Leave docs, examples, and a usable handoff": "Dejar docs, ejemplos y un handoff usable",
+    "Agentic Media System": "Sistema de medios agentico",
+    "Media pipeline": "Pipeline de medios",
+    "Scoped": "Por alcance",
+    "Built from the Infinite Monkey production workflow": "Construido desde el flujo de produccion de Infinite Monkey",
+    "Visual system, script, caption, and edit handoff": "Sistema visual, guion, captions y handoff de edicion",
+    "Turns social clips into durable blog and proof assets": "Convierte clips sociales en notas y activos de prueba durables",
+    "Discuss media workflow": "Hablar del flujo de medios",
+    "Help using DialectOS for Spanish docs, app strings, support macros, or locale files across target dialects.": "Ayuda usando DialectOS para docs en español, textos de app, macros de soporte o archivos locale en dialectos objetivo.",
+    "Up to 10,000 source words and 5 dialects": "Hasta 10,000 palabras fuente y 5 dialectos",
+    "Severity table and implementation-ready report": "Tabla de severidad y reporte listo para implementar",
+    "For teams avoiding embarrassing generic Spanish": "Para equipos que quieren evitar español generico y vergonzoso",
+    "Ask about certification": "Preguntar por certificacion",
+    "Learning Diagnostics": "Diagnosticos de aprendizaje",
+    "A source-history diagnostic for AI-assisted developers who want evidence about their learning patterns, repeated failures, and next practice loops.": "Diagnostico de historial fuente para desarrolladores asistidos por IA que quieren evidencia sobre patrones de aprendizaje, fallas repetidas y siguientes ciclos de practica.",
+    "Uses devarch-framework and learning-archaeology patterns": "Usa devarch-framework y patrones de arqueologia de aprendizaje",
+    "Finds repeated failures, habits, and study opportunities": "Encuentra fallas repetidas, habitos y oportunidades de practica",
+    "Outputs a report people can act on": "Entrega un reporte accionable",
+    "Request diagnostic": "Pedir diagnostico",
+    "Downloadable prompts, repo structures, Claude Code workflows, and implementation templates for builders who already ship.": "Prompts descargables, estructuras de repo, flujos de Claude Code y plantillas de implementacion para builders que ya envian.",
+    "Designed as workflows, not prompt confetti": "Diseñados como flujos, no confeti de prompts",
+    "Good entry point before scoped work": "Buen punto de entrada antes de un alcance pagado",
+    "Open shop": "Abrir tienda",
+    "mcp-video, Epoch, DialectOS, openglaze, devarch tools": "mcp-video, Epoch, DialectOS, openglaze y herramientas devarch",
+    "Start from a workflow that actually hurts or fascinates: video editing, estimating time, localization, glaze math, learning from commits.": "Empieza desde un flujo que de verdad duele o fascina: edicion de video, estimacion de tiempo, localizacion, matematicas de esmaltes o aprendizaje desde commits.",
+    "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so the work can survive outside the chat.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que el trabajo sobreviva fuera del chat.",
+    "Keep the tools open where possible, sell practical implementation help when someone wants the setup, adaptation, or advising done with them.": "Mantener abiertas las herramientas cuando sea posible y vender ayuda practica de implementacion cuando alguien quiere setup, adaptacion o asesoria hecha con ellos.",
+    "Servidores MCP, CLIs, domain tools, experiments, and build notes that you can inspect, install, fork, learn from, or use as starting points.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que puedes inspeccionar, instalar, bifurcar, estudiar o usar como punto de partida.",
+    "Tool you want to use, repo you want installed, workflow you want adapted, docs you do not understand, half-working MCP setup, or a build you want advice on. If it connects to Kyanite's tools and practice, bring the messy truth.": "Herramienta que quieres usar, repo que quieres instalar, flujo que quieres adaptar, docs que no entiendes, setup MCP a medias o build sobre el que quieres consejo. Si conecta con las herramientas y practica de Kyanite, trae la verdad desordenada.",
+    "© 2026 KyaniteLabs. All rights reserved.": "© 2026 KyaniteLabs. Todos los derechos reservados.",
+    "&copy; 2026 KyaniteLabs. All rights reserved.": "&copy; 2026 KyaniteLabs. Todos los derechos reservados.",
+    "This creates a structured implementation request for Kyanite. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether the request fits KyaniteLabs: open-source tools, build workflows, MCP systems, media pipelines, localization QA, and learning diagnostics.": "Esto crea una solicitud estructurada de implementacion para Kyanite. No compra, publica ni compromete nada automaticamente. Da el contexto suficiente para decidir si el pedido encaja con KyaniteLabs: herramientas open source, flujos de construccion, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de aprendizaje.",
+}
+
+SPANISH_REPLACEMENTS = {**COMMON_ES_REPLACEMENTS, **LANDING_ES_REPLACEMENTS, **EXTRA_ES_REPLACEMENTS}
+
+
+def add_hreflang(html, en_path, es_path):
+    alternates = f"""
+  <link rel="alternate" hreflang="en" href="{CANONICAL_BASE}{en_path}">
+  <link rel="alternate" hreflang="es" href="{CANONICAL_BASE}{es_path}">
+  <link rel="alternate" hreflang="x-default" href="{CANONICAL_BASE}{en_path}">
+"""
+    if 'hreflang="es"' in html:
+        return html
+    return html.replace("</head>", alternates + "</head>", 1)
+
+
+def spanishify(html, en_path, es_path):
+    html = add_hreflang(html, en_path, es_path)
+    html = html.replace('<html lang="en">', '<html lang="es">', 1)
+    url_pairs = [
+        ('href="/implementation/intake"', 'href="/es/implementation/intake"'),
+        ('href="/implementation"', 'href="/es/implementation"'),
+        ('href="/blog/', 'href="/es/blog/'),
+        ('href="/blog"', 'href="/es/blog"'),
+        ('href="/shop/', 'href="/es/shop/'),
+        ('href="/shop"', 'href="/es/shop"'),
+        ('href="/about"', 'href="/es/about"'),
+        ('href="/#', 'href="/es/#'),
+        ('href="/"', 'href="/es/"'),
+        ('https://kyanitelabs.tech/implementation/intake', 'https://kyanitelabs.tech/es/implementation/intake'),
+        ('https://kyanitelabs.tech/implementation', 'https://kyanitelabs.tech/es/implementation'),
+        ('https://kyanitelabs.tech/blog/', 'https://kyanitelabs.tech/es/blog/'),
+        ('https://kyanitelabs.tech/blog', 'https://kyanitelabs.tech/es/blog'),
+        ('https://kyanitelabs.tech/shop/', 'https://kyanitelabs.tech/es/shop/'),
+        ('https://kyanitelabs.tech/shop', 'https://kyanitelabs.tech/es/shop'),
+    ]
+    for old, new in url_pairs:
+        html = html.replace(old, new)
+    html = html.replace(
+        f'class="language-link" href="{es_path}" hreflang="es" lang="es"',
+        f'class="language-link" href="{en_path}" hreflang="en" lang="en"',
+    )
+    html = html.replace(f'<link rel="canonical" href="{CANONICAL_BASE}{en_path}">', f'<link rel="canonical" href="{CANONICAL_BASE}{es_path}">')
+    html = html.replace(f'content="{CANONICAL_BASE}{en_path}"', f'content="{CANONICAL_BASE}{es_path}"')
+    html = html.replace('>ES</a>', '>EN</a>')
+    html = html.replace(f'href="{CANONICAL_BASE}/es/es/', f'href="{CANONICAL_BASE}/es/')
+    html = html.replace('href="/es/es/', 'href="/es/')
+    html = html.replace('href="/es/static/', 'href="/static/')
+    html = html.replace('href="/es/', 'href="/es/')
+    ordered_replacements = sorted(SPANISH_REPLACEMENTS.items(), key=lambda item: len(item[0]), reverse=True)
+    for english, spanish in ordered_replacements:
+        html = html.replace(english, spanish)
+    for english, spanish in ordered_replacements:
+        html = html.replace(english, spanish)
+    return html
+
+
 # ─── Routes ──────────────────────────────────────────────────────────────────
 
 @app.route("/")
 def index():
     try:
-        with open("templates/landing-v2.html", "r", encoding="utf-8") as f:
-            return f.read()
+        html = render_template_file(
+            "landing-v2.html",
+            public_projects=PUBLIC_PROJECTS,
+            blog_posts=BLOG_POSTS,
+            canonical_base=CANONICAL_BASE,
+        )
+        return add_hreflang(html, "/", "/es/")
     except Exception as e:
         # Fallback to old HTML if v2 fails
         return render_template_string(HTML, KOFI_URL=app.config["KOFI_URL"])
+
+
+@app.route("/es/")
+@app.route("/es")
+def index_es():
+    html = render_template_file(
+        "landing-v2.html",
+        public_projects=PUBLIC_PROJECTS_ES,
+        blog_posts=BLOG_POSTS_ES,
+        canonical_base=CANONICAL_BASE,
+    )
+    return spanishify(html, "/", "/es/")
+
+
+@app.route("/about")
+def about():
+    return render_template_file(
+        "about.html",
+        copy=ABOUT_COPY["en"],
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+@app.route("/es/about")
+def about_es():
+    return render_template_file(
+        "about.html",
+        copy=ABOUT_COPY["es"],
+        canonical_base=CANONICAL_BASE,
+    )
 
 
 @app.route("/robots.txt")
@@ -442,6 +1598,7 @@ def robots_txt():
             "",
             f"Sitemap: {CANONICAL_BASE}/sitemap.xml",
             f"# AI-readable site brief: {CANONICAL_BASE}/llms.txt",
+            f"# Structured AI sitemap: {CANONICAL_BASE}/ai-sitemap.json",
             "",
         ]),
         mimetype="text/plain",
@@ -450,15 +1607,29 @@ def robots_txt():
 
 @app.route("/sitemap.xml")
 def sitemap_xml():
-    today = datetime.utcnow().date().isoformat()
+    today = datetime.now(UTC).date().isoformat()
     pages = [
         ("/", "1.0", "weekly"),
-        ("/offers/productization-audit", "0.95", "monthly"),
-        ("/offers/productization-audit/intake", "0.8", "monthly"),
+        ("/about", "0.9", "monthly"),
+        ("/blog", "0.88", "weekly"),
+        ("/implementation", "0.9", "monthly"),
+        ("/implementation/intake", "0.75", "monthly"),
         ("/shop", "0.65", "monthly"),
         ("/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
         ("/shop/claude-code-productivity-pack", "0.55", "monthly"),
+        ("/es/", "1.0", "weekly"),
+        ("/es/about", "0.9", "monthly"),
+        ("/es/blog", "0.88", "weekly"),
+        ("/es/implementation", "0.9", "monthly"),
+        ("/es/implementation/intake", "0.75", "monthly"),
+        ("/es/shop", "0.65", "monthly"),
+        ("/es/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
+        ("/es/shop/claude-code-productivity-pack", "0.55", "monthly"),
+        ("/llms.txt", "0.7", "weekly"),
+        ("/ai-sitemap.json", "0.7", "weekly"),
     ]
+    pages.extend((f"/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS)
+    pages.extend((f"/es/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS_ES)
     urls = []
     for path, priority, changefreq in pages:
         urls.append(f"""  <url>
@@ -475,50 +1646,196 @@ def sitemap_xml():
     return Response(body, mimetype="application/xml")
 
 
+@app.route("/ai-sitemap.json")
+def ai_sitemap_json():
+    return jsonify({
+        "site": {
+            "name": "KyaniteLabs",
+            "url": CANONICAL_BASE,
+            "description": "Open-source proof and paid implementation help for getting AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in real environments.",
+            "parentOrganization": "PuenteWorks LLC",
+            "languages": ["en", "es"],
+        },
+        "audienceFit": [
+            "Developers, builders, artists, and AI operators who want Kyanite-built tools working in their environment.",
+            "Teams who want the outcome from Kyanite open-source tools without doing every setup, adaptation, and handoff step alone.",
+            "People following the build notes, learning process, experiments, and public product work behind KyaniteLabs.",
+        ],
+        "paidPaths": [
+            {
+                "name": "Implementation and Advising",
+                "url": f"{CANONICAL_BASE}/implementation",
+                "deliverables": [
+                    "Get Kyanite tools installed, configured, and checked",
+                    "Adapt an open-source tool to the real workflow and tradeoffs that matter",
+                    "Explain setup, architecture, docs, and handoff",
+                    "Build implementation scope for MCP, media, localization, or dev tooling work",
+                ],
+            },
+            {
+                "name": "MCP / Agent Tool Build",
+                "url": f"{CANONICAL_BASE}/#support",
+                "deliverables": [
+                    "MCP server, CLI, or Python/TypeScript package",
+                    "Tool schemas, examples, tests, docs, and install path",
+                    "Public or internal implementation surface",
+                ],
+            },
+            {
+                "name": "Agentic Media System",
+                "url": f"{CANONICAL_BASE}/#support",
+                "deliverables": [
+                    "mcp-video-backed media workflow",
+                    "Repeatable video assembly recipes",
+                    "Clips, captions, posting assets, and review handoff",
+                ],
+            },
+            {
+                "name": "Spanish Launch QA",
+                "url": f"{CANONICAL_BASE}/#support",
+                "deliverables": [
+                    "DialectOS-backed Spanish localization QA",
+                    "Dialect, register, glossary, and structure checks",
+                    "Implementation-ready localization report",
+                ],
+            },
+        ],
+        "publicRepositories": PUBLIC_PROJECTS,
+        "founder": {
+            "name": "Simon Gonzalez de Cruz",
+            "url": f"{CANONICAL_BASE}/about",
+            "spanishUrl": f"{CANONICAL_BASE}/es/about",
+        },
+        "blogPosts": [
+            {
+                "title": post["title"],
+                "url": f"{CANONICAL_BASE}/blog/{post['slug']}",
+                "spanishUrl": f"{CANONICAL_BASE}/es/blog/{post['slug']}",
+                "primaryKeyword": post.get("primary_keyword"),
+                "description": post["excerpt"],
+            }
+            for post in BLOG_POSTS
+        ],
+        "contact": "info@kyanitelabs.tech",
+    })
+
+
 @app.route("/llms.txt")
 def llms_txt():
     project_lines = "\n".join(
         f"- [{p['name']}]({p['url']}): {p['description']}" for p in PUBLIC_PROJECTS
     )
-    body = f"""# Kyanite Labs
+    body = f"""# KyaniteLabs
 
-> Product studio for public AI tools, MCP servers, domain software, and repo-native launch systems.
+> Open-source proof and paid implementation help for getting AI tools working in real environments.
 
-Kyanite Labs builds and productizes public AI-native tools. The public proof surface is the KyaniteLabs GitHub organization: MCP servers, CLI tools, domain software, localization QA, video automation, time estimation, and repo-learning diagnostics.
+KyaniteLabs is where Simon Gonzalez de Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
+
+KyaniteLabs is part of PuenteWorks LLC. PuenteWorks LLC is the legal/payment container; KyaniteLabs is the technical/product line and public proof surface.
 
 ## Primary Pages
 
-- [Homepage]({CANONICAL_BASE}/): product-led service overview, public GitHub proof, offers, and contact form.
-- [Productization audit]({CANONICAL_BASE}/offers/productization-audit): paid first step for turning an internal workflow, agent tool, or repo into a public product surface.
-- [Productization intake]({CANONICAL_BASE}/offers/productization-audit/intake): structured intake for product, MCP, or launch-packaging work.
+- [Homepage]({CANONICAL_BASE}/): outcome-led overview, public GitHub proof, products, blog, and contact form.
+- [About Simon Gonzalez de Cruz]({CANONICAL_BASE}/about): founder page with Kyanite's builder story, principles, and brand boundary.
+- [Blog]({CANONICAL_BASE}/blog): build notes, learning notes, agent-system essays, and tool implementation field notes.
+- [Implementation help]({CANONICAL_BASE}/implementation): paid help for getting Kyanite-built tools working in a real environment.
+- [Implementation intake]({CANONICAL_BASE}/implementation/intake): structured intake for implementation and advising work.
 - [Shop]({CANONICAL_BASE}/shop): digital products and operator assets.
+- [Spanish homepage]({CANONICAL_BASE}/es/): one-to-one Spanish public site.
 
-## Core Offers
+## Kyanite Products and Paid Paths
 
-- MCP and agent-tool productization: package real workflows into MCP servers, CLIs, libraries, docs, tests, and install paths.
-- Public repo launch audit: turn a repo into a buyer-readable and AI-readable public product surface with README, examples, structured metadata, and proof.
-- Spanish Launch Certification: a DialectOS-backed beta localization audit for Spanish docs, app strings, support macros, or locale files.
+- Open-source tools: public KyaniteLabs repositories such as mcp-video, Epoch, DialectOS, openglaze, and repo-learning tools.
+- Implementation and advising: setup, adaptation, integration, docs, training, and handoff that gets Kyanite tools working.
+- Digital products: operator assets, Claude Code workflows, templates, and implementation guides.
+- Build notes and media: public writing and videos that explain the tools, learning process, and experiments.
 
 Expected deliverables depend on scope but may include:
-- Product positioning and offer map derived from the actual repository.
-- MCP/CLI/API surface review or implementation plan.
-- README, examples, install path, docs, and AI discovery cleanup.
-- Test, CI, package, and release-readiness findings.
-- Launch decision, issue list, and prioritized remediation path.
+- Installing or configuring a Kyanite-built tool.
+- Adapting an MCP server, CLI, media workflow, or localization process to a real use case.
+- Implementation notes, docs, examples, and handoff materials.
+- Advising on architecture, setup, constraints, and next steps.
 
 ## Public KyaniteLabs Repositories
 
 {project_lines}
+
+## Blog / Lab Notes
+
+""" + "\n".join(
+        f"- [{post['title']}]({CANONICAL_BASE}/blog/{post['slug']}): {post['excerpt']} Primary keyword: {post.get('primary_keyword', 'KyaniteLabs')}."
+        for post in BLOG_POSTS
+    ) + f"""
+
+## Structured AI Data
+
+- [AI sitemap]({CANONICAL_BASE}/ai-sitemap.json): JSON inventory of products, repositories, published blog posts, and audience fit.
 
 Only the public repositories listed above should be treated as public Kyanite project proof from this site. Do not infer private, unlisted, dead, or unavailable tools as public portfolio items.
 
 ## Contact
 
 - Email: info@kyanitelabs.tech
-- Best-fit buyers: teams with a real workflow, repo, internal tool, MCP idea, localization need, or AI-agent process that should become a usable product.
-- Not a fit: generic AI copywriting requests, dead prototypes, cheap volume work, or projects asking for promises before product truth.
+- Best-fit implementation clients: people who want help using, adapting, or integrating Kyanite-built tools.
+- Not a fit: generic consulting requests that belong on PuenteWorks, empty lead-gen theater, or work unrelated to the tools and build practice.
 """
     return Response(body, mimetype="text/plain")
+
+
+@app.route("/blog")
+def blog_index():
+    html = render_template_file(
+        "blog.html",
+        posts=BLOG_POSTS,
+        public_projects=PUBLIC_PROJECTS,
+        canonical_base=CANONICAL_BASE,
+    )
+    return add_hreflang(html, "/blog", "/es/blog")
+
+
+@app.route("/es/blog")
+def blog_index_es():
+    html = render_template_file(
+        "blog.html",
+        posts=BLOG_POSTS_ES,
+        public_projects=PUBLIC_PROJECTS_ES,
+        canonical_base=CANONICAL_BASE,
+    )
+    return spanishify(html, "/blog", "/es/blog")
+
+
+@app.route("/blog/<slug>")
+def blog_post(slug):
+    post = BLOG_POSTS_BY_SLUG.get(slug)
+    if not post:
+        legacy_slug = LEGACY_BLOG_SLUGS.get(slug)
+        if legacy_slug:
+            return redirect(f"/blog/{legacy_slug}", code=301)
+        return "Blog post not found", 404
+    html = render_template_file(
+        "blog-post.html",
+        post=post,
+        posts=BLOG_POSTS,
+        canonical_base=CANONICAL_BASE,
+    )
+    return add_hreflang(html, f"/blog/{slug}", f"/es/blog/{slug}")
+
+
+@app.route("/es/blog/<slug>")
+def blog_post_es(slug):
+    post = BLOG_POSTS_ES_BY_SLUG.get(slug)
+    if not post:
+        legacy_slug = LEGACY_BLOG_SLUGS.get(slug)
+        if legacy_slug:
+            return redirect(f"/es/blog/{legacy_slug}", code=301)
+        return "Nota no encontrada", 404
+    html = render_template_file(
+        "blog-post.html",
+        post=post,
+        posts=BLOG_POSTS_ES,
+        canonical_base=CANONICAL_BASE,
+    )
+    return spanishify(html, f"/blog/{slug}", f"/es/blog/{slug}")
 
 
 @app.route("/api/contact", methods=["POST"])
@@ -533,7 +1850,7 @@ def contact():
         if not name or not email or not project:
             return jsonify({"error": "All fields are required"}), 400
         msg = EmailMessage()
-        msg["Subject"] = f"Kyanite Labs Contact: {name}"
+        msg["Subject"] = f"KyaniteLabs Contact: {name}"
         msg["From"]    = app.config["SMTP_FROM"]
         msg["To"]      = app.config["CONTACT_TO"]
         msg.set_content(f"New contact from kyanitelabs.tech\n\nName: {name}\nEmail: {email}\nProject:\n{project}\n")
@@ -545,7 +1862,8 @@ def contact():
 
 
 @app.route("/api/audit-intake", methods=["POST"])
-def audit_intake():
+@app.route("/api/implementation-intake", methods=["POST"])
+def implementation_intake():
     try:
         data = request.get_json() or {}
         name = (data.get("name") or "").strip()
@@ -559,7 +1877,7 @@ def audit_intake():
             return jsonify({"error": "Name, email, and biggest operational pain are required"}), 400
 
         payload = {
-            "offer_slug": "productization-audit",
+            "offer_slug": "implementation-support",
             "name": name,
             "email": email,
             "company": company,
@@ -589,10 +1907,10 @@ def audit_intake():
                 pass
 
         msg = EmailMessage()
-        msg["Subject"] = f"Kyanite Productization Intake: {name}"
+        msg["Subject"] = f"Kyanite Implementation Intake: {name}"
         msg["From"] = app.config["SMTP_FROM"]
         msg["To"] = app.config["CONTACT_TO"]
-        msg.set_content(f"""New Kyanite productization intake
+        msg.set_content(f"""New Kyanite implementation intake
 
 Name: {name}
 Email: {email}
@@ -601,10 +1919,10 @@ Company/Project: {company}
 Public URLs:
 {urls}
 
-Repo / workflow / stack:
+Tool / workflow / stack:
 {stack}
 
-Biggest productization pain:
+Biggest implementation pain:
 {pain}
 
 Desired outcome:
@@ -613,7 +1931,7 @@ Desired outcome:
         with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
             server.send_message(msg)
 
-        return jsonify({"ok": True, "message": "Productization intake received"}), 200
+        return jsonify({"ok": True, "message": "Implementation intake received"}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Failed to save intake: {e.stderr or e.stdout or str(e)}"}), 500
     except Exception as e:
@@ -625,7 +1943,7 @@ COMING_SOON = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop — Kyanite Labs</title>
+  <title>Shop — KyaniteLabs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
@@ -636,7 +1954,7 @@ COMING_SOON = """<!DOCTYPE html>
     .emoji { font-size: 4rem; margin-bottom: 1.5rem; }
     h1 { font-size: 2rem; font-weight: 800; letter-spacing: 0; margin-bottom: 1rem; }
     p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
-    .status { display: inline-flex; align-items: center; gap: 8px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); padding: 8px 20px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; color: var(--green); }
+    .status { display: inline-flex; align-items: center; gap: 8px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--green); }
     .status::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
   </style>
@@ -653,169 +1971,57 @@ COMING_SOON = """<!DOCTYPE html>
 """
 
 @app.route("/offers/productization-audit")
-def productization_audit_offer():
-    return render_template_string("""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Productization Audit — Kyanite Labs</title>
-  <meta name="description" content="A product-led audit for MCP servers, agent tools, public repos, docs, package surfaces, and launch-ready AI discovery.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://kyanitelabs.tech/offers/productization-audit">
-  <meta property="og:title" content="Productization Audit — Kyanite Labs">
-  <meta property="og:description" content="Turn a real repo or workflow into a buyer-readable, AI-readable product surface.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://kyanitelabs.tech/offers/productization-audit">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #6b6b80; --accent: #7c6af5; --accent2: #a78bfa; --green: #34d399; }
-    * { box-sizing: border-box; }
-    body { margin:0; font-family: Inter, sans-serif; background: var(--bg); color: var(--text); }
-    .container { max-width: 960px; margin: 0 auto; padding: 96px 24px 64px; }
-    .badge { display:inline-block; background: rgba(124,106,245,0.12); color: var(--accent2); border:1px solid rgba(124,106,245,0.3); padding:6px 14px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; }
-    h1 { font-size: clamp(2.4rem,5vw,4rem); line-height:1.05; margin:20px 0 18px; letter-spacing:0; }
-    p.lead { color: var(--muted); font-size: 1.1rem; line-height: 1.8; max-width: 720px; }
-    .cta { display:flex; gap:14px; flex-wrap:wrap; margin:32px 0 48px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; padding:14px 20px; border-radius:12px; text-decoration:none; font-weight:700; }
-    .btn-primary { background: var(--accent); color:#fff; }
-    .btn-secondary { border:1px solid var(--border); color:var(--text); background: var(--surface); }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:18px; margin: 28px 0 40px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px; }
-    .card h3 { margin-top:0; margin-bottom:10px; }
-    ul { margin:0; padding-left: 20px; color: var(--muted); line-height: 1.7; }
-    .price { font-size: 2.5rem; font-weight: 800; margin: 8px 0; }
-    .price span { font-size: 1rem; color: var(--muted); font-weight: 500; }
-    .section-title { margin: 40px 0 12px; font-size: 1.4rem; }
-    .proof { background: rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.28); border-radius:18px; padding:22px; }
-    .proof strong { color: #fff; }
-    .muted { color: var(--muted); }
-    a.inline { color: var(--accent2); }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="badge">Paid Productization Offer</div>
-    <h1>Productization Audit</h1>
-    <p class="lead">If you have a real workflow, internal tool, MCP idea, or public repo that should become something people can install, understand, cite, or buy, this audit turns the repo truth into a launch plan. Kyanite uses the same product instincts behind mcp-video, Epoch, DialectOS, OpenGlaze, and Dev Learning Archaeologist.</p>
-    <div class="cta">
-      <a class="btn btn-primary" href="/offers/productization-audit/intake">Start productization intake</a>
-      <a class="btn btn-secondary" href="mailto:info@kyanitelabs.tech?subject=Kyanite%20Productization%20Audit">Email Kyanite</a>
-    </div>
-    <div class="grid">
-      <div class="card"><h3>What we check</h3><ul><li>Repo purpose, audience, and install path</li><li>MCP, CLI, API, package, and docs surface</li><li>README, examples, screenshots, demos, and AI discovery</li><li>Tests, CI, release tags, package metadata, and buyer trust</li><li>What should be sold, open-sourced, documented, or killed</li></ul></div>
-      <div class="card"><h3>What you get</h3><ul><li>Product positioning from actual repo evidence</li><li>Launch-readiness findings and priority fixes</li><li>Offer recommendation and public proof checklist</li><li>AI-readable discovery recommendations</li><li>Scope for implementation if Kyanite should build it</li></ul></div>
-      <div class="card"><h3>Pricing</h3><div class="price">$750 <span>starting</span></div><p class="muted">Good fit for one repo, tool, or workflow that already exists but needs buyer-readable product shape. Larger productization or build work scopes upward.</p></div>
-    </div>
-    <div class="proof">
-      <strong>Why this exists:</strong> Kyanite already ships public product repos: MCP video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The offer is based on that repeatable pattern, not a generic consulting vibe.
-    </div>
-    <h2 class="section-title">Best fit</h2>
-    <ul>
-      <li>Teams with an internal AI workflow that should become an MCP server, CLI, or package</li>
-      <li>Founders with a public repo that is technically real but not yet legible or sellable</li>
-      <li>Builders who need repo-backed recommendations, not vague AI positioning</li>
-    </ul>
-    <h2 class="section-title">Next step</h2>
-    <p class="muted">Send the repo, workflow, current docs, and the buyer/user you think it should serve to <a class="inline" href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a> or use the intake form. If the fit is wrong, Kyanite will say so.</p>
-  </div>
-</body>
-</html>
-""")
+def legacy_productization_audit_offer():
+    return redirect("/implementation", code=301)
+
+
+@app.route("/implementation")
+def implementation_offer():
+    html = render_template_file("productization-audit.html")
+    return add_hreflang(html, "/implementation", "/es/implementation")
+
+
+@app.route("/es/implementation")
+def implementation_offer_es():
+    html = render_template_file("productization-audit.html")
+    return spanishify(html, "/implementation", "/es/implementation")
 
 
 @app.route("/offers/productization-audit/intake")
-def productization_audit_intake():
-    return render_template_string("""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Productization Intake — Kyanite Labs</title>
-  <meta name="description" content="Structured intake for the Kyanite productization audit.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://kyanitelabs.tech/offers/productization-audit/intake">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root { --bg:#08080c; --surface:#0f0f15; --border:#1e1e2e; --text:#e2e2ec; --muted:#6b6b80; --accent:#7c6af5; --accent2:#a78bfa; --green:#34d399; --red:#ef4444; }
-    * { box-sizing:border-box; } body { margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(--text); }
-    .container { max-width: 880px; margin:0 auto; padding:72px 24px 48px; }
-    h1 { font-size: clamp(2.1rem,4vw,3.4rem); margin:0 0 16px; letter-spacing:0; }
-    .lead { color:var(--muted); line-height:1.8; max-width:720px; margin-bottom:28px; }
-    form { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px; }
-    label { display:block; font-weight:700; margin:18px 0 8px; }
-    input, textarea { width:100%; border:1px solid var(--border); background:#11111a; color:var(--text); border-radius:12px; padding:14px 16px; font:inherit; }
-    textarea { min-height:140px; resize:vertical; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
-    .btn { display:inline-flex; align-items:center; justify-content:center; padding:14px 20px; border-radius:12px; text-decoration:none; font-weight:700; border:0; cursor:pointer; margin-top:22px; }
-    .btn-primary { background:var(--accent); color:#fff; }
-    .muted { color:var(--muted); }
-    .status { margin-top:16px; display:none; padding:12px 14px; border-radius:12px; }
-    .status.ok { display:block; background:rgba(52,211,153,0.08); border:1px solid rgba(52,211,153,0.28); color:var(--green); }
-    .status.err { display:block; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.28); color:var(--red); }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <p><a href="/offers/productization-audit" style="color:#a78bfa; text-decoration:none;">Back to the productization offer</a></p>
-    <h1>Productization Audit Intake</h1>
-    <p class="lead">Send the repo, workflow, current public surface, and the product problem. This creates a structured productization request for Kyanite; it does not automatically buy or publish anything.</p>
-    <form id="audit-intake-form" onsubmit="submitIntake(event)">
-      <div class="grid">
-        <div><label for="name">Name</label><input id="name" name="name" required placeholder="Alex Chen"></div>
-        <div><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="alex@company.com"></div>
-      </div>
-      <label for="company">Company / Project</label><input id="company" name="company" placeholder="Project name or company">
-      <label for="urls">Repo / public URL(s)</label><textarea id="urls" name="urls" placeholder="https://github.com/org/repo
-https://docs.example.com"></textarea>
-      <label for="stack">Tool / workflow summary</label><textarea id="stack" name="stack" placeholder="MCP server, CLI, package, app, docs, internal workflow, data sources, target users, etc."></textarea>
-      <label for="pain">Biggest productization pain</label><textarea id="pain" name="pain" required placeholder="What is real but not yet clear, usable, packaged, documented, or sellable?"></textarea>
-      <label for="outcome">What would make this worth paying for?</label><textarea id="outcome" name="outcome" placeholder="A launch plan, repo cleanup, offer map, MCP surface, package release, docs, certification, etc."></textarea>
-      <button class="btn btn-primary" type="submit">Send productization intake</button>
-      <div id="intake-status" class="status"></div>
-    </form>
-  </div>
-<script>
-async function submitIntake(event) {
-  event.preventDefault();
-  const status = document.getElementById('intake-status');
-  status.className = 'status';
-  const fd = new FormData(document.getElementById('audit-intake-form'));
-  const payload = {
-    name: fd.get('name'),
-    email: fd.get('email'),
-    company: fd.get('company'),
-    urls: fd.get('urls'),
-    stack: fd.get('stack'),
-    pain: fd.get('pain'),
-    outcome: fd.get('outcome')
-  };
-  const res = await fetch('/api/audit-intake', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-  const data = await res.json().catch(() => ({}));
-  if (res.ok && data.ok) {
-    status.textContent = 'Productization intake sent. Kyanite will review it and follow up.';
-    status.className = 'status ok';
-    document.getElementById('audit-intake-form').reset();
-  } else {
-    status.textContent = data.error || 'Something went wrong. Email info@kyanitelabs.tech.';
-    status.className = 'status err';
-  }
-}
-</script>
-</body>
-</html>
-""")
+def legacy_productization_audit_intake():
+    return redirect("/implementation/intake", code=301)
+
+
+@app.route("/implementation/intake")
+def implementation_intake_page():
+    html = render_template_file("productization-intake.html")
+    return add_hreflang(html, "/implementation/intake", "/es/implementation/intake")
+
+
+@app.route("/es/implementation/intake")
+def implementation_intake_page_es():
+    html = render_template_file("productization-intake.html")
+    return spanishify(html, "/implementation/intake", "/es/implementation/intake")
 
 
 @app.route("/shop")
 def shop():
-    return render_template_string(
-        open(os.path.join(os.path.dirname(__file__), "templates", "shop.html")).read(),
+    html = render_template_file(
+        "shop.html",
         products=PRODUCTS,
         KOFI_URL=app.config["KOFI_URL"]
     )
+    return add_hreflang(html, "/shop", "/es/shop")
+
+
+@app.route("/es/shop")
+def shop_es():
+    html = render_template_file(
+        "shop.html",
+        products=PRODUCTS_ES,
+        KOFI_URL=app.config["KOFI_URL"]
+    )
+    return spanishify(html, "/shop", "/es/shop")
 
 
 @app.route("/shop/<slug>")
@@ -823,8 +2029,17 @@ def product_page(slug):
     p = PRODUCTS.get(slug)
     if not p:
         return "Product not found", 404
-    template = open(os.path.join(os.path.dirname(__file__), "templates", "product.html")).read()
-    return render_template_string(template, product=p, slug=slug, kofi_url=app.config["KOFI_URL"])
+    html = render_template_file("product.html", product=p, slug=slug, kofi_url=app.config["KOFI_URL"])
+    return add_hreflang(html, f"/shop/{slug}", f"/es/shop/{slug}")
+
+
+@app.route("/es/shop/<slug>")
+def product_page_es(slug):
+    p = PRODUCTS_ES.get(slug)
+    if not p:
+        return "Producto no encontrado", 404
+    html = render_template_file("product.html", product=p, slug=slug, kofi_url=app.config["KOFI_URL"])
+    return spanishify(html, f"/shop/{slug}", f"/es/shop/{slug}")
 
 
 @app.route("/webhook/kofi", methods=["POST"])
@@ -973,7 +2188,21 @@ def cerafica_cors_response(data, status=200):
     return resp
 
 
+@app.before_request
+def guard_disabled_cerafica_db_routes():
+    if request.method == "OPTIONS":
+        return None
+    if request.path == "/api/cerafica/health":
+        return None
+    if request.path.startswith("/api/cerafica/") and not app.config.get("ENABLE_CERAFICA_DB"):
+        return cerafica_cors_response({"error": "Cerafica database is not enabled on this service"}, 503)
+    return None
+
+
 def init_cerafica_db():
+    if not app.config.get("ENABLE_CERAFICA_DB"):
+        print("[CERAFICA_DB] init skipped (ENABLE_CERAFICA_DB != 1)")
+        return
     try:
         conn = get_pg_conn()
         cur = conn.cursor()

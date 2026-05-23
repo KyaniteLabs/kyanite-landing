@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ post.get('seo_title', post.title) }} — KyaniteLabs</title>
+  <meta name="description" content="{{ post.get('meta_description', post.excerpt) }}">
+  <meta name="keywords" content="{{ post.get('primary_keyword', '') }}, KyaniteLabs, MCP servers, agentic systems, AI tools, open source, implementation">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="{{ post.get('seo_title', post.title) }} — KyaniteLabs">
+  <meta property="og:description" content="{{ post.get('meta_description', post.excerpt) }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://kyanitelabs.tech/blog/{{ post.slug }}">
+  <link rel="canonical" href="https://kyanitelabs.tech/blog/{{ post.slug }}">
+  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": "https://kyanitelabs.tech/blog/{{ post.slug }}#article",
+        "headline": "{{ post.title }}",
+        "description": "{{ post.get('meta_description', post.excerpt) }}",
+        "datePublished": "{{ post.date }}",
+        "dateModified": "{{ post.date }}",
+        "inLanguage": "en-US",
+        "keywords": "{{ post.get('primary_keyword', '') }}",
+        "author": {"@type": "Organization", "name": "KyaniteLabs"},
+        "publisher": {
+          "@type": "Organization",
+          "name": "KyaniteLabs",
+          "logo": {"@type": "ImageObject", "url": "https://kyanitelabs.tech/static/brand/avatar_square_neon_180x180.png"}
+        },
+        "mainEntityOfPage": "https://kyanitelabs.tech/blog/{{ post.slug }}"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "KyaniteLabs", "item": "https://kyanitelabs.tech/"},
+          {"@type": "ListItem", "position": 2, "name": "Blog", "item": "https://kyanitelabs.tech/blog"},
+          {"@type": "ListItem", "position": 3, "name": "{{ post.title }}", "item": "https://kyanitelabs.tech/blog/{{ post.slug }}"}
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260521-about-readable">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/#proof">Proof</a>
+        <a class="active" href="/blog">Blog</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
+        <a class="language-link" href="/es/blog/{{ post.slug }}" hreflang="es" lang="es">ES</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <div class="eyebrow">{{ post.category }}</div>
+        <h1>{{ post.title }}</h1>
+        <p>{{ post.excerpt }}</p>
+        <div class="post-meta"><span>{{ post.date }}</span><span>{{ post.read_time }}</span><span>{{ post.primary_keyword }}</span></div>
+      </div>
+    </section>
+
+    <section>
+      <article class="article">
+        {{ post.body | safe }}
+      </article>
+    </section>
+
+    <section class="band">
+      <div class="container split-panel">
+        <div class="card">
+          <span class="mono-label">Work with Kyanite</span>
+          <h2 class="section-title">Get the tool working.</h2>
+          <p class="section-sub">If this post describes a Kyanite tool or result you need in your real environment, implementation help is the paid path: setup, advising, docs, examples, and a usable handoff.</p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="/implementation/intake">Start implementation intake</a>
+            <a class="btn btn-secondary" href="/implementation">See implementation help</a>
+          </div>
+        </div>
+        <div class="card">
+          <span class="mono-label">Brand boundary</span>
+          <p>KyaniteLabs is the technical/product line and public proof surface inside PuenteWorks LLC. Kyanite only offers help that is grounded in its tools, products, and build practice.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">More Lab Notes</div>
+          <h2 class="section-title">Keep following the system.</h2>
+        </div>
+        <div class="grid-3">
+          {% for item in posts %}
+          {% if item.slug != post.slug %}
+          <a class="post-card" href="/blog/{{ item.slug }}">
+            <div class="post-meta"><span>{{ item.category }}</span><span>{{ item.read_time }}</span></div>
+            <span class="post-title">{{ item.title }}</span>
+            <p>{{ item.excerpt }}</p>
+          </a>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+    </div>
+  </footer>
+</body>
+</html>

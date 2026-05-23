@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ product.get('seo_title', product.name + ' — Kyanite Labs Shop') }}</title>
+  <title>{{ product.get('seo_title', product.name + ' — KyaniteLabs') }}</title>
   <meta name="description" content="{{ product.get('seo_description', product.tagline) }}">
   <meta name="keywords" content="{{ product.get('keywords', '') }}">
   <meta name="robots" content="index, follow">
@@ -14,6 +14,7 @@
   <meta property="product:price:amount" content="{{ product.price }}">
   <meta property="product:price:currency" content="USD">
   <link rel="canonical" href="https://kyanitelabs.tech/shop/{{ slug }}">
+  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -21,151 +22,95 @@
     "name": "{{ product.name }}",
     "description": "{{ product.get('seo_description', product.tagline) | e }}",
     "url": "https://kyanitelabs.tech/shop/{{ slug }}",
-    "brand": {"@type": "Brand", "name": "Kyanite Labs"},
-    "offers": {
-      "@type": "Offer",
-      "price": "{{ product.price }}",
-      "priceCurrency": "USD"
-    }
+    "brand": {"@type": "Brand", "name": "KyaniteLabs"},
+    "offers": {"@type": "Offer", "price": "{{ product.price }}", "priceCurrency": "USD"}
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #6b6b80; --accent: #7c6af5; --accent2: #a78bfa; --accent-glow: rgba(124,106,245,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { color: var(--accent2); }
-    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,8,12,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-    .nav-logo { font-weight: 800; font-size: 1.1rem; letter-spacing: 0; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; align-items: center; }
-    .nav-links a { color: var(--muted); font-size: 0.875rem; font-weight: 500; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
-    .breadcrumb { padding: 100px 0 0; text-align: center; }
-    .breadcrumb .container { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.8rem; color: var(--muted); }
-    .breadcrumb a { color: var(--muted); }
-    .breadcrumb a:hover { color: var(--text); }
-    .breadcrumb span { color: var(--accent); }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-    .product-layout { display: grid; grid-template-columns: 1fr 380px; gap: 60px; padding: 60px 0 100px; align-items: start; }
-    .product-main {}
-    .product-emoji { font-size: 3.5rem; margin-bottom: 24px; }
-    .product-badge { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 12px; }
-    .product-category { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-    .product-name { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; }
-    .product-tagline { font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }
-    .product-description { font-size: 1rem; color: var(--text); line-height: 1.75; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }
-    .features-section {}
-    .features-section h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0; }
-    .features-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-    .features-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.9rem; color: var(--text); }
-    .features-list li::before { content: ''; width: 20px; height: 20px; background: var(--green-bg); border-radius: 50%; flex-shrink: 0; margin-top: 2px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 11px; background-position: center; background-repeat: no-repeat; }
-    .product-sidebar { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 80px; }
-    .sidebar-preview { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 40px; text-align: center; }
-    .sidebar-emoji { font-size: 4rem; margin-bottom: 16px; }
-    .sidebar-price { font-size: 3rem; font-weight: 800; letter-spacing: 0; margin-bottom: 4px; }
-    .sidebar-price span { font-size: 1rem; font-weight: 500; color: var(--muted); }
-    .sidebar-delivery { font-size: 0.8rem; color: var(--green); display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 8px; }
-    .sidebar-delivery::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-    .sidebar-body { padding: 28px; }
-    .kofi-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; background: #00b8f1; color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; text-decoration: none; transition: all 0.2s; margin-bottom: 20px; }
-    .kofi-btn:hover { background: #00a0d8; transform: translateY(-2px); color: #fff; box-shadow: 0 6px 20px rgba(0,184,241,0.4); }
-    .kofi-btn img { height: 20px; }
-    .sidebar-note { font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.5; }
-    .guarantee { margin-top: 16px; padding: 14px; background: var(--green-bg); border: 1px solid rgba(52,211,153,0.2); border-radius: var(--radius-sm); text-align: center; }
-    .guarantee p { font-size: 0.75rem; color: var(--green); font-weight: 600; }
-    .faq-section { margin-top: 60px; padding-top: 60px; border-top: 1px solid var(--border); }
-    .faq-section h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 28px; letter-spacing: 0; }
-    .faq-list { display: flex; flex-direction: column; gap: 24px; }
-    .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-    .faq-q { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
-    .faq-q::before { content: 'Q. '; color: var(--accent); }
-    .faq-a { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
-    .faq-a::before { content: 'A. '; color: var(--accent); opacity: 0.6; }
-    footer { background: var(--bg); border-top: 1px solid var(--border); padding: 40px 0 32px; }
-    footer .container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    footer p { color: var(--muted); font-size: 0.8rem; }
-    footer a { color: var(--muted); font-size: 0.8rem; }
-    footer a:hover { color: var(--accent); }
-    @media (max-width: 900px) { .product-layout { grid-template-columns: 1fr; } .product-sidebar { position: static; } }
-    @media (max-width: 768px) { nav { padding: 0 1.25rem; } .nav-links { display: none; } .container { padding: 0 1.25rem; } }
-  </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260521-about-readable">
 </head>
 <body>
-<nav>
-  <div class="nav-logo">Kyanite<span>.</span></div>
-  <div class="nav-links">
-    <a href="/">Home</a>
-    <a href="/shop" class="active">Shop</a>
-    <a href="/#contact">Contact</a>
-  </div>
-</nav>
-
-<div class="breadcrumb">
-  <div class="container">
-    <a href="/">Home</a> / <a href="/shop">Shop</a> / <span>{{ product.name }}</span>
-  </div>
-</div>
-
-<div class="container">
-  <div class="product-layout">
-    <div class="product-main">
-      <div class="product-emoji">{{ product.emoji }}</div>
-      {% if product.badge %}<span class="product-badge" style="background:{{ product.badge_color }}20; color:{{ product.badge_color }}; border:1px solid {{ product.badge_color }}40;">{{ product.badge }}</span>{% endif %}
-      <div class="product-category">{{ product.category }}</div>
-      <h1 class="product-name">{{ product.name }}</h1>
-      <p class="product-tagline">{{ product.tagline }}</p>
-      <p class="product-description">{{ product.description }}</p>
-      <div class="features-section">
-        <h2>What's Included</h2>
-        <ul class="features-list">
-          {% for f in product.features %}
-          <li>{{ f }}</li>
-          {% endfor %}
-        </ul>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/blog">Blog</a>
+        <a class="active" href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/#contact">Contact</a>
+        <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
+        <a class="language-link" href="/es/shop/{{ slug }}" hreflang="es" lang="es">ES</a>
       </div>
+    </nav>
+  </header>
 
-      {% if product.faq %}
-      <div class="faq-section">
-        <h2>Frequently Asked Questions</h2>
-        <div class="faq-list">
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <div class="eyebrow">Operator asset // {{ product.category }}</div>
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.tagline }}</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container product-layout">
+        <article class="article">
+          <span class="mono-label">{{ product.category }}</span>
+          <h2>What this is</h2>
+          <p>{{ product.description }}</p>
+
+          <h2>What's included</h2>
+          <ul>
+            {% for f in product.features %}
+            <li>{{ f }}</li>
+            {% endfor %}
+          </ul>
+
+          {% if product.faq %}
+          <h2>Questions buyers ask</h2>
           {% for item in product.faq %}
-          <div class="faq-item">
-            <div class="faq-q">{{ item.q }}</div>
-            <div class="faq-a">{{ item.a }}</div>
-          </div>
+          <h3>{{ item.q }}</h3>
+          <p>{{ item.a }}</p>
           {% endfor %}
+          {% endif %}
+        </article>
+
+        <aside class="card product-panel">
+          <span class="tile-code">{{ product.name[0] }}</span>
+          <span class="tag green">Instant download</span>
+          <h3>{{ product.name }}</h3>
+          <div class="offer-price">${{ product.price }} <span>USD</span></div>
+          <p>{{ product.delivery }}</p>
+          <div class="button-row">
+            <a class="btn btn-primary" href="{{ product.get('kofi_product_url') or kofi_url }}" target="_blank" rel="noopener noreferrer">Buy on Ko-fi</a>
+            <a class="btn btn-secondary" href="/shop">Back to shop</a>
+          </div>
+          <ul class="clean-list">
+            <li>{{ product.delivery_detail }}</li>
+            <li>30-day refund guarantee.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+          <p>Agent-native tools and operator assets grounded in real workflows.</p>
         </div>
+        <div><h4>Shop</h4><a href="/shop">All assets</a><a href="/implementation">Implementation Help</a></div>
+        <div><h4>Proof</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/blog">Blog</a></div>
+        <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      {% endif %}
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
     </div>
-
-    <div class="product-sidebar">
-      <div class="sidebar-preview">
-        <div class="sidebar-emoji">{{ product.emoji }}</div>
-        <div class="sidebar-price">${{ product.price }}<span> USD</span></div>
-        <div class="sidebar-delivery">{{ product.delivery }}</div>
-      </div>
-      <div class="sidebar-body">
-        <a href="{{ product.get('kofi_product_url') or kofi_url }}" target="_blank" rel="noopener noreferrer" class="kofi-btn">
-          <svg height="20" width="20" viewBox="0 0 391.4 391.4" fill="white"><path d="M293.1 322.9c-11.5 13.2-28.4 21-46.4 21H99.7l-7.5 29H62.2l25.7-100H0V0h227.3c33.2 0 61.4 20.4 72.2 49.3 6.8 18.2 6.5 37.9-1 55.7-3.1 7.3-7.5 14.1-12.9 19.7 15.9 5.3 28.5 18.5 32.3 35.4 5.3 24.1-9.5 47.9-32.3 52.7-4.1.8-8.3 1.2-12.5 1.2h44.7l-24.7 100H273.5l22.7-92.7c4.3-17.6-2.1-35.8-16.4-47z"/></svg>
-          Buy on Ko-fi — ${{ product.price }}
-        </a>
-        <p class="sidebar-note">{{ product.delivery_detail }}</p>
-        <div class="guarantee"><p>30-day refund guarantee. Not happy? Email us for a full refund.</p></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer>
-  <div class="container">
-    <p>&copy; 2026 Kyanite Labs. All rights reserved.</p>
-    <p><a href="/">Home</a> · <a href="/shop">Shop</a> · <a href="mailto:info@kyanitelabs.tech">Contact</a></p>
-  </div>
-</footer>
+  </footer>
 </body>
 </html>

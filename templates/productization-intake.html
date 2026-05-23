@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Implementation Intake — KyaniteLabs</title>
+  <meta name="description" content="Tell KyaniteLabs what result you need from a tool, repo, media pipeline, localization QA pass, or diagnostic so the next step can be scoped.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://kyanitelabs.tech/implementation/intake">
+  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260521-about-readable">
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <div class="nav-links">
+        <a href="/#tools">Tools</a>
+        <a href="/blog">Blog</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About</a>
+        <a href="/implementation">Implementation</a>
+        <a href="/#contact">Contact</a>
+        <a class="language-link" href="/es/implementation/intake" hreflang="es" lang="es">ES</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <div class="eyebrow">Structured implementation intake</div>
+        <h1>Tell Kyanite what you need working.</h1>
+        <p>This creates a structured implementation request for a real outcome. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether Kyanite can help you get the tool, repo, media pipeline, localization QA pass, or diagnostic working.</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="container product-layout">
+        <form class="form-panel" id="audit-intake-form" onsubmit="submitIntake(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input id="name" name="name" required placeholder="Alex Chen">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="alex@company.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="company">Company / Project</label>
+            <input id="company" name="company" placeholder="Project name or company">
+          </div>
+          <div class="form-group">
+            <label for="urls">Kyanite tool / source / demo URL(s)</label>
+            <textarea id="urls" name="urls" placeholder="https://github.com/KyaniteLabs/mcp-video&#10;https://github.com/KyaniteLabs/Epoch&#10;https://docs.example.com"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="stack">Tool / workflow summary</label>
+            <textarea id="stack" name="stack" placeholder="Which Kyanite tool or workflow do you want help with? What are you trying to do with it?"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="pain">Biggest implementation pain</label>
+            <textarea id="pain" name="pain" required placeholder="What is confusing, broken, too technical, undocumented, hard to install, or hard to adapt?"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="outcome">What would make this worth paying for?</label>
+            <textarea id="outcome" name="outcome" placeholder="Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc."></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit" id="submitBtn">Send implementation intake</button>
+          <div id="intake-status" class="status"></div>
+        </form>
+
+        <aside class="card product-panel">
+          <span class="mono-label">What happens next</span>
+          <h3>Kyanite reads the context before selling the fix.</h3>
+          <p>If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.</p>
+          <ul class="clean-list">
+            <li>No automatic charge.</li>
+            <li>No public posting without permission.</li>
+            <li>Best with source, demo, docs, product notes, logs, or current blocker evidence.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+    </div>
+  </footer>
+
+  <script>
+    async function submitIntake(event) {
+      event.preventDefault();
+      var status = document.getElementById('intake-status');
+      var button = document.getElementById('submitBtn');
+      status.className = 'status';
+      status.textContent = '';
+      button.disabled = true;
+      button.textContent = 'Sending...';
+      var fd = new FormData(document.getElementById('audit-intake-form'));
+      var payload = {
+        name: fd.get('name'),
+        email: fd.get('email'),
+        company: fd.get('company'),
+        urls: fd.get('urls'),
+        stack: fd.get('stack'),
+        pain: fd.get('pain'),
+        outcome: fd.get('outcome')
+      };
+      try {
+        var res = await fetch('/api/implementation-intake', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        var data = await res.json().catch(function() { return {}; });
+        if (res.ok && data.ok) {
+          status.textContent = 'Implementation intake sent. Kyanite will review it and follow up.';
+          status.className = 'status ok';
+          document.getElementById('audit-intake-form').reset();
+        } else {
+          status.textContent = data.error || 'Something went wrong. Email info@kyanitelabs.tech.';
+          status.className = 'status err';
+        }
+      } catch (error) {
+        status.textContent = 'Network error. Email info@kyanitelabs.tech.';
+        status.className = 'status err';
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Send implementation intake';
+      }
+    }
+  </script>
+</body>
+</html>
