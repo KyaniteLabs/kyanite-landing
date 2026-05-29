@@ -20,6 +20,8 @@ jobs:
         run: |
           python -m py_compile app.py
           python - <<'PY'
+          import contextlib
+          import io
           import json
           from app import app
 
@@ -51,4 +53,11 @@ jobs:
           assert "copy" in config["guardrails"]["protectedSurfaces"]
           assert "layout" in config["guardrails"]["protectedSurfaces"]
           assert config["layerConfig"]["runtimeFlags"]["pointerEvents"] == "none"
+
+          app.config["KOFI_TOKEN"] = "expected-secret"
+          log = io.StringIO()
+          with contextlib.redirect_stdout(log):
+              response = client.post("/webhook/kofi", json={"verification_token": "do-not-log-me", "order_id": "test"})
+          assert response.status_code == 403
+          assert "do-not-log-me" not in log.getvalue()
           PY
