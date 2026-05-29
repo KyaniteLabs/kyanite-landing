@@ -9,73 +9,23 @@ on:
 jobs:
   smoke:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: "3.11"
+
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
+
       - name: Check
         run: |
           python -m py_compile app.py
-          python - <<'PY'
-          import contextlib
-          import io
-          import json
-          from app import app, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
-
-          client = app.test_client()
-          paths = [
-              "/",
-              "/privacy",
-              "/terms",
-              f"/{TIKTOK_SITE_VERIFICATION_FILENAME}",
-              "/sitemap.xml",
-              "/static/posthog.js",
-              "/static/liminal-sites/liminal-sensorium.css",
-              "/static/liminal-sites/liminal-sensorium.js",
-              "/static/liminal-sites/liminal-sensorium-config.json",
-              "/static/liminal-sites/liminal-sensorium-manifest.json",
-          ]
-
-          for path in paths:
-              response = client.get(path)
-              assert response.status_code == 200, (path, response.status_code)
-
-          html = client.get("/").get_data(as_text=True)
-          assert "/static/posthog.js" in html
-          assert "/static/liminal-sites/liminal-sensorium.js" in html
-          assert "/implementation/intake" in html
-          assert "MENU</button>" not in html
-          assert "&#9776;</button>" in html
-
-          assert "Privacy Policy" in client.get("/privacy").get_data(as_text=True)
-          assert "Terms of Service" in client.get("/terms").get_data(as_text=True)
-          assert client.get(f"/{TIKTOK_SITE_VERIFICATION_FILENAME}").get_data(as_text=True) == TIKTOK_SITE_VERIFICATION_BODY
-
-          sitemap = client.get("/sitemap.xml").get_data(as_text=True)
-          assert "https://kyanitelabs.tech/privacy" in sitemap
-          assert "https://kyanitelabs.tech/terms" in sitemap
-
-          posthog_js = client.get("/static/posthog.js").get_data(as_text=True)
-          assert "_phIsBot" in posthog_js
-          assert "navigator.sendBeacon" in posthog_js
-          assert "keepalive:true" in posthog_js
-
-          sensorium_css = client.get("/static/liminal-sites/liminal-sensorium.css").get_data(as_text=True)
-          assert ":not(.skip-link)" in sensorium_css
-
-          config = json.loads(client.get("/static/liminal-sites/liminal-sensorium-config.json").get_data(as_text=True))
-          assert config["guardrails"]["missionLocked"] is True
-          assert "copy" in config["guardrails"]["protectedSurfaces"]
-          assert "layout" in config["guardrails"]["protectedSurfaces"]
-          assert config["layerConfig"]["runtimeFlags"]["pointerEvents"] == "none"
-
-          app.config["KOFI_TOKEN"] = "expected-secret"
-          log = io.StringIO()
-          with contextlib.redirect_stdout(log):
-              response = client.post("/webhook/kofi", json={"verification_token": "do-not-log-me", "order_id": "test"})
-          assert response.status_code == 403
-          assert "do-not-log-me" not in log.getvalue()
-          PY
+          python -m unittest discover -s tests

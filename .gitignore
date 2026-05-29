@@ -3,6 +3,8 @@ __pycache__/
 *.py.bak.*
 .DS_Store
 .env
+*.pem
+*.key
 .worktrees/
 temp/
 temp_*.jpg
