@@ -23,11 +23,15 @@ jobs:
           import contextlib
           import io
           import json
-          from app import app
+          from app import app, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
 
           client = app.test_client()
           paths = [
               "/",
+              "/privacy",
+              "/terms",
+              f"/{TIKTOK_SITE_VERIFICATION_FILENAME}",
+              "/sitemap.xml",
               "/static/posthog.js",
               "/static/liminal-sites/liminal-sensorium.css",
               "/static/liminal-sites/liminal-sensorium.js",
@@ -46,7 +50,16 @@ jobs:
           assert "MENU</button>" not in html
           assert "&#9776;</button>" in html
 
+          assert "Privacy Policy" in client.get("/privacy").get_data(as_text=True)
+          assert "Terms of Service" in client.get("/terms").get_data(as_text=True)
+          assert client.get(f"/{TIKTOK_SITE_VERIFICATION_FILENAME}").get_data(as_text=True) == TIKTOK_SITE_VERIFICATION_BODY
+
+          sitemap = client.get("/sitemap.xml").get_data(as_text=True)
+          assert "https://kyanitelabs.tech/privacy" in sitemap
+          assert "https://kyanitelabs.tech/terms" in sitemap
+
           posthog_js = client.get("/static/posthog.js").get_data(as_text=True)
+          assert "_phIsBot" in posthog_js
           assert "navigator.sendBeacon" in posthog_js
           assert "keepalive:true" in posthog_js
 

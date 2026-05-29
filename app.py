@@ -42,6 +42,10 @@ app.config["ENABLE_CERAFICA_DB"] = os.environ.get("ENABLE_CERAFICA_DB", "0") == 
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
+TIKTOK_SITE_VERIFICATION_FILENAME = "tiktokuizIkj1wDJXH5viSolnBjshmsH3xQAW3.txt"
+TIKTOK_SITE_VERIFICATION_BODY = (
+    "tiktok-developers-site-verification=uizIkj1wDJXH5viSolnBjshmsH3xQAW3"
+)
 
 
 def render_template_file(template_name, **context):
@@ -1576,6 +1580,159 @@ def about_es():
     )
 
 
+LEGAL_PAGE_HTML = """
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }} | KyaniteLabs</title>
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="{{ canonical_base }}{{ path }}">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070812;
+      --panel: #111421;
+      --text: #f4f7ff;
+      --muted: #aab4c7;
+      --line: #2a3044;
+      --accent: #38d8ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+    main {
+      width: min(760px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 64px 0;
+    }
+    a { color: var(--accent); }
+    header {
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+    }
+    .brand {
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1;
+      margin: 12px 0 0;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 32px 0 8px;
+    }
+    p, li { color: var(--muted); }
+    section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      margin: 16px 0;
+      padding: 20px;
+    }
+    footer {
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 32px;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <a class="brand" href="/">KyaniteLabs</a>
+      <h1>{{ title }}</h1>
+      <p>Last updated: May 24, 2026</p>
+    </header>
+    {{ body|safe }}
+    <footer>
+      <p>Questions: <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></p>
+    </footer>
+  </main>
+</body>
+</html>
+"""
+
+
+@app.route("/privacy")
+def privacy_policy():
+    body = """
+    <section>
+      <h2>What this covers</h2>
+      <p>Kyanite Content Factory is an internal content workflow and posting tool used by KyaniteLabs operators to prepare, review, and publish media to connected social accounts.</p>
+    </section>
+    <section>
+      <h2>Data we use</h2>
+      <p>The tool may store connected account identifiers, display names, handles, access tokens, refresh tokens, post metadata, local media references, captions, and publishing status needed to operate the posting workflow.</p>
+    </section>
+    <section>
+      <h2>How data is used</h2>
+      <p>We use this data to authenticate connected accounts, upload approved content, track publishing state, troubleshoot failures, and maintain a human-reviewable content pipeline.</p>
+    </section>
+    <section>
+      <h2>Sharing</h2>
+      <p>We do not sell personal data. Data is shared with platform APIs only as needed to authenticate, upload, or publish content that an authorized operator has approved.</p>
+    </section>
+    <section>
+      <h2>Retention and access</h2>
+      <p>Operational records and tokens are kept only as long as they are useful for the workflow or required for troubleshooting. Access is limited to authorized KyaniteLabs operators.</p>
+    </section>
+    """
+    return render_template_string(
+        LEGAL_PAGE_HTML,
+        title="Privacy Policy",
+        path="/privacy",
+        canonical_base=CANONICAL_BASE,
+        body=body,
+    )
+
+
+@app.route("/terms")
+def terms_of_service():
+    body = """
+    <section>
+      <h2>Authorized use</h2>
+      <p>Kyanite Content Factory is intended for authorized KyaniteLabs and PuenteWorks operators. Users are responsible for connecting only accounts they have authority to manage.</p>
+    </section>
+    <section>
+      <h2>Platform rules</h2>
+      <p>Use of connected social platforms remains subject to each platform's own terms, policies, API rules, and review requirements.</p>
+    </section>
+    <section>
+      <h2>Content responsibility</h2>
+      <p>Operators are responsible for reviewing captions, media, disclosures, music usage, and publication settings before posting content externally.</p>
+    </section>
+    <section>
+      <h2>Availability</h2>
+      <p>The tool is provided for internal workflow use. Availability can depend on local services, platform APIs, account status, and third-party review or rate limits.</p>
+    </section>
+    <section>
+      <h2>Contact</h2>
+      <p>For questions about this tool or these terms, contact KyaniteLabs at info@kyanitelabs.tech.</p>
+    </section>
+    """
+    return render_template_string(
+        LEGAL_PAGE_HTML,
+        title="Terms of Service",
+        path="/terms",
+        canonical_base=CANONICAL_BASE,
+        body=body,
+    )
+
+
 @app.route("/robots.txt")
 def robots_txt():
     return Response(
@@ -1605,12 +1762,19 @@ def robots_txt():
     )
 
 
+@app.route(f"/{TIKTOK_SITE_VERIFICATION_FILENAME}")
+def tiktok_site_verification():
+    return Response(TIKTOK_SITE_VERIFICATION_BODY, mimetype="text/plain")
+
+
 @app.route("/sitemap.xml")
 def sitemap_xml():
     today = datetime.now(UTC).date().isoformat()
     pages = [
         ("/", "1.0", "weekly"),
         ("/about", "0.9", "monthly"),
+        ("/privacy", "0.45", "yearly"),
+        ("/terms", "0.45", "yearly"),
         ("/blog", "0.88", "weekly"),
         ("/implementation", "0.9", "monthly"),
         ("/implementation/intake", "0.75", "monthly"),

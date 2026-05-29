@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 *.py.bak.*
+.DS_Store
 .env
 .worktrees/
 temp/
