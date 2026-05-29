@@ -50,6 +50,9 @@ jobs:
           assert "navigator.sendBeacon" in posthog_js
           assert "keepalive:true" in posthog_js
 
+          sensorium_css = client.get("/static/liminal-sites/liminal-sensorium.css").get_data(as_text=True)
+          assert ":not(.skip-link)" in sensorium_css
+
           config = json.loads(client.get("/static/liminal-sites/liminal-sensorium-config.json").get_data(as_text=True))
           assert config["guardrails"]["missionLocked"] is True
           assert "copy" in config["guardrails"]["protectedSurfaces"]
