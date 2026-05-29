@@ -1,0 +1,93 @@
+{
+  "configId": "kyanitelabs-home-sensorium-20260528",
+  "siteId": "kyanitelabs-home",
+  "createdAt": "2026-05-28T00:00:00.000Z",
+  "source": "posthog-fixture",
+  "signalVector": {
+    "sampleSize": 5,
+    "attention": 0.6996666666666667,
+    "intent": 0.6000000000000001,
+    "depth": 0.577,
+    "friction": 0,
+    "returnWarmth": 0.48750000000000004,
+    "novelty": 0.025,
+    "silence": 0.7690599999999999,
+    "confidence": 0.56875,
+    "notes": [
+      "Normalized 5 PostHog-shaped events into bounded site signals.",
+      "Intent signals exist: protect CTA surfaces and avoid layout changes.",
+      "Attention signals can support a slightly richer ambient layer.",
+      "Sparse signal field: treat silence as a request for calm defaults."
+    ]
+  },
+  "intent": {
+    "calmness": 0.6385372,
+    "clarity": 0.6859999999999999,
+    "warmth": 0.7139533333333334,
+    "motion": 0.2061394666666667,
+    "complexity": 0.31344,
+    "contrast": 0.68,
+    "experimentalism": 0.11946000000000001,
+    "notes": [
+      "Aesthetic intent is advisory and mission-locked to atmosphere only.",
+      "Keep interaction zones untouched because intent is present."
+    ]
+  },
+  "layerConfig": {
+    "paletteTemperature": 0.7139533333333334,
+    "motionIntensity": 0.148420416,
+    "visualDensity": 0.19795840000000003,
+    "textureStrength": 0.07764900000000001,
+    "contrastSupport": 0.68,
+    "experimentalBias": 0.11946000000000001,
+    "reducedMotion": false,
+    "cssVariables": {
+      "--liminal-sensorium-warm": "hsla(42, 92%, 60%, 0.077)",
+      "--liminal-sensorium-cool": "hsla(202, 88%, 62%, 0.062)",
+      "--liminal-sensorium-contrast": "0.680",
+      "--liminal-sensorium-density": "0.198",
+      "--liminal-sensorium-texture": "0.078",
+      "--liminal-sensorium-motion": "0.148",
+      "--liminal-sensorium-duration": "21s"
+    },
+    "runtimeFlags": {
+      "protectContent": true,
+      "pointerEvents": "none",
+      "source": "liminal-sites-sensorium"
+    }
+  },
+  "guardrails": {
+    "missionLocked": true,
+    "protectedSurfaces": [
+      "copy",
+      "layout",
+      "navigation",
+      "forms",
+      "seo",
+      "cta-targets",
+      "analytics"
+    ],
+    "clamps": {
+      "paletteTemperature": { "min": 0.25, "max": 0.75 },
+      "motionIntensity": { "min": 0, "max": 0.35 },
+      "visualDensity": { "min": 0.1, "max": 0.45 },
+      "textureStrength": { "min": 0, "max": 0.3 },
+      "contrastSupport": { "min": 0.6, "max": 1 },
+      "experimentalBias": { "min": 0, "max": 0.4 }
+    },
+    "notes": [
+      "Sensorium may only tune reversible atmospheric assets.",
+      "PostHog signals cannot rewrite content, conversion flow, metadata, navigation, or analytics capture.",
+      "The runtime layer must be pointer-events:none and fail closed when config loading fails."
+    ]
+  },
+  "provenance": {
+    "engine": "liminal-sites",
+    "sensor": "posthog",
+    "mode": "fixture-first",
+    "eventCount": 5,
+    "notes": [
+      "Static fixture generated for kyanitelabs.tech homepage sensorium install."
+    ]
+  }
+}

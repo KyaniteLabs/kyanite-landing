@@ -1,0 +1,17 @@
+{
+  "deploymentId": "kyanitelabs-home-sensorium-deploy-20260528",
+  "siteId": "kyanitelabs-home",
+  "configId": "kyanitelabs-home-sensorium-20260528",
+  "mode": "sensorium-runtime-snippet",
+  "assets": {
+    "css": "/static/liminal-sites/liminal-sensorium.css",
+    "js": "/static/liminal-sites/liminal-sensorium.js",
+    "config": "/static/liminal-sites/liminal-sensorium-config.json",
+    "manifest": "/static/liminal-sites/liminal-sensorium-manifest.json"
+  },
+  "guardrails": {
+    "protectContent": true,
+    "pointerEvents": "none",
+    "protectedSurfaces": ["copy", "layout", "navigation", "forms", "seo", "cta-targets", "analytics"]
+  }
+}
