@@ -43,6 +43,8 @@ jobs:
           assert "/static/posthog.js" in html
           assert "/static/liminal-sites/liminal-sensorium.js" in html
           assert "/implementation/intake" in html
+          assert "MENU</button>" not in html
+          assert "&#9776;</button>" in html
 
           posthog_js = client.get("/static/posthog.js").get_data(as_text=True)
           assert "navigator.sendBeacon" in posthog_js
