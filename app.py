@@ -2058,7 +2058,7 @@ def kofi_webhook():
         # Verify webhook token if configured
         webhook_token = app.config["KOFI_TOKEN"]
         if webhook_token and verification_token != webhook_token:
-            print(f"[KOFI-WH] Invalid token: {verification_token}")
+            print("[KOFI-WH] Invalid token rejected")
             return jsonify({"error": "Invalid token"}), 403
 
         if not order_id:

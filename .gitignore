@@ -3,3 +3,5 @@ __pycache__/
 *.py.bak.*
 .env
 .worktrees/
+temp/
+temp_*.jpg

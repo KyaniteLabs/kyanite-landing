@@ -276,6 +276,8 @@ textarea {
   border-radius: var(--radius);
   background: rgba(12, 28, 42, 0.84);
   color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
 .mobile-menu {
