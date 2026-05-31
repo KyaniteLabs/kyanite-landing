@@ -286,7 +286,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   padding: 10px 20px;
   border-radius: 50px;
   box-shadow: 0 4px 15px rgba(123, 143, 168, 0.3);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
 .cart-btn:hover {
@@ -368,7 +368,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   padding: 16px 32px;
   border-radius: 50px;
   box-shadow: 0 4px 20px rgba(74, 55, 40, 0.2);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
   position: relative;
 }
 
@@ -404,7 +404,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   padding: 16px 32px;
   border-radius: 50px;
   border: 2px solid #4A3728;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
 .btn-secondary:hover {
@@ -610,7 +610,7 @@ button { cursor: pointer; border: none; font-family: inherit; }
   background: #FFFCF8;
   padding: 16px 16px 60px 16px;
   box-shadow: 0 8px 30px rgba(74, 55, 40, 0.12);
-  transition: all 0.4s ease;
+  transition: transform 0.4s ease, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, opacity 0.4s ease;
   position: relative;
 }
 
@@ -1026,7 +1026,8 @@ button { cursor: pointer; border: none; font-family: inherit; }
 }
 
 .postcard-form input:focus {
-  outline: none;
+  outline: 2px solid transparent;
+  outline-offset: 3px;
   border-color: #7B8FA8;
 }
 

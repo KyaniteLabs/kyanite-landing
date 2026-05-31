@@ -44,7 +44,7 @@
   <a class="skip-link" href="#main">{{ "Skip to content" if copy.lang == "en" else "Saltar al contenido" }}</a>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="{{ '/es/' if copy.lang == 'es' else '/' }}"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="{{ '/es/' if copy.lang == 'es' else '/' }}"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
         <a href="{{ '/es/#tools' if copy.lang == 'es' else '/#tools' }}">{{ "Tools" if copy.lang == "en" else "Herramientas" }}</a>
         <a href="{{ '/es/#proof' if copy.lang == 'es' else '/#proof' }}">{{ "Proof" if copy.lang == "en" else "Prueba" }}</a>
@@ -164,7 +164,7 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a class="brand-mark" href="{{ '/es/' if copy.lang == 'es' else '/' }}"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+          <a class="brand-mark" href="{{ '/es/' if copy.lang == 'es' else '/' }}"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
           <p>{{ "Open-source proof and paid implementation help for getting AI tools working in real environments." if copy.lang == "en" else "Prueba open source y ayuda pagada de implementacion para hacer funcionar herramientas de IA en entornos reales." }}</p>
         </div>
         <div><h4>{{ "Work" if copy.lang == "en" else "Trabajo" }}</h4><a href="{{ '/es/blog' if copy.lang == 'es' else '/blog' }}">{{ "Blog" if copy.lang == "en" else "Notas" }}</a><a href="{{ '/es/shop' if copy.lang == 'es' else '/shop' }}">{{ "Shop" if copy.lang == "en" else "Tienda" }}</a><a href="{{ '/es/implementation' if copy.lang == 'es' else '/implementation' }}">{{ "Implementation Help" if copy.lang == "en" else "Ayuda de implementacion" }}</a></div>

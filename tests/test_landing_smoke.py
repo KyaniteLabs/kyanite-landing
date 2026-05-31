@@ -45,7 +45,8 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("/static/liminal-sites/liminal-sensorium.js", html)
         self.assertIn("/implementation/intake", html)
         self.assertNotIn("MENU</button>", html)
-        self.assertIn("&#9776;</button>", html)
+        self.assertIn('aria-label="Open menu"', html)
+        self.assertIn("<span></span><span></span></button>", html)
 
     def test_homepage_images_have_accessible_alt_text(self) -> None:
         html = self.client.get("/").get_data(as_text=True)

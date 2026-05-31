@@ -17,7 +17,7 @@
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
         <a href="/#tools">Tools</a>
         <a href="/blog">Blog</a>
@@ -45,16 +45,16 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="name">Name</label>
-              <input id="name" name="name" required placeholder="Alex Chen">
+              <input id="name" name="name" autocomplete="name" required placeholder="Alex Chen">
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input id="email" name="email" type="email" required placeholder="alex@company.com">
+              <input id="email" name="email" type="email" autocomplete="email" spellcheck="false" required placeholder="alex@company.com">
             </div>
           </div>
           <div class="form-group">
             <label for="company">Company / Project</label>
-            <input id="company" name="company" placeholder="Project name or company">
+            <input id="company" name="company" autocomplete="organization" placeholder="Project name or company">
           </div>
           <div class="form-group">
             <label for="urls">Kyanite tool / source / demo URL(s)</label>
@@ -73,7 +73,7 @@
             <textarea id="outcome" name="outcome" placeholder="Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc."></textarea>
           </div>
           <button class="btn btn-primary" type="submit" id="submitBtn">Send implementation intake</button>
-          <div id="intake-status" class="status"></div>
+          <div id="intake-status" class="status" role="status" aria-live="polite"></div>
         </form>
 
         <aside class="card product-panel">
@@ -104,7 +104,7 @@
       status.className = 'status';
       status.textContent = '';
       button.disabled = true;
-      button.textContent = 'Sending...';
+      button.textContent = 'Sending…';
       var fd = new FormData(document.getElementById('audit-intake-form'));
       var payload = {
         name: fd.get('name'),

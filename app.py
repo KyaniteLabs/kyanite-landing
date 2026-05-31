@@ -742,7 +742,7 @@ PRODUCTS = {
         "category": "Claude Code",
         "badge": "Flagship",
         "badge_color": "#7c6af5",
-        "emoji": "🤖",
+        "emoji": "AB",
         "features": [
             "Production CLAUDE.md with memory hierarchy (root, directory, local, global)",
             "4 Claude Code skills: feature-build, pr-review, debug, deploy",
@@ -780,7 +780,7 @@ PRODUCTS = {
         "category": "Claude Code",
         "badge": None,
         "badge_color": None,
-        "emoji": "⚡",
+        "emoji": "CP",
         "features": [
             "100 Claude Code-specific prompts — @file refs, /commands, Plan Mode, subagents",
             "5 anti-pattern deep dives with fixes (kitchen sink, vague prompts, bloated CLAUDE.md)",
@@ -1019,7 +1019,7 @@ def product_html(p, slug):
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-    :root {{ --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #7c6af5; --accent2: #a78bfa; --accent-glow: rgba(124,106,245,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; --orange: #f59e0b; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; --measure: 66ch; }}
+    :root {{ --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #78d9e7; --accent2: #e8b86f; --accent-glow: rgba(120,217,231,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; --orange: #f59e0b; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; --measure: 66ch; }}
     html {{ font-size: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }}
     body {{ font-family: var(--body-font); font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); background: var(--bg); color: var(--text); line-height: 1.6; font-synthesis: none; text-rendering: optimizeLegibility; }}
     a {{ color: var(--accent); text-decoration: none; }}
@@ -1038,7 +1038,7 @@ def product_html(p, slug):
     .container {{ max-width: 1100px; margin: 0 auto; padding: 0 2rem; }}
     .product-layout {{ display: grid; grid-template-columns: 1fr 380px; gap: 60px; padding: 60px 0 100px; align-items: start; }}
     .product-main {{}}
-    .product-emoji {{ font-size: 3.5rem; margin-bottom: 24px; }}
+    .product-emoji {{ width: 58px; height: 58px; display: grid; place-items: center; margin-bottom: 24px; border: 1px solid rgba(120,217,231,0.35); border-radius: 16px; background: linear-gradient(145deg, rgba(120,217,231,0.14), rgba(232,184,111,0.08)); color: var(--text); font-family: var(--display-font); font-size: 1rem; font-weight: 800; letter-spacing: 0; box-shadow: inset 0 1px 0 rgba(255,255,255,0.14); }}
     .product-badge {{ display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 6px; border-bottom: 1px solid currentColor; margin-bottom: 12px; }}
     .product-category {{ font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }}
     .product-name {{ max-width: var(--measure); font-family: var(--display-font); font-size: clamp(1.8rem, 1.44rem + 1.8vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; text-wrap: balance; }}
@@ -1051,14 +1051,14 @@ def product_html(p, slug):
     .features-list li::before {{ content: ''; width: 20px; height: 20px; background: var(--green-bg); border-radius: 50%; flex-shrink: 0; margin-top: 2px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='3'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E"); background-size: 11px; background-position: center; background-repeat: no-repeat; }}
     .product-sidebar {{ background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: sticky; top: 80px; }}
     .sidebar-preview {{ background: var(--surface2); border-bottom: 1px solid var(--border); padding: 40px; text-align: center; }}
-    .sidebar-emoji {{ font-size: 4rem; margin-bottom: 16px; }}
+    .sidebar-emoji {{ width: 82px; height: 82px; display: grid; place-items: center; margin: 0 auto 16px; border: 1px solid rgba(120,217,231,0.35); border-radius: 22px; background: linear-gradient(145deg, rgba(120,217,231,0.15), rgba(232,184,111,0.1)); color: var(--text); font-family: var(--display-font); font-size: 1.15rem; font-weight: 800; letter-spacing: 0; box-shadow: inset 0 1px 0 rgba(255,255,255,0.16); }}
     .sidebar-price {{ font-size: 3rem; font-weight: 800; letter-spacing: 0; margin-bottom: 4px; }}
     .sidebar-price span {{ font-size: 1rem; font-weight: 500; color: var(--muted); }}
     .sidebar-delivery {{ font-size: 0.8rem; color: var(--green); display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 8px; }}
     .sidebar-delivery::before {{ content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }}
     @keyframes pulse {{ 0%, 100% {{ opacity: 1; }} 50% {{ opacity: 0.4; }} }}
     .sidebar-body {{ padding: 28px; }}
-    .kofi-btn {{ display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; background: #00b8f1; color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; text-decoration: none; transition: all 0.2s; margin-bottom: 20px; }}
+    .kofi-btn {{ display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px; background: #00b8f1; color: #fff; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background-color 220ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms cubic-bezier(0.22, 1, 0.36, 1); margin-bottom: 20px; }}
     .kofi-btn:hover {{ background: #00a0d8; transform: translateY(-2px); color: #fff; box-shadow: 0 6px 20px rgba(0,184,241,0.4); }}
     .kofi-btn img {{ height: 20px; }}
     .sidebar-note {{ font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.5; }}
@@ -1256,7 +1256,7 @@ COMMON_ES_REPLACEMENTS = {
     "Email address": "Email",
     "Context": "Contexto",
     "Start the conversation": "Iniciar la conversacion",
-    "Sending...": "Enviando...",
+    "Sending…": "Enviando...",
     "Message sent. Kyanite will review the context and reply if there is a real fit.": "Mensaje enviado. Kyanite revisara el contexto y respondera si hay buen fit.",
     "Network error. Please email info@kyanitelabs.tech.": "Error de red. Escribe a info@kyanitelabs.tech.",
     "Blog / Lab Notes": "Notas de laboratorio",
@@ -2196,13 +2196,13 @@ COMING_SOON = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop — KyaniteLabs</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #6b6b80; --accent: #7c6af5; --accent2: #a78bfa; --green: #34d399; }
-    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    :root { --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #78d9e7; --accent2: #e8b86f; --green: #34d399; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; }
+    body { font-family: var(--body-font); background: var(--bg); color: var(--text); min-height: 100dvh; display: flex; align-items: center; justify-content: center; }
     .wrap { text-align: center; padding: 2rem; max-width: 480px; }
-    .emoji { font-size: 4rem; margin-bottom: 1.5rem; }
+    .status-tile { width: 76px; height: 76px; display: grid; place-items: center; margin: 0 auto 1.5rem; border: 1px solid rgba(120,217,231,0.35); border-radius: 20px; background: linear-gradient(145deg, rgba(120,217,231,0.14), rgba(232,184,111,0.08)); font-family: var(--display-font); font-size: 1rem; font-weight: 800; letter-spacing: 0; box-shadow: inset 0 1px 0 rgba(255,255,255,0.14); }
     h1 { font-size: 2rem; font-weight: 800; letter-spacing: 0; margin-bottom: 1rem; }
     p { color: var(--muted); font-size: 1.05rem; line-height: 1.7; margin-bottom: 2rem; }
     .status { display: inline-flex; align-items: center; gap: 8px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); padding: 8px 14px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: var(--green); }
@@ -2212,7 +2212,7 @@ COMING_SOON = """<!DOCTYPE html>
 </head>
 <body>
   <div class="wrap">
-    <div class="emoji">🔨</div>
+    <div class="status-tile" aria-hidden="true">LAB</div>
     <h1>Shop is Building</h1>
     <p>We're crafting something worth paying for. Real products, not placeholders. Coming soon.</p>
     <div class="status">Building in progress</div>

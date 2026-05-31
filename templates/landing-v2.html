@@ -92,7 +92,7 @@
     <header class="topbar">
       <nav class="nav container" aria-label="Primary">
         <a class="brand-mark" href="/">
-          <img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">
+          <img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">
           KyaniteLabs
         </a>
         <div class="nav-links">
@@ -106,7 +106,7 @@
           <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
           <a class="language-link" href="/es/" hreflang="es" lang="es">ES</a>
         </div>
-        <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMenu()">&#9776;</button>
+        <button class="menu-button" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu" onclick="toggleMenu()"><span></span><span></span></button>
       </nav>
     </header>
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
@@ -141,7 +141,7 @@
           </div>
           <div class="hero-art fade-up" aria-hidden="true">
             <div class="hero-art-frame">
-              <img src="/static/brand/hero_crystal_workbench_1672x941.png" alt="Kyanite crystal workbench with AI implementation tools">
+              <img src="/static/brand/hero_crystal_workbench_1672x941.png" alt="Kyanite crystal workbench with AI implementation tools" width="1672" height="941" fetchpriority="high">
               <div class="hero-art-caption">
                 <span>public build surface</span>
                 <strong>MCP / media / proof</strong>
@@ -363,20 +363,20 @@
               </ul>
             </div>
             <div class="form-panel fade-up">
-              <div class="status" id="formSuccess">Message sent. Kyanite will review the context and reply if there is a real fit.</div>
-              <div class="status" id="formError"></div>
+              <div class="status" id="formSuccess" role="status" aria-live="polite">Message sent. Kyanite will review the context and reply if there is a real fit.</div>
+              <div class="status" id="formError" role="status" aria-live="polite"></div>
               <form id="contact-form" onsubmit="submitForm(event)">
                 <div class="form-group">
                   <label for="name">Your name</label>
-                  <input type="text" id="name" name="name" placeholder="Alex Chen" required>
+                  <input type="text" id="name" name="name" autocomplete="name" placeholder="Alex Chen" required>
                 </div>
                 <div class="form-group">
                   <label for="email">Email address</label>
-                  <input type="email" id="email" name="email" placeholder="alex@company.com" required>
+                  <input type="email" id="email" name="email" autocomplete="email" spellcheck="false" placeholder="alex@company.com" required>
                 </div>
                 <div class="form-group">
                   <label for="project">Context</label>
-                  <textarea id="project" name="project" placeholder="Which Kyanite tool or result do you want working? Include repo/demo URLs, your setup, current blocker, and what done would look like." required></textarea>
+                  <textarea id="project" name="project" autocomplete="off" placeholder="Which Kyanite tool or result do you want working? Include repo/demo URLs, your setup, current blocker, and what done would look like." required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" id="submitBtn">Start the conversation</button>
               </form>
@@ -391,7 +391,7 @@
         <div class="footer-grid">
           <div>
             <a class="brand-mark" href="/">
-              <img src="/static/brand/avatar_square_neon_64x64.png" alt="" aria-hidden="true">
+              <img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">
               KyaniteLabs
             </a>
             <p>Open-source proof and paid implementation help for getting AI tools working in real environments.</p>
@@ -455,7 +455,7 @@
       error.className = 'status err';
       error.style.display = 'none';
       btn.disabled = true;
-      btn.textContent = 'Sending...';
+      btn.textContent = 'Sending…';
       var data = {
         name: document.getElementById('name').value,
         email: document.getElementById('email').value,
