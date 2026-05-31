@@ -1024,7 +1024,7 @@ def product_html(p, slug):
     body {{ font-family: var(--body-font); font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); background: var(--bg); color: var(--text); line-height: 1.6; font-synthesis: none; text-rendering: optimizeLegibility; }}
     a {{ color: var(--accent); text-decoration: none; }}
     a:hover {{ color: var(--accent2); }}
-    nav {{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,8,12,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }}
+    nav {{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; background: #08080c; border-bottom: 1px solid var(--border); }}
     .nav-logo {{ font-weight: 800; font-size: 1.1rem; letter-spacing: 0; }}
     .nav-logo span {{ color: var(--accent); }}
     .nav-links {{ display: flex; gap: 2rem; align-items: center; }}
