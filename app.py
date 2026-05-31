@@ -900,11 +900,15 @@ HTML = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KyaniteLabs - Get AI Tools Working</title>
   <meta name="description" content="KyaniteLabs provides open-source proof and paid implementation help for getting AI tools working in real environments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: #05070b; color: #f3f8ff; min-height: 100vh; display: grid; place-items: center; }
-    main { width: min(760px, calc(100% - 40px)); }
-    h1 { font-size: clamp(2.2rem, 8vw, 4rem); line-height: 1.05; letter-spacing: 0; margin: 0 0 18px; }
-    p { color: #c2d2df; font-size: 1.08rem; line-height: 1.7; }
+    html { font-size: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { margin: 0; font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); background: #05070b; color: #f3f8ff; min-height: 100vh; display: grid; place-items: center; line-height: 1.6; font-synthesis: none; text-rendering: optimizeLegibility; }
+    main { width: min(760px, 66ch, calc(100% - 40px)); }
+    h1 { font-family: "Space Grotesk", system-ui, sans-serif; font-size: clamp(2.2rem, 1.55rem + 3.25vw, 4rem); line-height: 1.05; letter-spacing: 0; margin: 0 0 18px; text-wrap: balance; }
+    p { color: #c2d2df; max-width: 66ch; font-size: 1rem; line-height: 1.7; text-wrap: pretty; }
     a { color: #26e6ff; font-weight: 700; }
   </style>
 </head>
@@ -965,11 +969,13 @@ def product_html(p, slug):
   <link rel="canonical" href="https://kyanitelabs.tech/shop/{slug}">
   <script type="application/ld+json">{ld_json}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-    :root {{ --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #6b6b80; --accent: #7c6af5; --accent2: #a78bfa; --accent-glow: rgba(124,106,245,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; --orange: #f59e0b; }}
-    body {{ font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }}
+    :root {{ --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #7c6af5; --accent2: #a78bfa; --accent-glow: rgba(124,106,245,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; --orange: #f59e0b; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; --measure: 66ch; }}
+    html {{ font-size: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }}
+    body {{ font-family: var(--body-font); font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); background: var(--bg); color: var(--text); line-height: 1.6; font-synthesis: none; text-rendering: optimizeLegibility; }}
     a {{ color: var(--accent); text-decoration: none; }}
     a:hover {{ color: var(--accent2); }}
     nav {{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; background: rgba(8,8,12,0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }}
@@ -989,9 +995,9 @@ def product_html(p, slug):
     .product-emoji {{ font-size: 3.5rem; margin-bottom: 24px; }}
     .product-badge {{ display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 0 6px; border-bottom: 1px solid currentColor; margin-bottom: 12px; }}
     .product-category {{ font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }}
-    .product-name {{ font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; }}
-    .product-tagline {{ font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; }}
-    .product-description {{ font-size: 1rem; color: var(--text); line-height: 1.75; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); }}
+    .product-name {{ max-width: var(--measure); font-family: var(--display-font); font-size: clamp(1.8rem, 1.44rem + 1.8vw, 2.8rem); font-weight: 800; letter-spacing: 0; line-height: 1.15; margin-bottom: 16px; text-wrap: balance; }}
+    .product-tagline {{ max-width: var(--measure); font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 32px; text-wrap: pretty; }}
+    .product-description {{ max-width: var(--measure); font-size: 1rem; color: var(--text); line-height: 1.75; margin-bottom: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border); text-wrap: pretty; }}
     .features-section {{}}
     .features-section h2 {{ font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; letter-spacing: 0; }}
     .features-list {{ list-style: none; display: flex; flex-direction: column; gap: 14px; }}
@@ -1589,6 +1595,9 @@ LEGAL_PAGE_HTML = """
   <title>{{ title }} | KyaniteLabs</title>
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="{{ canonical_base }}{{ path }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
@@ -1598,17 +1607,34 @@ LEGAL_PAGE_HTML = """
       --muted: #aab4c7;
       --line: #2a3044;
       --accent: #38d8ff;
+      --body-font: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --display-font: "Space Grotesk", system-ui, sans-serif;
+      --mono-font: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --step--1: clamp(0.84rem, 0.79rem + 0.22vw, 0.95rem);
+      --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+      --step-4: clamp(2.07rem, 1.64rem + 2.15vw, 3.2rem);
+      --measure: 66ch;
     }
     * { box-sizing: border-box; }
+    html {
+      font-size: 100%;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
     body {
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--body-font);
+      font-size: var(--step-0);
       line-height: 1.6;
+      font-synthesis: none;
+      font-optical-sizing: auto;
+      text-rendering: optimizeLegibility;
     }
     main {
-      width: min(760px, calc(100% - 32px));
+      width: min(760px, var(--measure), calc(100% - 32px));
       margin: 0 auto;
       padding: 64px 0;
     }
@@ -1620,21 +1646,31 @@ LEGAL_PAGE_HTML = """
     }
     .brand {
       color: var(--accent);
-      font-size: 0.8rem;
+      font-family: var(--mono-font);
+      font-size: var(--step--1);
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
     h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-family: var(--display-font);
+      font-size: var(--step-4);
       line-height: 1;
       margin: 12px 0 0;
+      text-wrap: balance;
     }
     h2 {
-      font-size: 1.1rem;
+      font-family: var(--display-font);
+      font-size: var(--step-1);
+      line-height: 1.2;
       margin: 32px 0 8px;
+      text-wrap: balance;
     }
-    p, li { color: var(--muted); }
+    p, li {
+      color: var(--muted);
+      max-width: var(--measure);
+      text-wrap: pretty;
+    }
     section {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -1647,6 +1683,7 @@ LEGAL_PAGE_HTML = """
       border-top: 1px solid var(--line);
       margin-top: 32px;
       padding-top: 20px;
+      font-size: var(--step--1);
     }
   </style>
 </head>

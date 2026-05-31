@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import re
 import unittest
 
 from app import app, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
@@ -50,6 +51,20 @@ class LandingSmokeTests(unittest.TestCase):
         sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
         self.assertIn("https://kyanitelabs.tech/privacy", sitemap)
         self.assertIn("https://kyanitelabs.tech/terms", sitemap)
+
+    def test_public_typography_uses_zoom_safe_scale_and_brand_fonts(self) -> None:
+        css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
+
+        self.assertIn("--measure: 66ch", css)
+        self.assertIn("font-size: var(--step-0)", css)
+        self.assertIn("text-wrap: balance", css)
+        self.assertNotRegex(css, re.compile(r"font-size:\s*clamp\([^,]+,\s*[0-9.]+vw"))
+
+        for path in ["/", "/privacy", "/terms"]:
+            with self.subTest(path=path):
+                html = self.client.get(path).get_data(as_text=True)
+                self.assertIn("Plus+Jakarta+Sans", html)
+                self.assertNotIn("font-family: Inter", html)
 
     def test_posthog_proxy_and_sensorium_config_keep_privacy_guards(self) -> None:
         posthog_js = self.client.get("/static/posthog.js").get_data(as_text=True)
