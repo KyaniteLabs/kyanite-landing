@@ -1,7 +1,8 @@
 FROM python:3.13-alpine
 
 WORKDIR /app
-RUN pip install --no-cache-dir flask gunicorn psycopg2-binary requests pyyaml
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
 COPY templates/ ./templates/

@@ -12,6 +12,13 @@ from app import app, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FIL
 class LandingSmokeTests(unittest.TestCase):
     def setUp(self) -> None:
         self.client = app.test_client()
+        self._original_config = {
+            "ADMIN_API_TOKEN": app.config.get("ADMIN_API_TOKEN", ""),
+            "KOFI_TOKEN": app.config.get("KOFI_TOKEN", ""),
+        }
+
+    def tearDown(self) -> None:
+        app.config.update(self._original_config)
 
     def test_public_pages_and_static_assets_load(self) -> None:
         paths = [
@@ -39,6 +46,18 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("/implementation/intake", html)
         self.assertNotIn("MENU</button>", html)
         self.assertIn("&#9776;</button>", html)
+
+    def test_homepage_images_have_accessible_alt_text(self) -> None:
+        html = self.client.get("/").get_data(as_text=True)
+        image_tags = re.findall(r"<img\b[^>]*>", html)
+
+        self.assertGreater(len(image_tags), 0)
+        for tag in image_tags:
+            with self.subTest(tag=tag):
+                if 'aria-hidden="true"' in tag:
+                    self.assertIn('alt=""', tag)
+                else:
+                    self.assertRegex(tag, r'\salt="[^"]+"')
 
     def test_policy_pages_and_discovery_files_keep_expected_content(self) -> None:
         self.assertIn("Privacy Policy", self.client.get("/privacy").get_data(as_text=True))
@@ -82,6 +101,55 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("layout", config["guardrails"]["protectedSurfaces"])
         self.assertEqual(config["layerConfig"]["runtimeFlags"]["pointerEvents"], "none")
 
+    def test_security_headers_are_sent_on_public_pages(self) -> None:
+        response = self.client.get("/")
+
+        self.assertEqual(response.headers["Strict-Transport-Security"], "max-age=31536000; includeSubDomains")
+        self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
+        self.assertEqual(response.headers["X-Frame-Options"], "DENY")
+        self.assertEqual(response.headers["Referrer-Policy"], "strict-origin-when-cross-origin")
+        self.assertIn("frame-ancestors 'none'", response.headers["Content-Security-Policy"])
+        self.assertIn("https://puenteworks.com", response.headers["Content-Security-Policy"])
+        self.assertIn("geolocation=()", response.headers["Permissions-Policy"])
+
+    def test_public_admin_endpoints_fail_closed_without_leaking_runtime_details(self) -> None:
+        for path in ["/api/sales/stats", "/api/waitlist"]:
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                body = response.get_data(as_text=True)
+
+                self.assertEqual(response.status_code, 404)
+                self.assertNotIn("postgres", body.lower())
+                self.assertNotIn("psycopg2", body.lower())
+                self.assertNotIn("infra-postgres", body)
+
+        app.config["ADMIN_API_TOKEN"] = "expected-admin-token"
+        response = self.client.get("/api/sales/stats")
+        self.assertEqual(response.status_code, 403)
+
+    def test_kofi_webhook_requires_configured_secret(self) -> None:
+        app.config["KOFI_TOKEN"] = ""
+
+        response = self.client.post(
+            "/webhook/kofi",
+            json={"verification_token": "", "order_id": "test-order", "amount": "29.00"},
+        )
+
+        self.assertEqual(response.status_code, 503)
+        self.assertIn("not configured", response.get_json()["error"])
+
+    def test_public_post_payload_size_is_bounded(self) -> None:
+        response = self.client.post(
+            "/api/contact",
+            json={
+                "name": "Load Test",
+                "email": "load@example.com",
+                "project": "x" * 70000,
+            },
+        )
+
+        self.assertEqual(response.status_code, 413)
+
     def test_kofi_webhook_rejects_bad_token_without_logging_secret(self) -> None:
         app.config["KOFI_TOKEN"] = "expected-secret"
         log = io.StringIO()
@@ -94,6 +162,16 @@ class LandingSmokeTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 403)
         self.assertNotIn("do-not-log-me", log.getvalue())
+
+    def test_docker_runtime_uses_locked_python_requirements(self) -> None:
+        with open("Dockerfile", encoding="utf-8") as f:
+            dockerfile = f.read()
+        with open("requirements.txt", encoding="utf-8") as f:
+            requirements = f.read()
+
+        self.assertIn("pip install --no-cache-dir -r requirements.txt", dockerfile)
+        for package in ["Flask", "gunicorn", "psycopg2-binary", "requests", "PyYAML"]:
+            self.assertRegex(requirements, rf"(?im)^{re.escape(package)}[<>=]")
 
 
 if __name__ == "__main__":

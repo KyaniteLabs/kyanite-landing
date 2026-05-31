@@ -18,8 +18,11 @@ from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
 from urllib.parse import urlencode
 from flask import Flask, request, jsonify, render_template_string, Response, redirect
+from werkzeug.exceptions import RequestEntityTooLarge
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 BASE_DIR = os.path.dirname(__file__)
 
 # Config from env
@@ -39,6 +42,8 @@ app.config["PG_USER"]      = os.environ.get("PG_USER", "postgres")
 app.config["PG_PASS"]      = os.environ.get("PG_PASS", "postgres")
 app.config["ENABLE_SHOP_DB"] = os.environ.get("ENABLE_SHOP_DB", "0") == "1"
 app.config["ENABLE_CERAFICA_DB"] = os.environ.get("ENABLE_CERAFICA_DB", "0") == "1"
+app.config["ADMIN_API_TOKEN"] = os.environ.get("ADMIN_API_TOKEN", "")
+app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", str(64 * 1024)))
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
@@ -46,6 +51,47 @@ TIKTOK_SITE_VERIFICATION_FILENAME = "tiktokuizIkj1wDJXH5viSolnBjshmsH3xQAW3.txt"
 TIKTOK_SITE_VERIFICATION_BODY = (
     "tiktok-developers-site-verification=uizIkj1wDJXH5viSolnBjshmsH3xQAW3"
 )
+ADMIN_API_PATHS = {"/api/sales/stats", "/api/waitlist"}
+CONTENT_SECURITY_POLICY = "; ".join([
+    "default-src 'self'",
+    "script-src 'self' 'unsafe-inline' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' https://fonts.gstatic.com",
+    "img-src 'self' data: https:",
+    "connect-src 'self' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "base-uri 'self'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+])
+SECURITY_HEADERS = {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
+    "Content-Security-Policy": CONTENT_SECURITY_POLICY,
+}
+
+
+@app.after_request
+def add_security_headers(response):
+    for header, value in SECURITY_HEADERS.items():
+        response.headers.setdefault(header, value)
+    return response
+
+
+@app.errorhandler(RequestEntityTooLarge)
+def request_entity_too_large(_error):
+    return jsonify({"error": "Payload too large"}), 413
+
+
+def admin_api_gate():
+    token = app.config.get("ADMIN_API_TOKEN", "")
+    if not token:
+        return jsonify({"error": "Not found"}), 404
+    if request.headers.get("Authorization", "") != f"Bearer {token}":
+        return jsonify({"error": "Forbidden"}), 403
+    return None
 
 
 def render_template_file(template_name, **context):
@@ -2058,6 +2104,8 @@ def contact():
         with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
             server.send_message(msg)
         return jsonify({"ok": True}), 200
+    except RequestEntityTooLarge:
+        raise
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -2133,6 +2181,8 @@ Desired outcome:
             server.send_message(msg)
 
         return jsonify({"ok": True, "message": "Implementation intake received"}), 200
+    except RequestEntityTooLarge:
+        raise
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Failed to save intake: {e.stderr or e.stdout or str(e)}"}), 500
     except Exception as e:
@@ -2256,9 +2306,11 @@ def kofi_webhook():
         amount      = data.get("amount", 0)
         currency     = data.get("currency", "USD")
 
-        # Verify webhook token if configured
         webhook_token = app.config["KOFI_TOKEN"]
-        if webhook_token and verification_token != webhook_token:
+        if not webhook_token:
+            print("[KOFI-WH] Missing webhook token rejected")
+            return jsonify({"error": "Ko-fi webhook token is not configured"}), 503
+        if verification_token != webhook_token:
             print("[KOFI-WH] Invalid token rejected")
             return jsonify({"error": "Invalid token"}), 403
 
@@ -2307,6 +2359,8 @@ def kofi_webhook():
         print(f"[KOFI-WH] Logged: {order_id} | {product_slug} | ${amount} {currency}")
         return jsonify({"ok": True, "logged": logged}), 200
 
+    except RequestEntityTooLarge:
+        raise
     except Exception as e:
         print(f"[KOFI-WH] Error: {e}")
         return jsonify({"error": str(e)}), 500
@@ -2393,6 +2447,8 @@ def cerafica_cors_response(data, status=200):
 def guard_disabled_cerafica_db_routes():
     if request.method == "OPTIONS":
         return None
+    if request.path in ADMIN_API_PATHS:
+        return admin_api_gate()
     if request.path == "/api/cerafica/health":
         return None
     if request.path.startswith("/api/cerafica/") and not app.config.get("ENABLE_CERAFICA_DB"):
