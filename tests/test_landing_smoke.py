@@ -51,6 +51,8 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("/static/posthog.js", html)
         self.assertIn("/static/liminal-sites/liminal-sensorium.js", html)
         self.assertIn("/implementation/intake", html)
+        self.assertIn("/static/brand/website_hero_dark_1920x1080.png", html)
+        self.assertIn("KyaniteLabs crystalline logo on a dark technical field", html)
         self.assertNotIn("MENU</button>", html)
         self.assertIn('aria-label="Open menu"', html)
         self.assertIn("<span></span><span></span></button>", html)

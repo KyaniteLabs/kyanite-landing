@@ -3400,3 +3400,115 @@ body::after {
     height: 38px;
   }
 }
+
+/* Hero brand restoration: large matte logo plate, no glass treatment. */
+.hero-logo-stage {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: 520px;
+  isolation: isolate;
+}
+
+.hero-logo-stage::before,
+.hero-logo-stage::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero-logo-stage::before {
+  inset: 8% -4% 8% 10%;
+  z-index: -1;
+  border: 1px solid rgba(202, 224, 234, 0.14);
+  background:
+    linear-gradient(90deg, rgba(100, 220, 231, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(231, 196, 92, 0.07) 1px, transparent 1px),
+    #050b10;
+  background-size: 34px 34px;
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+  transform: translate(18px, 18px);
+}
+
+.hero-logo-stage::after {
+  inset: 4% 6% auto auto;
+  width: min(28vw, 320px);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(231, 196, 92, 0.82), transparent);
+}
+
+.hero-logo-plate {
+  position: relative;
+  overflow: hidden;
+  width: min(100%, 760px);
+  margin: 0;
+  border: 1px solid rgba(202, 224, 234, 0.24);
+  background: #030608;
+  box-shadow: 16px 16px 0 rgba(0, 0, 0, 0.2);
+  clip-path: polygon(0 0, calc(100% - 26px) 0, 100% 26px, 100% 100%, 26px 100%, 0 calc(100% - 26px));
+}
+
+.hero-logo-plate::before,
+.hero-logo-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-logo-plate::before {
+  border: 10px solid #030608;
+  clip-path: inherit;
+}
+
+.hero-logo-plate::after {
+  background:
+    linear-gradient(90deg, rgba(3, 6, 8, 0.08), transparent 32%, rgba(3, 6, 8, 0.14)),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.18), transparent 48%, rgba(3, 6, 8, 0.22));
+}
+
+.hero-logo-plate img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 430px;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.95) contrast(1.12) brightness(0.86);
+}
+
+@media (max-width: 980px) {
+  .hero-logo-stage {
+    min-height: auto;
+  }
+
+  .hero-logo-plate {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-logo-stage {
+    display: grid;
+    margin-top: 18px;
+  }
+
+  .hero-logo-stage::before {
+    inset: 8% 0 4% 5%;
+    transform: translate(10px, 10px);
+  }
+
+  .hero-logo-stage::after {
+    width: min(54vw, 240px);
+  }
+
+  .hero-logo-plate {
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .hero-logo-plate img {
+    min-height: 238px;
+  }
+}
