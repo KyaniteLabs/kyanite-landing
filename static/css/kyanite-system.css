@@ -3290,3 +3290,113 @@ body::after {
       #030608;
   }
 }
+
+/* Project-specific generated hero assets for the public proof wall. */
+.project-card:has(.project-visual) {
+  align-content: start;
+  gap: 0;
+  padding: 0;
+  background: #07131b;
+}
+
+.grid-4:has(.project-visual) > * {
+  grid-column: span 3;
+}
+
+.grid-4:has(.project-visual) > *:nth-child(1) {
+  grid-column: span 5;
+}
+
+.grid-4:has(.project-visual) > *:nth-child(2) {
+  grid-column: span 4;
+}
+
+.grid-4:has(.project-visual) > *:nth-child(3) {
+  grid-column: span 3;
+}
+
+.grid-4:has(.project-visual) > *:nth-child(n + 4) {
+  grid-column: span 3;
+}
+
+.project-visual {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(202, 224, 234, 0.16);
+  background: #050b10;
+}
+
+.project-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(5, 11, 16, 0.28), transparent 42%, rgba(5, 11, 16, 0.34)),
+    linear-gradient(0deg, rgba(5, 11, 16, 0.5), transparent 54%);
+}
+
+.project-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.08) brightness(0.84);
+  transform: scale(1.01);
+  transition:
+    transform 0.52s var(--motion-curve),
+    filter 0.52s var(--motion-curve);
+}
+
+.project-card:hover .project-visual img {
+  filter: saturate(0.98) contrast(1.12) brightness(0.9);
+  transform: scale(1.045);
+}
+
+.project-card-body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+}
+
+.project-card-kicker {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.project-card-kicker .tile-code {
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  margin: 0;
+}
+
+.project-description {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (max-width: 1100px) {
+  .grid-4:has(.project-visual) > *,
+  .grid-4:has(.project-visual) > *:nth-child(n) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .project-card-body {
+    padding: 16px;
+  }
+
+  .project-card-kicker .tile-code {
+    width: 38px;
+    height: 38px;
+  }
+}
