@@ -3193,3 +3193,100 @@ textarea {
     grid-template-columns: 38px minmax(0, 1fr);
   }
 }
+
+/* Generated matte material pass: Kyanite source-map textures, solid surfaces only. */
+body::before {
+  background: url("/static/brand/kyanite-texture-section-field-1774x887.webp") center top / cover no-repeat;
+  opacity: 0.5;
+  filter: grayscale(0.18) saturate(0.82) contrast(1.28) brightness(0.68);
+}
+
+body::after {
+  background:
+    linear-gradient(90deg, rgba(100, 220, 231, 0.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(100, 220, 231, 0.035) 1px, transparent 1px),
+    linear-gradient(116deg, transparent 0 51%, rgba(231, 196, 92, 0.12) 51.05% 51.2%, transparent 51.3%),
+    linear-gradient(31deg, transparent 0 62%, rgba(227, 79, 124, 0.08) 62.08% 62.22%, transparent 62.34%),
+    rgba(3, 6, 8, 0.52);
+  background-size: 64px 64px, 64px 64px, 100% 100%, 100% 100%, auto;
+}
+
+.hero {
+  background:
+    linear-gradient(90deg, #030608 0 25%, rgba(3, 6, 8, 0.93) 45%, rgba(3, 6, 8, 0.68) 72%, #030608 100%),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.22), rgba(3, 6, 8, 0.62)),
+    url("/static/brand/kyanite-texture-lab-slab-1672x941.webp") right -8vw top 20px / min(78vw, 1180px) auto no-repeat,
+    #030608;
+}
+
+.hero-evidence {
+  background:
+    linear-gradient(90deg, rgba(7, 19, 27, 0.96), rgba(7, 19, 27, 0.7)),
+    linear-gradient(135deg, rgba(100, 220, 231, 0.1), transparent 28%),
+    url("/static/brand/kyanite-texture-proof-strip-2172x724.webp") center top / cover no-repeat,
+    #07131b;
+}
+
+.hero-evidence::before {
+  z-index: 1;
+}
+
+.band {
+  background:
+    linear-gradient(90deg, rgba(7, 16, 24, 0.96), rgba(7, 16, 24, 0.88)),
+    url("/static/brand/kyanite-texture-section-field-1774x887.webp") center / cover no-repeat,
+    #071018;
+}
+
+.evidence-material {
+  min-height: 116px;
+  background: #050b10;
+}
+
+.evidence-material img {
+  min-height: 116px;
+  object-position: center;
+  opacity: 0.86;
+  filter: saturate(0.84) contrast(1.2) brightness(0.78);
+}
+
+.evidence-material::after {
+  background:
+    linear-gradient(90deg, rgba(5, 11, 16, 0.82), rgba(5, 11, 16, 0.18) 52%, rgba(5, 11, 16, 0.74)),
+    linear-gradient(0deg, rgba(5, 11, 16, 0.64), transparent 56%);
+}
+
+#tools .signal-board {
+  background:
+    linear-gradient(0deg, rgba(5, 11, 16, 0.58), rgba(5, 11, 16, 0.2)),
+    url("/static/brand/kyanite-texture-proof-strip-2172x724.webp") center / cover no-repeat,
+    #050b10;
+}
+
+#tools .signal-board::before {
+  background:
+    linear-gradient(90deg, rgba(5, 11, 16, 0.82), rgba(5, 11, 16, 0.4)),
+    url("/static/brand/kyanite-texture-proof-strip-2172x724.webp") center top / cover no-repeat,
+    #050b10;
+}
+
+.page-hero {
+  background:
+    linear-gradient(90deg, rgba(3, 6, 8, 0.96), rgba(3, 6, 8, 0.76) 50%, rgba(3, 6, 8, 0.9)),
+    url("/static/brand/kyanite-texture-lab-slab-1672x941.webp") 70% center / cover no-repeat,
+    #030608;
+}
+
+@media (max-width: 760px) {
+  body::before {
+    background-position: center top;
+    opacity: 0.36;
+  }
+
+  .hero {
+    background:
+      linear-gradient(90deg, rgba(3, 6, 8, 0.98), rgba(3, 6, 8, 0.76)),
+      url("/static/brand/kyanite-texture-section-field-1774x887.webp") center top / cover no-repeat,
+      #030608;
+  }
+}
