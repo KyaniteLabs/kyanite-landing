@@ -6,7 +6,7 @@ import json
 import re
 import unittest
 
-from app import app, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
+from app import app, INDEXNOW_KEY, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
 
 
 class LandingSmokeTests(unittest.TestCase):
@@ -26,7 +26,14 @@ class LandingSmokeTests(unittest.TestCase):
             "/privacy",
             "/terms",
             f"/{TIKTOK_SITE_VERIFICATION_FILENAME}",
+            f"/{INDEXNOW_KEY}.txt",
+            "/robots.txt",
             "/sitemap.xml",
+            "/llms.txt",
+            "/llms-full.txt",
+            "/ai-sitemap.json",
+            "/feed.xml",
+            "/rss.xml",
             "/static/posthog.js",
             "/static/liminal-sites/liminal-sensorium.css",
             "/static/liminal-sites/liminal-sensorium.js",
@@ -67,10 +74,26 @@ class LandingSmokeTests(unittest.TestCase):
             self.client.get(f"/{TIKTOK_SITE_VERIFICATION_FILENAME}").get_data(as_text=True),
             TIKTOK_SITE_VERIFICATION_BODY,
         )
+        self.assertEqual(self.client.get(f"/{INDEXNOW_KEY}.txt").get_data(as_text=True), INDEXNOW_KEY)
 
         sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
         self.assertIn("https://kyanitelabs.tech/privacy", sitemap)
         self.assertIn("https://kyanitelabs.tech/terms", sitemap)
+        self.assertIn("https://kyanitelabs.tech/llms-full.txt", sitemap)
+        self.assertIn("https://kyanitelabs.tech/feed.xml", sitemap)
+
+        robots = self.client.get("/robots.txt").get_data(as_text=True)
+        self.assertIn("OAI-SearchBot", robots)
+        self.assertIn("https://kyanitelabs.tech/llms-full.txt", robots)
+        self.assertIn(f"https://kyanitelabs.tech/{INDEXNOW_KEY}.txt", robots)
+
+        llms_full = self.client.get("/llms-full.txt").get_data(as_text=True)
+        self.assertIn("KyaniteLabs Full AI Context", llms_full)
+        self.assertIn("checkyourself", llms_full)
+
+        feed = self.client.get("/feed.xml").get_data(as_text=True)
+        self.assertIn("<rss version=\"2.0\">", feed)
+        self.assertIn("<channel>", feed)
 
     def test_public_typography_uses_zoom_safe_scale_and_brand_fonts(self) -> None:
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)

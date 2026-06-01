@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KyaniteLabs — Get AI Tools Working in Real Workflows</title>
   <meta name="description" content="KyaniteLabs helps builders and teams get open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in their real environment.">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="author" content="KyaniteLabs">
   <meta name="theme-color" content="#05070b">
   <link rel="canonical" href="https://kyanitelabs.tech/">
   <link rel="sitemap" type="application/xml" title="KyaniteLabs sitemap" href="https://kyanitelabs.tech/sitemap.xml">
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
+  <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <meta property="og:site_name" content="KyaniteLabs">
   <meta property="og:title" content="KyaniteLabs — Get AI Tools Working">
   <meta property="og:description" content="Open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics made usable in real workflows.">
@@ -72,6 +74,29 @@
             {"@type": "Offer", "name": "Agentic Media Workflow Help"}
           ]
         }
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://kyanitelabs.tech/#public-projects",
+        "name": "KyaniteLabs public project proof",
+        "description": "Public KyaniteLabs and Simon Gonzalez de Cruz repositories that support the site's claims.",
+        "itemListElement": [
+          {% for project in public_projects %}
+          {
+            "@type": "ListItem",
+            "position": {{ loop.index }},
+            "item": {
+              "@type": "SoftwareSourceCode",
+              "name": {{ project.name | tojson }},
+              "description": {{ project.description | tojson }},
+              "codeRepository": {{ project.url | tojson }},
+              "programmingLanguage": {{ project.language | tojson }},
+              "dateModified": {{ project.updated | tojson }},
+              "image": "https://kyanitelabs.tech{{ project.image }}"
+            }
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
       }
     ]
   }

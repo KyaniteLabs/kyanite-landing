@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ copy.meta_title }}</title>
   <meta name="description" content="{{ copy.meta_description }}">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:site_name" content="KyaniteLabs">
   <meta property="og:title" content="{{ copy.meta_title }}">
   <meta property="og:description" content="{{ copy.meta_description }}">
@@ -13,6 +13,9 @@
   <meta property="og:url" content="{{ canonical_base }}{{ copy.path }}">
   <meta property="og:image" content="{{ canonical_base }}/static/brand/simon-gonzalez-de-cruz-portrait.jpg">
   <link rel="canonical" href="{{ canonical_base }}{{ copy.path }}">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
+  <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <link rel="alternate" hreflang="en" href="{{ canonical_base }}/about">
   <link rel="alternate" hreflang="es" href="{{ canonical_base }}/es/about">
   <link rel="alternate" hreflang="x-default" href="{{ canonical_base }}/about">

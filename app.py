@@ -3,6 +3,8 @@ KyaniteLabs — Landing + Shop
 """
 import os
 import json
+import html as html_lib
+import re
 import smtplib
 import subprocess
 import tempfile
@@ -13,6 +15,7 @@ except ModuleNotFoundError:
     psycopg2 = None
 import requests as http_requests
 from email.message import EmailMessage
+from email.utils import format_datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
@@ -47,6 +50,8 @@ app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", str(
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
+ROBOTS_INDEX_DIRECTIVE = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+INDEXNOW_KEY = "a4b0d2c3f1e94887a256c44b9e2c6f10"
 TIKTOK_SITE_VERIFICATION_FILENAME = "tiktokuizIkj1wDJXH5viSolnBjshmsH3xQAW3.txt"
 TIKTOK_SITE_VERIFICATION_BODY = (
     "tiktok-developers-site-verification=uizIkj1wDJXH5viSolnBjshmsH3xQAW3"
@@ -98,6 +103,16 @@ def render_template_file(template_name, **context):
     path = os.path.join(BASE_DIR, "templates", template_name)
     with open(path, encoding="utf-8") as f:
         return render_template_string(f.read(), **context)
+
+
+def plain_text(value):
+    text = re.sub(r"<[^>]+>", " ", value)
+    text = html_lib.unescape(text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def rss_date(value):
+    return format_datetime(datetime.fromisoformat(value).replace(tzinfo=UTC))
 
 PUBLIC_PROJECTS = [
     {
@@ -663,8 +678,8 @@ BLOG_COPY_ES = {
     "agents-need-verifiable-tools": {
         "title": "Los agentes necesitan herramientas verificables, no mejor teatro de prompts",
         "category": "Implementacion MCP",
-        "seo_title": "herramientas verificables para agentes de IA e implementacion MCP",
-        "meta_description": "Los agentes de IA necesitan herramientas que puedan llamar, inspeccionar, verificar y revisar. KyaniteLabs construye servidores MCP y superficies de implementacion con ese principio.",
+        "seo_title": "herramientas verificables para agentes de IA",
+        "meta_description": "Los agentes de IA necesitan herramientas que puedan llamar, inspeccionar, verificar y revisar. KyaniteLabs construye servidores MCP con ese principio.",
         "excerpt": "El patron util no es un prompt mas bonito. Es una superficie de herramienta que el agente puede llamar, inspeccionar, verificar y revisar.",
         "body": """
 <p><strong>El patron util no es un prompt mas bonito. Es una superficie de herramienta que el agente puede llamar, inspeccionar, verificar y revisar.</strong> Un prompt puede sugerir trabajo. Una herramienta puede tocar el artefacto.</p>
@@ -687,7 +702,7 @@ revisar siguiente paso</code></pre>
     "repo-history-is-a-product-signal": {
         "title": "El historial del repo es una señal de producto",
         "category": "Inteligencia de repos",
-        "seo_title": "arqueologia de repos como señal de producto para equipos de IA",
+        "seo_title": "arqueologia de repos para equipos de IA",
         "meta_description": "El historial del repo muestra como cambio un proyecto, donde se atasco y si la superficie publica coincide con el codigo.",
         "excerpt": "Un repo no es solo almacenamiento. Es evidencia de decisiones, reparaciones, releases, cambios de nombre, huecos de pruebas y oficio real.",
         "body": """
@@ -710,7 +725,7 @@ revisar siguiente paso</code></pre>
     "implementation-help-is-product-surface": {
         "title": "La ayuda de implementacion es parte de la superficie del producto",
         "category": "Implementacion de herramientas de IA",
-        "seo_title": "soporte de implementacion para herramientas open source de IA",
+        "seo_title": "soporte para herramientas open source de IA",
         "meta_description": "Las herramientas open source de IA necesitan superficies de implementacion: instalacion, ejemplos, docs, prueba, limites de soporte y traspaso.",
         "excerpt": "Una herramienta open source util todavia necesita una ruta desde repo publico hasta entorno funcionando. Esa ruta es producto.",
         "body": """
@@ -756,7 +771,7 @@ mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
     "infinite-monkey-agentic-systems": {
         "title": "Monos infinitos, LLMs y el cuarto alrededor de la maquina",
         "category": "Sistemas agenticos",
-        "seo_title": "los sistemas agenticos necesitan arquitectura de probabilidad",
+        "seo_title": "arquitectura para sistemas agenticos",
         "meta_description": "Los sistemas agenticos son arquitectura de probabilidad: generacion, filtros, herramientas, evaluaciones, memoria y gusto humano alrededor de los LLMs.",
         "excerpt": "El argumento detras del video: la calidad no es solo probabilidad. Es arquitectura, filtros y gusto humano.",
         "body": """
@@ -838,7 +853,7 @@ mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
     "ai-discovery-llms-txt-geo": {
         "title": "El descubrimiento por IA necesita mas que un sitemap",
         "category": "SEO / GEO",
-        "seo_title": "descubrimiento por IA, llms.txt y GEO para sitios de producto",
+        "seo_title": "descubrimiento por IA y GEO para sitios",
         "meta_description": "El descubrimiento por IA necesita sitemap, llms.txt, datos estructurados, copy de respuesta directa, FAQ y superficies publicas de prueba.",
         "excerpt": "Lo que Kyanite agrega para que buscadores y asistentes de IA entiendan herramientas, productos, prueba y rutas de soporte.",
         "body": """
@@ -968,7 +983,7 @@ PRODUCT_COPY_ES = {
             {"q": "Cuanto toma el setup?", "a": "Unos 30 minutos para copiar y ajustar archivos; 1 a 2 horas si tambien haces deploy con Docker y CI/CD."},
             {"q": "Cual es la politica de reembolso?", "a": "Si no te sirve, escribe dentro de 30 dias y se reembolsa la compra."},
         ],
-        "seo_title": "Blueprint para agentes de codigo con IA — setup completo de Claude Code",
+        "seo_title": "Blueprint para agentes de codigo con IA",
         "seo_description": "Setup de Claude Code listo para produccion: CLAUDE.md, skills, subagentes, hooks, MCP y CI/CD.",
     },
     "claude-code-productivity-pack": {
@@ -1140,7 +1155,7 @@ def product_html(p, slug):
   <title>{p.get('seo_title', p['name'] + ' — KyaniteLabs Shop')}</title>
   <meta name="description" content="{p.get('seo_description', p['tagline'])}">
   <meta name="keywords" content="{p.get('keywords', '')}">
-  <meta name="robots" content="index, follow">
+  <meta name="robots" content="{ROBOTS_INDEX_DIRECTIVE}">
   <meta property="og:title" content="{p.get('seo_title', p['name'])}">
   <meta property="og:description" content="{p.get('seo_description', p['tagline'])}">
   <meta property="og:type" content="product">
@@ -1148,6 +1163,9 @@ def product_html(p, slug):
   <meta property="product:price:amount" content="{p['price']}">
   <meta property="product:price:currency" content="USD">
   <link rel="canonical" href="https://kyanitelabs.tech/shop/{slug}">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
+  <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <script type="application/ld+json">{ld_json}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1277,7 +1295,7 @@ ABOUT_COPY = {
         "alt_path": "/es/about",
         "alt_label": "ES",
         "meta_title": "About Simon Gonzalez de Cruz — KyaniteLabs",
-        "meta_description": "About Simon Gonzalez de Cruz, founder of KyaniteLabs: a creative development lab for MCP servers, agentic media systems, localization QA, estimation tools, repo diagnostics, domain software, and implementation help.",
+        "meta_description": "About Simon Gonzalez de Cruz, founder of KyaniteLabs: open-source AI tools, MCP servers, agentic media, localization QA, and implementation help.",
         "eyebrow": "About the builder",
         "title": "A lab for tools that survive contact with real work.",
         "lead": "I'm Simon Gonzalez de Cruz. KyaniteLabs is my creative development lab for MCP servers, AI media systems, localization QA, estimation tools, repo diagnostics, domain software, and the build notes that make the work inspectable.",
@@ -1320,7 +1338,7 @@ ABOUT_COPY = {
         "alt_path": "/about",
         "alt_label": "EN",
         "meta_title": "Sobre Simon Gonzalez de Cruz — KyaniteLabs",
-        "meta_description": "Sobre Simon Gonzalez de Cruz, fundador de KyaniteLabs: laboratorio creativo para servidores MCP, sistemas de medios agenticos, QA de localizacion, estimacion, diagnostico de repos, software de dominio e implementacion.",
+        "meta_description": "Sobre Simon Gonzalez de Cruz, fundador de KyaniteLabs: herramientas open source de IA, servidores MCP, medios agenticos e implementacion.",
         "eyebrow": "Sobre el builder",
         "title": "Un laboratorio para herramientas que sobreviven al trabajo real.",
         "lead": "Soy Simon Gonzalez de Cruz. KyaniteLabs es mi laboratorio creativo para servidores MCP, sistemas de medios con IA, QA de localizacion, estimacion, diagnostico de repos, software de dominio y notas de construccion que vuelven inspeccionable el trabajo.",
@@ -1454,7 +1472,7 @@ COMMON_ES_REPLACEMENTS = {
     "Open-source proof and paid implementation help for getting AI tools working in real environments.": "Prueba open source y ayuda pagada de implementacion para hacer funcionar herramientas de IA en entornos reales.",
     "KyaniteLabs — Get AI Tools Working in Real Workflows": "KyaniteLabs — Herramientas de IA funcionando en flujos reales",
     "KyaniteLabs — Get AI Tools Working": "KyaniteLabs — Herramientas de IA funcionando",
-    "KyaniteLabs helps builders and teams get open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in their real environment.": "KyaniteLabs ayuda a builders y equipos a hacer funcionar herramientas de IA open source, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de repos en su entorno real.",
+    "KyaniteLabs helps builders and teams get open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in their real environment.": "KyaniteLabs ayuda a builders y equipos a implementar herramientas de IA open source, sistemas MCP, medios, localizacion y diagnosticos de repos.",
     "Open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics made usable in real workflows.": "Herramientas de IA open source, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de repos hechos usables en flujos reales.",
     "Implementation Help — Get Kyanite Tools Working": "Ayuda de implementacion — Haz funcionar herramientas Kyanite",
     "Paid implementation and advising that helps builders install, adapt, understand, and hand off KyaniteLabs tools in real workflows.": "Implementacion y asesoria pagada para instalar, adaptar, entender y entregar herramientas KyaniteLabs en flujos reales.",
@@ -1774,8 +1792,12 @@ LEGAL_PAGE_HTML = """
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title }} | KyaniteLabs</title>
-  <meta name="robots" content="index,follow">
+  <meta name="description" content="{{ description }}">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="{{ canonical_base }}{{ path }}">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
+  <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
+  <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -1912,6 +1934,7 @@ def privacy_policy():
     return render_template_string(
         LEGAL_PAGE_HTML,
         title="Privacy Policy",
+        description="KyaniteLabs privacy policy for contact forms, connected workflows, operational records, platform integrations, and public site analytics.",
         path="/privacy",
         canonical_base=CANONICAL_BASE,
         body=body,
@@ -1945,6 +1968,7 @@ def terms_of_service():
     return render_template_string(
         LEGAL_PAGE_HTML,
         title="Terms of Service",
+        description="KyaniteLabs terms of service for authorized workflows, platform rules, content responsibility, availability, and contact boundaries.",
         path="/terms",
         canonical_base=CANONICAL_BASE,
         body=body,
@@ -1968,12 +1992,30 @@ def robots_txt():
             "User-agent: ChatGPT-User",
             "Allow: /",
             "",
+            "User-agent: ClaudeBot",
+            "Allow: /",
+            "",
+            "User-agent: Claude-User",
+            "Allow: /",
+            "",
             "User-agent: PerplexityBot",
+            "Allow: /",
+            "",
+            "User-agent: Google-Extended",
+            "Allow: /",
+            "",
+            "User-agent: Applebot-Extended",
+            "Allow: /",
+            "",
+            "User-agent: CCBot",
             "Allow: /",
             "",
             f"Sitemap: {CANONICAL_BASE}/sitemap.xml",
             f"# AI-readable site brief: {CANONICAL_BASE}/llms.txt",
+            f"# Full AI-readable context: {CANONICAL_BASE}/llms-full.txt",
             f"# Structured AI sitemap: {CANONICAL_BASE}/ai-sitemap.json",
+            f"# Blog RSS feed: {CANONICAL_BASE}/feed.xml",
+            f"# IndexNow key: {CANONICAL_BASE}/{INDEXNOW_KEY}.txt",
             "",
         ]),
         mimetype="text/plain",
@@ -1983,6 +2025,11 @@ def robots_txt():
 @app.route(f"/{TIKTOK_SITE_VERIFICATION_FILENAME}")
 def tiktok_site_verification():
     return Response(TIKTOK_SITE_VERIFICATION_BODY, mimetype="text/plain")
+
+
+@app.route(f"/{INDEXNOW_KEY}.txt")
+def indexnow_key_file():
+    return Response(INDEXNOW_KEY, mimetype="text/plain")
 
 
 @app.route("/sitemap.xml")
@@ -2008,7 +2055,9 @@ def sitemap_xml():
         ("/es/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
         ("/es/shop/claude-code-productivity-pack", "0.55", "monthly"),
         ("/llms.txt", "0.7", "weekly"),
+        ("/llms-full.txt", "0.65", "weekly"),
         ("/ai-sitemap.json", "0.7", "weekly"),
+        ("/feed.xml", "0.6", "weekly"),
     ]
     pages.extend((f"/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS)
     pages.extend((f"/es/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS_ES)
@@ -2028,6 +2077,38 @@ def sitemap_xml():
     return Response(body, mimetype="application/xml")
 
 
+@app.route("/feed.xml")
+@app.route("/rss.xml")
+def feed_xml():
+    items = []
+    for post in BLOG_POSTS:
+        url = f"{CANONICAL_BASE}/blog/{post['slug']}"
+        title = html_lib.escape(post["title"])
+        description = html_lib.escape(post["excerpt"])
+        category = html_lib.escape(post["category"])
+        items.append(f"""    <item>
+      <title>{title}</title>
+      <link>{url}</link>
+      <guid isPermaLink="true">{url}</guid>
+      <description>{description}</description>
+      <category>{category}</category>
+      <pubDate>{rss_date(post["date"])}</pubDate>
+    </item>""")
+    body = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>KyaniteLabs Blog / Lab Notes</title>
+    <link>{CANONICAL_BASE}/blog</link>
+    <description>Build notes, implementation field notes, AI tool essays, and KyaniteLabs public proof updates.</description>
+    <language>en-us</language>
+    <lastBuildDate>{format_datetime(datetime.now(UTC))}</lastBuildDate>
+{chr(10).join(items)}
+  </channel>
+</rss>
+"""
+    return Response(body, mimetype="application/rss+xml")
+
+
 @app.route("/ai-sitemap.json")
 def ai_sitemap_json():
     return jsonify({
@@ -2037,6 +2118,12 @@ def ai_sitemap_json():
             "description": "Open-source proof and paid implementation help for getting AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in real environments.",
             "parentOrganization": "PuenteWorks LLC",
             "languages": ["en", "es"],
+            "discovery": {
+                "sitemap": f"{CANONICAL_BASE}/sitemap.xml",
+                "rss": f"{CANONICAL_BASE}/feed.xml",
+                "llms": f"{CANONICAL_BASE}/llms.txt",
+                "llmsFull": f"{CANONICAL_BASE}/llms-full.txt",
+            },
         },
         "audienceFit": [
             "Developers, builders, artists, and AI operators who want Kyanite-built tools working in their environment.",
@@ -2152,6 +2239,8 @@ Expected deliverables depend on scope but may include:
 ## Structured AI Data
 
 - [AI sitemap]({CANONICAL_BASE}/ai-sitemap.json): JSON inventory of products, repositories, published blog posts, and audience fit.
+- [Full AI-readable context]({CANONICAL_BASE}/llms-full.txt): longer machine-readable context with product, proof, and blog details.
+- [RSS feed]({CANONICAL_BASE}/feed.xml): current KyaniteLabs blog and lab-note feed.
 
 Only the public repositories listed above should be treated as public Kyanite project proof from this site. Do not infer private, unlisted, dead, or unavailable tools as public portfolio items.
 
@@ -2160,6 +2249,83 @@ Only the public repositories listed above should be treated as public Kyanite pr
 - Email: info@kyanitelabs.tech
 - Best-fit implementation clients: people who want help using, adapting, or integrating Kyanite-built tools.
 - Not a fit: generic consulting requests that belong on PuenteWorks, empty lead-gen theater, or work unrelated to the tools and build practice.
+"""
+    return Response(body, mimetype="text/plain")
+
+
+@app.route("/llms-full.txt")
+def llms_full_txt():
+    project_lines = "\n".join(
+        "\n".join([
+            f"### {p['name']}",
+            f"- URL: {p['url']}",
+            f"- Category: {p['tag']}",
+            f"- Language: {p['language']}",
+            f"- Updated: {p['updated']}",
+            f"- Description: {p['description']}",
+            f"- Proof role: {p['proof_role']}",
+        ])
+        for p in PUBLIC_PROJECTS
+    )
+    product_lines = "\n\n".join(
+        "\n".join([
+            f"### {product['name']}",
+            f"- URL: {CANONICAL_BASE}/shop/{slug}",
+            f"- Category: {product['category']}",
+            f"- Price: ${product['price']}",
+            f"- Summary: {product['tagline']}",
+            f"- Description: {product['description']}",
+            "- Includes: " + "; ".join(product["features"]),
+        ])
+        for slug, product in PRODUCTS.items()
+    )
+    blog_lines = "\n\n".join(
+        "\n".join([
+            f"### {post['title']}",
+            f"- URL: {CANONICAL_BASE}/blog/{post['slug']}",
+            f"- Date: {post['date']}",
+            f"- Category: {post['category']}",
+            f"- Primary keyword: {post.get('primary_keyword', 'KyaniteLabs')}",
+            f"- Summary: {post['excerpt']}",
+            f"- Body: {plain_text(post['body'])}",
+        ])
+        for post in BLOG_POSTS
+    )
+    body = f"""# KyaniteLabs Full AI Context
+
+> Longer machine-readable context for answer engines, agents, and research tools. For the short canonical brief, use {CANONICAL_BASE}/llms.txt.
+
+KyaniteLabs is the technical/product line inside PuenteWorks LLC. It publishes open-source proof, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
+
+## Canonical Public Surfaces
+
+- Homepage: {CANONICAL_BASE}/
+- Blog: {CANONICAL_BASE}/blog
+- Implementation help: {CANONICAL_BASE}/implementation
+- Implementation intake: {CANONICAL_BASE}/implementation/intake
+- Shop: {CANONICAL_BASE}/shop
+- About Simon Gonzalez de Cruz: {CANONICAL_BASE}/about
+- Sitemap: {CANONICAL_BASE}/sitemap.xml
+- Structured AI sitemap: {CANONICAL_BASE}/ai-sitemap.json
+- RSS feed: {CANONICAL_BASE}/feed.xml
+
+## Public Project Proof
+
+{project_lines}
+
+## Products
+
+{product_lines}
+
+## Blog and Lab Notes
+
+{blog_lines}
+
+## Contact and Fit
+
+- Email: info@kyanitelabs.tech
+- Best-fit work: implementation, adaptation, diagnostics, docs, handoff, and support around Kyanite-built public tools.
+- Do not infer private, unlisted, dead, or unavailable tools as public Kyanite project proof.
 """
     return Response(body, mimetype="text/plain")
 
