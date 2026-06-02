@@ -37,22 +37,23 @@
     ]
   }
   </script>
-  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-public-projects">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
   <script src="/static/posthog.js"></script>
   <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
+  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
 </head>
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
-        <a href="/#tools">Tools</a>
-        <a href="/#proof">Builds</a>
-        <a href="/blog">Blog</a>
+        <a href="/#proof">Projects</a>
+        <a href="/implementation">Implementation</a>
+        <a href="/blog">Lab Notes</a>
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
@@ -65,12 +66,12 @@
   <main>
     <section class="page-hero">
       <div class="container page-hero-inner">
-        <div class="eyebrow">Paid outcome help</div>
-        <h1>Get the tool working without doing every setup step alone.</h1>
-        <p><strong>KyaniteLabs is the technical/product line inside PuenteWorks LLC.</strong> Most Kyanite products are open source. Paid implementation helps you install the tool, adapt it to your environment, understand the tradeoffs, and leave with a usable handoff.</p>
+        <div class="eyebrow">Implementation path</div>
+        <h1>Get the Kyanite tool working in your environment.</h1>
+        <p><strong>Most Kyanite products are open source.</strong> Paid implementation is for the moment when you want the tool installed, adapted, checked, documented, and handed off without burning days on setup alone.</p>
         <div class="button-row">
-          <a class="btn btn-primary" href="/implementation/intake">Start implementation intake</a>
-          <a class="btn btn-secondary" href="mailto:info@kyanitelabs.tech?subject=Kyanite%20Implementation%20Help">Email Kyanite</a>
+          <a class="btn btn-primary" href="/implementation/intake">Send the implementation brief</a>
+          <a class="btn btn-secondary" href="mailto:info@kyanitelabs.tech?subject=Kyanite%20Implementation%20Help">Email the context</a>
         </div>
       </div>
     </section>
@@ -80,7 +81,7 @@
         <div class="grid-3">
           <div class="feature-card">
             <span class="tile-code">01</span>
-            <h3>What we check</h3>
+            <h3>What you bring</h3>
             <ul class="clean-list">
               <li>What result you need from the Kyanite tool</li>
               <li>Your machine, stack, constraints, and current blocker</li>
@@ -91,7 +92,7 @@
           </div>
           <div class="feature-card">
             <span class="tile-code">02</span>
-            <h3>What you get</h3>
+            <h3>What Kyanite returns</h3>
             <ul class="clean-list">
               <li>A practical path to the working result</li>
               <li>Setup/adaptation notes and priority blockers</li>
@@ -104,9 +105,9 @@
             <span class="tag">Paid path</span>
             <h3>Implementation</h3>
             <div class="offer-price">Scoped</div>
-            <p>Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting belongs under PuenteWorks.</p>
+            <p>Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting routes through PuenteWorks.</p>
             <div class="button-row">
-              <a class="btn btn-primary" href="/implementation/intake">Start intake</a>
+              <a class="btn btn-primary" href="/implementation/intake">Send brief</a>
             </div>
           </div>
         </div>
@@ -118,7 +119,7 @@
         <div class="section-head">
           <div class="section-label">Exact Help</div>
           <h2 class="section-title">What Kyanite can help you get working.</h2>
-          <p class="section-sub">The goal is practical implementation, not strategy theater. You should leave closer to a tool you can actually use.</p>
+          <p class="section-sub">The goal is practical implementation. You should leave closer to a tool you can actually use.</p>
         </div>
         <div class="grid-3">
           <div class="feature-card">
@@ -134,7 +135,7 @@
           <div class="feature-card">
             <span class="tile-code">C</span>
             <h3>Understand tradeoffs and hand off</h3>
-            <p>Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation does not depend on a one-off chat.</p>
+            <p>Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation survives after the session.</p>
           </div>
         </div>
       </div>
@@ -142,7 +143,7 @@
 
     <section class="band">
       <div class="container split-panel">
-        <div class="card">
+        <div class="card trace-panel">
           <span class="mono-label">Why this exists</span>
           <h2 class="section-title">Kyanite already builds the proof.</h2>
           <p class="section-sub">MCP video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The paid support exists so people can reach the outcome faster, not just admire the repo.</p>
@@ -163,14 +164,14 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+          <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
           <p>Open-source proof and paid implementation help for getting AI tools working in real environments.</p>
         </div>
-        <div><h4>Support</h4><a href="/implementation/intake">Implementation Intake</a><a href="/#support">Products + support</a></div>
+        <div><h4>Support</h4><a href="/implementation/intake">Implementation Intake</a><a href="/#support">Next steps</a></div>
         <div><h4>Builds</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/blog">Blog</a></div>
         <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
     </div>
   </footer>
 </body>

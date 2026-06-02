@@ -6,7 +6,14 @@ import json
 import re
 import unittest
 
-from app import app, INDEXNOW_KEY, TIKTOK_SITE_VERIFICATION_BODY, TIKTOK_SITE_VERIFICATION_FILENAME
+from app import (
+    BLOG_POSTS,
+    INDEXNOW_KEY,
+    PRODUCTS,
+    TIKTOK_SITE_VERIFICATION_BODY,
+    TIKTOK_SITE_VERIFICATION_FILENAME,
+    app,
+)
 
 
 class LandingSmokeTests(unittest.TestCase):
@@ -14,6 +21,8 @@ class LandingSmokeTests(unittest.TestCase):
         self.client = app.test_client()
         self._original_config = {
             "ADMIN_API_TOKEN": app.config.get("ADMIN_API_TOKEN", ""),
+            "ENABLE_CERAFICA_DB": app.config.get("ENABLE_CERAFICA_DB", False),
+            "ENABLE_CERAFICA_PUBLIC_API": app.config.get("ENABLE_CERAFICA_PUBLIC_API", False),
             "KOFI_TOKEN": app.config.get("KOFI_TOKEN", ""),
         }
 
@@ -51,11 +60,25 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("/static/posthog.js", html)
         self.assertIn("/static/liminal-sites/liminal-sensorium.js", html)
         self.assertIn("/implementation/intake", html)
-        self.assertIn("/static/brand/website_hero_dark_1920x1080.png", html)
-        self.assertIn("KyaniteLabs crystalline logo on a dark technical field", html)
+        self.assertIn("/static/brand/kyanite-hero-generated-blended-1672x941.png", html)
+        self.assertIn("KyaniteLabs crystalline logo on a dark Voronoi technical field", html)
+        self.assertIn("The projects are the proof.", html)
+        self.assertIn("Choose the next move.", html)
+        self.assertNotIn('id="tools"', html)
+        self.assertNotIn("Flagship Proof // mcp-video", html)
         self.assertNotIn("MENU</button>", html)
         self.assertIn('aria-label="Open menu"', html)
         self.assertIn("<span></span><span></span></button>", html)
+
+    def test_public_nav_does_not_point_to_removed_tools_section(self) -> None:
+        paths = ["/", "/about", "/implementation", "/implementation/intake", "/blog", "/shop"]
+        paths.extend(f"/blog/{post['slug']}" for post in BLOG_POSTS)
+        paths.extend(f"/shop/{slug}" for slug in PRODUCTS)
+
+        for path in paths:
+            with self.subTest(path=path):
+                html = self.client.get(path).get_data(as_text=True)
+                self.assertNotIn("#tools", html)
 
     def test_homepage_images_have_accessible_alt_text(self) -> None:
         html = self.client.get("/").get_data(as_text=True)
@@ -152,6 +175,81 @@ class LandingSmokeTests(unittest.TestCase):
         app.config["ADMIN_API_TOKEN"] = "expected-admin-token"
         response = self.client.get("/api/sales/stats")
         self.assertEqual(response.status_code, 403)
+
+    def test_cerafica_api_namespace_is_not_public_by_default(self) -> None:
+        app.config["ENABLE_CERAFICA_DB"] = False
+        app.config["ENABLE_CERAFICA_PUBLIC_API"] = False
+
+        for path in ["/api/cerafica/health", "/api/cerafica/checkout"]:
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                body = response.get_data(as_text=True).lower()
+
+                self.assertEqual(response.status_code, 404)
+                self.assertNotIn("stripe", body)
+                self.assertNotIn("postgres", body)
+                self.assertNotIn("database is not enabled", body)
+
+    def test_public_copy_avoids_process_leakage(self) -> None:
+        paths = [
+            "/",
+            "/about",
+            "/implementation",
+            "/implementation/intake",
+            "/blog",
+            "/shop",
+            "/llms.txt",
+            "/llms-full.txt",
+        ]
+        paths.extend(f"/blog/{post['slug']}" for post in BLOG_POSTS)
+        paths.extend(f"/shop/{slug}" for slug in PRODUCTS)
+        banned_phrases = [
+            "legal/payment",
+            "technical/product",
+            "public proof surface",
+            "empty lead-gen",
+            "lead-gen theater",
+            "strategy theater",
+            "one-off chat",
+            "structured implementation request",
+            "messy truth",
+            "messy process",
+        ]
+
+        for path in paths:
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True).lower()
+                for phrase in banned_phrases:
+                    self.assertNotIn(phrase, body)
+
+    def test_spanish_routes_do_not_leak_replacement_artifacts(self) -> None:
+        paths = ["/es/", "/es/about", "/es/implementation", "/es/implementation/intake", "/es/blog", "/es/shop"]
+
+        for path in paths:
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True)
+
+                self.assertNotIn("Contactoo", body)
+                self.assertNotIn("/es/es/", body)
+                self.assertNotIn("Herramientas Herramientas", body)
+
+    def test_voronoi_motion_assets_are_wired(self) -> None:
+        css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
+        homepage = self.client.get("/").get_data(as_text=True)
+
+        self.assertIn("kyanite-voronoi-material-field-1800x1200.webp", css)
+        self.assertIn("kyanite-voronoi-material-slab-1600x760.webp", css)
+        self.assertIn("kyanite-voronoi-material-proof-2172x724.webp", css)
+        self.assertIn("kyanite-voronoi-drift", css)
+        self.assertIn("/static/js/kyanite-motion.js", homepage)
+        self.assertNotIn("source-map", css)
+        self.assertNotIn("source map / public build surface", css)
+
+    def test_unrelated_client_prototypes_are_not_public_kyanite_routes(self) -> None:
+        response = self.client.get("/mockup/tertulia")
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(any("tertulia" in str(rule).lower() for rule in app.url_map.iter_rules()))
 
     def test_kofi_webhook_requires_configured_secret(self) -> None:
         app.config["KOFI_TOKEN"] = ""

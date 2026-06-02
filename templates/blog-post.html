@@ -15,7 +15,7 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
-  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,7 +33,7 @@
         "publisher": {
           "@type": "Organization",
           "name": "KyaniteLabs",
-          "logo": {"@type": "ImageObject", "url": "https://kyanitelabs.tech/static/brand/avatar_square_neon_180x180.png"}
+          "logo": {"@type": "ImageObject", "url": "https://kyanitelabs.tech/static/brand/kyanite-icon-voronoi-180x180.png"}
         },
         "mainEntityOfPage": "https://kyanitelabs.tech/blog/{{ post.slug }}"
       },
@@ -51,18 +51,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-public-projects">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+  <script>document.documentElement.classList.add('js');</script>
   <script src="/static/posthog.js"></script>
   <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
+  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
 </head>
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
-        <a href="/#tools">Tools</a>
-        <a href="/#proof">Proof</a>
-        <a class="active" href="/blog">Blog</a>
+        <a href="/#proof">Projects</a>
+        <a href="/implementation">Implementation</a>
+        <a class="active" href="/blog">Lab Notes</a>
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
@@ -83,7 +85,7 @@
     </section>
 
     <section>
-      <article class="article">
+      <article class="article fade-up">
         {{ post.body | safe }}
       </article>
     </section>
@@ -92,16 +94,16 @@
       <div class="container split-panel">
         <div class="card">
           <span class="mono-label">Work with Kyanite</span>
-          <h2 class="section-title">Get the tool working.</h2>
-          <p class="section-sub">If this post describes a Kyanite tool or result you need in your real environment, implementation help is the paid path: setup, advising, docs, examples, and a usable handoff.</p>
+          <h2 class="section-title">Want this working in your environment?</h2>
+          <p class="section-sub">If this post describes a Kyanite tool or result you need, implementation help can cover setup, advising, docs, examples, checks, and a usable handoff.</p>
           <div class="button-row">
             <a class="btn btn-primary" href="/implementation/intake">Start implementation intake</a>
             <a class="btn btn-secondary" href="/implementation">See implementation help</a>
           </div>
         </div>
-        <div class="card">
-          <span class="mono-label">Brand boundary</span>
-          <p>KyaniteLabs is the technical/product line and public proof surface inside PuenteWorks LLC. Kyanite only offers help that is grounded in its tools, products, and build practice.</p>
+        <div class="card trace-panel">
+          <span class="mono-label">Fit boundary</span>
+          <p>Kyanite offers help grounded in its tools, products, and build practice. Broader consulting routes through PuenteWorks.</p>
         </div>
       </div>
     </section>
@@ -115,7 +117,7 @@
         <div class="grid-3">
           {% for item in posts %}
           {% if item.slug != post.slug %}
-          <a class="post-card" href="/blog/{{ item.slug }}">
+          <a class="post-card" href="/blog/{{ item.slug }}" aria-label="{{ item.title }}">
             <div class="post-meta"><span>{{ item.category }}</span><span>{{ item.read_time }}</span></div>
             <span class="post-title">{{ item.title }}</span>
             <p>{{ item.excerpt }}</p>
@@ -129,7 +131,7 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
     </div>
   </footer>
 </body>

@@ -10,21 +10,23 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
-  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-public-projects">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+  <script>document.documentElement.classList.add('js');</script>
   <script src="/static/posthog.js"></script>
   <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
+  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
 </head>
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
-        <a href="/#tools">Tools</a>
-        <a href="/blog">Blog</a>
+        <a href="/#proof">Projects</a>
+        <a href="/blog">Lab Notes</a>
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/implementation">Implementation</a>
@@ -37,9 +39,9 @@
   <main>
     <section class="page-hero">
       <div class="container page-hero-inner">
-        <div class="eyebrow">Structured implementation intake</div>
-        <h1>Tell Kyanite what you need working.</h1>
-        <p>This creates a structured implementation request for a real outcome. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether Kyanite can help you get the tool, repo, media pipeline, localization QA pass, or diagnostic working.</p>
+        <div class="eyebrow">Implementation brief</div>
+        <h1>Send the blocker before buying anything.</h1>
+        <p>This gives Kyanite enough context to decide whether the tool, repo, media pipeline, localization QA pass, or diagnostic can be moved toward a working handoff. It does not charge, publish, or commit you to a scope.</p>
       </div>
     </section>
 
@@ -76,14 +78,14 @@
             <label for="outcome">What would make this worth paying for?</label>
             <textarea id="outcome" name="outcome" placeholder="Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc."></textarea>
           </div>
-          <button class="btn btn-primary" type="submit" id="submitBtn">Send implementation intake</button>
+          <button class="btn btn-primary" type="submit" id="submitBtn">Send the implementation brief</button>
           <div id="intake-status" class="status" role="status" aria-live="polite"></div>
         </form>
 
         <aside class="card product-panel">
           <span class="mono-label">What happens next</span>
           <h3>Kyanite reads the context before selling the fix.</h3>
-          <p>If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.</p>
+          <p>If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.</p>
           <ul class="clean-list">
             <li>No automatic charge.</li>
             <li>No public posting without permission.</li>
@@ -96,7 +98,7 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
     </div>
   </footer>
 
@@ -108,7 +110,7 @@
       status.className = 'status';
       status.textContent = '';
       button.disabled = true;
-      button.textContent = 'Sending…';
+      button.textContent = 'Sending...';
       var fd = new FormData(document.getElementById('audit-intake-form'));
       var payload = {
         name: fd.get('name'),
@@ -123,7 +125,7 @@
         var res = await fetch('/api/implementation-intake', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         var data = await res.json().catch(function() { return {}; });
         if (res.ok && data.ok) {
-          status.textContent = 'Implementation intake sent. Kyanite will review it and follow up.';
+          status.textContent = 'Implementation brief sent. Kyanite will review it and follow up.';
           status.className = 'status ok';
           document.getElementById('audit-intake-form').reset();
         } else {
@@ -135,7 +137,7 @@
         status.className = 'status err';
       } finally {
         button.disabled = false;
-        button.textContent = 'Send implementation intake';
+        button.textContent = 'Send the implementation brief';
       }
     }
   </script>

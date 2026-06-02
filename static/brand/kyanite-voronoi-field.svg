@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1200" preserveAspectRatio="none">
+  <rect width="1800" height="1200" fill="#030608"/>
+  <g fill="none" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M0 154 188 0h312l228 182 326-82 262 154 484-118" stroke="#58d4df" stroke-opacity=".18" stroke-width="2"/>
+    <path d="M0 420 230 306l246 86 196-210 386 216 286-144 456 242" stroke="#e7c45c" stroke-opacity=".14" stroke-width="2"/>
+    <path d="M0 742 286 628l210 164 360-168 242 224 344-116 358 174" stroke="#e34f7c" stroke-opacity=".11" stroke-width="2"/>
+    <path d="M0 1088 232 894l330 104 214-260 376 206 250-252 398 94" stroke="#cae0ea" stroke-opacity=".12" stroke-width="2"/>
+    <path d="M188 0 230 306 0 420M500 0 476 392l252-210M1054 100l4 298 286-144M1316 254l126 478 358-236M286 628l-54 266 330 104M856 624l-80 114 80 342M1098 848l54 96 250-252" stroke="#cae0ea" stroke-opacity=".09" stroke-width="1.5"/>
+  </g>
+  <g fill-opacity=".08">
+    <polygon points="188,0 500,0 728,182 476,392 230,306" fill="#58d4df"/>
+    <polygon points="728,182 1054,100 1058,398 856,624 476,392" fill="#e7c45c"/>
+    <polygon points="1058,398 1344,254 1442,732 1098,848 856,624" fill="#58d4df"/>
+    <polygon points="230,306 476,392 286,628 0,742 0,420" fill="#e34f7c"/>
+    <polygon points="286,628 496,792 562,998 232,894" fill="#cae0ea"/>
+    <polygon points="856,624 1098,848 1152,944 856,1080 776,738" fill="#e7c45c"/>
+  </g>
+</svg>

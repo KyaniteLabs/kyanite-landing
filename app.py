@@ -45,6 +45,7 @@ app.config["PG_USER"]      = os.environ.get("PG_USER", "postgres")
 app.config["PG_PASS"]      = os.environ.get("PG_PASS", "postgres")
 app.config["ENABLE_SHOP_DB"] = os.environ.get("ENABLE_SHOP_DB", "0") == "1"
 app.config["ENABLE_CERAFICA_DB"] = os.environ.get("ENABLE_CERAFICA_DB", "0") == "1"
+app.config["ENABLE_CERAFICA_PUBLIC_API"] = os.environ.get("ENABLE_CERAFICA_PUBLIC_API", "0") == "1"
 app.config["ADMIN_API_TOKEN"] = os.environ.get("ADMIN_API_TOKEN", "")
 app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", str(64 * 1024)))
 
@@ -295,7 +296,7 @@ BLOG_POSTS = [
         "excerpt": "The useful agent pattern is not a prettier prompt. It is a tool surface the agent can call, inspect, verify, and revise.",
         "body": """
 <p><strong>The useful agent pattern is not a prettier prompt. It is a tool surface the agent can call, inspect, verify, and revise.</strong> A prompt can suggest work. A tool can touch the artifact.</p>
-<p>That distinction is why Kyanite keeps building MCP servers, command-line tools, demos, and public proof surfaces. The agent needs a handle on the real operation: editing a video, estimating time, localizing Spanish variants, reading repo history, or checking a domain-specific calculation.</p>
+<p>That distinction is why Kyanite keeps building MCP servers, command-line tools, demos, and public proof records. The agent needs a handle on the real operation: editing a video, estimating time, localizing Spanish variants, reading repo history, or checking a domain-specific calculation.</p>
 <p>If the system cannot verify what happened, the agent is still mostly guessing.</p>
 <h2>The tool contract is the product boundary</h2>
 <p>A good agent tool has a clear action, typed inputs, structured output, readable errors, and a small verification path. That sounds boring. It is also what separates a reusable capability from a one-off session.</p>
@@ -338,7 +339,7 @@ revise next step</code></pre>
   <li>Whether public claims match current routes, releases, and README examples.</li>
   <li>Where a project needs cleanup before a buyer, user, or contributor can trust it.</li>
 </ul>
-<p>This is why Kyanite includes devarch-framework and Dev Learning Archaeologist in the public proof surface. They turn invisible engineering behavior into a readable diagnostic artifact.</p>
+<p>This is why Kyanite includes devarch-framework and Dev Learning Archaeologist in the public project set. They turn invisible engineering behavior into a readable diagnostic artifact.</p>
 <h2>AI makes this more important, not less</h2>
 <p>AI agents can change more files faster. That is useful when the work is bounded and verified. It is dangerous when nobody can tell which changes mattered. Repo history becomes the receipt trail.</p>
 <blockquote>If a tool claims to be ready, the repo should help prove readiness instead of forcing the reader to trust the landing page.</blockquote>
@@ -370,7 +371,7 @@ revise next step</code></pre>
   <li>Name what the tool does not do yet.</li>
   <li>Offer a paid path when someone wants the result without doing every setup step alone.</li>
 </ul>
-<p>Kyanite's own site follows that pattern: public repos, products, blog posts, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, implementation intake, and a clear boundary that KyaniteLabs is the technical/product path inside PuenteWorks LLC.</p>
+<p>Kyanite's own site follows that pattern: public repos, products, blog posts, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, implementation intake, and a clear boundary between Kyanite tool implementation and broader PuenteWorks consulting.</p>
 <h2>Open source does not remove service work</h2>
 <p>Open source can reduce lock-in and prove capability. It does not automatically handle installation, adaptation, team training, environment differences, docs, examples, or maintenance decisions.</p>
 <blockquote>The repo proves the tool exists. Implementation help gets the tool into working hands.</blockquote>
@@ -482,7 +483,7 @@ verification command
 known limits
 implementation option</code></pre>
 <h2>What Kyanite sells</h2>
-<p>KyaniteLabs is the public proof surface where the tools, experiments, blog posts, and open-source products live. The paid path helps people install, adapt, understand, and hand off those tools in a real environment.</p>
+<p>KyaniteLabs is the public lab where the tools, experiments, blog posts, and open-source products live. The paid path helps people install, adapt, understand, and hand off those tools in a real environment.</p>
 <blockquote>The goal is not generic consulting. The goal is getting useful tools into working hands.</blockquote>
 <p>Good implementation does not hide the mess. It turns the mess into a map.</p>
 """,
@@ -562,7 +563,7 @@ implementation option</code></pre>
         "read_time": "6 min",
         "primary_keyword": "AI discovery",
         "seo_title": "AI discovery, llms.txt, and GEO for product sites",
-        "meta_description": "AI discovery needs sitemap coverage, llms.txt, structured data, direct-answer copy, FAQ sections, and clear public proof surfaces.",
+        "meta_description": "AI discovery needs sitemap coverage, llms.txt, structured data, direct-answer copy, FAQ sections, and clear public project evidence.",
         "excerpt": "What Kyanite adds so search engines and AI assistants can understand the tools, products, proof, and support path.",
         "body": """
 <p><strong>AI discovery works when a site gives crawlers and answer engines structured, quotable, current facts about what exists, who it helps, and what proof supports it.</strong> A sitemap is necessary. It is not enough.</p>
@@ -1380,15 +1381,18 @@ ABOUT_COPY = {
 COMMON_ES_REPLACEMENTS = {
     "Skip to content": "Saltar al contenido",
     "Tools": "Herramientas",
+    "Projects": "Proyectos",
     "Proof": "Prueba",
     "Builds": "Builds",
     "Blog": "Notas",
+    "Lab Notes": "Notas",
     "Support": "Soporte",
     "Shop": "Tienda",
     "Contact": "Contacto",
     "About": "Sobre mi",
     "Home": "Inicio",
     "Implementation Help": "Ayuda de implementacion",
+    "Start Intake": "Enviar intake",
     "Implementation Intake": "Intake de implementacion",
     "Implementation": "Implementacion",
     "Creative dev lab": "Laboratorio creativo de desarrollo",
@@ -1397,6 +1401,34 @@ COMMON_ES_REPLACEMENTS = {
     "Get implementation help": "Pedir ayuda de implementacion",
     "Read the blog": "Leer las notas",
     "Public Proof": "Prueba publica",
+    "The projects are the proof.": "Los proyectos son la prueba.",
+    "Open the repo, inspect the artifact, and pick the Kyanite build closest to the blocker you want running in your environment.": "Abre el repo, inspecciona el artefacto y elige el build de Kyanite mas cercano al bloqueo que quieres hacer funcionar en tu entorno.",
+    "Use The Proof": "Usar la prueba",
+    "Choose the next move.": "Elige el siguiente paso.",
+    "Use the gallery as a map: install one of the tools, read the build context, or start with a smaller asset before a scoped implementation conversation.": "Usa la galeria como mapa: instala una herramienta, lee el contexto del build o empieza con un activo mas pequeno antes de una conversacion de implementacion por alcance.",
+    "Scoped help": "Ayuda por alcance",
+    "Get a project running": "Haz funcionar un proyecto",
+    "For builders who want mcp-video, Epoch, DialectOS, OpenGlaze, repo diagnostics, or another Kyanite build installed, adapted, and handed off cleanly.": "Para builders que quieren mcp-video, Epoch, DialectOS, OpenGlaze, diagnosticos de repo u otro build de Kyanite instalado, adaptado y entregado con claridad.",
+    "Install path, config, and first successful run": "Ruta de instalacion, config y primer run exitoso",
+    "Adaptation to your repo, workflow, or operating constraints": "Adaptacion a tu repo, flujo o restricciones operativas",
+    "Documentation you can reuse after the call": "Documentacion que puedes reutilizar despues de la llamada",
+    "Start intake": "Enviar intake",
+    "Understand the build": "Entender el build",
+    "Read the notes behind the project: what the tool does, where it is useful, what still needs care, and how the implementation surface should behave.": "Lee las notas detras del proyecto: que hace la herramienta, donde sirve, que todavia requiere cuidado y como debe comportarse la superficie de implementacion.",
+    "MCP video editing, localization QA, and estimation notes": "Notas de video MCP, QA de localizacion y estimacion",
+    "Implementation checklists and product decisions": "Checklists de implementacion y decisiones de producto",
+    "Plain facts that make the build easier to evaluate": "Hechos claros que hacen mas facil evaluar el build",
+    "Read lab notes": "Leer notas",
+    "Assets": "Activos",
+    "Start smaller": "Empieza mas pequeno",
+    "Use templates, workflows, and operator assets when you do not need a full implementation pass yet but want fewer blank-page starts.": "Usa plantillas, flujos y activos de operador cuando todavia no necesitas una implementacion completa pero quieres menos comienzos desde pagina en blanco.",
+    "Claude Code workflows and productization templates": "Flujos de Claude Code y plantillas de productizacion",
+    "Useful before a scoped implementation request": "Util antes de un pedido de implementacion por alcance",
+    "Lower-commitment entry point for builders": "Entrada de menor compromiso para builders",
+    "Latest Lab Notes": "Notas recientes",
+    "The thinking should make the tools easier to trust.": "El pensamiento debe hacer que las herramientas sean mas confiables.",
+    "Build logs and implementation notes show where a tool works, where it is rough, and what it takes to use it well.": "Los logs de construccion y notas de implementacion muestran donde funciona una herramienta, donde esta rough y que hace falta para usarla bien.",
+    "Read all notes": "Leer todas las notas",
     "The repos are the lab notebook and the product shelf.": "Los repos son el cuaderno de laboratorio y la vitrina de producto.",
     "Blog // Lab Notes": "Notas // Laboratorio",
     "The thinking should be as public as the tools.": "El pensamiento debe ser tan publico como las herramientas.",
@@ -1404,7 +1436,7 @@ COMMON_ES_REPLACEMENTS = {
     "Operating Model": "Modelo operativo",
     "Products + Support": "Productos + soporte",
     "Open-source first. Paid help when you want it implemented.": "Open source primero. Ayuda pagada cuando quieres implementarlo.",
-    "Bring the messy truth.": "Trae la verdad desordenada.",
+    "Bring the blocker.": "Trae el bloqueo.",
     "Your name": "Tu nombre",
     "Email address": "Email",
     "Context": "Contexto",
@@ -1458,7 +1490,7 @@ COMMON_ES_REPLACEMENTS = {
     "Get help using the tool.": "Recibe ayuda para usar la herramienta.",
     "Get the tool working.": "Haz funcionar la herramienta.",
     "If this post describes a Kyanite tool or result you need in your real environment, implementation help is the paid path: setup, advising, docs, examples, and a usable handoff.": "Si esta nota describe una herramienta o resultado Kyanite que necesitas en tu entorno real, la ayuda de implementacion es la ruta pagada: setup, asesoria, docs, ejemplos y un handoff usable.",
-    "KyaniteLabs is the technical/product line and public proof surface inside PuenteWorks LLC. Kyanite only offers help that is grounded in its tools, products, and build practice.": "KyaniteLabs es la linea tecnica/producto y superficie de prueba publica dentro de PuenteWorks LLC. Kyanite solo ofrece ayuda basada en sus herramientas, productos y practica de construccion.",
+    "Kyanite offers help grounded in its tools, products, and build practice. Broader consulting routes through PuenteWorks.": "Kyanite ofrece ayuda basada en sus herramientas, productos y practica de construccion. La consultoria mas amplia se enruta por PuenteWorks.",
     "The repos are proof before the pitch.": "Los repos son prueba antes del pitch.",
     "Public repositories show what Kyanite builds, learns, breaks, fixes, and releases. The paid path helps people get those tools working in real environments.": "Los repositorios publicos muestran lo que Kyanite construye, aprende, rompe, arregla y publica. La ruta pagada ayuda a que esas herramientas funcionen en entornos reales.",
     "See implementation help": "Ver ayuda de implementacion",
@@ -1479,7 +1511,7 @@ COMMON_ES_REPLACEMENTS = {
     "Get help turning KyaniteLabs tools into a working setup instead of doing every install, adaptation, and handoff step alone.": "Recibe ayuda para convertir herramientas KyaniteLabs en un setup funcional sin hacer cada paso de instalacion, adaptacion y handoff en soledad.",
     "Paid outcome help": "Ayuda pagada para llegar al resultado",
     "Get the tool working without doing every setup step alone.": "Haz funcionar la herramienta sin hacer cada paso de setup en soledad.",
-    "KyaniteLabs is the technical/product line inside PuenteWorks LLC.": "KyaniteLabs es la linea tecnica/producto dentro de PuenteWorks LLC.",
+    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
     "Most Kyanite products are open source. Paid implementation helps you install the tool, adapt it to your environment, understand the tradeoffs, and leave with a usable handoff.": "La mayoria de los productos Kyanite son open source. La implementacion pagada te ayuda a instalar la herramienta, adaptarla a tu entorno, entender los tradeoffs y salir con un handoff usable.",
     "What result you need from the Kyanite tool": "Que resultado necesitas de la herramienta Kyanite",
     "Your machine, stack, constraints, and current blocker": "Tu maquina, stack, restricciones y bloqueo actual",
@@ -1487,7 +1519,7 @@ COMMON_ES_REPLACEMENTS = {
     "A practical path to the working result": "Una ruta practica hacia el resultado funcionando",
     "Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting belongs under PuenteWorks.": "Buen fit cuando quieres el resultado de una herramienta o flujo Kyanite sin hacer cada paso de setup, adaptacion y handoff en soledad. La consultoria mas amplia pertenece a PuenteWorks.",
     "What Kyanite can help you get working.": "Lo que Kyanite puede ayudarte a hacer funcionar.",
-    "The goal is practical implementation, not strategy theater. You should leave closer to a tool you can actually use.": "La meta es implementacion practica, no teatro de estrategia. Debes salir mas cerca de una herramienta que realmente puedas usar.",
+    "The goal is practical implementation. You should leave closer to a tool you can actually use.": "La meta es implementacion practica. Debes salir mas cerca de una herramienta que realmente puedas usar.",
     "Adapt it to the real workflow": "Adaptarlo al flujo real",
     "Understand tradeoffs and hand off": "Entender tradeoffs y dejar handoff",
     "Kyanite already builds the proof.": "Kyanite ya construye la prueba.",
@@ -1495,9 +1527,9 @@ COMMON_ES_REPLACEMENTS = {
     "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow working in their environment.": "Personas que quieren mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite funcionando en su entorno.",
     "Tell KyaniteLabs what result you need from a tool, repo, media pipeline, localization QA pass, or diagnostic so the next step can be scoped.": "Dile a KyaniteLabs que resultado necesitas de una herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico para poder definir el siguiente paso.",
     "Tell Kyanite what you need working.": "Dile a Kyanite que necesitas hacer funcionar.",
-    "This creates a structured implementation request for a real outcome. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether Kyanite can help you get the tool, repo, media pipeline, localization QA pass, or diagnostic working.": "Esto crea una solicitud estructurada de implementacion para un resultado real. No compra, publica ni compromete nada automaticamente. Da suficiente contexto para decidir si Kyanite puede ayudarte a hacer funcionar la herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico.",
+    "This gives Kyanite enough context to decide whether the tool, repo, media pipeline, localization QA pass, or diagnostic can be moved toward a working handoff. It does not charge, publish, or commit you to a scope.": "Esto da a Kyanite suficiente contexto para decidir si la herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico puede avanzar hacia un handoff funcional. No cobra, publica ni te compromete a un alcance.",
     "Kyanite reads the context before selling the fix.": "Kyanite lee el contexto antes de vender la solucion.",
-    "If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.": "Si encaja con la superficie de Kyanite, recibiras un siguiente paso concreto. Si pertenece a consultoria mas amplia de PuenteWorks, la respuesta lo enrutara ahi en vez de forzar un alcance tecnico.",
+    "If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.": "Si encaja con una ruta de herramienta Kyanite, recibiras un siguiente paso concreto. Si pertenece a consultoria mas amplia de PuenteWorks, la respuesta lo enrutara ahi en vez de forzar un alcance tecnico.",
     "Best with source, demo, docs, product notes, logs, or current blocker evidence.": "Funciona mejor con fuente, demo, docs, notas de producto, logs o evidencia del bloqueo actual.",
     "KyaniteLabs — Creative Dev Lab for Open Source AI Tools": "KyaniteLabs — Laboratorio creativo para herramientas de IA open source",
     "KyaniteLabs — Creative Dev Lab for Open Source AI Herramientas": "KyaniteLabs — Laboratorio creativo para herramientas de IA open source",
@@ -1512,7 +1544,7 @@ COMMON_ES_REPLACEMENTS = {
     "Which Kyanite tool or workflow do you want help with? What are you trying to do with it?": "Con que herramienta o flujo de Kyanite quieres ayuda? Que quieres lograr con eso?",
     "What is confusing, broken, too technical, undocumented, hard to install, or hard to adapt?": "Que es confuso, roto, demasiado tecnico, indocumentado, dificil de instalar o dificil de adaptar?",
     "Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc.": "Herramienta instalada, flujo adaptado, docs, ejemplos, llamada de entrenamiento, plan de integracion, QA de localizacion, pipeline de medios, etc.",
-    "If this fits the Kyanite lab surface, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, Kyanite will say that instead of pretending.": "Si encaja con la superficie de Kyanite, recibiras un siguiente paso concreto. Si pertenece a una consultoria mas amplia de PuenteWorks, Kyanite lo dira en vez de fingir.",
+    "If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, Kyanite will say that instead of pretending.": "Si encaja con una ruta de herramienta Kyanite, recibiras un siguiente paso concreto. Si pertenece a una consultoria mas amplia de PuenteWorks, Kyanite lo dira en vez de fingir.",
     "No automatic charge.": "Sin cobro automatico.",
     "No public posting without permission.": "Nada se publica sin permiso.",
     "Best with source, demo, docs, product notes, logs, or workflow evidence.": "Funciona mejor con fuente, demo, docs, notas de producto, logs o evidencia del flujo.",
@@ -1585,10 +1617,10 @@ LANDING_ES_REPLACEMENTS = {
     "Build from real use": "Construir desde uso real",
     "Make it inspectable": "Hacerlo inspeccionable",
     "Help people use it": "Ayudar a que se use",
-    "KyaniteLabs is the build lab and technical/product line inside PuenteWorks LLC. The paid work here is implementation and advising around Kyanite tools, products, workflows, and artifacts.": "KyaniteLabs es el laboratorio de construccion y la linea tecnica/producto dentro de PuenteWorks LLC. El trabajo pagado aqui es implementacion y asesoria alrededor de herramientas, productos, flujos y artefactos de Kyanite.",
+    "KyaniteLabs publishes the tools and proof. Paid work helps people get Kyanite tools, products, workflows, and artifacts installed, adapted, documented, and usable.": "KyaniteLabs publica las herramientas y la prueba. El trabajo pagado ayuda a instalar, adaptar, documentar y usar herramientas, productos, flujos y artefactos de Kyanite.",
     "Best for builders who want implementation help around Kyanite tools.": "Ideal para builders que quieren ayuda de implementacion alrededor de herramientas Kyanite.",
-    "Not a fit for generic consulting, empty lead-gen theater, or unrelated agency work.": "No es para consultoria generica, teatro de lead-gen o trabajo de agencia sin relacion.",
-    "PuenteWorks LLC is the legal/payment container; Kyanite is the technical lab.": "PuenteWorks LLC es el contenedor legal/de pago; Kyanite es el laboratorio tecnico.",
+    "Not a fit for generic consulting, vague vendor inquiries, or unrelated agency work.": "No es para consultoria generica, consultas vagas de proveedor o trabajo de agencia sin relacion.",
+    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
 }
 
 EXTRA_ES_REPLACEMENTS = {
@@ -1605,7 +1637,7 @@ EXTRA_ES_REPLACEMENTS = {
     "Agent-native tools, public proof, and notes from the build floor.": "Herramientas agent-native, prueba publica y notas desde el taller.",
     "Agent-native tools, operator assets, and public product systems.": "Herramientas agent-native, activos de operador y sistemas publicos de producto.",
     "Agent-native tools and operator assets grounded in real workflows.": "Herramientas agent-native y activos de operador basados en flujos reales.",
-    "KyaniteLabs is the creative build lab and technical/product line inside PuenteWorks LLC.": "KyaniteLabs es el laboratorio creativo de construccion y la linea tecnica/producto dentro de PuenteWorks LLC.",
+    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
     "Most Kyanite products are open source. The paid path here is implementation and advising around those tools: install them, adapt them to your workflow, understand the tradeoffs, and leave with something usable.": "La mayoria de los productos Kyanite son open source. La ruta pagada aqui es implementacion y asesoria alrededor de esas herramientas: instalarlas, adaptarlas a tu flujo, entender los tradeoffs y salir con algo usable.",
     "Which Kyanite tool or workflow you want to use": "Que herramienta o flujo de Kyanite quieres usar",
     "Your machine, stack, constraints, and current blockers": "Tu maquina, stack, restricciones y bloqueos actuales",
@@ -1619,16 +1651,16 @@ EXTRA_ES_REPLACEMENTS = {
     "Scope for deeper build work if the tool needs it": "Alcance para construccion mas profunda si la herramienta lo necesita",
     "Paid path": "Ruta pagada",
     "Good fit when you want help implementing a Kyanite tool or workflow instead of doing the setup and adaptation alone. Broader consulting belongs under PuenteWorks.": "Buen fit cuando quieres ayuda implementando una herramienta o flujo de Kyanite en vez de hacer el setup y la adaptacion en soledad. La consultoria mas amplia pertenece a PuenteWorks.",
-    "The goal is practical implementation, not strategy theater. You should leave closer to using the tool.": "El objetivo es implementacion practica, no teatro estrategico. Debes salir mas cerca de usar la herramienta.",
+    "The goal is practical implementation. You should leave closer to using the tool.": "El objetivo es implementacion practica. Debes salir mas cerca de usar la herramienta.",
     "Get a Kyanite tool running in your environment with the right dependencies, commands, configs, examples, and basic checks.": "Deja una herramienta Kyanite funcionando en tu entorno con dependencias, comandos, configs, ejemplos y checks basicos.",
     "Map the tool to your real process: video pipeline, estimation workflow, localization QA, glaze studio work, or dev-learning diagnostics.": "Mapea la herramienta a tu proceso real: pipeline de video, estimacion, QA de localizacion, estudio de esmaltes o diagnosticos de aprendizaje.",
-    "Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation does not depend on a one-off chat.": "Entiende tradeoffs, siguientes pasos, limites y mantenimiento para que la implementacion no dependa de un chat aislado.",
+    "Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation survives after the session.": "Entiende tradeoffs, siguientes pasos, limites y mantenimiento para que la implementacion sobreviva despues de la sesion.",
     "MCP video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The paid support exists so people can actually use the tools, not just admire the repo.": "Edicion de video por MCP, estimacion de tiempo, QA de localizacion en español, software de esmaltes ceramicos y diagnosticos de aprendizaje. El soporte pagado existe para que la gente use las herramientas, no solo admire el repo.",
     "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow implemented.": "Personas que quieren implementar mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite.",
     "Builders who want advising around setup, adaptation, docs, and next steps.": "Builders que quieren asesoria sobre setup, adaptacion, docs y siguientes pasos.",
     "Not generic consulting. That belongs under PuenteWorks.": "No es consultoria generica. Eso pertenece a PuenteWorks.",
     "KyaniteLabs publishes notes after there is a real build, lesson, product, or workflow to explain.": "KyaniteLabs publica notas cuando ya hay un build, aprendizaje, producto o flujo real que explicar.",
-    "The blog covers open-source AI tools, MCP systems, agentic media, developer learning, implementation notes, and the messy process behind the work.": "Las notas cubren herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, implementacion y el proceso desordenado detras del trabajo.",
+    "The blog covers open-source AI tools, MCP systems, agentic media, developer learning, implementation notes, and the work behind the proof.": "Las notas cubren herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, implementacion y el trabajo detras de la prueba.",
     "Published KyaniteLabs notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.": "Notas de KyaniteLabs sobre herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, productos e implementacion.",
     "Published technical lab notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.": "Notas tecnicas de laboratorio sobre herramientas de IA open source, sistemas MCP, medios agenticos, aprendizaje de desarrollo, productos e implementacion.",
     "Repositories show what Kyanite builds, learns, breaks, fixes, and releases. The paid path is implementation help around those tools, not a generic consulting offer.": "Los repositorios muestran lo que Kyanite construye, aprende, rompe, arregla y publica. La ruta pagada es ayuda de implementacion alrededor de esas herramientas, no consultoria generica.",
@@ -1677,10 +1709,10 @@ EXTRA_ES_REPLACEMENTS = {
     "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so the work can survive outside the chat.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que el trabajo sobreviva fuera del chat.",
     "Keep the tools open where possible, sell practical implementation help when someone wants the setup, adaptation, or advising done with them.": "Mantener abiertas las herramientas cuando sea posible y vender ayuda practica de implementacion cuando alguien quiere setup, adaptacion o asesoria hecha con ellos.",
     "Servidores MCP, CLIs, domain tools, experiments, and build notes that you can inspect, install, fork, learn from, or use as starting points.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que puedes inspeccionar, instalar, bifurcar, estudiar o usar como punto de partida.",
-    "Tool you want to use, repo you want installed, workflow you want adapted, docs you do not understand, half-working MCP setup, or a build you want advice on. If it connects to Kyanite's tools and practice, bring the messy truth.": "Herramienta que quieres usar, repo que quieres instalar, flujo que quieres adaptar, docs que no entiendes, setup MCP a medias o build sobre el que quieres consejo. Si conecta con las herramientas y practica de Kyanite, trae la verdad desordenada.",
+    "Tool you need running, repo you need installed, video pipeline you need usable, Spanish QA you need trusted, diagnostic you need explained, or a build you need handed off. If it connects to Kyanite's tools and practice, bring the blocker.": "Herramienta que necesitas corriendo, repo que necesitas instalado, pipeline de video que necesitas usable, QA de espanol que necesitas confiable, diagnostico que necesitas explicado o build que necesitas entregar. Si conecta con las herramientas y practica de Kyanite, trae el bloqueo.",
     "© 2026 KyaniteLabs. All rights reserved.": "© 2026 KyaniteLabs. Todos los derechos reservados.",
     "&copy; 2026 KyaniteLabs. All rights reserved.": "&copy; 2026 KyaniteLabs. Todos los derechos reservados.",
-    "This creates a structured implementation request for Kyanite. It does not automatically buy, publish, or commit to anything. It gives enough context to decide whether the request fits KyaniteLabs: open-source tools, build workflows, MCP systems, media pipelines, localization QA, and learning diagnostics.": "Esto crea una solicitud estructurada de implementacion para Kyanite. No compra, publica ni compromete nada automaticamente. Da el contexto suficiente para decidir si el pedido encaja con KyaniteLabs: herramientas open source, flujos de construccion, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de aprendizaje.",
+    "This gives Kyanite enough context to decide whether the request fits: open-source tools, build workflows, MCP systems, media pipelines, localization QA, and learning diagnostics.": "Esto da a Kyanite suficiente contexto para decidir si el pedido encaja: herramientas open source, flujos de construccion, sistemas MCP, pipelines de medios, QA de localizacion y diagnosticos de aprendizaje.",
 }
 
 SPANISH_REPLACEMENTS = {**COMMON_ES_REPLACEMENTS, **LANDING_ES_REPLACEMENTS, **EXTRA_ES_REPLACEMENTS}
@@ -1731,8 +1763,6 @@ def spanishify(html, en_path, es_path):
     html = html.replace('href="/es/static/', 'href="/static/')
     html = html.replace('href="/es/', 'href="/es/')
     ordered_replacements = sorted(SPANISH_REPLACEMENTS.items(), key=lambda item: len(item[0]), reverse=True)
-    for english, spanish in ordered_replacements:
-        html = html.replace(english, spanish)
     for english, spanish in ordered_replacements:
         html = html.replace(english, spanish)
     return html
@@ -2200,7 +2230,7 @@ def llms_txt():
 
 KyaniteLabs is where Simon Gonzalez de Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
 
-KyaniteLabs is part of PuenteWorks LLC. PuenteWorks LLC is the legal/payment container; KyaniteLabs is the technical/product line and public proof surface.
+KyaniteLabs is operated by PuenteWorks LLC. Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
 
 ## Primary Pages
 
@@ -2248,7 +2278,7 @@ Only the public repositories listed above should be treated as public Kyanite pr
 
 - Email: info@kyanitelabs.tech
 - Best-fit implementation clients: people who want help using, adapting, or integrating Kyanite-built tools.
-- Not a fit: generic consulting requests that belong on PuenteWorks, empty lead-gen theater, or work unrelated to the tools and build practice.
+- Not a fit: generic consulting requests that belong on PuenteWorks, vague vendor inquiries, or work unrelated to the tools and build practice.
 """
     return Response(body, mimetype="text/plain")
 
@@ -2295,7 +2325,7 @@ def llms_full_txt():
 
 > Longer machine-readable context for answer engines, agents, and research tools. For the short canonical brief, use {CANONICAL_BASE}/llms.txt.
 
-KyaniteLabs is the technical/product line inside PuenteWorks LLC. It publishes open-source proof, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
+KyaniteLabs is operated by PuenteWorks LLC. It publishes open-source tools, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
 
 ## Canonical Public Surfaces
 
@@ -2692,15 +2722,6 @@ def _price_to_slug(amount, currency):
     return "unknown"
 
 
-@app.route("/mockup/tertulia")
-def mockup_tertulia():
-    try:
-        with open("templates/mockup-terulia-crafty.html", "r", encoding="utf-8") as f:
-            return f.read()
-    except Exception as e:
-        return f"Error loading mockup: {e}", 500
-
-
 @app.route("/api/sales/stats")
 def sales_stats():
     """Admin endpoint to check sales (should be protected in production)."""
@@ -2746,10 +2767,12 @@ def cerafica_cors_response(data, status=200):
 
 @app.before_request
 def guard_disabled_cerafica_db_routes():
-    if request.method == "OPTIONS":
-        return None
     if request.path in ADMIN_API_PATHS:
         return admin_api_gate()
+    if request.path.startswith("/api/cerafica/") and not app.config.get("ENABLE_CERAFICA_PUBLIC_API"):
+        return jsonify({"error": "Not found"}), 404
+    if request.method == "OPTIONS":
+        return None
     if request.path == "/api/cerafica/health":
         return None
     if request.path.startswith("/api/cerafica/") and not app.config.get("ENABLE_CERAFICA_DB"):
@@ -2819,7 +2842,7 @@ def init_cerafica_db():
 def cerafica_health():
     if request.method == "OPTIONS":
         return cerafica_cors_response({"ok": True})
-    return cerafica_cors_response({"ok": True, "stripe_configured": bool(CERAFICA_STRIPE_KEY)})
+    return cerafica_cors_response({"ok": True})
 
 
 @app.route("/api/cerafica/checkout", methods=["POST", "OPTIONS"])

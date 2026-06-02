@@ -17,7 +17,7 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
-  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,17 +32,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-public-projects">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+  <script>document.documentElement.classList.add('js');</script>
   <script src="/static/posthog.js"></script>
   <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
+  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
 </head>
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
-        <a href="/#tools">Tools</a>
-        <a href="/blog">Blog</a>
+        <a href="/#proof">Projects</a>
+        <a href="/implementation">Implementation</a>
+        <a href="/blog">Lab Notes</a>
         <a class="active" href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
@@ -63,12 +66,12 @@
 
     <section>
       <div class="container product-layout">
-        <article class="article">
+        <article class="article fade-up">
           <span class="mono-label">{{ product.category }}</span>
-          <h2>What this is</h2>
+          <h2>What you get</h2>
           <p>{{ product.description }}</p>
 
-          <h2>What's included</h2>
+          <h2>Inside the download</h2>
           <ul>
             {% for f in product.features %}
             <li>{{ f }}</li>
@@ -76,7 +79,7 @@
           </ul>
 
           {% if product.faq %}
-          <h2>Questions buyers ask</h2>
+          <h2>Buyer questions</h2>
           {% for item in product.faq %}
           <h3>{{ item.q }}</h3>
           <p>{{ item.a }}</p>
@@ -84,14 +87,18 @@
           {% endif %}
         </article>
 
-        <aside class="card product-panel">
+        <aside class="card product-panel fade-up">
+          <div class="artifact-cover artifact-cover-small" aria-hidden="true">
+            <span>{{ product.category }}</span>
+            <strong>{{ product.name }}</strong>
+          </div>
           <span class="tile-code">{{ product.name[0] }}</span>
           <span class="tag green">Instant download</span>
           <h3>{{ product.name }}</h3>
           <div class="offer-price">${{ product.price }} <span>USD</span></div>
           <p>{{ product.delivery }}</p>
           <div class="button-row">
-            <a class="btn btn-primary" href="{{ product.get('kofi_product_url') or kofi_url }}" target="_blank" rel="noopener noreferrer">Buy on Ko-fi</a>
+            <a class="btn btn-primary" href="{{ product.get('kofi_product_url') or kofi_url }}" target="_blank" rel="noopener noreferrer">Buy the download on Ko-fi</a>
             <a class="btn btn-secondary" href="/shop">Back to shop</a>
           </div>
           <ul class="clean-list">
@@ -107,14 +114,14 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+          <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
           <p>Agent-native tools and operator assets grounded in real workflows.</p>
         </div>
         <div><h4>Shop</h4><a href="/shop">All assets</a><a href="/implementation">Implementation Help</a></div>
         <div><h4>Proof</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/blog">Blog</a></div>
         <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
     </div>
   </footer>
 </body>

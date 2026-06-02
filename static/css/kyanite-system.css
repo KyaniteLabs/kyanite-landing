@@ -2989,7 +2989,7 @@ body::after {
 }
 
 .evidence-material::before {
-  content: "source map / public build surface";
+  content: "public lab / working tools";
   position: absolute;
   left: 18px;
   top: 16px;
@@ -3194,7 +3194,7 @@ textarea {
   }
 }
 
-/* Generated matte material pass: Kyanite source-map textures, solid surfaces only. */
+/* Generated matte material pass: Kyanite project textures, solid surfaces only. */
 body::before {
   background: url("/static/brand/kyanite-texture-section-field-1774x887.webp") center top / cover no-repeat;
   opacity: 0.5;
@@ -3511,4 +3511,540 @@ body::after {
   .hero-logo-plate img {
     min-height: 238px;
   }
+}
+
+/* 2026-06-01 remediation: Voronoi material system, shared motion, no pill controls. */
+:root {
+  --voronoi-field: url("/static/brand/kyanite-voronoi-material-field-1800x1200.webp");
+  --voronoi-slab: url("/static/brand/kyanite-voronoi-material-slab-1600x760.webp");
+  --voronoi-proof: url("/static/brand/kyanite-voronoi-material-proof-2172x724.webp");
+}
+
+body::before {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(94, 220, 232, 0.2), transparent 28%),
+    radial-gradient(circle at 82% 24%, rgba(233, 201, 96, 0.12), transparent 24%),
+    linear-gradient(180deg, rgba(3, 6, 8, 0.2), rgba(3, 6, 8, 0.92)),
+    var(--voronoi-field) center top / cover no-repeat;
+  opacity: 0.58;
+  filter: saturate(0.96) contrast(1.1) brightness(0.86);
+  transform: translate3d(0, 0, 0) scale(1.02);
+  animation: kyanite-voronoi-drift 48s var(--motion-curve) infinite alternate;
+}
+
+body::after {
+  background:
+    linear-gradient(90deg, rgba(3, 6, 8, 0.96), rgba(3, 6, 8, 0.26) 46%, rgba(3, 6, 8, 0.86)),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.9), transparent 42%, rgba(3, 6, 8, 0.76)),
+    linear-gradient(116deg, transparent 0 51%, rgba(231, 196, 92, 0.11) 51.05% 51.2%, transparent 51.3%),
+    linear-gradient(31deg, transparent 0 62%, rgba(232, 86, 130, 0.08) 62.08% 62.22%, transparent 62.34%);
+  background-size: auto;
+}
+
+.hero {
+  background:
+    linear-gradient(96deg, #030608 0 26%, rgba(3, 6, 8, 0.88) 48%, rgba(3, 6, 8, 0.58) 76%, #030608 100%),
+    linear-gradient(0deg, rgba(3, 6, 8, 0.16), rgba(3, 6, 8, 0.68)),
+    var(--voronoi-slab) right top / min(86vw, 1280px) 100% no-repeat,
+    #030608;
+}
+
+.hero::before {
+  background:
+    linear-gradient(112deg, transparent 0 42%, rgba(94, 220, 232, 0.17) 42.18% 42.36%, transparent 42.6%),
+    linear-gradient(128deg, transparent 0 62%, rgba(233, 201, 96, 0.13) 62.1% 62.28%, transparent 62.48%),
+    var(--voronoi-field) center / cover no-repeat;
+  background-size: auto, auto, cover;
+  opacity: 0.34;
+  mix-blend-mode: screen;
+}
+
+.band,
+.page-hero,
+.hero-evidence,
+#tools .signal-board,
+#tools .signal-board::before {
+  background:
+    linear-gradient(90deg, rgba(5, 11, 16, 0.86), rgba(5, 11, 16, 0.58)),
+    linear-gradient(135deg, rgba(94, 220, 232, 0.08), transparent 34%),
+    var(--voronoi-proof) center / cover no-repeat,
+    #050b10;
+}
+
+.page-hero {
+  border-bottom: 1px solid rgba(202, 224, 234, 0.12);
+}
+
+.hero-logo-stage {
+  --pointer-x: 0;
+  --pointer-y: 0;
+}
+
+.hero-logo-stage::before {
+  background:
+    linear-gradient(135deg, rgba(94, 220, 232, 0.1), transparent 34%),
+    var(--voronoi-slab) center / cover no-repeat,
+    #050b10;
+  background-size: auto, cover, auto;
+  transform:
+    translate(18px, 18px)
+    translate3d(calc(var(--pointer-x) * -6px), calc(var(--pointer-y) * -6px), 0);
+  transition: transform 0.32s var(--motion-curve);
+}
+
+.hero-logo-plate {
+  transform:
+    translate3d(calc(var(--pointer-x) * 8px), calc(var(--pointer-y) * 8px), 0)
+    rotateX(calc(var(--pointer-y) * -1.4deg))
+    rotateY(calc(var(--pointer-x) * 1.4deg));
+  transform-style: preserve-3d;
+  transition: transform 0.32s var(--motion-curve), border-color 0.32s var(--motion-curve);
+}
+
+.hero-logo-stage:hover .hero-logo-plate {
+  border-color: rgba(233, 201, 96, 0.34);
+}
+
+.project-card::before,
+.post-card::before,
+.product-card::before,
+.offer-card::before,
+.feature-card::before,
+.card::before {
+  background:
+    linear-gradient(135deg, rgba(94, 220, 232, 0.05), transparent 32%),
+    var(--voronoi-proof) center / cover no-repeat;
+  opacity: 0.22;
+}
+
+.btn,
+.nav-links a,
+.nav-links .nav-cta,
+.mobile-menu,
+.card,
+.product-card,
+.post-card,
+.project-card,
+.feature-card,
+.offer-card,
+.form-panel,
+.product-panel {
+  border-radius: var(--radius);
+}
+
+.btn,
+.nav-links .nav-cta {
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 11px) 0, 100% 11px, 100% 100%, 11px 100%, 0 calc(100% - 11px));
+}
+
+.btn::after,
+.nav-links .nav-cta::after {
+  content: "↗";
+  border-radius: 0;
+}
+
+.artifact-cover,
+.editorial-cover,
+.trace-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(202, 224, 234, 0.16);
+  background:
+    linear-gradient(135deg, rgba(94, 220, 232, 0.08), transparent 34%),
+    linear-gradient(315deg, rgba(233, 201, 96, 0.08), transparent 38%),
+    var(--voronoi-slab) center / cover no-repeat,
+    #050b10;
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+.artifact-cover {
+  display: grid;
+  align-content: end;
+  min-height: 150px;
+  margin: -1px -1px 18px;
+  padding: 18px;
+}
+
+.artifact-cover-small {
+  min-height: 116px;
+  margin: 0 0 18px;
+}
+
+.artifact-cover span,
+.editorial-cover {
+  color: var(--amber);
+  font-family: var(--mono-font);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.artifact-cover strong {
+  max-width: 18ch;
+  color: var(--text);
+  font-family: var(--display-font);
+  font-size: clamp(1.2rem, 1rem + 0.8vw, 1.72rem);
+  line-height: 0.98;
+}
+
+.editorial-cover {
+  display: inline-grid;
+  place-items: end start;
+  min-height: 88px;
+  width: 100%;
+  margin-bottom: 16px;
+  padding: 14px;
+}
+
+.editorial-cover::after {
+  content: attr(data-label);
+}
+
+.trace-panel {
+  padding: clamp(22px, 3vw, 34px);
+}
+
+.post-card,
+.product-card,
+.project-card {
+  transition:
+    transform 0.42s var(--motion-curve),
+    border-color 0.42s var(--motion-curve),
+    background-color 0.42s var(--motion-curve),
+    box-shadow 0.42s var(--motion-curve);
+}
+
+.post-card:hover,
+.product-card:hover,
+.project-card:hover {
+  transform: translate3d(0, -4px, 0);
+}
+
+.js .fade-up,
+.js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  transition:
+    opacity 0.78s var(--motion-curve),
+    transform 0.78s var(--motion-curve);
+  transition-delay: calc(var(--reveal-index, 0) * 44ms);
+}
+
+.js .fade-up.visible,
+.js [data-reveal].visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes kyanite-voronoi-drift {
+  from {
+    transform: translate3d(-1.4%, -0.8%, 0) scale(1.02);
+  }
+  to {
+    transform: translate3d(1.2%, 0.8%, 0) scale(1.045);
+  }
+}
+
+@media (max-width: 760px) {
+  body::before {
+    opacity: 0.38;
+  }
+
+  .hero {
+    background:
+      linear-gradient(90deg, rgba(3, 6, 8, 0.98), rgba(3, 6, 8, 0.78)),
+      var(--voronoi-slab) center top / cover no-repeat,
+      #030608;
+  }
+
+  .artifact-cover {
+    min-height: 118px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  body::before {
+    animation: none;
+    transform: none;
+  }
+
+  .js .fade-up,
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-logo-plate,
+  .hero-logo-stage::before {
+    transform: none;
+  }
+}
+
+/* Hero image honesty: show the generated asset without presentation junk. */
+.hero-logo-stage {
+  min-height: auto;
+  align-items: center;
+}
+
+.hero-logo-stage::before,
+.hero-logo-stage::after,
+.hero-logo-plate::before,
+.hero-logo-plate::after {
+  display: none;
+}
+
+.hero-logo-plate,
+.hero-logo-stage:hover .hero-logo-plate {
+  overflow: visible;
+  width: min(100%, 960px);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  clip-path: none;
+  transform: none;
+}
+
+.hero-logo-plate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: auto;
+  object-fit: contain;
+  object-position: center;
+  filter: none;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .hero-logo-stage {
+    margin-top: 20px;
+  }
+
+  .hero-logo-plate {
+    width: 100%;
+  }
+}
+
+/* Exact generated hero: the artwork is the hero, not a texture source. */
+.hero {
+  min-height: auto;
+  padding: 112px 0 72px;
+  background: #030608;
+}
+
+.hero::before,
+.hero::after {
+  display: none;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(22px, 3vw, 38px);
+  align-items: start;
+}
+
+.hero-logo-stage {
+  order: -1;
+  width: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.hero-logo-plate,
+.hero-logo-stage:hover .hero-logo-plate {
+  width: 100%;
+}
+
+.hero-logo-plate img {
+  width: 100%;
+  max-width: none;
+}
+
+.hero-inner {
+  max-width: 920px;
+  min-height: auto;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.hero-inner::after {
+  display: none;
+}
+
+.hero h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding: 92px 0 58px;
+  }
+
+  .hero-logo-stage {
+    margin-top: 0;
+  }
+}
+
+/* 2026-06-01 structure pass: proof-first homepage, softer hero edge, no isolated flagship slab. */
+.hero {
+  padding: 104px 0 60px;
+  background:
+    linear-gradient(180deg, rgba(3, 6, 8, 0.72), #030608 72%),
+    linear-gradient(90deg, #030608 0 12%, rgba(3, 6, 8, 0.36) 48%, #030608 100%),
+    var(--voronoi-field) center top / cover no-repeat,
+    #030608;
+}
+
+.hero-grid {
+  gap: clamp(18px, 2.8vw, 32px);
+}
+
+.hero-logo-stage {
+  max-width: min(1160px, calc(100vw - 28px));
+}
+
+.hero-logo-plate {
+  background: #030608;
+  filter: drop-shadow(0 28px 54px rgba(0, 0, 0, 0.5));
+}
+
+.hero-logo-plate img {
+  display: block;
+}
+
+.hero-inner {
+  max-width: 980px;
+}
+
+.hero + .proof-wall {
+  padding-top: clamp(54px, 7vw, 92px);
+  border-top: 1px solid rgba(202, 224, 234, 0.1);
+}
+
+.proof-wall {
+  position: relative;
+  background:
+    linear-gradient(180deg, #030608 0, rgba(5, 11, 16, 0.92) 44%, #030608 100%),
+    var(--voronoi-proof) center top / cover no-repeat;
+}
+
+.proof-wall .section-head {
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+
+.grid-4:has(.project-visual) {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 20px);
+}
+
+@media (max-width: 1100px) {
+  .grid-4:has(.project-visual) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-4:has(.project-visual) > *,
+  .grid-4:has(.project-visual) > *:nth-child(n) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .grid-4:has(.project-visual) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.proof-strip {
+  margin-top: clamp(18px, 3vw, 30px);
+}
+
+.decision-band {
+  background:
+    linear-gradient(92deg, rgba(5, 11, 16, 0.98), rgba(5, 11, 16, 0.76) 58%, rgba(3, 6, 8, 0.98)),
+    var(--voronoi-slab) center / cover no-repeat,
+    #050b10;
+}
+
+.route-grid {
+  align-items: stretch;
+}
+
+.route-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: clamp(22px, 3vw, 32px);
+}
+
+.route-card .tile-code,
+.route-card .tag {
+  margin: 0;
+}
+
+.route-card h3 {
+  margin: 0;
+  font-size: var(--step-2);
+}
+
+.route-card p {
+  line-height: 1.62;
+}
+
+.route-card .button-row {
+  align-self: end;
+  margin-top: 4px;
+}
+
+.lab-notes-preview {
+  background:
+    linear-gradient(180deg, #030608, rgba(5, 11, 16, 0.94) 44%, #030608),
+    var(--voronoi-field) center / cover no-repeat;
+}
+
+.lab-notes-preview .post-card {
+  min-height: 100%;
+}
+
+@media (max-width: 1120px) {
+  .nav-links {
+    display: none;
+  }
+
+  .menu-button {
+    display: inline-grid;
+    place-items: center;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    padding: 88px 0 50px;
+  }
+
+  .hero-logo-stage {
+    max-width: calc(100vw - 22px);
+  }
+
 }

@@ -14,23 +14,24 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
-  <link rel="icon" type="image/png" href="/static/brand/avatar_square_neon_64x64.png">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-public-projects">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
   <script>document.documentElement.classList.add('js');</script>
   <script src="/static/posthog.js"></script>
   <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
+  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
 </head>
 <body>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
-      <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
       <div class="nav-links">
-        <a href="/#tools">Tools</a>
-        <a href="/#proof">Proof</a>
-        <a href="/blog">Blog</a>
+        <a href="/#proof">Projects</a>
+        <a href="/implementation">Implementation</a>
+        <a href="/blog">Lab Notes</a>
         <a class="active" href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
@@ -44,8 +45,8 @@
     <section class="page-hero">
       <div class="container page-hero-inner">
         <div class="eyebrow">Operator assets</div>
-        <h1>Operator assets for agent-native teams.</h1>
-        <p>Prompts, repo structures, Claude Code workflows, and implementation templates. Not courses. Not vague prompt dumps. Small artifacts built for people who ship.</p>
+        <h1>Operator assets for people building with agents.</h1>
+        <p>Downloadable workflows, repo structures, and implementation templates from the same Kyanite practice behind the public tools. Small artifacts for builders who want a sharper starting point.</p>
       </div>
     </section>
 
@@ -54,6 +55,10 @@
         <div class="grid-2">
           {% for slug, p in products.items() %}
           <article class="product-card fade-up">
+            <div class="artifact-cover" aria-hidden="true">
+              <span>{{ p.category }}</span>
+              <strong>{{ p.name }}</strong>
+            </div>
             <div class="product-top">
               <div>
                 <span class="mono-label">{{ p.category }}</span>
@@ -70,7 +75,7 @@
               {% if p.features|length > 5 %}<li>{{ p.features|length - 5 }} more included</li>{% endif %}
             </ul>
             <div class="button-row">
-              <a class="btn btn-primary" href="/shop/{{ slug }}">View details</a>
+              <a class="btn btn-primary" href="/shop/{{ slug }}">See what's inside</a>
             </div>
           </article>
           {% endfor %}
@@ -83,22 +88,16 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a class="brand-mark" href="/"><img src="/static/brand/avatar_square_neon_64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+          <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
           <p>Agent-native tools, operator assets, and public product systems.</p>
         </div>
         <div><h4>Proof</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/blog">Blog</a></div>
         <div><h4>Support</h4><a href="/implementation">Implementation Help</a><a href="/implementation/intake">Implementation Intake</a></div>
         <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is part of PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
     </div>
   </footer>
 
-  <script>
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.fade-up').forEach(function(el) { observer.observe(el); });
-  </script>
 </body>
 </html>
