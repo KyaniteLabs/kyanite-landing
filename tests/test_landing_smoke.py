@@ -159,6 +159,7 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertEqual(response.headers["Referrer-Policy"], "strict-origin-when-cross-origin")
         self.assertIn("frame-ancestors 'none'", response.headers["Content-Security-Policy"])
         self.assertIn("https://puenteworks.com", response.headers["Content-Security-Policy"])
+        self.assertIn("worker-src 'self' blob:", response.headers["Content-Security-Policy"])
         self.assertIn("geolocation=()", response.headers["Permissions-Policy"])
 
     def test_public_admin_endpoints_fail_closed_without_leaking_runtime_details(self) -> None:

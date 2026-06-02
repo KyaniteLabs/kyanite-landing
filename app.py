@@ -65,6 +65,7 @@ CONTENT_SECURITY_POLICY = "; ".join([
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
     "connect-src 'self' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "worker-src 'self' blob:",
     "base-uri 'self'",
     "frame-ancestors 'none'",
     "form-action 'self'",
