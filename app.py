@@ -2,10 +2,16 @@
 KyaniteLabs — Landing + Shop
 """
 import os
+import csv
 import json
+import hmac
+import io
 import html as html_lib
+import hashlib
 import re
+import secrets
 import smtplib
+import sqlite3
 import subprocess
 import tempfile
 try:
@@ -19,7 +25,7 @@ from email.utils import format_datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 from flask import Flask, request, jsonify, render_template_string, Response, redirect
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -47,17 +53,31 @@ app.config["ENABLE_SHOP_DB"] = os.environ.get("ENABLE_SHOP_DB", "0") == "1"
 app.config["ENABLE_CERAFICA_DB"] = os.environ.get("ENABLE_CERAFICA_DB", "0") == "1"
 app.config["ENABLE_CERAFICA_PUBLIC_API"] = os.environ.get("ENABLE_CERAFICA_PUBLIC_API", "0") == "1"
 app.config["ADMIN_API_TOKEN"] = os.environ.get("ADMIN_API_TOKEN", "")
+app.config["NEWSLETTER_DB_PATH"] = os.environ.get(
+    "NEWSLETTER_DB_PATH",
+    os.environ.get("KYANITE_NEWSLETTER_DB_PATH", "/app/revenue/kyanite-newsletter.sqlite3"),
+)
+app.config["NEWSLETTER_UNSUBSCRIBE_SECRET"] = os.environ.get(
+    "NEWSLETTER_UNSUBSCRIBE_SECRET",
+    os.environ.get("ADMIN_API_TOKEN", ""),
+)
 app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", str(64 * 1024)))
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
+app.config["NEWSLETTER_PUBLIC_BASE_URL"] = os.environ.get("NEWSLETTER_PUBLIC_BASE_URL", CANONICAL_BASE)
 ROBOTS_INDEX_DIRECTIVE = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
 INDEXNOW_KEY = "a4b0d2c3f1e94887a256c44b9e2c6f10"
 TIKTOK_SITE_VERIFICATION_FILENAME = "tiktokuizIkj1wDJXH5viSolnBjshmsH3xQAW3.txt"
 TIKTOK_SITE_VERIFICATION_BODY = (
     "tiktok-developers-site-verification=uizIkj1wDJXH5viSolnBjshmsH3xQAW3"
 )
-ADMIN_API_PATHS = {"/api/sales/stats", "/api/waitlist"}
+ADMIN_API_PATHS = {
+    "/api/sales/stats",
+    "/api/waitlist",
+    "/api/newsletter/subscribers",
+    "/api/newsletter/export.csv",
+}
 CONTENT_SECURITY_POLICY = "; ".join([
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
@@ -115,6 +135,180 @@ def plain_text(value):
 
 def rss_date(value):
     return format_datetime(datetime.fromisoformat(value).replace(tzinfo=UTC))
+
+
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
+def clean_text_field(value, limit=500):
+    text = str(value or "").replace("\x00", " ").strip()
+    text = re.sub(r"\s+", " ", text)
+    return text[:limit]
+
+
+def current_timestamp():
+    return datetime.now(UTC).isoformat(timespec="seconds")
+
+
+def newsletter_db_path():
+    path = app.config["NEWSLETTER_DB_PATH"]
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    return path
+
+
+def newsletter_connect():
+    conn = sqlite3.connect(newsletter_db_path())
+    conn.row_factory = sqlite3.Row
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL DEFAULT '',
+            interest TEXT NOT NULL DEFAULT '',
+            source_page TEXT NOT NULL DEFAULT '',
+            consent_status TEXT NOT NULL DEFAULT 'subscribed',
+            unsubscribe_token TEXT NOT NULL UNIQUE,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            user_agent TEXT NOT NULL DEFAULT '',
+            remote_addr TEXT NOT NULL DEFAULT ''
+        )
+    """)
+    conn.commit()
+    return conn
+
+
+def newsletter_unsubscribe_token(email):
+    secret = app.config.get("NEWSLETTER_UNSUBSCRIBE_SECRET", "")
+    if secret:
+        digest = hmac.new(secret.encode("utf-8"), email.encode("utf-8"), hashlib.sha256).hexdigest()
+        return digest[:48]
+    return secrets.token_urlsafe(32)
+
+
+def newsletter_unsubscribe_url(token):
+    base_url = app.config.get("NEWSLETTER_PUBLIC_BASE_URL", CANONICAL_BASE).rstrip("/")
+    return f"{base_url}/api/newsletter/unsubscribe?token={quote(token)}"
+
+
+def newsletter_request_data():
+    if request.is_json:
+        return request.get_json(silent=True) or {}
+    return request.form.to_dict()
+
+
+def newsletter_remote_addr():
+    forwarded = request.headers.get("X-Forwarded-For", "")
+    if forwarded:
+        return clean_text_field(forwarded.split(",", 1)[0], 80)
+    return clean_text_field(request.remote_addr or "", 80)
+
+
+def newsletter_row_dict(row):
+    return {
+        "email": row["email"],
+        "name": row["name"],
+        "interest": row["interest"],
+        "source_page": row["source_page"],
+        "consent_status": row["consent_status"],
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
+
+
+def upsert_newsletter_subscriber(data):
+    email = clean_text_field(data.get("email"), 254).lower()
+    name = clean_text_field(data.get("name"), 120)
+    interest = clean_text_field(data.get("interest"), 1000)
+    source_page = clean_text_field(data.get("source_page") or request.referrer or "/", 240)
+    token = newsletter_unsubscribe_token(email)
+    now = current_timestamp()
+
+    conn = newsletter_connect()
+    try:
+        conn.execute("""
+            INSERT INTO newsletter_subscribers (
+                email, name, interest, source_page, consent_status, unsubscribe_token,
+                created_at, updated_at, user_agent, remote_addr
+            )
+            VALUES (?, ?, ?, ?, 'subscribed', ?, ?, ?, ?, ?)
+            ON CONFLICT(email) DO UPDATE SET
+                name = excluded.name,
+                interest = excluded.interest,
+                source_page = excluded.source_page,
+                consent_status = 'subscribed',
+                unsubscribe_token = excluded.unsubscribe_token,
+                updated_at = excluded.updated_at,
+                user_agent = excluded.user_agent,
+                remote_addr = excluded.remote_addr
+        """, (
+            email,
+            name,
+            interest,
+            source_page,
+            token,
+            now,
+            now,
+            clean_text_field(request.headers.get("User-Agent"), 240),
+            newsletter_remote_addr(),
+        ))
+        conn.commit()
+        row = conn.execute(
+            "SELECT * FROM newsletter_subscribers WHERE email = ?",
+            (email,),
+        ).fetchone()
+        return dict(row)
+    finally:
+        conn.close()
+
+
+def send_newsletter_notification(row):
+    recipient = app.config.get("CONTACT_TO", "")
+    if not recipient:
+        return
+    msg = EmailMessage()
+    msg["Subject"] = f"KyaniteLabs newsletter signup: {row['email']}"
+    msg["From"] = app.config["SMTP_FROM"]
+    msg["To"] = recipient
+    msg.set_content(
+        "New Kyanite Build Notes signup\n\n"
+        f"Email: {row['email']}\n"
+        f"Name: {row['name'] or '-'}\n"
+        f"Interest: {row['interest'] or '-'}\n"
+        f"Source: {row['source_page'] or '-'}\n"
+        f"Status: {row['consent_status']}\n"
+        f"Unsubscribe: {newsletter_unsubscribe_url(row['unsubscribe_token'])}\n"
+    )
+    with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
+        server.send_message(msg)
+
+
+def newsletter_response_page(title, message, status=200):
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{html_lib.escape(title)} | KyaniteLabs</title>
+  <link rel="stylesheet" href="/static/css/kyanite-system.css">
+</head>
+<body>
+  <main class="page-hero">
+    <div class="container page-hero-inner">
+      <div class="eyebrow">Kyanite Build Notes</div>
+      <h1>{html_lib.escape(title)}</h1>
+      <p class="lead">{html_lib.escape(message)}</p>
+      <div class="button-row">
+        <a class="btn btn-secondary" href="/">Back to KyaniteLabs</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>"""
+    return Response(html, status=status, mimetype="text/html")
 
 PUBLIC_PROJECTS = [
     {
@@ -1622,6 +1816,21 @@ LANDING_ES_REPLACEMENTS = {
     "Best for builders who want implementation help around Kyanite tools.": "Ideal para builders que quieren ayuda de implementacion alrededor de herramientas Kyanite.",
     "Not a fit for generic consulting, vague vendor inquiries, or unrelated agency work.": "No es para consultoria generica, consultas vagas de proveedor o trabajo de agencia sin relacion.",
     "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
+    "Subscribe": "Suscribirse",
+    "Kyanite Build Notes": "Notas de construccion Kyanite",
+    "Follow the useful builds.": "Sigue los builds utiles.",
+    "Get short notes when a Kyanite tool, product, or field note is worth inspecting: MCP servers, media pipelines, repo diagnostics, localization QA, implementation lessons, and useful weird software.": "Recibe notas cortas cuando una herramienta, producto o nota de campo de Kyanite merece inspeccionarse: servidores MCP, pipelines de medios, diagnosticos de repos, QA de localizacion, aprendizajes de implementacion y software raro util.",
+    "Only public build notes and practical implementation signals.": "Solo notas publicas de construccion y senales practicas de implementacion.",
+    "No scraped lists, generic AI newsletter noise, or purchased audiences.": "Sin listas scrapeadas, ruido generico de newsletters de IA ni audiencias compradas.",
+    "Unsubscribe whenever the notes stop being useful.": "Puedes darte de baja cuando las notas dejen de ser utiles.",
+    "Newsletter": "Boletin",
+    "You are on the Kyanite Build Notes list.": "Ya estas en la lista de notas Kyanite.",
+    "Name <span class=\"optional-label\">optional</span>": "Nombre <span class=\"optional-label\">opcional</span>",
+    "What should Kyanite write about? <span class=\"optional-label\">optional</span>": "Sobre que debe escribir Kyanite? <span class=\"optional-label\">opcional</span>",
+    "Tool, repo, media pipeline, localization, productization, or implementation problem.": "Herramienta, repo, pipeline de medios, localizacion, productizacion o problema de implementacion.",
+    "Send me Kyanite Build Notes. I can unsubscribe any time.": "Enviame notas Kyanite. Puedo darme de baja cuando quiera.",
+    "Join Build Notes": "Unirme a las notas",
+    "Joining...": "Uniendo...",
 }
 
 EXTRA_ES_REPLACEMENTS = {
@@ -1926,7 +2135,7 @@ LEGAL_PAGE_HTML = """
     <header>
       <a class="brand" href="/">KyaniteLabs</a>
       <h1>{{ title }}</h1>
-      <p>Last updated: May 24, 2026</p>
+      <p>Last updated: June 4, 2026</p>
     </header>
     {{ body|safe }}
     <footer>
@@ -1943,23 +2152,23 @@ def privacy_policy():
     body = """
     <section>
       <h2>What this covers</h2>
-      <p>Kyanite Content Factory is an internal content workflow and posting tool used by KyaniteLabs operators to prepare, review, and publish media to connected social accounts.</p>
+      <p>This policy covers KyaniteLabs public site forms, Kyanite Build Notes newsletter signups, implementation intake, contact requests, public analytics, and internal connected workflows used by authorized KyaniteLabs operators.</p>
     </section>
     <section>
       <h2>Data we use</h2>
-      <p>The tool may store connected account identifiers, display names, handles, access tokens, refresh tokens, post metadata, local media references, captions, and publishing status needed to operate the posting workflow.</p>
+      <p>Public forms may collect your name, email address, request context, newsletter interests, consent status, source page, timestamp, browser user agent, and IP-derived request metadata. Internal connected workflows may store connected account identifiers, display names, handles, access tokens, refresh tokens, post metadata, local media references, captions, and publishing status needed to operate approved posting workflows.</p>
     </section>
     <section>
       <h2>How data is used</h2>
-      <p>We use this data to authenticate connected accounts, upload approved content, track publishing state, troubleshoot failures, and maintain a human-reviewable content pipeline.</p>
+      <p>We use public form data to reply to requests, review implementation fit, send Kyanite Build Notes when you explicitly subscribe, honor unsubscribe requests, troubleshoot form delivery, and maintain basic operational records. We use connected workflow data to authenticate accounts, upload approved content, track publishing state, troubleshoot failures, and maintain a human-reviewable content pipeline.</p>
     </section>
     <section>
       <h2>Sharing</h2>
-      <p>We do not sell personal data. Data is shared with platform APIs only as needed to authenticate, upload, or publish content that an authorized operator has approved.</p>
+      <p>We do not sell personal data. Data is shared with platform APIs only as needed to authenticate, upload, or publish content that an authorized operator has approved. Email and infrastructure providers may process messages or operational logs as needed to run the site and newsletter workflow.</p>
     </section>
     <section>
       <h2>Retention and access</h2>
-      <p>Operational records and tokens are kept only as long as they are useful for the workflow or required for troubleshooting. Access is limited to authorized KyaniteLabs operators.</p>
+      <p>Newsletter records are kept until you unsubscribe or ask for removal. Operational records and tokens are kept only as long as they are useful for the workflow or required for troubleshooting. Access is limited to authorized KyaniteLabs operators.</p>
     </section>
     """
     return render_template_string(
@@ -2440,6 +2649,130 @@ def contact():
         raise
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/newsletter/subscribe", methods=["POST"])
+def newsletter_subscribe():
+    data = newsletter_request_data()
+
+    if clean_text_field(data.get("company"), 160):
+        return jsonify({"ok": True}), 200
+
+    email = clean_text_field(data.get("email"), 254).lower()
+    consent_value = data.get("consent") or data.get("newsletter_consent") or ""
+    consented = consent_value is True or str(consent_value).lower() in {"1", "true", "yes", "on"}
+
+    if not email or not EMAIL_RE.match(email):
+        return jsonify({"error": "Use a valid email address."}), 400
+    if not consented:
+        return jsonify({"error": "Consent is required for Kyanite Build Notes."}), 400
+
+    try:
+        row = upsert_newsletter_subscriber({**data, "email": email})
+        try:
+            send_newsletter_notification(row)
+        except Exception as e:
+            print(f"[NEWSLETTER_NOTIFY_ERROR] {type(e).__name__}: {str(e)[:180]}")
+        return jsonify({
+            "ok": True,
+            "message": "You are on the Kyanite Build Notes list.",
+        }), 200
+    except RequestEntityTooLarge:
+        raise
+    except Exception as e:
+        print(f"[NEWSLETTER_SUBSCRIBE_ERROR] {type(e).__name__}: {str(e)[:180]}")
+        return jsonify({"error": "Could not save the signup right now."}), 500
+
+
+@app.route("/api/newsletter/unsubscribe", methods=["GET", "POST"])
+def newsletter_unsubscribe():
+    data = request.get_json(silent=True) if request.is_json else {}
+    token = clean_text_field(
+        request.args.get("token") or request.form.get("token") or (data or {}).get("token"),
+        160,
+    )
+    if not token:
+        if request.is_json:
+            return jsonify({"error": "Missing unsubscribe token."}), 400
+        return newsletter_response_page(
+            "Missing link",
+            "The unsubscribe link is missing its token.",
+            status=400,
+        )
+
+    now = current_timestamp()
+    conn = newsletter_connect()
+    try:
+        row = conn.execute(
+            "SELECT * FROM newsletter_subscribers WHERE unsubscribe_token = ?",
+            (token,),
+        ).fetchone()
+        if not row:
+            if request.is_json:
+                return jsonify({"error": "Unsubscribe link not found."}), 404
+            return newsletter_response_page(
+                "Link not found",
+                "That unsubscribe link was not found. Email info@kyanitelabs.tech if you still need help.",
+                status=404,
+            )
+        conn.execute(
+            "UPDATE newsletter_subscribers SET consent_status = 'unsubscribed', updated_at = ? WHERE unsubscribe_token = ?",
+            (now, token),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    if request.is_json:
+        return jsonify({"ok": True, "message": "You have been unsubscribed."}), 200
+    return newsletter_response_page(
+        "You are unsubscribed",
+        "KyaniteLabs will not send Kyanite Build Notes to that address anymore.",
+        status=200,
+    )
+
+
+@app.route("/api/newsletter/subscribers", methods=["GET"])
+def newsletter_subscribers():
+    conn = newsletter_connect()
+    try:
+        rows = conn.execute("""
+            SELECT *
+            FROM newsletter_subscribers
+            ORDER BY updated_at DESC, id DESC
+        """).fetchall()
+        rows = [dict(row) for row in rows]
+    finally:
+        conn.close()
+    subscribers = [newsletter_row_dict(row) for row in rows]
+    return jsonify({"ok": True, "count": len(subscribers), "subscribers": subscribers}), 200
+
+
+@app.route("/api/newsletter/export.csv", methods=["GET"])
+def newsletter_export_csv():
+    conn = newsletter_connect()
+    try:
+        rows = conn.execute("""
+            SELECT email, name, interest, source_page, consent_status, created_at, updated_at
+            FROM newsletter_subscribers
+            ORDER BY updated_at DESC, id DESC
+        """).fetchall()
+        rows = [dict(row) for row in rows]
+    finally:
+        conn.close()
+
+    output = io.StringIO()
+    writer = csv.DictWriter(
+        output,
+        fieldnames=["email", "name", "interest", "source_page", "consent_status", "created_at", "updated_at"],
+    )
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+
+    response = Response(output.getvalue(), mimetype="text/csv")
+    response.headers["Content-Disposition"] = "attachment; filename=kyanite-newsletter-subscribers.csv"
+    return response
 
 
 @app.route("/api/audit-intake", methods=["POST"])

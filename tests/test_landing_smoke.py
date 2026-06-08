@@ -3,7 +3,9 @@ from __future__ import annotations
 import contextlib
 import io
 import json
+import os
 import re
+import tempfile
 import unittest
 
 from app import (
@@ -24,10 +26,28 @@ class LandingSmokeTests(unittest.TestCase):
             "ENABLE_CERAFICA_DB": app.config.get("ENABLE_CERAFICA_DB", False),
             "ENABLE_CERAFICA_PUBLIC_API": app.config.get("ENABLE_CERAFICA_PUBLIC_API", False),
             "KOFI_TOKEN": app.config.get("KOFI_TOKEN", ""),
+            "CONTACT_TO": app.config.get("CONTACT_TO", ""),
+            "NEWSLETTER_DB_PATH": app.config.get("NEWSLETTER_DB_PATH", ""),
+            "NEWSLETTER_PUBLIC_BASE_URL": app.config.get("NEWSLETTER_PUBLIC_BASE_URL", ""),
+            "NEWSLETTER_UNSUBSCRIBE_SECRET": app.config.get("NEWSLETTER_UNSUBSCRIBE_SECRET", ""),
         }
+        self._tmp_paths: list[str] = []
 
     def tearDown(self) -> None:
         app.config.update(self._original_config)
+        for path in self._tmp_paths:
+            with contextlib.suppress(FileNotFoundError):
+                os.remove(path)
+
+    def use_newsletter_test_db(self) -> str:
+        fd, path = tempfile.mkstemp(prefix="kyanite-newsletter-", suffix=".sqlite3")
+        os.close(fd)
+        self._tmp_paths.append(path)
+        app.config["NEWSLETTER_DB_PATH"] = path
+        app.config["NEWSLETTER_UNSUBSCRIBE_SECRET"] = "test-newsletter-secret"
+        app.config["NEWSLETTER_PUBLIC_BASE_URL"] = "https://kyanitelabs.tech"
+        app.config["CONTACT_TO"] = ""
+        return path
 
     def test_public_pages_and_static_assets_load(self) -> None:
         paths = [
@@ -64,6 +84,10 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("KyaniteLabs crystalline logo on a dark Voronoi technical field", html)
         self.assertIn("The projects are the proof.", html)
         self.assertIn("Choose the next move.", html)
+        self.assertIn('id="newsletter"', html)
+        self.assertIn('id="newsletter-form"', html)
+        self.assertIn("/api/newsletter/subscribe", html)
+        self.assertIn("Kyanite Build Notes", html)
         self.assertNotIn('id="tools"', html)
         self.assertNotIn("Flagship Proof // mcp-video", html)
         self.assertNotIn("MENU</button>", html)
@@ -163,7 +187,7 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("geolocation=()", response.headers["Permissions-Policy"])
 
     def test_public_admin_endpoints_fail_closed_without_leaking_runtime_details(self) -> None:
-        for path in ["/api/sales/stats", "/api/waitlist"]:
+        for path in ["/api/sales/stats", "/api/waitlist", "/api/newsletter/subscribers", "/api/newsletter/export.csv"]:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 body = response.get_data(as_text=True)
@@ -176,6 +200,91 @@ class LandingSmokeTests(unittest.TestCase):
         app.config["ADMIN_API_TOKEN"] = "expected-admin-token"
         response = self.client.get("/api/sales/stats")
         self.assertEqual(response.status_code, 403)
+
+    def test_newsletter_signup_requires_valid_email_and_consent(self) -> None:
+        self.use_newsletter_test_db()
+
+        missing_consent = self.client.post(
+            "/api/newsletter/subscribe",
+            json={"email": "reader@example.com"},
+        )
+        bad_email = self.client.post(
+            "/api/newsletter/subscribe",
+            json={"email": "not-an-email", "consent": "yes"},
+        )
+
+        self.assertEqual(missing_consent.status_code, 400)
+        self.assertIn("Consent is required", missing_consent.get_json()["error"])
+        self.assertEqual(bad_email.status_code, 400)
+        self.assertIn("valid email", bad_email.get_json()["error"])
+
+    def test_newsletter_signup_persists_and_admin_export_is_protected(self) -> None:
+        self.use_newsletter_test_db()
+        app.config["ADMIN_API_TOKEN"] = "expected-admin-token"
+
+        response = self.client.post(
+            "/api/newsletter/subscribe",
+            json={
+                "name": "Reader Person",
+                "email": "Reader@Example.com",
+                "interest": "mcp-video and repo diagnostics",
+                "source_page": "/",
+                "consent": "yes",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["ok"])
+
+        blocked = self.client.get("/api/newsletter/subscribers")
+        self.assertEqual(blocked.status_code, 403)
+
+        admin = self.client.get(
+            "/api/newsletter/subscribers",
+            headers={"Authorization": "Bearer expected-admin-token"},
+        )
+        data = admin.get_json()
+        self.assertEqual(admin.status_code, 200)
+        self.assertEqual(data["count"], 1)
+        self.assertEqual(data["subscribers"][0]["email"], "reader@example.com")
+        self.assertEqual(data["subscribers"][0]["consent_status"], "subscribed")
+
+        export = self.client.get(
+            "/api/newsletter/export.csv",
+            headers={"Authorization": "Bearer expected-admin-token"},
+        )
+        self.assertEqual(export.status_code, 200)
+        self.assertIn("text/csv", export.headers["Content-Type"])
+        self.assertIn("reader@example.com", export.get_data(as_text=True))
+
+    def test_newsletter_unsubscribe_changes_consent_status(self) -> None:
+        self.use_newsletter_test_db()
+        app.config["ADMIN_API_TOKEN"] = "expected-admin-token"
+
+        signup = self.client.post(
+            "/api/newsletter/subscribe",
+            json={"email": "reader@example.com", "consent": "yes"},
+        )
+        self.assertEqual(signup.status_code, 200)
+
+        subscribers = self.client.get(
+            "/api/newsletter/subscribers",
+            headers={"Authorization": "Bearer expected-admin-token"},
+        ).get_json()["subscribers"]
+        self.assertEqual(subscribers[0]["consent_status"], "subscribed")
+
+        from app import newsletter_unsubscribe_token
+
+        token = newsletter_unsubscribe_token("reader@example.com")
+        unsubscribe = self.client.get(f"/api/newsletter/unsubscribe?token={token}")
+        self.assertEqual(unsubscribe.status_code, 200)
+        self.assertIn("You are unsubscribed", unsubscribe.get_data(as_text=True))
+
+        subscribers = self.client.get(
+            "/api/newsletter/subscribers",
+            headers={"Authorization": "Bearer expected-admin-token"},
+        ).get_json()["subscribers"]
+        self.assertEqual(subscribers[0]["consent_status"], "unsubscribed")
 
     def test_cerafica_api_namespace_is_not_public_by_default(self) -> None:
         app.config["ENABLE_CERAFICA_DB"] = False
