@@ -126,6 +126,7 @@
           <a href="#proof">Projects</a>
           <a href="/implementation">Implementation</a>
           <a href="/blog">Lab Notes</a>
+          <a href="#newsletter">Subscribe</a>
           <a href="/shop">Shop</a>
           <a href="/about">About</a>
           <a href="#contact">Contact</a>
@@ -139,6 +140,7 @@
       <a href="#proof" onclick="closeMenu()">Projects</a>
       <a href="/implementation">Implementation</a>
       <a href="/blog">Lab Notes</a>
+      <a href="#newsletter" onclick="closeMenu()">Subscribe</a>
       <a href="/shop">Shop</a>
       <a href="/about">About</a>
       <a href="#contact" onclick="closeMenu()">Contact</a>
@@ -281,6 +283,49 @@
         </div>
       </section>
 
+      <section id="newsletter" class="band newsletter-band">
+        <div class="container">
+          <div class="split-panel newsletter-split">
+            <div class="card fade-up">
+              <div class="section-label">Kyanite Build Notes</div>
+              <h2 class="section-title">Follow the useful builds.</h2>
+              <p class="section-sub">Get short notes when a Kyanite tool, product, or field note is worth inspecting: MCP servers, media pipelines, repo diagnostics, localization QA, implementation lessons, and useful weird software.</p>
+              <ul class="clean-list">
+                <li>Only public build notes and practical implementation signals.</li>
+                <li>No scraped lists, generic AI newsletter noise, or purchased audiences.</li>
+                <li>Unsubscribe whenever the notes stop being useful.</li>
+              </ul>
+            </div>
+            <div class="form-panel fade-up" aria-labelledby="newsletter-title">
+              <div class="section-label" id="newsletter-title">Newsletter</div>
+              <div class="status" id="newsletterSuccess" role="status" aria-live="polite">You are on the Kyanite Build Notes list.</div>
+              <div class="status" id="newsletterError" role="status" aria-live="polite"></div>
+              <form id="newsletter-form" action="/api/newsletter/subscribe" method="post" onsubmit="submitNewsletter(event)">
+                <input type="hidden" id="newsletterSourcePage" name="source_page" value="/">
+                <input type="hidden" id="newsletterCompany" name="company" value="">
+                <div class="form-group">
+                  <label for="newsletterName">Name <span class="optional-label">optional</span></label>
+                  <input type="text" id="newsletterName" name="name" autocomplete="name" placeholder="Alex Chen">
+                </div>
+                <div class="form-group">
+                  <label for="newsletterEmail">Email address</label>
+                  <input type="email" id="newsletterEmail" name="email" autocomplete="email" spellcheck="false" placeholder="alex@company.com" required>
+                </div>
+                <div class="form-group">
+                  <label for="newsletterInterest">What should Kyanite write about? <span class="optional-label">optional</span></label>
+                  <textarea id="newsletterInterest" class="compact-textarea" name="interest" autocomplete="off" placeholder="Tool, repo, media pipeline, localization, productization, or implementation problem."></textarea>
+                </div>
+                <label class="consent-line" for="newsletterConsent">
+                  <input type="checkbox" id="newsletterConsent" name="consent" value="yes" required>
+                  <span>Send me Kyanite Build Notes. I can unsubscribe any time.</span>
+                </label>
+                <button type="submit" class="btn btn-primary" id="newsletterSubmitBtn">Join Build Notes</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="contact">
         <div class="container">
           <div class="split-panel">
@@ -344,6 +389,7 @@
           <div>
             <h4>Contact</h4>
             <a href="/implementation/intake">Implementation Intake</a>
+            <a href="#newsletter">Kyanite Build Notes</a>
             <a href="#contact">Project Conversation</a>
             <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>
           </div>
@@ -407,6 +453,48 @@
       }).finally(function() {
         btn.disabled = false;
         btn.textContent = 'Start the conversation';
+      });
+    }
+    function submitNewsletter(e) {
+      e.preventDefault();
+      var btn = document.getElementById('newsletterSubmitBtn');
+      var success = document.getElementById('newsletterSuccess');
+      var error = document.getElementById('newsletterError');
+      success.className = 'status ok';
+      success.style.display = 'none';
+      error.className = 'status err';
+      error.style.display = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Joining...';
+      var data = {
+        name: document.getElementById('newsletterName').value,
+        email: document.getElementById('newsletterEmail').value,
+        interest: document.getElementById('newsletterInterest').value,
+        source_page: document.getElementById('newsletterSourcePage').value,
+        company: document.getElementById('newsletterCompany').value,
+        consent: document.getElementById('newsletterConsent').checked ? 'yes' : ''
+      };
+      fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(function(res) {
+        return res.json().then(function(result) { return { ok: res.ok, result: result }; });
+      }).then(function(data) {
+        if (data.ok) {
+          success.textContent = data.result.message || 'You are on the Kyanite Build Notes list.';
+          success.style.display = 'block';
+          document.getElementById('newsletter-form').reset();
+        } else {
+          error.textContent = data.result.error || 'Something went wrong.';
+          error.style.display = 'block';
+        }
+      }).catch(function() {
+        error.textContent = 'Network error. Please email info@kyanitelabs.tech.';
+        error.style.display = 'block';
+      }).finally(function() {
+        btn.disabled = false;
+        btn.textContent = 'Join Build Notes';
       });
     }
   </script>
