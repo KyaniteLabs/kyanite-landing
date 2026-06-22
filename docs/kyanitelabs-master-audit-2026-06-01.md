@@ -27,7 +27,7 @@ The third problem is public-surface hygiene. Some workspace/process boundaries a
 
 Completed in this pass:
 
-- Tertulia client prototype files were moved out of `kyanite-landing` to `/Users/simongonzalezdecruz/workspaces/PUENTEWORKS/clients/tertulia-with-saints`.
+- Tertulia client prototype files were moved out of `kyanite-landing` to the PuenteWorks client workspace.
 - The public Flask route `/mockup/tertulia` was removed from Kyanite.
 
 Still open:
@@ -155,7 +155,7 @@ Evidence:
 
 Status:
 
-- Fixed in this pass by moving files to `/Users/simongonzalezdecruz/workspaces/PUENTEWORKS/clients/tertulia-with-saints`.
+- Fixed in this pass by moving files to the PuenteWorks client workspace.
 - Fixed in this pass by removing the Flask route.
 
 Recommended follow-up:

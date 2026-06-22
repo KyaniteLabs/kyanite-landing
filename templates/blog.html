@@ -24,7 +24,16 @@
         "name": "KyaniteLabs Blog / Lab Notes",
         "url": "https://kyanitelabs.tech/blog",
         "description": "Published technical lab notes on open-source AI tools, MCP systems, agentic media, developer learning, products, and implementation field notes.",
-        "publisher": {"@type": "Organization", "name": "KyaniteLabs"}
+        "publisher": {
+          "@type": "Organization",
+          "name": "KyaniteLabs",
+          "url": "https://kyanitelabs.tech/",
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "PuenteWorks",
+            "url": "https://puenteworks.com/"
+          }
+        }
       },
       {
         "@type": "ItemList",
@@ -44,14 +53,9 @@
   }
   </script>
   <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
-  <script>document.documentElement.classList.add('js');</script>
-  <script src="/static/posthog.js"></script>
-  <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
-  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
 </head>
 <body>
   <header class="topbar">
@@ -64,6 +68,7 @@
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
+        <a href="https://puenteworks.com">PuenteWorks</a>
         <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
         <a class="language-link" href="/es/blog" hreflang="es" lang="es">ES</a>
       </div>
@@ -106,7 +111,7 @@
           <a class="project-card fade-up" href="{{ project.url }}" target="_blank" rel="noopener noreferrer">
             {% if project.image %}
             <figure class="project-visual" aria-hidden="true">
-              <img src="{{ project.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async" aria-hidden="true">
+              <img data-src="{{ project.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async" fetchpriority="low" aria-hidden="true">
             </figure>
             {% endif %}
             <span class="project-card-body">
@@ -133,11 +138,20 @@
         </div>
         <div><h4>Blog</h4>{% for post in posts[:3] %}<a href="/blog/{{ post.slug }}">{{ post.title }}</a>{% endfor %}</div>
         <div><h4>Work</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/implementation">Implementation Help</a></div>
-        <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
+        <div><h4>Contact</h4><a href="https://puenteworks.com">PuenteWorks</a><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</span></div>
     </div>
   </footer>
 
+  <script>
+    window.addEventListener('load', function() {
+      window.setTimeout(function() {
+        var mediaScript = document.createElement('script');
+        mediaScript.src = '/static/js/kyanite-lazy-media.js?v=20260619-page-speed';
+        document.body.appendChild(mediaScript);
+      }, 0);
+    }, { once: true });
+  </script>
 </body>
 </html>

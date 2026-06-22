@@ -12,6 +12,7 @@ from app import (
     BLOG_POSTS,
     INDEXNOW_KEY,
     PRODUCTS,
+    PUENTEWORKS_URL,
     TIKTOK_SITE_VERIFICATION_BODY,
     TIKTOK_SITE_VERIFICATION_FILENAME,
     app,
@@ -26,10 +27,13 @@ class LandingSmokeTests(unittest.TestCase):
             "ENABLE_CERAFICA_DB": app.config.get("ENABLE_CERAFICA_DB", False),
             "ENABLE_CERAFICA_PUBLIC_API": app.config.get("ENABLE_CERAFICA_PUBLIC_API", False),
             "KOFI_TOKEN": app.config.get("KOFI_TOKEN", ""),
+            "SMTP_HOST": app.config.get("SMTP_HOST", ""),
+            "SMTP_PORT": app.config.get("SMTP_PORT", 25),
             "CONTACT_TO": app.config.get("CONTACT_TO", ""),
             "NEWSLETTER_DB_PATH": app.config.get("NEWSLETTER_DB_PATH", ""),
             "NEWSLETTER_PUBLIC_BASE_URL": app.config.get("NEWSLETTER_PUBLIC_BASE_URL", ""),
             "NEWSLETTER_UNSUBSCRIBE_SECRET": app.config.get("NEWSLETTER_UNSUBSCRIBE_SECRET", ""),
+            "FORM_SUBMISSION_LOG_PATH": app.config.get("FORM_SUBMISSION_LOG_PATH", ""),
         }
         self._tmp_paths: list[str] = []
 
@@ -80,7 +84,7 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("/static/posthog.js", html)
         self.assertIn("/static/liminal-sites/liminal-sensorium.js", html)
         self.assertIn("/implementation/intake", html)
-        self.assertIn("/static/brand/kyanite-hero-generated-blended-1672x941.png", html)
+        self.assertIn("/static/brand/kyanite-hero-generated-blended-1672x941-q72.webp", html)
         self.assertIn("KyaniteLabs crystalline logo on a dark Voronoi technical field", html)
         self.assertIn("The projects are the proof.", html)
         self.assertIn("Choose the next move.", html)
@@ -144,6 +148,42 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("<rss version=\"2.0\">", feed)
         self.assertIn("<channel>", feed)
 
+    def test_puenteworks_cross_brand_bridge_is_visible_and_machine_readable(self) -> None:
+        paths = [
+            "/",
+            "/about",
+            "/implementation",
+            "/implementation/intake",
+            "/blog",
+            "/shop",
+            "/privacy",
+            "/terms",
+            "/es/",
+            "/es/about",
+            "/es/implementation",
+            "/es/implementation/intake",
+            "/es/blog",
+            "/es/shop",
+        ]
+        paths.extend(f"/blog/{post['slug']}" for post in BLOG_POSTS)
+        paths.extend(f"/es/blog/{post['slug']}" for post in BLOG_POSTS)
+        paths.extend(f"/shop/{slug}" for slug in PRODUCTS)
+        paths.extend(f"/es/shop/{slug}" for slug in PRODUCTS)
+
+        for path in paths:
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True)
+                self.assertIn(PUENTEWORKS_URL, body)
+
+        ai_sitemap = self.client.get("/ai-sitemap.json").get_json()
+        self.assertEqual(ai_sitemap["site"]["parentOrganization"]["url"], PUENTEWORKS_URL)
+        self.assertEqual(ai_sitemap["site"]["portfolioRelationship"]["puenteWorks"], PUENTEWORKS_URL)
+
+        llms = self.client.get("/llms.txt").get_data(as_text=True)
+        llms_full = self.client.get("/llms-full.txt").get_data(as_text=True)
+        self.assertIn(f"[PuenteWorks LLC]({PUENTEWORKS_URL})", llms)
+        self.assertIn(f"Parent business and broader consulting home: {PUENTEWORKS_URL}", llms_full)
+
     def test_public_typography_uses_zoom_safe_scale_and_brand_fonts(self) -> None:
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
 
@@ -155,15 +195,17 @@ class LandingSmokeTests(unittest.TestCase):
         for path in ["/", "/privacy", "/terms"]:
             with self.subTest(path=path):
                 html = self.client.get(path).get_data(as_text=True)
-                self.assertIn("Plus+Jakarta+Sans", html)
+                self.assertNotIn("fonts.googleapis.com", html)
+                self.assertNotIn("fonts.gstatic.com", html)
                 self.assertNotIn("font-family: Inter", html)
+        self.assertIn('"Plus Jakarta Sans"', css)
 
     def test_posthog_proxy_and_sensorium_config_keep_privacy_guards(self) -> None:
         posthog_js = self.client.get("/static/posthog.js").get_data(as_text=True)
 
         self.assertIn("_phIsBot", posthog_js)
         self.assertIn("navigator.sendBeacon", posthog_js)
-        self.assertIn("keepalive:true", posthog_js)
+        self.assertRegex(posthog_js, re.compile(r"keepalive\s*:\s*true"))
 
         sensorium_css = self.client.get("/static/liminal-sites/liminal-sensorium.css").get_data(as_text=True)
         self.assertIn(":not(.skip-link)", sensorium_css)
@@ -343,15 +385,16 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertNotIn("/es/es/", body)
                 self.assertNotIn("Herramientas Herramientas", body)
 
-    def test_voronoi_motion_assets_are_wired(self) -> None:
+    def test_voronoi_performance_assets_are_wired(self) -> None:
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
         homepage = self.client.get("/").get_data(as_text=True)
 
-        self.assertIn("kyanite-voronoi-material-field-1800x1200.webp", css)
-        self.assertIn("kyanite-voronoi-material-slab-1600x760.webp", css)
-        self.assertIn("kyanite-voronoi-material-proof-2172x724.webp", css)
+        self.assertIn("--voronoi-field", css)
+        self.assertIn("--voronoi-slab", css)
+        self.assertIn("--voronoi-proof", css)
         self.assertIn("kyanite-voronoi-drift", css)
-        self.assertIn("/static/js/kyanite-motion.js", homepage)
+        self.assertIn("/static/js/kyanite-nav.js?v=20260601-public-projects", homepage)
+        self.assertNotIn("/static/js/kyanite-motion.js", homepage)
         self.assertNotIn("source-map", css)
         self.assertNotIn("source map / public build surface", css)
 
@@ -383,6 +426,44 @@ class LandingSmokeTests(unittest.TestCase):
         )
 
         self.assertEqual(response.status_code, 413)
+
+    def test_contact_and_intake_have_local_fallback_success_paths(self) -> None:
+        fd, path = tempfile.mkstemp(prefix="kyanite-form-fallback-", suffix=".jsonl")
+        os.close(fd)
+        self._tmp_paths.append(path)
+        app.config["FORM_SUBMISSION_LOG_PATH"] = path
+        app.config["SMTP_HOST"] = "smtp.invalid.local"
+        app.config["SMTP_PORT"] = 25
+
+        contact = self.client.post(
+            "/api/contact",
+            json={
+                "name": "Local Smoke",
+                "email": "local@example.com",
+                "project": "Confirm the contact form keeps a local success path.",
+            },
+        )
+        self.assertEqual(contact.status_code, 200)
+        self.assertEqual(contact.get_json()["delivery"], "local_log")
+
+        intake = self.client.post(
+            "/api/implementation-intake",
+            json={
+                "name": "Local Smoke",
+                "email": "local@example.com",
+                "company": "Example Co",
+                "pain": "The implementation intake needs to work without production services.",
+                "outcome": "A stored local fallback record.",
+            },
+        )
+        self.assertEqual(intake.status_code, 200)
+        self.assertEqual(intake.get_json()["delivery"], "local_log")
+
+        with open(path, encoding="utf-8") as f:
+            records = [json.loads(line) for line in f if line.strip()]
+        kinds = [record["kind"] for record in records]
+        self.assertIn("contact", kinds)
+        self.assertIn("implementation_intake", kinds)
 
     def test_kofi_webhook_rejects_bad_token_without_logging_secret(self) -> None:
         app.config["KOFI_TOKEN"] = "expected-secret"

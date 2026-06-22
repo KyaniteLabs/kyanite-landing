@@ -11,14 +11,9 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
-  <script>document.documentElement.classList.add('js');</script>
-  <script src="/static/posthog.js"></script>
-  <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
-  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
 </head>
 <body>
   <header class="topbar">
@@ -31,6 +26,7 @@
         <a href="/about">About</a>
         <a href="/implementation">Implementation</a>
         <a href="/#contact">Contact</a>
+        <a href="https://puenteworks.com">PuenteWorks</a>
         <a class="language-link" href="/es/implementation/intake" hreflang="es" lang="es">ES</a>
       </div>
     </nav>
@@ -47,7 +43,7 @@
 
     <section>
       <div class="container product-layout">
-        <form class="form-panel" id="audit-intake-form" onsubmit="submitIntake(event)">
+        <form class="form-panel" id="audit-intake-form" action="/api/implementation-intake" method="post" onsubmit="submitIntake(event)">
           <div class="form-grid">
             <div class="form-group">
               <label for="name">Name</label>
@@ -85,7 +81,7 @@
         <aside class="card product-panel">
           <span class="mono-label">What happens next</span>
           <h3>Kyanite reads the context before selling the fix.</h3>
-          <p>If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader PuenteWorks consulting, the response will route it there instead of forcing a technical scope.</p>
+          <p>If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader <a href="https://puenteworks.com">PuenteWorks</a> consulting, the response will route it there instead of forcing a technical scope.</p>
           <ul class="clean-list">
             <li>No automatic charge.</li>
             <li>No public posting without permission.</li>
@@ -98,7 +94,7 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</span></div>
     </div>
   </footer>
 

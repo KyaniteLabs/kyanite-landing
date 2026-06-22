@@ -6,6 +6,7 @@ __pycache__/
 *.pem
 *.key
 .worktrees/
+static/social-ingest/
 temp/
 temp_*.jpg
 checkyourself copy/

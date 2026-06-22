@@ -62,9 +62,14 @@ app.config["NEWSLETTER_UNSUBSCRIBE_SECRET"] = os.environ.get(
     os.environ.get("ADMIN_API_TOKEN", ""),
 )
 app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_CONTENT_LENGTH", str(64 * 1024)))
+app.config["FORM_SUBMISSION_LOG_PATH"] = os.environ.get(
+    "FORM_SUBMISSION_LOG_PATH",
+    os.path.join(tempfile.gettempdir(), "kyanite-form-submissions.jsonl"),
+)
 
 
 CANONICAL_BASE = "https://kyanitelabs.tech"
+PUENTEWORKS_URL = "https://puenteworks.com"
 app.config["NEWSLETTER_PUBLIC_BASE_URL"] = os.environ.get("NEWSLETTER_PUBLIC_BASE_URL", CANONICAL_BASE)
 ROBOTS_INDEX_DIRECTIVE = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
 INDEXNOW_KEY = "a4b0d2c3f1e94887a256c44b9e2c6f10"
@@ -100,10 +105,67 @@ SECURITY_HEADERS = {
 }
 
 
+def record_form_submission(kind, payload):
+    entry = {
+        "kind": kind,
+        "created_at": datetime.now(UTC).isoformat(),
+        "payload": payload,
+    }
+    path = app.config.get("FORM_SUBMISSION_LOG_PATH")
+    if not path:
+        return
+    directory = os.path.dirname(path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    with open(path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def deliver_form_email(kind, msg, fallback_payload):
+    try:
+        with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
+            server.send_message(msg)
+        return "email"
+    except OSError as e:
+        record_form_submission(kind, {**fallback_payload, "delivery_error": str(e)})
+        print(f"[FORM_FALLBACK] {kind} recorded locally after SMTP error: {type(e).__name__}")
+        return "local_log"
+
+PUBLIC_PAGE_CACHE = {}
+PUBLIC_CACHE_EXCLUDED_PREFIXES = ("/api/", "/webhook/", "/static/")
+
+
+def public_cache_key():
+    if request.method != "GET" or request.query_string:
+        return None
+    path = request.path or "/"
+    if any(path.startswith(prefix) for prefix in PUBLIC_CACHE_EXCLUDED_PREFIXES):
+        return None
+    return path
+
+
+@app.before_request
+def serve_public_page_cache():
+    key = public_cache_key()
+    if not key or key not in PUBLIC_PAGE_CACHE:
+        return None
+    cached = PUBLIC_PAGE_CACHE[key]
+    return Response(cached["body"], status=cached["status"], headers=cached["headers"])
+
+
 @app.after_request
 def add_security_headers(response):
     for header, value in SECURITY_HEADERS.items():
         response.headers.setdefault(header, value)
+    key = public_cache_key()
+    if key and response.status_code == 200 and not response.direct_passthrough:
+        content_type = response.headers.get("Content-Type", "")
+        if any(kind in content_type for kind in ("text/html", "text/plain", "application/json", "application/xml", "text/xml", "application/rss+xml")):
+            PUBLIC_PAGE_CACHE[key] = {
+                "status": response.status_code,
+                "headers": [(name, value) for name, value in response.headers.items()],
+                "body": response.get_data(),
+            }
     return response
 
 
@@ -1292,9 +1354,6 @@ HTML = """<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KyaniteLabs - Get AI Tools Working</title>
   <meta name="description" content="KyaniteLabs provides open-source proof and paid implementation help for getting AI tools working in real environments.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     html { font-size: 100%; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { margin: 0; font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem); background: #05070b; color: #f3f8ff; min-height: 100vh; display: grid; place-items: center; line-height: 1.6; font-synthesis: none; text-rendering: optimizeLegibility; }
@@ -1308,8 +1367,8 @@ HTML = """<!DOCTYPE html>
   <main>
     <h1>KyaniteLabs gets useful AI tools working in real environments.</h1>
     <p>Public proof lives in the KyaniteLabs GitHub organization: MCP servers, agent tooling, domain software, localization QA, build notes, and open-source experiments people can inspect before asking for help.</p>
-    <p><a href="https://github.com/KyaniteLabs">View public KyaniteLabs repositories</a> or email <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>.</p>
-    <p>KyaniteLabs is part of PuenteWorks LLC.</p>
+    <p><a href="https://github.com/KyaniteLabs">View public KyaniteLabs repositories</a>, visit <a href="https://puenteworks.com">PuenteWorks</a>, or email <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>.</p>
+    <p>KyaniteLabs is part of <a href="https://puenteworks.com">PuenteWorks LLC</a>.</p>
   </main>
 </body>
 </html>
@@ -1337,6 +1396,16 @@ def product_html(p, slug):
         "description": p.get("seo_description", p["tagline"]),
         "url": f"https://kyanitelabs.tech/shop/{slug}",
         "brand": {"@type": "Brand", "name": "KyaniteLabs"},
+        "provider": {
+            "@type": "Organization",
+            "name": "KyaniteLabs",
+            "url": CANONICAL_BASE,
+            "parentOrganization": {
+                "@type": "Organization",
+                "name": "PuenteWorks",
+                "url": PUENTEWORKS_URL,
+            },
+        },
         "offers": {
             "@type": "Offer",
             "price": str(p["price"]),
@@ -1363,9 +1432,6 @@ def product_html(p, slug):
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <script type="application/ld+json">{ld_json}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
     :root {{ --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #78d9e7; --accent2: #e8b86f; --accent-glow: rgba(120,217,231,0.15); --green: #34d399; --green-bg: rgba(52,211,153,0.1); --radius: 12px; --radius-sm: 8px; --orange: #f59e0b; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; --measure: 66ch; }}
@@ -1428,6 +1494,7 @@ def product_html(p, slug):
   <div class="nav-links">
     <a href="/">Home</a>
     <a href="/shop" class="active">Shop</a>
+    <a href="{PUENTEWORKS_URL}">PuenteWorks</a>
     <a href="/#contact">Contact</a>
   </div>
 </nav>
@@ -1476,7 +1543,7 @@ def product_html(p, slug):
 <footer>
   <div class="container">
     <p>&copy; 2026 KyaniteLabs. All rights reserved.</p>
-    <p><a href="/">Home</a> · <a href="/shop">Shop</a> · <a href="mailto:info@kyanitelabs.tech">Contact</a></p>
+    <p><a href="/">Home</a> · <a href="/shop">Shop</a> · <a href="{PUENTEWORKS_URL}">PuenteWorks</a> · <a href="mailto:info@kyanitelabs.tech">Contact</a></p>
   </div>
 </footer>
 </body>
@@ -1815,6 +1882,12 @@ LANDING_ES_REPLACEMENTS = {
     "KyaniteLabs publishes the tools and proof. Paid work helps people get Kyanite tools, products, workflows, and artifacts installed, adapted, documented, and usable.": "KyaniteLabs publica las herramientas y la prueba. El trabajo pagado ayuda a instalar, adaptar, documentar y usar herramientas, productos, flujos y artefactos de Kyanite.",
     "Best for builders who want implementation help around Kyanite tools.": "Ideal para builders que quieren ayuda de implementacion alrededor de herramientas Kyanite.",
     "Not a fit for generic consulting, vague vendor inquiries, or unrelated agency work.": "No es para consultoria generica, consultas vagas de proveedor o trabajo de agencia sin relacion.",
+    "What belongs to Kyanite vs. a separate <a href=\"https://puenteworks.com\">PuenteWorks</a> engagement": "Que pertenece a Kyanite y que requiere un engagement separado de <a href=\"https://puenteworks.com\">PuenteWorks</a>",
+    "Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting routes through <a href=\"https://puenteworks.com\">PuenteWorks</a>.": "Buen fit cuando quieres el resultado de una herramienta o flujo Kyanite sin hacer cada paso de setup, adaptacion y handoff en soledad. La consultoria mas amplia se enruta por <a href=\"https://puenteworks.com\">PuenteWorks</a>.",
+    "Broader consulting routes through <a href=\"https://puenteworks.com\">PuenteWorks</a>.": "La consultoria mas amplia se enruta por <a href=\"https://puenteworks.com\">PuenteWorks</a>.",
+    "Not generic consulting. That belongs under <a href=\"https://puenteworks.com\">PuenteWorks</a>.": "No es consultoria generica. Eso pertenece a <a href=\"https://puenteworks.com\">PuenteWorks</a>.",
+    "If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader <a href=\"https://puenteworks.com\">PuenteWorks</a> consulting, the response will route it there instead of forcing a technical scope.": "Si encaja con una ruta de herramienta Kyanite, recibiras un siguiente paso concreto. Si pertenece a consultoria mas amplia de <a href=\"https://puenteworks.com\">PuenteWorks</a>, la respuesta lo enrutara ahi en vez de forzar un alcance tecnico.",
+    "KyaniteLabs is operated by <a href=\"https://puenteworks.com\">PuenteWorks LLC</a>.": "KyaniteLabs es operado por <a href=\"https://puenteworks.com\">PuenteWorks LLC</a>.",
     "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
     "Subscribe": "Suscribirse",
     "Kyanite Build Notes": "Notas de construccion Kyanite",
@@ -2038,9 +2111,7 @@ LEGAL_PAGE_HTML = """
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
   <style>
     :root {
       color-scheme: dark;
@@ -2139,6 +2210,7 @@ LEGAL_PAGE_HTML = """
     </header>
     {{ body|safe }}
     <footer>
+      <p>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</p>
       <p>Questions: <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></p>
     </footer>
   </main>
@@ -2356,7 +2428,16 @@ def ai_sitemap_json():
             "name": "KyaniteLabs",
             "url": CANONICAL_BASE,
             "description": "Open-source proof and paid implementation help for getting AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in real environments.",
-            "parentOrganization": "PuenteWorks LLC",
+            "parentOrganization": {
+                "name": "PuenteWorks",
+                "url": PUENTEWORKS_URL,
+                "role": "Legal and business container for broader consulting, workflow, and AI operations work.",
+            },
+            "portfolioRelationship": {
+                "puenteWorks": PUENTEWORKS_URL,
+                "kyaniteLabs": CANONICAL_BASE,
+                "summary": "PuenteWorks leads business workflow and consulting engagements; KyaniteLabs is the technical product and implementation lab inside the same owned portfolio.",
+            },
             "languages": ["en", "es"],
             "discovery": {
                 "sitemap": f"{CANONICAL_BASE}/sitemap.xml",
@@ -2440,7 +2521,7 @@ def llms_txt():
 
 KyaniteLabs is where Simon Gonzalez de Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
 
-KyaniteLabs is operated by PuenteWorks LLC. Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
+KyaniteLabs is operated by [PuenteWorks LLC]({PUENTEWORKS_URL}). Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
 
 ## Primary Pages
 
@@ -2450,6 +2531,7 @@ KyaniteLabs is operated by PuenteWorks LLC. Kyanite is the public lab for tool i
 - [Implementation help]({CANONICAL_BASE}/implementation): paid help for getting Kyanite-built tools working in a real environment.
 - [Implementation intake]({CANONICAL_BASE}/implementation/intake): structured intake for implementation and advising work.
 - [Shop]({CANONICAL_BASE}/shop): digital products and operator assets.
+- [PuenteWorks]({PUENTEWORKS_URL}): parent business, consulting, workflow, and broader AI operations home.
 - [Spanish homepage]({CANONICAL_BASE}/es/): one-to-one Spanish public site.
 
 ## Kyanite Products and Paid Paths
@@ -2487,6 +2569,7 @@ Only the public repositories listed above should be treated as public Kyanite pr
 ## Contact
 
 - Email: info@kyanitelabs.tech
+- Parent business: PuenteWorks at {PUENTEWORKS_URL}
 - Best-fit implementation clients: people who want help using, adapting, or integrating Kyanite-built tools.
 - Not a fit: generic consulting requests that belong on PuenteWorks, vague vendor inquiries, or work unrelated to the tools and build practice.
 """
@@ -2537,6 +2620,8 @@ def llms_full_txt():
 
 KyaniteLabs is operated by PuenteWorks LLC. It publishes open-source tools, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
 
+Parent business and broader consulting home: {PUENTEWORKS_URL}
+
 ## Canonical Public Surfaces
 
 - Homepage: {CANONICAL_BASE}/
@@ -2545,6 +2630,7 @@ KyaniteLabs is operated by PuenteWorks LLC. It publishes open-source tools, buil
 - Implementation intake: {CANONICAL_BASE}/implementation/intake
 - Shop: {CANONICAL_BASE}/shop
 - About Simon Gonzalez de Cruz: {CANONICAL_BASE}/about
+- PuenteWorks parent business: {PUENTEWORKS_URL}
 - Sitemap: {CANONICAL_BASE}/sitemap.xml
 - Structured AI sitemap: {CANONICAL_BASE}/ai-sitemap.json
 - RSS feed: {CANONICAL_BASE}/feed.xml
@@ -2642,9 +2728,8 @@ def contact():
         msg["From"]    = app.config["SMTP_FROM"]
         msg["To"]      = app.config["CONTACT_TO"]
         msg.set_content(f"New contact from kyanitelabs.tech\n\nName: {name}\nEmail: {email}\nProject:\n{project}\n")
-        with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
-            server.send_message(msg)
-        return jsonify({"ok": True}), 200
+        delivery = deliver_form_email("contact", msg, {"name": name, "email": email, "project": project})
+        return jsonify({"ok": True, "delivery": delivery}), 200
     except RequestEntityTooLarge:
         raise
     except Exception as e:
@@ -2801,24 +2886,28 @@ def implementation_intake():
             "outcome": outcome,
         }
 
-        with tempfile.NamedTemporaryFile("w", delete=False, suffix=".json") as tmp:
-            json.dump(payload, tmp)
-            tmp_path = tmp.name
+        intake_worker = "/app/ops/revenue_intake.py"
+        if os.path.exists(intake_worker):
+            with tempfile.NamedTemporaryFile("w", delete=False, suffix=".json") as tmp:
+                json.dump(payload, tmp)
+                tmp_path = tmp.name
 
-        try:
-            subprocess.run([
-                "python3",
-                "/app/ops/revenue_intake.py",
-                "--root",
-                "/app/revenue",
-                "--payload",
-                tmp_path,
-            ], check=True, capture_output=True, text=True, timeout=20)
-        finally:
             try:
-                os.unlink(tmp_path)
-            except OSError:
-                pass
+                subprocess.run([
+                    "python3",
+                    intake_worker,
+                    "--root",
+                    "/app/revenue",
+                    "--payload",
+                    tmp_path,
+                ], check=True, capture_output=True, text=True, timeout=20)
+            finally:
+                try:
+                    os.unlink(tmp_path)
+                except OSError:
+                    pass
+        else:
+            record_form_submission("implementation_intake_payload", payload)
 
         msg = EmailMessage()
         msg["Subject"] = f"Kyanite Implementation Intake: {name}"
@@ -2842,10 +2931,9 @@ Biggest implementation pain:
 Desired outcome:
 {outcome}
 """)
-        with smtplib.SMTP(app.config["SMTP_HOST"], app.config["SMTP_PORT"]) as server:
-            server.send_message(msg)
+        delivery = deliver_form_email("implementation_intake", msg, payload)
 
-        return jsonify({"ok": True, "message": "Implementation intake received"}), 200
+        return jsonify({"ok": True, "message": "Implementation intake received", "delivery": delivery}), 200
     except RequestEntityTooLarge:
         raise
     except subprocess.CalledProcessError as e:
@@ -2860,8 +2948,6 @@ COMING_SOON = """<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shop — KyaniteLabs</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root { --bg: #08080c; --surface: #0f0f15; --surface2: #16161f; --border: #1e1e2e; --text: #e2e2ec; --muted: #8f90a6; --accent: #78d9e7; --accent2: #e8b86f; --green: #34d399; --body-font: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; --display-font: 'Space Grotesk', system-ui, sans-serif; }

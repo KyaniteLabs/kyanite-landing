@@ -23,7 +23,16 @@
         "@id": "https://kyanitelabs.tech/implementation#service",
         "name": "KyaniteLabs Implementation Help",
         "serviceType": "Implementation and advising for Kyanite-built open-source tools, MCP servers, media workflows, localization systems, and developer-learning diagnostics",
-        "provider": {"@type": "Organization", "name": "KyaniteLabs", "parentOrganization": {"@type": "Organization", "name": "PuenteWorks LLC"}},
+        "provider": {
+          "@type": "Organization",
+          "name": "KyaniteLabs",
+          "url": "https://kyanitelabs.tech/",
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "PuenteWorks",
+            "url": "https://puenteworks.com/"
+          }
+        },
         "areaServed": "Worldwide",
         "offers": {"@type": "Offer", "url": "https://kyanitelabs.tech/implementation/intake"}
       },
@@ -38,13 +47,9 @@
   }
   </script>
   <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
-  <script src="/static/posthog.js"></script>
-  <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
-  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
 </head>
 <body>
   <header class="topbar">
@@ -57,6 +62,7 @@
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
+        <a href="https://puenteworks.com">PuenteWorks</a>
         <a class="nav-cta" href="/implementation/intake">Implementation Intake</a>
         <a class="language-link" href="/es/implementation" hreflang="es" lang="es">ES</a>
       </div>
@@ -87,7 +93,7 @@
               <li>Your machine, stack, constraints, and current blocker</li>
               <li>Install path, examples, checks, and handoff needs</li>
               <li>Whether advising, setup, adaptation, or a build sprint fits</li>
-              <li>What belongs to Kyanite vs. a separate PuenteWorks engagement</li>
+              <li>What belongs to Kyanite vs. a separate <a href="https://puenteworks.com">PuenteWorks</a> engagement</li>
             </ul>
           </div>
           <div class="feature-card">
@@ -105,7 +111,7 @@
             <span class="tag">Paid path</span>
             <h3>Implementation</h3>
             <div class="offer-price">Scoped</div>
-            <p>Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting routes through PuenteWorks.</p>
+            <p>Good fit when you want the outcome from a Kyanite tool or workflow instead of doing every setup, adaptation, and handoff step alone. Broader consulting routes through <a href="https://puenteworks.com">PuenteWorks</a>.</p>
             <div class="button-row">
               <a class="btn btn-primary" href="/implementation/intake">Send brief</a>
             </div>
@@ -153,7 +159,7 @@
           <ul class="clean-list">
             <li>People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow working in their environment.</li>
             <li>Builders who want advising around setup, adaptation, docs, and next steps.</li>
-            <li>Not generic consulting. That belongs under PuenteWorks.</li>
+            <li>Not generic consulting. That belongs under <a href="https://puenteworks.com">PuenteWorks</a>.</li>
           </ul>
         </div>
       </div>
@@ -169,9 +175,9 @@
         </div>
         <div><h4>Support</h4><a href="/implementation/intake">Implementation Intake</a><a href="/#support">Next steps</a></div>
         <div><h4>Builds</h4><a href="/about">About</a><a href="/#proof">Public repos</a><a href="/blog">Blog</a></div>
-        <div><h4>Contact</h4><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
+        <div><h4>Contact</h4><a href="https://puenteworks.com">PuenteWorks</a><a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></div>
       </div>
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</span></div>
     </div>
   </footer>
 </body>

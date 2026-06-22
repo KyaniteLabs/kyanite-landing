@@ -40,7 +40,9 @@
         "description": "Implementation-focused lab for open-source AI tools, MCP systems, media pipelines, localization QA, repo diagnostics, and public build notes.",
         "parentOrganization": {
           "@type": "Organization",
-          "name": "PuenteWorks LLC"
+          "@id": "https://puenteworks.com/#organization",
+          "name": "PuenteWorks",
+          "url": "https://puenteworks.com/"
         },
         "sameAs": [
           "https://github.com/KyaniteLabs",
@@ -103,15 +105,10 @@
   </script>
   <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <link rel="apple-touch-icon" href="/static/brand/kyanite-icon-voronoi-180x180.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
   <link rel="stylesheet" href="/static/liminal-sites/liminal-sensorium.css" data-liminal-sites-sensorium="kyanitelabs-home-sensorium-20260528">
-  <script>document.documentElement.classList.add('js');</script>
-  <script src="/static/posthog.js"></script>
-  <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
-  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -130,6 +127,7 @@
           <a href="/shop">Shop</a>
           <a href="/about">About</a>
           <a href="#contact">Contact</a>
+          <a href="https://puenteworks.com">PuenteWorks</a>
           <a class="nav-cta" href="/implementation/intake">Start Intake</a>
           <a class="language-link" href="/es/" hreflang="es" lang="es">ES</a>
         </div>
@@ -144,6 +142,7 @@
       <a href="/shop">Shop</a>
       <a href="/about">About</a>
       <a href="#contact" onclick="closeMenu()">Contact</a>
+      <a href="https://puenteworks.com" onclick="closeMenu()">PuenteWorks</a>
       <a href="/implementation/intake">Start Intake</a>
       <a href="/es/" hreflang="es" lang="es">ES</a>
     </div>
@@ -168,7 +167,7 @@
           </div>
           <div class="hero-logo-stage fade-up" aria-label="KyaniteLabs brand artwork">
             <figure class="hero-logo-plate">
-              <img src="/static/brand/kyanite-hero-generated-blended-1672x941.png" alt="KyaniteLabs crystalline logo on a dark Voronoi technical field" width="1672" height="941" fetchpriority="high" decoding="async">
+              <img src="/static/brand/kyanite-hero-generated-blended-1672x941-q72.webp" alt="KyaniteLabs crystalline logo on a dark Voronoi technical field" width="1672" height="941" fetchpriority="high" decoding="async">
             </figure>
           </div>
         </div>
@@ -186,7 +185,7 @@
             <a class="project-card fade-up" href="{{ project.url }}" target="_blank" rel="noopener noreferrer">
               {% if project.image %}
               <figure class="project-visual" aria-hidden="true">
-                <img src="{{ project.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async" aria-hidden="true">
+                <img data-src="{{ project.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async" fetchpriority="low" aria-hidden="true">
               </figure>
               {% endif %}
               <span class="project-card-body">
@@ -336,13 +335,13 @@
               <ul class="clean-list">
                 <li>Best for builders who want a Kyanite tool working in their real environment.</li>
                 <li>Not a fit for generic consulting, vague vendor inquiries, or unrelated agency work.</li>
-                <li>KyaniteLabs is operated by PuenteWorks LLC.</li>
+                <li>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</li>
               </ul>
             </div>
             <div class="form-panel fade-up">
               <div class="status" id="formSuccess" role="status" aria-live="polite">Message sent. Kyanite will review the context and reply if there is a real fit.</div>
               <div class="status" id="formError" role="status" aria-live="polite"></div>
-              <form id="contact-form" onsubmit="submitForm(event)">
+              <form id="contact-form" action="/api/contact" method="post" onsubmit="submitForm(event)">
                 <div class="form-group">
                   <label for="name">Your name</label>
                   <input type="text" id="name" name="name" autocomplete="name" placeholder="Alex Chen" required>
@@ -391,12 +390,13 @@
             <a href="/implementation/intake">Implementation Intake</a>
             <a href="#newsletter">Kyanite Build Notes</a>
             <a href="#contact">Project Conversation</a>
+            <a href="https://puenteworks.com">PuenteWorks</a>
             <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>
           </div>
         </div>
         <div class="footer-bottom">
           <span>&copy; 2026 KyaniteLabs. All rights reserved.</span>
-          <span>KyaniteLabs is operated by PuenteWorks LLC.</span>
+          <span>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</span>
         </div>
       </div>
     </footer>
@@ -498,6 +498,20 @@
       });
     }
   </script>
-  <script defer src="/static/liminal-sites/liminal-sensorium.js" data-liminal-sites-sensorium="kyanitelabs-home-sensorium-20260528" data-config-url="/static/liminal-sites/liminal-sensorium-config.json"></script>
+  <script>
+    window.addEventListener('load', function() {
+      window.setTimeout(function() {
+        var mediaScript = document.createElement('script');
+        mediaScript.src = '/static/js/kyanite-lazy-media.js?v=20260619-page-speed';
+        document.body.appendChild(mediaScript);
+
+        var sensoriumScript = document.createElement('script');
+        sensoriumScript.src = '/static/liminal-sites/liminal-sensorium.js';
+        sensoriumScript.setAttribute('data-liminal-sites-sensorium', 'kyanitelabs-home-sensorium-20260528');
+        sensoriumScript.setAttribute('data-config-url', '/static/liminal-sites/liminal-sensorium-config.json');
+        document.body.appendChild(sensoriumScript);
+      }, 0);
+    }, { once: true });
+  </script>
 </body>
 </html>

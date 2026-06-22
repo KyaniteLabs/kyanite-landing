@@ -115,6 +115,13 @@ a:hover {
   color: #dcfbff;
 }
 
+p a,
+li a {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
 img {
   display: block;
   max-width: 100%;
@@ -923,7 +930,7 @@ section::before {
   min-height: 100%;
   padding: 24px;
   border-radius: var(--radius);
-  background: url("/static/brand/website_header_dark_2400x800.png") center / cover no-repeat;
+  background: linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
   border: 1px solid var(--line);
   box-shadow: inset 0 0 0 9999px rgba(5, 7, 11, 0.58);
   display: grid;
@@ -2424,7 +2431,7 @@ section::before {
   border-radius: var(--radius);
   background:
     linear-gradient(130deg, rgba(4, 9, 13, 0.42), rgba(4, 9, 13, 0.84)),
-    url("/static/brand/website_header_dark_2400x800.png") center / cover no-repeat;
+    linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 }
 
@@ -3380,11 +3387,17 @@ body::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 1;
   filter: saturate(0.92) contrast(1.08) brightness(0.84);
   transform: scale(1.01);
   transition:
+    opacity 0.28s ease,
     transform 0.52s var(--motion-curve),
     filter 0.52s var(--motion-curve);
+}
+
+.project-visual img[data-src] {
+  opacity: 0;
 }
 
 .project-card:hover .project-visual img {
@@ -3551,9 +3564,9 @@ body::after {
 
 /* 2026-06-01 remediation: Voronoi material system, shared motion, no pill controls. */
 :root {
-  --voronoi-field: url("/static/brand/kyanite-voronoi-material-field-1800x1200.webp");
-  --voronoi-slab: url("/static/brand/kyanite-voronoi-material-slab-1600x760.webp");
-  --voronoi-proof: url("/static/brand/kyanite-voronoi-material-proof-2172x724.webp");
+  --voronoi-field: radial-gradient(ellipse at 18% 12%, rgba(94, 220, 232, 0.18), transparent 58%);
+  --voronoi-slab: linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
+  --voronoi-proof: linear-gradient(140deg, rgba(94, 220, 232, 0.1), rgba(5, 11, 16, 0.32) 46%, rgba(233, 201, 96, 0.09));
 }
 
 body::before {
