@@ -490,6 +490,9 @@ BLOG_POSTS = [
         "seo_title": "GPT-5.6 Sol vs Terra vs Luna: Agent Routing Policy",
         "meta_description": "Route GPT-5.6 Sol, Terra, and Luna by task uncertainty, completion contract, verification cost, reasoning effort, and agent-system architecture.",
         "excerpt": "The practical GPT-5.6 split is Sol for discovery, Terra for bounded execution, and Luna for repeatable processing - with a different verification contract for each.",
+        "hero_image": "/static/brand/gpt-5-6-routing-instrument-1728x910.webp",
+        "hero_alt": "A dark metal routing instrument with separate Sol, Terra, and Luna channels.",
+        "hero_caption": "A Kyanite routing instrument: Sol investigates, Terra executes, Luna processes.",
         "body": """
 <h2>Executive summary — TL;DR / BLUF</h2>
 <ul>
@@ -1022,6 +1025,8 @@ BLOG_COPY_ES = {
         "seo_title": "GPT-5.6 Sol vs Terra vs Luna: politica para agentes",
         "meta_description": "Rutea GPT-5.6 Sol, Terra y Luna por incertidumbre, contrato de finalizacion, costo de verificacion, esfuerzo y arquitectura agentica.",
         "excerpt": "La division practica es Sol para descubrir, Terra para ejecutar trabajo acotado y Luna para procesar volumen verificable, cada uno con un contrato distinto.",
+        "hero_alt": "Un instrumento metalico oscuro con rutas separadas para Sol, Terra y Luna.",
+        "hero_caption": "Un instrumento de ruteo Kyanite: Sol investiga, Terra ejecuta y Luna procesa.",
         "body": """
 <h2>Resumen ejecutivo — TL;DR / BLUF</h2>
 <ul>

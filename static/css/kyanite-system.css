@@ -1855,6 +1855,136 @@ textarea:focus {
   }
 }
 
+/* Image-backed Lab Note hero: keep the article promise and evidence above the fold. */
+.page-hero.page-hero--article {
+  padding: clamp(126px, 12vw, 150px) 0 clamp(54px, 6vw, 74px);
+  background:
+    linear-gradient(96deg, rgba(3, 6, 8, 0.98) 0 24%, rgba(3, 6, 8, 0.82) 56%, rgba(3, 6, 8, 0.94) 100%),
+    linear-gradient(135deg, rgba(94, 220, 232, 0.1), transparent 38%),
+    var(--voronoi-proof) center / cover no-repeat,
+    #030608;
+}
+
+.page-hero--article .page-hero-inner {
+  max-width: min(1280px, calc(100% - 40px));
+  padding-left: 0;
+}
+
+.page-hero--article .page-hero-inner::before {
+  content: none;
+  display: none;
+}
+
+.article-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+
+.article-hero-copy {
+  min-width: 0;
+}
+
+.page-hero.page-hero--article h1 {
+  max-width: 16ch;
+  margin-top: 14px;
+  font-size: clamp(2.7rem, 1.7rem + 2.8vw, 4.65rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.page-hero--article .article-hero-copy > p {
+  max-width: 58ch;
+  margin-top: 22px;
+  color: rgba(231, 241, 247, 0.8);
+  font-size: clamp(1rem, 0.94rem + 0.25vw, 1.16rem);
+}
+
+.article-hero-visual {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(124, 225, 234, 0.3);
+  background: #06090c;
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(233, 201, 96, 0.08) inset;
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+}
+
+.article-hero-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, rgba(94, 220, 232, 0.12), transparent 34%),
+    linear-gradient(300deg, rgba(232, 86, 130, 0.08), transparent 30%);
+  mix-blend-mode: screen;
+}
+
+.article-hero-visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1728 / 910;
+  object-fit: cover;
+}
+
+.article-hero-visual figcaption {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 12px 16px 14px;
+  border-top: 1px solid rgba(124, 225, 234, 0.16);
+  color: rgba(201, 215, 226, 0.7);
+  background: rgba(3, 6, 8, 0.96);
+  font-family: var(--mono-font);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 980px) {
+  .article-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .page-hero.page-hero--article h1 {
+    max-width: 20ch;
+  }
+
+  .article-hero-visual {
+    width: min(100%, 780px);
+  }
+}
+
+@media (max-width: 640px) {
+  .page-hero.page-hero--article {
+    padding: 112px 0 46px;
+  }
+
+  .page-hero--article .page-hero-inner {
+    max-width: min(100% - 28px, 1280px);
+  }
+
+  .page-hero.page-hero--article h1 {
+    max-width: none;
+    font-size: clamp(2.2rem, 1.7rem + 2.5vw, 3.1rem);
+    line-height: 1;
+  }
+
+  .page-hero--article .post-meta {
+    gap: 8px;
+  }
+
+  .article-hero-visual figcaption {
+    font-size: 0.62rem;
+  }
+}
+
 /* 2026 high-taste pass: machined crystal lab, angular proof surface. */
 :root {
   --void: #04070a;

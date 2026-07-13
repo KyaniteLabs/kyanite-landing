@@ -11,6 +11,10 @@
   <meta property="og:description" content="{{ post.get('meta_description', post.excerpt) }}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kyanitelabs.tech/blog/{{ post.slug }}">
+  {% if post.get('hero_image') %}<meta property="og:image" content="https://kyanitelabs.tech{{ post.hero_image }}">
+  <meta property="og:image:alt" content="{{ post.hero_alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://kyanitelabs.tech{{ post.hero_image }}">{% endif %}
   <link rel="canonical" href="https://kyanitelabs.tech/blog/{{ post.slug }}">
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
@@ -25,6 +29,7 @@
         "@id": "https://kyanitelabs.tech/blog/{{ post.slug }}#article",
         "headline": "{{ post.title }}",
         "description": "{{ post.get('meta_description', post.excerpt) }}",
+        {% if post.get('hero_image') %}"image": "https://kyanitelabs.tech{{ post.hero_image }}",{% endif %}
         "datePublished": "{{ post.date }}",
         "dateModified": "{{ post.date }}",
         "inLanguage": "en-US",
@@ -75,12 +80,20 @@
   </header>
 
   <main>
-    <section class="page-hero">
-      <div class="container page-hero-inner">
-        <div class="eyebrow">{{ post.category }}</div>
-        <h1>{{ post.title }}</h1>
-        <p>{{ post.excerpt }}</p>
-        <div class="post-meta"><span>{{ post.date }}</span><span>{{ post.read_time }}</span><span>{{ post.primary_keyword }}</span></div>
+    <section class="page-hero{% if post.get('hero_image') %} page-hero--article{% endif %}">
+      <div class="container page-hero-inner{% if post.get('hero_image') %} article-hero-grid{% endif %}">
+        <div class="article-hero-copy">
+          <div class="eyebrow">{{ post.category }}</div>
+          <h1>{{ post.title }}</h1>
+          <p>{{ post.excerpt }}</p>
+          <div class="post-meta"><span>{{ post.date }}</span><span>{{ post.read_time }}</span><span>{{ post.primary_keyword }}</span></div>
+        </div>
+        {% if post.get('hero_image') %}
+        <figure class="article-hero-visual">
+          <img src="{{ post.hero_image }}" alt="{{ post.hero_alt }}" width="1728" height="910" fetchpriority="high" decoding="async">
+          <figcaption>{{ post.hero_caption }}</figcaption>
+        </figure>
+        {% endif %}
       </div>
     </section>
 

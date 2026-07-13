@@ -104,6 +104,21 @@ class LandingSmokeTests(unittest.TestCase):
                 html = self.client.get(path).get_data(as_text=True)
                 self.assertNotIn("#tools", html)
 
+    def test_gpt56_article_uses_a_responsive_kyanite_hero(self) -> None:
+        hero_path = "/static/brand/gpt-5-6-routing-instrument-1728x910.webp"
+        html = self.client.get("/blog/gpt-5-6-sol-terra-luna-routing-guide").get_data(as_text=True)
+        css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
+
+        self.assertIn('class="page-hero page-hero--article"', html)
+        self.assertIn(f'<meta property="og:image" content="https://kyanitelabs.tech{hero_path}">', html)
+        self.assertIn(f'src="{hero_path}"', html)
+        self.assertIn('alt="A dark metal routing instrument with separate Sol, Terra, and Luna channels."', html)
+        self.assertIn('class="article-hero-visual"', html)
+        self.assertIn(".article-hero-grid", css)
+        self.assertIn(".page-hero--article .page-hero-inner::before", css)
+        self.assertIn(".page-hero--article h1", css)
+        self.assertEqual(self.client.get(hero_path).status_code, 200)
+
     def test_homepage_images_have_accessible_alt_text(self) -> None:
         html = self.client.get("/").get_data(as_text=True)
         image_tags = re.findall(r"<img\b[^>]*>", html)
