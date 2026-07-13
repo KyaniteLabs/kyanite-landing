@@ -480,6 +480,150 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
     {
+        "slug": "gpt-5-6-sol-terra-luna-routing-guide",
+        "title": "GPT-5.6 Sol vs. Terra vs. Luna: an evidence-based routing policy for coding agents",
+        "category": "Model Routing / Agent Systems",
+        "date": "2026-07-12",
+        "date_modified": "2026-07-12",
+        "read_time": "12 min",
+        "primary_keyword": "GPT-5.6 Sol vs Terra vs Luna",
+        "seo_title": "GPT-5.6 Sol vs Terra vs Luna: Agent Routing Policy",
+        "meta_description": "Route GPT-5.6 Sol, Terra, and Luna by task uncertainty, completion contract, verification cost, reasoning effort, and agent-system architecture.",
+        "excerpt": "The practical GPT-5.6 split is Sol for discovery, Terra for bounded execution, and Luna for repeatable processing - with a different verification contract for each.",
+        "body": """
+<h2>Executive summary — TL;DR / BLUF</h2>
+<ul>
+  <li><strong>Sol High is the discovery lane.</strong> Use it when the path, owner, or failure mode is still unknown. Give it an evidence target and an exit condition.</li>
+  <li><strong>Terra Medium is the execution lane.</strong> Use it after the decision is made and the work has explicit files, behaviors, boundaries, and acceptance gates.</li>
+  <li><strong>Luna is the processing lane.</strong> Use it for narrow, repeatable, high-volume tasks whose outputs can be checked by a schema, deterministic test, or sample audit.</li>
+  <li><strong>Max is an escalation, not a default.</strong> DataCurve's current DeepSWE result shows a modest observed gain over High at roughly 2.4 times the estimated task cost, with slightly overlapping confidence intervals.</li>
+  <li><strong>Fast and Ultra are separate controls.</strong> Fast is not currently documented for GPT-5.6; Ultra is multi-agent orchestration, not a reasoning level.</li>
+  <li><strong>Current usage note:</strong> the five-hour restriction for Codex and ChatGPT Work is temporarily absent for Plus, Business, and Pro, but weekly limits remain. The reported reduced internal “juice values” were experiments that OpenAI says it reverted.</li>
+</ul>
+<p><strong>BLUF: do not choose a GPT-5.6 model by prestige. Route by uncertainty and by the cost of proving the answer is correct.</strong></p>
+
+<h2>Model routing is a completion-contract problem</h2>
+<p>The important difference between Sol, Terra, and Luna is not simply “smart, cheaper, cheapest.” Each model is most reliable when the agent is given a different definition of done. Sol needs a research boundary. Terra needs a specification. Luna needs a validator.</p>
+<table>
+  <thead><tr><th>Model</th><th>Job</th><th>Completion contract</th><th>Failure to design around</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Sol</strong></td><td>Discover</td><td>Question, evidence target, protected boundaries, and stop condition</td><td>Continuing after the useful answer or widening scope without evidence</td></tr>
+    <tr><td><strong>Terra</strong></td><td>Execute</td><td>Approved plan, named files, acceptance gates, and required tests</td><td>Treating unresolved uncertainty as if it were an implementation detail</td></tr>
+    <tr><td><strong>Luna</strong></td><td>Process</td><td>Exact schema, examples, deterministic validator, and retry rule</td><td>Letting a cheap silent error propagate through the pipeline</td></tr>
+  </tbody>
+</table>
+<p>OpenAI's <a href="https://developers.openai.com/api/docs/models" rel="noopener">current model-selection guidance</a> describes the same capability ladder in product terms. The engineering move is to turn that ladder into a contract-and-verifier architecture.</p>
+
+<h2>What our first week changed</h2>
+<p>We used the three lanes across research, evaluation, websites, and agent systems. This was operational observation, not a controlled benchmark, so the claims below are field notes rather than universal rankings.</p>
+<p><strong>Sol was best when the work had to discover its own path.</strong> It carried long investigations and found consequential mistakes that a narrower pass could have missed. Its failure mode was persistence without a stopping rule: once the answer existed, it could keep exploring. The improvement was not a cleverer prompt. It was an explicit evidence target, protected boundaries, and a rule for when to stop.</p>
+<p><strong>Terra was strongest when the acceptance contract was already explicit.</strong> Given a bounded scope, it produced specific adversarial findings and clear approve-or-hold judgments. When hidden discovery remained, however, the apparent execution task was actually routed too early.</p>
+<p><strong>Luna was reliable when the output boundary was machine-checkable.</strong> Exact-schema JSON, extraction, metadata, and other constrained jobs repeatedly landed inside the requested shape. Some runs benefited from an explicit completion reminder. The model was not the whole control system; the schema and validator were.</p>
+
+<h2>A reference router for coding agents</h2>
+<pre><code>def route(task):
+    if task.uncertain or task.crosses_subsystems:
+        return ("Sol", "high", "evidence + exit condition")
+    if task.specified and task.bounded:
+        return ("Terra", "medium", "acceptance gates")
+    if task.repeatable and task.cheap_to_verify:
+        return ("Luna", "lowest sufficient", "schema + validator")
+    return ("Sol", "high", "evidence + exit condition")</code></pre>
+<p>The fallback matters. If work is neither bounded nor cheap to verify, it probably still contains discovery. Route that uncertainty deliberately before paying an executor to guess.</p>
+
+<h2>First constrain the router to the product surface</h2>
+<p>A routing policy cannot select a model the current product does not expose. “GPT-5.6” means different controls in ChatGPT, Codex, and the API, so record the surface as part of the route.</p>
+<ul>
+  <li><strong>Standard ChatGPT:</strong> OpenAI's current help documentation says GPT-5.6 uses Sol for Medium, High, and Extra High. Terra and Luna are not selected there.</li>
+  <li><strong>ChatGPT Work and Codex:</strong> eligible paid plans can expose Sol, Terra, and Luna. Max and Ultra depend on the product and plan.</li>
+  <li><strong>API:</strong> the three models support <code>none</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, and <code>max</code> reasoning effort.</li>
+</ul>
+<p>Check <a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">GPT-5.6 in ChatGPT</a> and the API model pages when implementing the policy. A model-picker screenshot is not an architecture contract; availability can change independently across products and plans.</p>
+
+<h2>Escalate reasoning effort only after diagnosing the failure</h2>
+<p>Reasoning effort is a second routing dimension. Higher effort gives the same model more room to explore, use tools, and revise, but it cannot repair a wrong premise, missing permission, broken test environment, or underspecified deliverable.</p>
+<table>
+  <thead><tr><th>Sol effort</th><th>DeepSWE v1.1 score</th><th>Estimated cost per task</th></tr></thead>
+  <tbody>
+    <tr><td>High</td><td>69.4%</td><td>$3.47</td></tr>
+    <tr><td>Extra High</td><td>70.7%</td><td>$4.70</td></tr>
+    <tr><td>Max</td><td>72.7%</td><td>$8.39</td></tr>
+  </tbody>
+</table>
+<p>Those July 9, 2026 values come from DataCurve's <a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">raw DeepSWE v1.1 artifact</a>. High to Max adds 3.3 observed percentage points while estimated task cost rises from $3.47 to $8.39 - about 2.4 times. The set contains 113 tasks, and the reported 95% confidence intervals for High and Max overlap slightly.</p>
+<p>That makes Max a diagnosed escalation: use it after High failed because exploration ended too soon or a hard branch was not followed. It is poor compensation for a bad brief. The benchmark is evidence from one harness, not a guaranteed gain on a particular repository.</p>
+
+<h2>Keep three cost systems separate</h2>
+<p>API price, benchmark-estimated cost, and Codex credits are not interchangeable units. OpenAI currently publishes API prices of $5/$30 per million input/output tokens for Sol, $2.50/$15 for Terra, and $1/$6 for Luna. For most plans, the current Codex card maps those same input/output quantities to 125/750 credits for Sol, 62.5/375 for Terra, and 25/150 for Luna, with lower cached-input rates.</p>
+<p>A benchmark's dollars-per-task number belongs to its own harness. A real agent run also pays for context, cached input, tool output, retries, validation, and any parallel branches. Use the <a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">live Codex rate card</a> for credits and measure verified completion cost in the system itself.</p>
+
+<h2>P.S. Current limits and the reported “juice” change</h2>
+<p><strong>As of July 12, 2026, the five-hour usage window for Codex and ChatGPT Work does not currently apply to Plus, Business, or Pro.</strong> OpenAI product lead <a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux wrote that the change is temporary</a>; an <a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">accessible contemporaneous report reproduces the announcement</a>. Weekly limits remain. Treat this as a live operating condition, not a permanent entitlement or unlimited usage.</p>
+<p>A separate <a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">public follow-up reproduced in this screenshot thread</a> addressed the smaller internal reasoning budgets - the “juice values” discussed online. Sottiaux said OpenAI tested those values while diagnosing unexpectedly high consumption and then reverted the experiment. The exact reduced numbers circulating in screenshots are therefore not a current documented interface or stable API contract.</p>
+<p>For a production router, treat both facts as current-state notes. Target published model and effort controls, watch the live usage surface, and re-measure behavior rather than encoding temporary limits or inferred internal budgets.</p>
+
+<h2>Do not collapse Max, Fast, and Ultra into one ladder</h2>
+<ul>
+  <li><strong>Max</strong> expands reasoning effort for one GPT-5.6 model.</li>
+  <li><strong>Fast</strong> is a higher-credit Codex inference option, but the current <a href="https://developers.openai.com/codex/speed" rel="noopener">Speed documentation</a> lists GPT-5.5 and GPT-5.4 - not GPT-5.6 - as supported.</li>
+  <li><strong>Ultra</strong> is a separate multi-agent setting that coordinates four agents by default. It is not another single-agent reasoning level above Max.</li>
+</ul>
+<p>Ultra earns its overhead when branches can produce independent evidence: separate subsystem reviews, competing implementations, or research questions without shared mutable state. It wastes context and creates collision risk when every worker needs the same files, decision, or sequential dependency.</p>
+
+<h2>The verifier belongs in the routing table</h2>
+<table>
+  <thead><tr><th>Lane</th><th>Required evidence</th><th>Typical verifier</th></tr></thead>
+  <tbody>
+    <tr><td>Sol discovery</td><td>Reproduction, cited investigation, or decision record</td><td>Test, source audit, or independent review</td></tr>
+    <tr><td>Terra execution</td><td>Bounded diff plus every acceptance gate named in the plan</td><td>Targeted tests, lint, type checks, and diff review</td></tr>
+    <tr><td>Luna processing</td><td>Structured output conforming to the requested contract</td><td>Schema, deterministic check, sample audit, or stronger-model review</td></tr>
+  </tbody>
+</table>
+<blockquote>The economical model is the one with the lowest total cost to a verified result, not the lowest token price.</blockquote>
+
+<h2>Implementation checklist</h2>
+<ol>
+  <li>Classify the task by uncertainty: discovery, bounded execution, or repeatable processing.</li>
+  <li>Record the product surface and verify that the intended model and effort control exist there.</li>
+  <li>Attach the right completion contract: evidence plus exit condition, acceptance gates, or schema plus validator.</li>
+  <li>Begin unclear hard work with Sol High. Escalate to Max only after diagnosing insufficient exploration.</li>
+  <li>Hand decided work to Terra and high-volume verifiable units to Luna.</li>
+  <li>Measure verified completions, retries, review time, latency, and token or credit use - not output volume alone.</li>
+</ol>
+<p>This policy makes model choice auditable. A failed task can be traced to the route, contract, environment, or verifier instead of being dismissed as “the model was not smart enough.” For the owner/operator version focused on approval and business risk, read the PuenteWorks companion: <a href="https://puenteworks.com/blog/choose-ai-model-by-job.html">use the cheapest AI model that can reliably finish the job</a>.</p>
+
+<h2>FAQ</h2>
+<h3>Is Sol always the best GPT-5.6 model for coding?</h3>
+<p>No. Sol is the strongest discovery route when the path is unclear. Terra is often the better engineering route once a plan is bounded, and Luna is more efficient for narrow transformations with deterministic validation.</p>
+<h3>Should coding agents default to Sol High or Max?</h3>
+<p>Start difficult, uncertain work at Sol High. Escalate to Max only after identifying that insufficient exploration—not a bad brief or environment—caused the failure.</p>
+<h3>Can Luna run a complete coding-agent session?</h3>
+<p>It can run a constrained session, but its strongest system role is often inside a workflow: classification, extraction, naming, summaries, and other repeated work whose output can be checked automatically.</p>
+<h3>Is Ultra more intelligent than Max?</h3>
+<p>No. Max increases reasoning effort for one model. Ultra coordinates multiple agents. Parallelism helps only when the work can be decomposed without duplicating context or colliding on shared state.</p>
+<h3>Do Codex and ChatGPT Work currently have a five-hour usage window?</h3>
+<p>As of July 12, 2026, OpenAI says the five-hour restriction for Codex and ChatGPT Work temporarily does not apply to Plus, Business, or Pro. Weekly limits remain, so this is not unlimited access or a permanent contract.</p>
+<h3>Were GPT-5.6 juice values permanently reduced?</h3>
+<p>No current public specification says that. Tibo Sottiaux said the internal reasoning-budget experiments were reverted. Route against published effort controls and verify behavior on your own workload.</p>
+
+<h2>Sources and limits</h2>
+<ul>
+  <li><a href="https://openai.com/index/gpt-5-6/" rel="noopener">OpenAI: GPT-5.6</a></li>
+  <li><a href="https://openai.com/index/previewing-gpt-5-6-sol/" rel="noopener">OpenAI: previewing GPT-5.6 Sol</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">OpenAI Help Center: GPT-5.6 in ChatGPT</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">OpenAI Help Center: Codex rate card</a></li>
+  <li><a href="https://developers.openai.com/codex/speed" rel="noopener">OpenAI: Codex Speed</a></li>
+  <li><a href="https://developers.openai.com/api/docs/models" rel="noopener">OpenAI API: models and model selection</a></li>
+  <li><a href="https://deepswe.datacurve.ai/" rel="noopener">DataCurve: DeepSWE v1.1 leaderboard</a></li>
+  <li><a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">DataCurve: raw DeepSWE v1.1 leaderboard artifact</a></li>
+  <li><a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux: temporary removal of the five-hour restriction</a></li>
+  <li><a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">All-AI: accessible report reproducing the temporary-limit announcement</a></li>
+  <li><a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">Tibo Sottiaux follow-up on usage and reverted juice-value experiments</a></li>
+</ul>
+<p><small>Fact-checked July 12, 2026. Product availability, prices, rate cards, usage limits, and benchmark results can change. The field notes are observational, and the routing policy should be validated against your own repositories and verification costs.</small></p>
+""",
+    },
+    {
         "slug": "agents-need-verifiable-tools",
         "title": "Agents need verifiable tools, not better prompt theater",
         "category": "MCP Implementation",
@@ -871,6 +1015,144 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
+    "gpt-5-6-sol-terra-luna-routing-guide": {
+        "title": "GPT-5.6 Sol vs. Terra vs. Luna: politica de ruteo basada en evidencia",
+        "category": "Ruteo de modelos / Sistemas agenticos",
+        "primary_keyword": "comparacion GPT-5.6 Sol Terra Luna",
+        "seo_title": "GPT-5.6 Sol vs Terra vs Luna: politica para agentes",
+        "meta_description": "Rutea GPT-5.6 Sol, Terra y Luna por incertidumbre, contrato de finalizacion, costo de verificacion, esfuerzo y arquitectura agentica.",
+        "excerpt": "La division practica es Sol para descubrir, Terra para ejecutar trabajo acotado y Luna para procesar volumen verificable, cada uno con un contrato distinto.",
+        "body": """
+<h2>Resumen ejecutivo — TL;DR / BLUF</h2>
+<ul>
+  <li><strong>Sol High es la ruta de descubrimiento.</strong> Usalo cuando todavia no sabes cual es el camino, el subsistema responsable o la causa de la falla. Dale una meta de evidencia y una condicion de salida.</li>
+  <li><strong>Terra Medium es la ruta de ejecucion.</strong> Usalo cuando la decision ya esta tomada y el trabajo tiene archivos, limites, comportamiento esperado y gates de aceptacion.</li>
+  <li><strong>Luna es la ruta de procesamiento.</strong> Usalo para tareas estrechas, repetibles y de alto volumen que un schema, prueba determinista o auditoria por muestra pueda verificar.</li>
+  <li><strong>Max es una escalada diagnosticada.</strong> En DeepSWE, el salto observado desde High fue modesto frente a un costo estimado por tarea unas 2.4 veces mayor, con intervalos de confianza que se superponen ligeramente.</li>
+  <li><strong>Fast y Ultra son controles distintos.</strong> Fast no esta documentado actualmente para GPT-5.6. Ultra coordina varios agentes; no es otro nivel de razonamiento.</li>
+  <li><strong>Nota de uso actual:</strong> la restriccion de cinco horas para Codex y ChatGPT Work esta suspendida temporalmente para Plus, Business y Pro, aunque siguen los limites semanales. OpenAI dice que revirtio los “juice values” internos reducidos que estaba probando.</li>
+</ul>
+<p><strong>BLUF: no elijas el modelo por prestigio. Elige segun la incertidumbre del trabajo y el costo de demostrar que el resultado es correcto.</strong></p>
+
+<h2>El ruteo es un problema de contratos de finalizacion</h2>
+<p>Sol, Terra y Luna no son solamente tres escalones de “mas potente” a “mas barato”. Cada uno funciona mejor con una definicion de terminado diferente. Sol necesita una frontera de investigacion. Terra necesita una especificacion. Luna necesita un validador.</p>
+<table>
+  <thead><tr><th>Modelo</th><th>Trabajo</th><th>Contrato de finalizacion</th><th>Falla a prevenir</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Sol</strong></td><td>Descubrir</td><td>Pregunta, meta de evidencia, limites protegidos y condicion de parada</td><td>Seguir despues de encontrar la respuesta o ampliar el alcance sin evidencia</td></tr>
+    <tr><td><strong>Terra</strong></td><td>Ejecutar</td><td>Plan aprobado, archivos nombrados, gates y pruebas requeridas</td><td>Tratar incertidumbre pendiente como si fuera un detalle de implementacion</td></tr>
+    <tr><td><strong>Luna</strong></td><td>Procesar</td><td>Schema exacto, ejemplos, validador determinista y regla de reintento</td><td>Permitir que un error barato y silencioso se propague por el pipeline</td></tr>
+  </tbody>
+</table>
+<p>La <a href="https://developers.openai.com/api/docs/models" rel="noopener">guia actual de modelos de OpenAI</a> presenta una jerarquia de capacidad y costo parecida. Para un sistema agentico, el paso importante es convertirla en una arquitectura de contratos y verificadores.</p>
+
+<h2>Lo que cambio despues de una semana de uso</h2>
+<p>Probamos las tres rutas en investigacion, evaluaciones, sitios y herramientas. Fue observacion operativa, no un benchmark controlado; por eso estas son notas de campo y no un ranking universal.</p>
+<p><strong>Sol rindio mejor cuando el trabajo tenia que descubrir su propia ruta.</strong> Sostuvo investigaciones largas y encontro errores importantes que un pase mas estrecho podia perder. Su falla caracteristica fue la persistencia sin salida: podia seguir explorando aun despues de tener la respuesta util. La mejora fue definir evidencia requerida, limites protegidos y una regla clara para parar.</p>
+<p><strong>Terra rindio mejor cuando el contrato de aceptacion ya estaba escrito.</strong> Con un alcance acotado produjo hallazgos adversariales concretos y decisiones limpias de aprobar o detener. Cuando todavia habia descubrimiento escondido, el supuesto trabajo de ejecucion habia sido ruteado demasiado pronto.</p>
+<p><strong>Luna fue consistente cuando el borde de salida se podia verificar por maquina.</strong> JSON con schema exacto, extraccion, metadata y tareas parecidas llegaron repetidamente con la forma pedida. Algunas corridas necesitaron un recordatorio explicito de cierre. El sistema de control no era solamente el modelo: era el modelo mas el schema y el validador.</p>
+
+<h2>Router de referencia para agentes de codigo</h2>
+<pre><code>def rutear(tarea):
+    if tarea.incierta or tarea.cruza_subsistemas:
+        return ("Sol", "high", "evidencia + condicion de salida")
+    if tarea.especificada and tarea.acotada:
+        return ("Terra", "medium", "gates de aceptacion")
+    if tarea.repetible and tarea.barata_de_verificar:
+        return ("Luna", "minimo suficiente", "schema + validador")
+    return ("Sol", "high", "evidencia + condicion de salida")</code></pre>
+<p>El fallback a Sol High es intencional. Si una tarea no esta acotada y tampoco es barata de verificar, probablemente todavia contiene trabajo de descubrimiento. Conviene resolver esa incertidumbre antes de pagarle a un ejecutor para adivinar.</p>
+
+<h2>Primero limita el router a la superficie real</h2>
+<p>Una politica no puede seleccionar un modelo que el producto actual no expone. “GPT-5.6” ofrece controles distintos en ChatGPT, Codex y el API, asi que la superficie debe formar parte de la decision.</p>
+<ul>
+  <li><strong>ChatGPT estandar:</strong> la documentacion actual indica que GPT-5.6 usa Sol para Medium, High y Extra High. Terra y Luna no se eligen ahi.</li>
+  <li><strong>ChatGPT Work y Codex:</strong> los planes elegibles pueden mostrar Sol, Terra y Luna. Max y Ultra dependen del producto y del plan.</li>
+  <li><strong>API:</strong> los tres modelos soportan <code>none</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> y <code>max</code>.</li>
+</ul>
+<p>Revisa <a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">GPT-5.6 en ChatGPT</a> y las paginas actuales del API al implementar el router. Una captura del selector no es un contrato de arquitectura: la disponibilidad puede cambiar por producto y por plan.</p>
+
+<h2>Escala el esfuerzo solo despues de diagnosticar la falla</h2>
+<p>El esfuerzo de razonamiento es una segunda dimension del ruteo. Un nivel mayor deja mas espacio para explorar, usar herramientas y revisar, pero no corrige una premisa equivocada, permisos faltantes, un entorno de pruebas roto o un entregable ambiguo.</p>
+<table>
+  <thead><tr><th>Esfuerzo Sol</th><th>DeepSWE v1.1</th><th>Costo estimado por tarea</th></tr></thead>
+  <tbody>
+    <tr><td>High</td><td>69.4%</td><td>$3.47</td></tr>
+    <tr><td>Extra High</td><td>70.7%</td><td>$4.70</td></tr>
+    <tr><td>Max</td><td>72.7%</td><td>$8.39</td></tr>
+  </tbody>
+</table>
+<p>Los valores del 9 de julio de 2026 vienen del <a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">artefacto crudo de DeepSWE v1.1</a> de DataCurve. De High a Max hay 3.3 puntos porcentuales observados, mientras el costo estimado pasa de $3.47 a $8.39 por tarea, unas 2.4 veces mas. Son 113 tareas y los intervalos de confianza de 95% para High y Max se superponen ligeramente.</p>
+<p>Eso convierte a Max en una escalada diagnosticada: usalo cuando High fallo porque abandono demasiado pronto una rama dificil o no exploro lo suficiente. El benchmark aporta evidencia de un harness; no promete la misma ganancia en un repo particular.</p>
+
+<h2>Manten separados los tres sistemas de costo</h2>
+<p>Precio del API, costo estimado por un benchmark y creditos Codex no son unidades intercambiables. OpenAI publica actualmente $5/$30 por millon de tokens de entrada/salida para Sol, $2.50/$15 para Terra y $1/$6 para Luna. Para la mayoria de planes, la tabla Codex asigna 125/750 creditos a Sol, 62.5/375 a Terra y 25/150 a Luna por la misma cantidad de entrada/salida, con tasas menores para entrada en cache.</p>
+<p>El numero en dolares de un benchmark pertenece a su propio harness. Una corrida real tambien paga contexto, cache, salida de herramientas, reintentos, validacion y ramas paralelas. Usa la <a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">tabla Codex vigente</a> y mide costo hasta una finalizacion verificada dentro del sistema.</p>
+
+<h2>P. D. Limites actuales y el cambio reportado de “juice”</h2>
+<p><strong>Al 12 de julio de 2026, la ventana de uso de cinco horas para Codex y ChatGPT Work no aplica actualmente a Plus, Business o Pro.</strong> <a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux escribio que el cambio es temporal</a>; un <a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">reporte contemporaneo accesible reproduce el anuncio</a>. Los limites semanales siguen vigentes. Es una condicion operativa actual, no un derecho permanente ni uso ilimitado.</p>
+<p>En otro <a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">seguimiento publico reproducido en este hilo con captura</a>, Sottiaux hablo de los presupuestos internos de razonamiento mas bajos que circularon como “juice values”. Dijo que OpenAI los probo mientras investigaba un consumo mayor al esperado y luego revirtio el experimento. Esos numeros reducidos no son una interfaz documentada actual ni un contrato estable.</p>
+<p>Para un router de produccion, ambos datos son notas de estado presente. Usa controles publicados, observa la superficie de consumo en vivo y vuelve a medir antes de codificar limites temporales o presupuestos internos inferidos.</p>
+
+<h2>No conviertas Max, Fast y Ultra en una sola escalera</h2>
+<ul>
+  <li><strong>Max</strong> da mas tiempo de razonamiento a un modelo GPT-5.6.</li>
+  <li><strong>Fast</strong> es una opcion de inferencia de Codex que consume mas creditos, pero la <a href="https://developers.openai.com/codex/speed" rel="noopener">documentacion actual de Speed</a> lista GPT-5.5 y GPT-5.4, no GPT-5.6.</li>
+  <li><strong>Ultra</strong> es una configuracion multiagente separada que coordina cuatro agentes por defecto. No es otro nivel de razonamiento de un solo agente por encima de Max.</li>
+</ul>
+<p>Ultra justifica su overhead cuando cada rama puede producir evidencia independiente: revisar subsistemas separados, comparar implementaciones o investigar preguntas sin estado mutable compartido. Desperdicia contexto y genera colisiones cuando todos necesitan los mismos archivos, la misma decision o una dependencia secuencial.</p>
+
+<h2>El verificador tambien pertenece a la tabla de ruteo</h2>
+<table>
+  <thead><tr><th>Ruta</th><th>Evidencia requerida</th><th>Verificador tipico</th></tr></thead>
+  <tbody>
+    <tr><td>Descubrimiento con Sol</td><td>Reproduccion, investigacion citada o registro de decision</td><td>Prueba, auditoria de fuentes o revision independiente</td></tr>
+    <tr><td>Ejecucion con Terra</td><td>Diff acotado mas los gates nombrados en el plan</td><td>Pruebas, lint, tipos y revision del diff</td></tr>
+    <tr><td>Procesamiento con Luna</td><td>Salida estructurada que cumple el contrato</td><td>Schema, chequeo determinista, muestra o revision con modelo mas fuerte</td></tr>
+  </tbody>
+</table>
+<blockquote>El modelo economico es el que minimiza el costo total hasta un resultado verificado, no el que cobra menos por token.</blockquote>
+
+<h2>Checklist de implementacion</h2>
+<ol>
+  <li>Clasifica la tarea por incertidumbre: descubrimiento, ejecucion acotada o procesamiento repetible.</li>
+  <li>Nombra la superficie y confirma que el modelo y el control de esfuerzo existan ahi.</li>
+  <li>Adjunta el contrato correcto: evidencia y salida, gates de aceptacion, o schema y validador.</li>
+  <li>Empieza trabajo incierto y dificil en Sol High. Escala a Max solo despues de diagnosticar exploracion insuficiente.</li>
+  <li>Entrega decisiones cerradas a Terra y unidades de volumen verificable a Luna.</li>
+  <li>Mide finalizaciones verificadas, reintentos, tiempo de revision, latencia y consumo, no solamente cantidad de salida.</li>
+</ol>
+<p>Esta politica vuelve auditable la seleccion. Una falla puede rastrearse hasta la ruta, el contrato, el entorno o el verificador, en vez de resumirse como “el modelo no fue suficientemente inteligente”. Para la version orientada a costo, aprobacion y riesgo del dueño, lee la guia complementaria de PuenteWorks: <a href="https://puenteworks.com/blog/choose-ai-model-by-job.html">usa el modelo de IA mas barato que pueda terminar bien el trabajo</a>.</p>
+
+<h2>Preguntas frecuentes</h2>
+<h3>¿Sol siempre es el mejor GPT-5.6 para codigo?</h3>
+<p>No. Sol es la mejor ruta de descubrimiento cuando el camino es incierto. Terra suele ser mejor cuando el plan ya esta acotado y Luna cuando la transformacion es estrecha y tiene validacion determinista.</p>
+<h3>¿Debo usar Sol High o Max por defecto?</h3>
+<p>Empieza el trabajo dificil e incierto en Sol High. Escala a Max solo despues de identificar que la causa fue exploracion insuficiente, no un brief o entorno defectuoso.</p>
+<h3>¿Ultra es mas inteligente que Max?</h3>
+<p>No. Max aumenta el esfuerzo de un modelo. Ultra coordina varios agentes. El paralelo ayuda solo cuando el trabajo puede separarse sin duplicar contexto ni chocar sobre estado compartido.</p>
+<h3>¿Codex y ChatGPT Work tienen actualmente una ventana de uso de cinco horas?</h3>
+<p>Al 12 de julio de 2026, OpenAI dice que la restriccion de cinco horas para Codex y ChatGPT Work no aplica temporalmente a Plus, Business o Pro. Los limites semanales siguen vigentes; no es acceso ilimitado ni un contrato permanente.</p>
+<h3>¿Los juice values de GPT-5.6 se redujeron permanentemente?</h3>
+<p>No hay una especificacion publica actual que diga eso. Tibo Sottiaux dijo que los experimentos internos con presupuestos de razonamiento fueron revertidos. Usa los controles publicados y verifica el comportamiento en tu propio workload.</p>
+
+<h2>Fuentes y limites</h2>
+<ul>
+  <li><a href="https://openai.com/index/gpt-5-6/" rel="noopener">OpenAI: GPT-5.6</a></li>
+  <li><a href="https://openai.com/index/previewing-gpt-5-6-sol/" rel="noopener">OpenAI: preview de GPT-5.6 Sol</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">OpenAI Help Center: GPT-5.6 en ChatGPT</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">OpenAI Help Center: tabla de creditos Codex</a></li>
+  <li><a href="https://developers.openai.com/codex/speed" rel="noopener">OpenAI: Codex Speed</a></li>
+  <li><a href="https://developers.openai.com/api/docs/models" rel="noopener">OpenAI API: modelos y seleccion</a></li>
+  <li><a href="https://deepswe.datacurve.ai/" rel="noopener">DataCurve: DeepSWE v1.1</a></li>
+  <li><a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">DataCurve: artefacto crudo de DeepSWE v1.1</a></li>
+  <li><a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux: retiro temporal de la restriccion de cinco horas</a></li>
+  <li><a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">All-AI: reporte accesible que reproduce el anuncio del limite temporal</a></li>
+  <li><a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">Seguimiento de Tibo Sottiaux sobre uso y experimentos de juice revertidos</a></li>
+</ul>
+<p><small>Verificado el 12 de julio de 2026. Disponibilidad, precios, limites, tablas de uso y benchmarks pueden cambiar. Las notas de campo son observacionales; valida la politica contra tus propios repos y costos de verificacion.</small></p>
+""",
+    },
     "agents-need-verifiable-tools": {
         "title": "Los agentes necesitan herramientas verificables, no mejor teatro de prompts",
         "category": "Implementacion MCP",
