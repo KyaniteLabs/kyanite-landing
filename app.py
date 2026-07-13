@@ -80,11 +80,11 @@ ADMIN_API_PATHS = {
 }
 CONTENT_SECURITY_POLICY = "; ".join([
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "script-src 'self' 'unsafe-inline' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com https://static.cloudflareinsights.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
-    "connect-src 'self' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "connect-src 'self' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com https://*.cloudflareinsights.com",
     "worker-src 'self' blob:",
     "base-uri 'self'",
     "frame-ancestors 'none'",
