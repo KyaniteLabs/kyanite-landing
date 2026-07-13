@@ -110,6 +110,7 @@ class LandingSmokeTests(unittest.TestCase):
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
 
         self.assertIn('class="page-hero page-hero--article"', html)
+        self.assertIn('/static/css/kyanite-system.css?v=20260713-gpt56-hero-2', html)
         self.assertIn(f'<meta property="og:image" content="https://kyanitelabs.tech{hero_path}">', html)
         self.assertIn(f'src="{hero_path}"', html)
         self.assertIn('alt="A dark metal routing instrument with separate Sol, Terra, and Luna channels."', html)
