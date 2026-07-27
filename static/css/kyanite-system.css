@@ -29,16 +29,16 @@
   --step-6: clamp(3rem, 1.95rem + 5.25vw, 5.9rem);
   --measure: 66ch;
   --measure-wide: 74ch;
-  --cyan: #5edce8;
-  --cyan-2: #2aaec1;
-  --cyan-rgb: 94, 220, 232;
+  --cyan: #00ffe6;
+  --cyan-2: #00ffe6;
+  --cyan-rgb: 0, 255, 230;
   --blue: #087dcc;
-  --magenta: #e85682;
-  --magenta-2: #a969d8;
-  --magenta-rgb: 232, 86, 130;
-  --amber: #e9c960;
-  --amber-2: #d89f38;
-  --amber-rgb: 233, 201, 96;
+  --magenta: #ff1a6e;
+  --magenta-2: #ff1a6e;
+  --magenta-rgb: 255, 26, 110;
+  --amber: #ffd11a;
+  --amber-2: #ffd11a;
+  --amber-rgb: 255, 209, 26;
   --green: #7edba5;
   --red: #ff1a3d;
   --shadow: rgba(0, 0, 0, 0.5);
@@ -854,7 +854,7 @@ section::before {
   margin-bottom: 16px;
   border: 1px solid rgba(var(--cyan-rgb), 0.3);
   border-radius: var(--radius-sm);
-  background: rgba(94, 220, 232, 0.1);
+  background: rgba(0, 255, 230, 0.1);
   color: var(--cyan);
   font-family: var(--mono-font);
   font-size: var(--step-1);
@@ -866,7 +866,7 @@ section::before {
 .grid-4 > *:nth-child(3n + 2) .tile-code {
   border-color: rgba(var(--amber-rgb), 0.34);
   color: var(--amber);
-  background: rgba(233, 201, 96, 0.08);
+  background: rgba(255, 209, 26, 0.08);
   box-shadow: none;
 }
 
@@ -874,7 +874,7 @@ section::before {
 .grid-4 > *:nth-child(3n) .tile-code {
   border-color: rgba(var(--magenta-rgb), 0.34);
   color: var(--magenta);
-  background: rgba(232, 86, 130, 0.08);
+  background: rgba(255, 26, 110, 0.08);
   box-shadow: none;
 }
 
@@ -930,7 +930,7 @@ section::before {
   min-height: 100%;
   padding: 24px;
   border-radius: var(--radius);
-  background: linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
+  background: linear-gradient(135deg, rgba(0, 255, 230, 0.16), rgba(255, 209, 26, 0.08) 42%, rgba(255, 26, 110, 0.1));
   border: 1px solid var(--line);
   box-shadow: inset 0 0 0 9999px rgba(5, 7, 11, 0.58);
   display: grid;
@@ -1713,7 +1713,7 @@ textarea:focus {
     min-height: calc(100dvh - 94px);
     align-content: start;
     background:
-      linear-gradient(135deg, rgba(100, 220, 231, 0.08), rgba(231, 196, 92, 0.06)),
+      linear-gradient(135deg, rgba(0, 255, 230, 0.08), rgba(255, 209, 26, 0.06)),
       rgba(4, 7, 10, 0.985);
   }
 
@@ -1879,11 +1879,11 @@ textarea:focus {
   --text-2: #c9d7e2;
   --muted: #8da0af;
   --muted-2: #657887;
-  --cyan: #64dce7;
-  --cyan-2: #19a7bd;
-  --amber: #e7c45c;
-  --amber-2: #b98932;
-  --magenta: #e34f7c;
+  --cyan: #00ffe6;
+  --cyan-2: #00ffe6;
+  --amber: #ffd11a;
+  --amber-2: #ffd11a;
+  --magenta: #ff1a6e;
   --green: #7edba5;
   --radius: 8px;
   --radius-sm: 6px;
@@ -1909,10 +1909,10 @@ body::before {
 body::after {
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.05) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(100, 220, 231, 0.04) 1px, transparent 1px),
-    linear-gradient(135deg, transparent 0 42%, rgba(231, 196, 92, 0.08) 42.2% 42.55%, transparent 42.8%),
-    linear-gradient(24deg, transparent 0 58%, rgba(227, 79, 124, 0.07) 58.15% 58.45%, transparent 58.7%),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 230, 0.04) 1px, transparent 1px),
+    linear-gradient(135deg, transparent 0 42%, rgba(255, 209, 26, 0.08) 42.2% 42.55%, transparent 42.8%),
+    linear-gradient(24deg, transparent 0 58%, rgba(255, 26, 110, 0.07) 58.15% 58.45%, transparent 58.7%),
     rgba(4, 7, 10, 0.34);
   background-size: 72px 72px, 72px 72px, 100% 100%, 100% 100%, auto;
   box-shadow:
@@ -1939,12 +1939,12 @@ button,
   border-color: rgba(246, 251, 255, 0.12);
   border-radius: var(--radius);
   background:
-    linear-gradient(100deg, rgba(246, 251, 255, 0.08), rgba(246, 251, 255, 0.02) 28%, rgba(100, 220, 231, 0.04)),
+    linear-gradient(100deg, rgba(246, 251, 255, 0.08), rgba(246, 251, 255, 0.02) 28%, rgba(0, 255, 230, 0.04)),
     rgba(4, 9, 13, 0.84);
   clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(100, 220, 231, 0.08),
+    inset 0 -1px 0 rgba(0, 255, 230, 0.08),
     0 28px 74px rgba(0, 0, 0, 0.32);
 }
 
@@ -2000,8 +2000,8 @@ button,
 
 .nav-links a:hover,
 .nav-links a.active {
-  border-color: rgba(100, 220, 231, 0.22);
-  background: rgba(100, 220, 231, 0.06);
+  border-color: rgba(0, 255, 230, 0.22);
+  background: rgba(0, 255, 230, 0.06);
   color: var(--text);
   transform: translateY(-1px);
 }
@@ -2090,8 +2090,8 @@ button,
 
 .hero::before {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.18) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(231, 196, 92, 0.11) 0 1px, transparent 1px 100%);
+    linear-gradient(90deg, rgba(0, 255, 230, 0.18) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(255, 209, 26, 0.11) 0 1px, transparent 1px 100%);
   background-size: 18vw 100%, 100% 18vh;
   border-top: 1px solid rgba(246, 251, 255, 0.06);
   opacity: 0.42;
@@ -2103,8 +2103,8 @@ button,
   inset: 18% 46% 10% -12%;
   pointer-events: none;
   background:
-    linear-gradient(110deg, transparent 0 46%, rgba(100, 220, 231, 0.2) 46.4% 46.8%, transparent 47.2%),
-    linear-gradient(112deg, transparent 0 59%, rgba(231, 196, 92, 0.18) 59.2% 59.5%, transparent 59.8%);
+    linear-gradient(110deg, transparent 0 46%, rgba(0, 255, 230, 0.2) 46.4% 46.8%, transparent 47.2%),
+    linear-gradient(112deg, transparent 0 59%, rgba(255, 209, 26, 0.18) 59.2% 59.5%, transparent 59.8%);
   opacity: 0.9;
 }
 
@@ -2205,7 +2205,7 @@ button,
   max-width: 760px;
   border-radius: var(--radius);
   background:
-    linear-gradient(135deg, rgba(100, 220, 231, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.08), transparent 34%),
     rgba(4, 9, 13, 0.74);
   clip-path: polygon(0 0, calc(100% - 13px) 0, 100% 13px, 100% 100%, 13px 100%, 0 calc(100% - 13px));
 }
@@ -2224,7 +2224,7 @@ button,
   inset: 11% -11% 0 8%;
   transform: skewY(-8deg) rotate(2.5deg);
   background:
-    linear-gradient(135deg, rgba(100, 220, 231, 0.08), transparent 32%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.08), transparent 32%),
     rgba(246, 251, 255, 0.018);
 }
 
@@ -2233,7 +2233,7 @@ button,
   border-color: rgba(246, 251, 255, 0.16);
   border-radius: var(--radius);
   background:
-    linear-gradient(135deg, rgba(246, 251, 255, 0.1), rgba(246, 251, 255, 0.02) 34%, rgba(100, 220, 231, 0.08)),
+    linear-gradient(135deg, rgba(246, 251, 255, 0.1), rgba(246, 251, 255, 0.02) 34%, rgba(0, 255, 230, 0.08)),
     rgba(4, 9, 13, 0.82);
   clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
   transform: rotateY(-7deg) rotateZ(1.2deg);
@@ -2267,13 +2267,13 @@ section {
 section::before {
   width: min(980px, calc(100% - 40px));
   background:
-    linear-gradient(90deg, transparent, rgba(100, 220, 231, 0.42), rgba(231, 196, 92, 0.32), transparent);
+    linear-gradient(90deg, transparent, rgba(0, 255, 230, 0.42), rgba(255, 209, 26, 0.32), transparent);
 }
 
 .band {
   background:
-    linear-gradient(135deg, rgba(100, 220, 231, 0.07), transparent 28%),
-    linear-gradient(18deg, transparent 64%, rgba(231, 196, 92, 0.07)),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.07), transparent 28%),
+    linear-gradient(18deg, transparent 64%, rgba(255, 209, 26, 0.07)),
     rgba(6, 16, 24, 0.7);
 }
 
@@ -2339,12 +2339,12 @@ section::before {
   border-color: rgba(246, 251, 255, 0.13);
   border-radius: var(--radius);
   background:
-    linear-gradient(145deg, rgba(246, 251, 255, 0.055), transparent 28%, rgba(100, 220, 231, 0.035)),
+    linear-gradient(145deg, rgba(246, 251, 255, 0.055), transparent 28%, rgba(0, 255, 230, 0.035)),
     rgba(6, 15, 22, 0.74);
   clip-path: polygon(0 0, calc(100% - var(--bevel)) 0, 100% var(--bevel), 100% 100%, var(--bevel) 100%, 0 calc(100% - var(--bevel)));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(100, 220, 231, 0.05),
+    inset 0 -1px 0 rgba(0, 255, 230, 0.05),
     0 28px 70px rgba(0, 0, 0, 0.24);
   transition:
     transform 0.52s var(--motion-curve),
@@ -2363,7 +2363,7 @@ section::before {
   border-color: rgba(var(--amber-rgb), 0.48);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(100, 220, 231, 0.06),
+    inset 0 -1px 0 rgba(0, 255, 230, 0.06),
     0 34px 82px rgba(0, 0, 0, 0.3);
 }
 
@@ -2377,7 +2377,7 @@ section::before {
 .form-panel::before {
   background:
     linear-gradient(120deg, rgba(255, 255, 255, 0.07), transparent 22%),
-    linear-gradient(315deg, rgba(100, 220, 231, 0.08), transparent 34%),
+    linear-gradient(315deg, rgba(0, 255, 230, 0.08), transparent 34%),
     var(--surface-noise);
   opacity: 1;
   mix-blend-mode: normal;
@@ -2410,7 +2410,7 @@ section::before {
   border-radius: var(--radius-sm);
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent),
-    rgba(100, 220, 231, 0.1);
+    rgba(0, 255, 230, 0.1);
   clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
 }
 
@@ -2431,7 +2431,7 @@ section::before {
   border-radius: var(--radius);
   background:
     linear-gradient(130deg, rgba(4, 9, 13, 0.42), rgba(4, 9, 13, 0.84)),
-    linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
+    linear-gradient(135deg, rgba(0, 255, 230, 0.16), rgba(255, 209, 26, 0.08) 42%, rgba(255, 26, 110, 0.1));
   clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 }
 
@@ -2456,7 +2456,7 @@ section::before {
 
 .post-meta span,
 .proof-strip span {
-  border-bottom: 1px solid rgba(100, 220, 231, 0.22);
+  border-bottom: 1px solid rgba(0, 255, 230, 0.22);
 }
 
 .page-hero {
@@ -2473,7 +2473,7 @@ section::before {
   height: 46%;
   pointer-events: none;
   background:
-    linear-gradient(176deg, transparent 0 46%, rgba(100, 220, 231, 0.16) 46.2% 46.5%, transparent 46.8%),
+    linear-gradient(176deg, transparent 0 46%, rgba(0, 255, 230, 0.16) 46.2% 46.5%, transparent 46.8%),
     linear-gradient(180deg, transparent, rgba(4, 7, 10, 0.74));
 }
 
@@ -2536,7 +2536,7 @@ textarea::placeholder {
 
 .footer {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.06), transparent 34%, rgba(231, 196, 92, 0.05)),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.06), transparent 34%, rgba(255, 209, 26, 0.05)),
     var(--midnight);
 }
 
@@ -2726,10 +2726,10 @@ body::before {
 
 body::after {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.07) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(100, 220, 231, 0.045) 1px, transparent 1px),
-    linear-gradient(116deg, transparent 0 51%, rgba(231, 196, 92, 0.18) 51.05% 51.22%, transparent 51.3%),
-    linear-gradient(31deg, transparent 0 62%, rgba(227, 79, 124, 0.12) 62.08% 62.22%, transparent 62.34%),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.07) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 230, 0.045) 1px, transparent 1px),
+    linear-gradient(116deg, transparent 0 51%, rgba(255, 209, 26, 0.18) 51.05% 51.22%, transparent 51.3%),
+    linear-gradient(31deg, transparent 0 62%, rgba(255, 26, 110, 0.12) 62.08% 62.22%, transparent 62.34%),
     rgba(3, 6, 8, 0.68);
   background-size: 56px 56px, 56px 56px, 100% 100%, 100% 100%, auto;
   box-shadow:
@@ -2743,7 +2743,7 @@ body::after {
   height: 68px;
   border-color: rgba(202, 224, 234, 0.2);
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.09), transparent 22%, rgba(231, 196, 92, 0.08) 82%, transparent),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.09), transparent 22%, rgba(255, 209, 26, 0.08) 82%, transparent),
     #071018;
   box-shadow: 0 16px 0 rgba(0, 0, 0, 0.12);
 }
@@ -2780,9 +2780,9 @@ body::after {
 
 .hero::before {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.22) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(231, 196, 92, 0.14) 0 1px, transparent 1px 100%),
-    linear-gradient(135deg, transparent 0 47%, rgba(227, 79, 124, 0.14) 47.1% 47.28%, transparent 47.4%);
+    linear-gradient(90deg, rgba(0, 255, 230, 0.22) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(255, 209, 26, 0.14) 0 1px, transparent 1px 100%),
+    linear-gradient(135deg, transparent 0 47%, rgba(255, 26, 110, 0.14) 47.1% 47.28%, transparent 47.4%);
   background-size: 13.5vw 100%, 100% 128px, 100% 100%;
   opacity: 0.36;
 }
@@ -2840,7 +2840,7 @@ body::after {
 
 .btn-primary {
   border-color: rgba(var(--amber-rgb), 0.92);
-  background: #e7c45c;
+  background: #ffd11a;
   color: #051015;
 }
 
@@ -2873,7 +2873,7 @@ body::after {
   min-height: 520px;
   border: 1px solid rgba(202, 224, 234, 0.22);
   background:
-    linear-gradient(135deg, rgba(100, 220, 231, 0.1), transparent 28%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.1), transparent 28%),
     #07131b;
   clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
   box-shadow: 16px 16px 0 rgba(0, 0, 0, 0.18);
@@ -3096,8 +3096,8 @@ section {
 .product-card::before,
 .form-panel::before {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.055) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(100, 220, 231, 0.04) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(0, 255, 230, 0.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 230, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
   opacity: 0.48;
 }
@@ -3135,8 +3135,8 @@ textarea {
   padding: 16px;
   border: 1px solid rgba(202, 224, 234, 0.14);
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.1) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(100, 220, 231, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.1) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 230, 0.07) 1px, transparent 1px),
     rgba(5, 11, 16, 0.78);
   background-size: 24px 24px;
   clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
@@ -3246,10 +3246,10 @@ body::before {
 
 body::after {
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.055) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(100, 220, 231, 0.035) 1px, transparent 1px),
-    linear-gradient(116deg, transparent 0 51%, rgba(231, 196, 92, 0.12) 51.05% 51.2%, transparent 51.3%),
-    linear-gradient(31deg, transparent 0 62%, rgba(227, 79, 124, 0.08) 62.08% 62.22%, transparent 62.34%),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.055) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0, 255, 230, 0.035) 1px, transparent 1px),
+    linear-gradient(116deg, transparent 0 51%, rgba(255, 209, 26, 0.12) 51.05% 51.2%, transparent 51.3%),
+    linear-gradient(31deg, transparent 0 62%, rgba(255, 26, 110, 0.08) 62.08% 62.22%, transparent 62.34%),
     rgba(3, 6, 8, 0.52);
   background-size: 64px 64px, 64px 64px, 100% 100%, 100% 100%, auto;
 }
@@ -3265,7 +3265,7 @@ body::after {
 .hero-evidence {
   background:
     linear-gradient(90deg, rgba(7, 19, 27, 0.96), rgba(7, 19, 27, 0.7)),
-    linear-gradient(135deg, rgba(100, 220, 231, 0.1), transparent 28%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.1), transparent 28%),
     url("/static/brand/kyanite-texture-proof-strip-2172x724.webp") center top / cover no-repeat,
     #07131b;
 }
@@ -3471,8 +3471,8 @@ body::after {
   z-index: -1;
   border: 1px solid rgba(202, 224, 234, 0.14);
   background:
-    linear-gradient(90deg, rgba(100, 220, 231, 0.08) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(231, 196, 92, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255, 209, 26, 0.07) 1px, transparent 1px),
     #050b10;
   background-size: 34px 34px;
   clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
@@ -3483,7 +3483,7 @@ body::after {
   inset: 4% 6% auto auto;
   width: min(28vw, 320px);
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(231, 196, 92, 0.82), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 209, 26, 0.82), transparent);
 }
 
 .hero-logo-plate {
@@ -3525,7 +3525,8 @@ body::after {
   min-height: 430px;
   object-fit: cover;
   object-position: center;
-  filter: saturate(0.95) contrast(1.12) brightness(0.86);
+  /* Hybrid A glass mark: do not crush translucency */
+  filter: saturate(1.05) contrast(1.06) brightness(1.02);
 }
 
 @media (max-width: 980px) {
@@ -3564,15 +3565,15 @@ body::after {
 
 /* 2026-06-01 remediation: Voronoi material system, shared motion, no pill controls. */
 :root {
-  --voronoi-field: radial-gradient(ellipse at 18% 12%, rgba(94, 220, 232, 0.18), transparent 58%);
-  --voronoi-slab: linear-gradient(135deg, rgba(94, 220, 232, 0.16), rgba(233, 201, 96, 0.08) 42%, rgba(232, 86, 130, 0.1));
-  --voronoi-proof: linear-gradient(140deg, rgba(94, 220, 232, 0.1), rgba(5, 11, 16, 0.32) 46%, rgba(233, 201, 96, 0.09));
+  --voronoi-field: radial-gradient(ellipse at 18% 12%, rgba(0, 255, 230, 0.18), transparent 58%);
+  --voronoi-slab: linear-gradient(135deg, rgba(0, 255, 230, 0.16), rgba(255, 209, 26, 0.08) 42%, rgba(255, 26, 110, 0.1));
+  --voronoi-proof: linear-gradient(140deg, rgba(0, 255, 230, 0.1), rgba(5, 11, 16, 0.32) 46%, rgba(255, 209, 26, 0.09));
 }
 
 body::before {
   background:
-    radial-gradient(circle at 18% 12%, rgba(94, 220, 232, 0.2), transparent 28%),
-    radial-gradient(circle at 82% 24%, rgba(233, 201, 96, 0.12), transparent 24%),
+    radial-gradient(circle at 18% 12%, rgba(0, 255, 230, 0.2), transparent 28%),
+    radial-gradient(circle at 82% 24%, rgba(255, 209, 26, 0.12), transparent 24%),
     linear-gradient(180deg, rgba(3, 6, 8, 0.2), rgba(3, 6, 8, 0.92)),
     var(--voronoi-field) center top / cover no-repeat;
   opacity: 0.58;
@@ -3585,8 +3586,8 @@ body::after {
   background:
     linear-gradient(90deg, rgba(3, 6, 8, 0.96), rgba(3, 6, 8, 0.26) 46%, rgba(3, 6, 8, 0.86)),
     linear-gradient(0deg, rgba(3, 6, 8, 0.9), transparent 42%, rgba(3, 6, 8, 0.76)),
-    linear-gradient(116deg, transparent 0 51%, rgba(231, 196, 92, 0.11) 51.05% 51.2%, transparent 51.3%),
-    linear-gradient(31deg, transparent 0 62%, rgba(232, 86, 130, 0.08) 62.08% 62.22%, transparent 62.34%);
+    linear-gradient(116deg, transparent 0 51%, rgba(255, 209, 26, 0.11) 51.05% 51.2%, transparent 51.3%),
+    linear-gradient(31deg, transparent 0 62%, rgba(255, 26, 110, 0.08) 62.08% 62.22%, transparent 62.34%);
   background-size: auto;
 }
 
@@ -3600,8 +3601,8 @@ body::after {
 
 .hero::before {
   background:
-    linear-gradient(112deg, transparent 0 42%, rgba(94, 220, 232, 0.17) 42.18% 42.36%, transparent 42.6%),
-    linear-gradient(128deg, transparent 0 62%, rgba(233, 201, 96, 0.13) 62.1% 62.28%, transparent 62.48%),
+    linear-gradient(112deg, transparent 0 42%, rgba(0, 255, 230, 0.17) 42.18% 42.36%, transparent 42.6%),
+    linear-gradient(128deg, transparent 0 62%, rgba(255, 209, 26, 0.13) 62.1% 62.28%, transparent 62.48%),
     var(--voronoi-field) center / cover no-repeat;
   background-size: auto, auto, cover;
   opacity: 0.34;
@@ -3615,7 +3616,7 @@ body::after {
 #tools .signal-board::before {
   background:
     linear-gradient(90deg, rgba(5, 11, 16, 0.86), rgba(5, 11, 16, 0.58)),
-    linear-gradient(135deg, rgba(94, 220, 232, 0.08), transparent 34%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.08), transparent 34%),
     var(--voronoi-proof) center / cover no-repeat,
     #050b10;
 }
@@ -3631,7 +3632,7 @@ body::after {
 
 .hero-logo-stage::before {
   background:
-    linear-gradient(135deg, rgba(94, 220, 232, 0.1), transparent 34%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.1), transparent 34%),
     var(--voronoi-slab) center / cover no-repeat,
     #050b10;
   background-size: auto, cover, auto;
@@ -3651,7 +3652,7 @@ body::after {
 }
 
 .hero-logo-stage:hover .hero-logo-plate {
-  border-color: rgba(233, 201, 96, 0.34);
+  border-color: rgba(255, 209, 26, 0.34);
 }
 
 .project-card::before,
@@ -3661,7 +3662,7 @@ body::after {
 .feature-card::before,
 .card::before {
   background:
-    linear-gradient(135deg, rgba(94, 220, 232, 0.05), transparent 32%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.05), transparent 32%),
     var(--voronoi-proof) center / cover no-repeat;
   opacity: 0.22;
 }
@@ -3700,8 +3701,8 @@ body::after {
   overflow: hidden;
   border: 1px solid rgba(202, 224, 234, 0.16);
   background:
-    linear-gradient(135deg, rgba(94, 220, 232, 0.08), transparent 34%),
-    linear-gradient(315deg, rgba(233, 201, 96, 0.08), transparent 38%),
+    linear-gradient(135deg, rgba(0, 255, 230, 0.08), transparent 34%),
+    linear-gradient(315deg, rgba(255, 209, 26, 0.08), transparent 38%),
     var(--voronoi-slab) center / cover no-repeat,
     #050b10;
   clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
@@ -3976,7 +3977,7 @@ body::after {
 
 .hero-logo-plate {
   background: #030608;
-  filter: drop-shadow(0 28px 54px rgba(0, 0, 0, 0.5));
+  filter: none;
 }
 
 .hero-logo-plate img {
@@ -4097,3 +4098,275 @@ body::after {
   }
 
 }
+
+/* HERO INSTRUMENT PANEL — Hybrid A integrated 2026-07-27 */
+.hero-instrument {
+  min-height: 0;
+}
+
+.hero-instrument.hero-logo-stage::before,
+.hero-instrument.hero-logo-stage::after {
+  display: none; /* replace floating plate chrome with integrated panel */
+}
+
+.hero-instrument-panel {
+  position: relative;
+  width: min(100%, 560px);
+  margin-left: auto;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(0, 255, 230, 0.22);
+  background:
+    linear-gradient(180deg, rgba(0, 255, 230, 0.06), transparent 28%),
+    linear-gradient(135deg, rgba(5, 11, 16, 0.96), rgba(3, 6, 8, 0.98));
+  box-shadow:
+    0 0 0 1px rgba(5, 7, 10, 0.8) inset,
+    18px 18px 0 rgba(0, 0, 0, 0.28);
+  clip-path: polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 28px 100%, 0 calc(100% - 28px));
+  overflow: hidden;
+}
+
+.hi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono-font), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hi-system { color: #00ffe6; }
+.hi-state { color: #ff1a6e; }
+
+.hi-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+.hi-index {
+  color: #ffd11a;
+  font-family: var(--mono-font), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hi-triad {
+  display: inline-flex;
+  gap: 6px;
+}
+.hi-triad i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+}
+.hi-triad .t-measure { background: #00ffe6; box-shadow: 0 0 10px rgba(0,255,230,.55); }
+.hi-triad .t-proof { background: #ffd11a; box-shadow: 0 0 10px rgba(255,209,26,.45); }
+.hi-triad .t-fault { background: #ff1a6e; box-shadow: 0 0 10px rgba(255,26,110,.45); }
+
+.hi-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  margin: 6px 0 12px;
+  border: 1px solid rgba(202, 224, 234, 0.12);
+  background:
+    linear-gradient(180deg, rgba(3, 8, 12, 0.15), rgba(3, 6, 8, 0.96)),
+    #05070a;
+  overflow: hidden;
+}
+
+.hi-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background-image:
+    linear-gradient(rgba(0, 255, 230, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 230, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at 50% 50%, #000 28%, transparent 78%);
+  pointer-events: none;
+}
+
+.hi-mark {
+  position: relative;
+  z-index: 2;
+  width: min(86%, 420px);
+  height: auto;
+  display: block;
+  /* no external halo — glow stays inside the crystal asset */
+  filter: none;
+  animation: none;
+}
+
+
+.hi-rail {
+  height: 3px;
+  background: rgba(244, 247, 251, 0.1);
+  border: 1px solid rgba(0, 255, 230, 0.14);
+  overflow: hidden;
+}
+
+.hi-rail > span {
+  display: block;
+  height: 100%;
+  width: 62%;
+  background: linear-gradient(90deg, #00ffe6, #ffd11a 55%, #ff1a6e);
+  box-shadow: 0 0 14px rgba(0, 255, 230, 0.45);
+  animation: hi-rail-pulse 4.8s ease-in-out infinite;
+}
+
+.hi-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  font-family: var(--mono-font), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.hi-rule { color: rgba(244, 247, 251, 0.82); }
+.hi-receipt { color: #ffd11a; text-align: right; }
+
+@keyframes hi-mark-breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-4px) scale(1.015); }
+}
+@keyframes hi-rail-pulse {
+  0%, 100% { width: 54%; opacity: 0.9; }
+  50% { width: 78%; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hi-mark, .hi-rail > span { animation: none; }
+}
+
+@media (max-width: 980px) {
+  .hero-instrument-panel {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .hero-instrument-panel {
+    box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.22);
+  }
+  .hi-header { font-size: 10px; }
+  .hi-mark { width: min(82%, 320px); }
+}
+
+/* HERO LAYOUT LOCK — two-column integrated instrument 2026-07-27 */
+/* Undo the old "artwork is the hero / hide h1 / single column" pass. */
+.hero {
+  min-height: min(100dvh, 920px);
+  padding: 128px 0 72px;
+  display: grid;
+  align-items: center;
+  background:
+    linear-gradient(100deg, #030608 0 28%, rgba(3, 6, 8, 0.88) 48%, rgba(3, 6, 8, 0.55) 72%, #030608 100%),
+    radial-gradient(ellipse at 78% 42%, rgba(0, 255, 230, 0.08), transparent 42%),
+    #030608;
+}
+
+.hero::before,
+.hero::after {
+  display: none;
+}
+
+.hero-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr) !important;
+  gap: clamp(28px, 4.5vw, 64px) !important;
+  align-items: center !important;
+}
+
+.hero-inner {
+  position: relative !important;
+  display: grid;
+  align-content: center;
+  max-width: 640px !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
+/* Unhide the brand title — previous pass visually clipped it */
+.hero h1 {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  clip: auto !important;
+  clip-path: none !important;
+  white-space: normal !important;
+}
+
+.hero-logo-stage,
+.hero-instrument {
+  order: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  display: grid;
+  align-items: center;
+  justify-items: end; /* panel sits cleanly in the right column */
+}
+
+.hero-instrument-panel {
+  width: min(100%, 520px) !important;
+  margin: 0 !important; /* was margin-left:auto on full-width stage → empty left void */
+  justify-self: end;
+}
+
+.hi-stage {
+  aspect-ratio: 1 / 1;
+}
+
+.hi-mark {
+  width: min(88%, 400px);
+  margin: 0 auto;
+}
+
+@media (max-width: 980px) {
+  .hero {
+    min-height: auto;
+    padding: 104px 0 56px;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+
+  .hero-logo-stage,
+  .hero-instrument {
+    order: -1 !important; /* mark first on small screens */
+    justify-items: stretch;
+  }
+
+  .hero-instrument-panel {
+    width: 100% !important;
+    max-width: 520px;
+    margin: 0 auto !important;
+    justify-self: center;
+  }
+
+  .hero-inner {
+    max-width: 100% !important;
+  }
+}
+
