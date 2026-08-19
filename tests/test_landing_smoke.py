@@ -181,7 +181,7 @@ class LandingSmokeTests(unittest.TestCase):
 
         llms = self.client.get("/llms.txt").get_data(as_text=True)
         llms_full = self.client.get("/llms-full.txt").get_data(as_text=True)
-        self.assertIn(f"[PuenteWorks LLC]({PUENTEWORKS_URL})", llms)
+        self.assertIn(f"[Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_URL})", llms)
         self.assertIn(f"Parent business and broader consulting home: {PUENTEWORKS_URL}", llms_full)
 
     def test_public_typography_uses_zoom_safe_scale_and_brand_fonts(self) -> None:

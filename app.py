@@ -999,7 +999,7 @@ revisar siguiente paso</code></pre>
   <li>Nombrar lo que la herramienta todavia no hace.</li>
   <li>Ofrecer una ruta pagada cuando alguien quiere el resultado sin hacer todo el setup solo.</li>
 </ul>
-<p>El sitio de Kyanite sigue ese patron: repos publicos, productos, notas, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, intake de implementacion y un limite claro de que KyaniteLabs es la ruta tecnica dentro de PuenteWorks LLC.</p>
+<p>El sitio de Kyanite sigue ese patron: repos publicos, productos, notas, <code>/llms.txt</code>, <code>/ai-sitemap.json</code>, intake de implementacion y un limite claro de que KyaniteLabs es la ruta tecnica dentro de Simon Gonzalez De Cruz / PuenteWorks.</p>
 <h2>Open source no elimina el trabajo de servicio</h2>
 <p>Open source puede reducir lock-in y probar capacidad. No maneja automaticamente instalacion, adaptacion, entrenamiento, diferencias de entorno, docs, ejemplos o mantenimiento.</p>
 <blockquote>El repo prueba que la herramienta existe. La implementacion lleva la herramienta a manos que la pueden usar.</blockquote>
@@ -1368,7 +1368,7 @@ HTML = """<!DOCTYPE html>
     <h1>KyaniteLabs gets useful AI tools working in real environments.</h1>
     <p>Public proof lives in the KyaniteLabs GitHub organization: MCP servers, agent tooling, domain software, localization QA, build notes, and open-source experiments people can inspect before asking for help.</p>
     <p><a href="https://github.com/KyaniteLabs">View public KyaniteLabs repositories</a>, visit <a href="https://puenteworks.com">PuenteWorks</a>, or email <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a>.</p>
-    <p>KyaniteLabs is part of <a href="https://puenteworks.com">PuenteWorks LLC</a>.</p>
+    <p>KyaniteLabs is part of <a href="https://puenteworks.com">Simon Gonzalez De Cruz / PuenteWorks</a>.</p>
   </main>
 </body>
 </html>
@@ -1570,7 +1570,7 @@ ABOUT_COPY = {
             "Before KyaniteLabs, I spent 12+ years in learning operations and enterprise training systems: Workday Learning for 8,000+ associates, SAP SuccessFactors, Cornerstone, global training programs, compliance reporting, Power Query and Power BI dashboards, and bilingual training delivery.",
             "That background still shapes the lab. Tools have to be inspectable, documented, and usable by people who did not build them. A clever prototype is not enough; the handoff has to survive.",
             "KyaniteLabs is where I turn that operational instinct toward weird, useful software: mcp-video for agentic video workflows, DialectOS for Spanish localization QA, Epoch for estimation, OpenGlaze for ceramic chemistry, devarch-framework for repo archaeology, and Innerscape for personal workflow systems.",
-            "PuenteWorks LLC is the legal and business container. PuenteWorks leads when the client problem is business workflow, scope, content, or approval rhythm. KyaniteLabs leads when the work needs a technical product surface: software, MCP tools, automation, docs, deployment, or repair."
+            "Simon Gonzalez De Cruz / PuenteWorks is the legal and business container. PuenteWorks leads when the client problem is business workflow, scope, content, or approval rhythm. KyaniteLabs leads when the work needs a technical product surface: software, MCP tools, automation, docs, deployment, or repair."
         ],
         "builds_label": "Selected builds",
         "builds_title": "Work people can inspect",
@@ -1613,7 +1613,7 @@ ABOUT_COPY = {
             "Antes de KyaniteLabs, pase mas de 12 anos en operaciones de aprendizaje y sistemas de capacitacion empresarial: Workday Learning para mas de 8,000 personas, SAP SuccessFactors, Cornerstone, programas globales de capacitacion, reportes de cumplimiento, dashboards con Power Query y Power BI, y capacitacion bilingue.",
             "Ese fondo todavia define el laboratorio. Las herramientas tienen que ser inspeccionables, documentadas y usables por personas que no las construyeron. Un prototipo inteligente no basta; el handoff tiene que sobrevivir.",
             "KyaniteLabs es donde llevo ese instinto operativo hacia software raro y util: mcp-video para flujos de video agenticos, DialectOS para QA de localizacion al espanol, Epoch para estimacion, OpenGlaze para quimica ceramica, devarch-framework para arqueologia de repos e Innerscape para sistemas personales de trabajo.",
-            "PuenteWorks LLC es el contenedor legal y comercial. PuenteWorks lidera cuando el problema del cliente es flujo de negocio, alcance, contenido o ritmo de aprobacion. KyaniteLabs lidera cuando el trabajo necesita una superficie tecnica de producto: software, herramientas MCP, automatizacion, docs, despliegue o reparacion."
+            "Simon Gonzalez De Cruz / PuenteWorks es el contenedor legal y comercial. PuenteWorks lidera cuando el problema del cliente es flujo de negocio, alcance, contenido o ritmo de aprobacion. KyaniteLabs lidera cuando el trabajo necesita una superficie tecnica de producto: software, herramientas MCP, automatizacion, docs, despliegue o reparacion."
         ],
         "builds_label": "Builds seleccionados",
         "builds_title": "Trabajo que se puede inspeccionar",
@@ -1773,7 +1773,7 @@ COMMON_ES_REPLACEMENTS = {
     "Get help turning KyaniteLabs tools into a working setup instead of doing every install, adaptation, and handoff step alone.": "Recibe ayuda para convertir herramientas KyaniteLabs en un setup funcional sin hacer cada paso de instalacion, adaptacion y handoff en soledad.",
     "Paid outcome help": "Ayuda pagada para llegar al resultado",
     "Get the tool working without doing every setup step alone.": "Haz funcionar la herramienta sin hacer cada paso de setup en soledad.",
-    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
+    "KyaniteLabs is operated by Simon Gonzalez De Cruz / PuenteWorks.": "KyaniteLabs es operado por Simon Gonzalez De Cruz / PuenteWorks.",
     "Most Kyanite products are open source. Paid implementation helps you install the tool, adapt it to your environment, understand the tradeoffs, and leave with a usable handoff.": "La mayoria de los productos Kyanite son open source. La implementacion pagada te ayuda a instalar la herramienta, adaptarla a tu entorno, entender los tradeoffs y salir con un handoff usable.",
     "What result you need from the Kyanite tool": "Que resultado necesitas de la herramienta Kyanite",
     "Your machine, stack, constraints, and current blocker": "Tu maquina, stack, restricciones y bloqueo actual",
@@ -1888,7 +1888,7 @@ LANDING_ES_REPLACEMENTS = {
     "Not generic consulting. That belongs under <a href=\"https://puenteworks.com\">PuenteWorks</a>.": "No es consultoria generica. Eso pertenece a <a href=\"https://puenteworks.com\">PuenteWorks</a>.",
     "If this fits a Kyanite tool path, you will get a grounded next step. If it belongs under broader <a href=\"https://puenteworks.com\">PuenteWorks</a> consulting, the response will route it there instead of forcing a technical scope.": "Si encaja con una ruta de herramienta Kyanite, recibiras un siguiente paso concreto. Si pertenece a consultoria mas amplia de <a href=\"https://puenteworks.com\">PuenteWorks</a>, la respuesta lo enrutara ahi en vez de forzar un alcance tecnico.",
     "KyaniteLabs is operated by <a href=\"https://puenteworks.com\">PuenteWorks LLC</a>.": "KyaniteLabs es operado por <a href=\"https://puenteworks.com\">PuenteWorks LLC</a>.",
-    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
+    "KyaniteLabs is operated by Simon Gonzalez De Cruz / PuenteWorks.": "KyaniteLabs es operado por Simon Gonzalez De Cruz / PuenteWorks.",
     "Subscribe": "Suscribirse",
     "Kyanite Build Notes": "Notas de construccion Kyanite",
     "Follow the useful builds.": "Sigue los builds utiles.",
@@ -1920,7 +1920,7 @@ EXTRA_ES_REPLACEMENTS = {
     "Agent-native tools, public proof, and notes from the build floor.": "Herramientas agent-native, prueba publica y notas desde el taller.",
     "Agent-native tools, operator assets, and public product systems.": "Herramientas agent-native, activos de operador y sistemas publicos de producto.",
     "Agent-native tools and operator assets grounded in real workflows.": "Herramientas agent-native y activos de operador basados en flujos reales.",
-    "KyaniteLabs is operated by PuenteWorks LLC.": "KyaniteLabs es operado por PuenteWorks LLC.",
+    "KyaniteLabs is operated by Simon Gonzalez De Cruz / PuenteWorks.": "KyaniteLabs es operado por Simon Gonzalez De Cruz / PuenteWorks.",
     "Most Kyanite products are open source. The paid path here is implementation and advising around those tools: install them, adapt them to your workflow, understand the tradeoffs, and leave with something usable.": "La mayoria de los productos Kyanite son open source. La ruta pagada aqui es implementacion y asesoria alrededor de esas herramientas: instalarlas, adaptarlas a tu flujo, entender los tradeoffs y salir con algo usable.",
     "Which Kyanite tool or workflow you want to use": "Que herramienta o flujo de Kyanite quieres usar",
     "Your machine, stack, constraints, and current blockers": "Tu maquina, stack, restricciones y bloqueos actuales",
@@ -2152,6 +2152,22 @@ LEGAL_PAGE_HTML = """
       margin: 0 auto;
       padding: 64px 0;
     }
+    .skip-link {
+      position: absolute;
+      left: 16px;
+      top: 12px;
+      transform: translateY(-140%);
+      background: var(--accent);
+      color: var(--bg);
+      border-radius: 4px;
+      padding: 10px 14px;
+      z-index: 20;
+    }
+    .skip-link:focus {
+      transform: translateY(0);
+      outline: 3px solid var(--text);
+      outline-offset: 3px;
+    }
     a { color: var(--accent); }
     header {
       border-bottom: 1px solid var(--line);
@@ -2202,7 +2218,8 @@ LEGAL_PAGE_HTML = """
   </style>
 </head>
 <body>
-  <main>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <main id="main">
     <header>
       <a class="brand" href="/">KyaniteLabs</a>
       <h1>{{ title }}</h1>
@@ -2210,7 +2227,7 @@ LEGAL_PAGE_HTML = """
     </header>
     {{ body|safe }}
     <footer>
-      <p>KyaniteLabs is operated by <a href="https://puenteworks.com">PuenteWorks LLC</a>.</p>
+      <p>KyaniteLabs is operated by <a href="https://puenteworks.com">Simon Gonzalez De Cruz / PuenteWorks</a>.</p>
       <p>Questions: <a href="mailto:info@kyanitelabs.tech">info@kyanitelabs.tech</a></p>
     </footer>
   </main>
@@ -2521,7 +2538,7 @@ def llms_txt():
 
 KyaniteLabs is where Simon Gonzalez de Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
 
-KyaniteLabs is operated by [PuenteWorks LLC]({PUENTEWORKS_URL}). Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
+KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_URL}). Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
 
 ## Primary Pages
 
@@ -2618,7 +2635,7 @@ def llms_full_txt():
 
 > Longer machine-readable context for answer engines, agents, and research tools. For the short canonical brief, use {CANONICAL_BASE}/llms.txt.
 
-KyaniteLabs is operated by PuenteWorks LLC. It publishes open-source tools, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
+KyaniteLabs is operated by Simon Gonzalez De Cruz / PuenteWorks. It publishes open-source tools, build notes, implementation paths, and operator assets for people who want AI tools, MCP servers, media pipelines, localization QA, repo diagnostics, and domain software working in real environments.
 
 Parent business and broader consulting home: {PUENTEWORKS_URL}
 
