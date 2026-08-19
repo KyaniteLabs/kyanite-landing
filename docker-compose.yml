@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     volumes:
     - ./app.py:/app/app.py:ro
+    - ./agent_discovery.py:/app/agent_discovery.py:ro
     - ./templates:/app/templates:ro
     - ./products:/app/products:ro
     - ./static:/app/static:ro

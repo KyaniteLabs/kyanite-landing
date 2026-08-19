@@ -26,13 +26,23 @@
         "headline": "{{ post.title }}",
         "description": "{{ post.get('meta_description', post.excerpt) }}",
         "datePublished": "{{ post.date }}",
-        "dateModified": "{{ post.date }}",
+        "dateModified": "{{ post.get('date_modified', post.date) }}",
         "inLanguage": "en-US",
         "keywords": "{{ post.get('primary_keyword', '') }}",
-        "author": {"@type": "Organization", "name": "KyaniteLabs"},
+        "author": {
+          "@type": "Person",
+          "name": "Simon Gonzalez De Cruz",
+          "url": "https://kyanitelabs.tech/about"
+        },
         "publisher": {
           "@type": "Organization",
           "name": "KyaniteLabs",
+          "url": "https://kyanitelabs.tech/",
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "PuenteWorks",
+            "url": "https://puenteworks.com/"
+          },
           "logo": {"@type": "ImageObject", "url": "https://kyanitelabs.tech/static/brand/kyanite-icon-voronoi-180x180.png"}
         },
         "mainEntityOfPage": "https://kyanitelabs.tech/blog/{{ post.slug }}"
@@ -48,16 +58,12 @@
     ]
   }
   </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
-  <script>document.documentElement.classList.add('js');</script>
-  <script src="/static/posthog.js"></script>
-  <script src="/static/js/kyanite-nav.js?v=20260601-public-projects" defer></script>
-  <script src="/static/js/kyanite-motion.js?v=20260601-voronoi-remediation" defer></script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
     <nav class="nav container" aria-label="Primary">
       <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
@@ -68,13 +74,14 @@
         <a href="/shop">Shop</a>
         <a href="/about">About</a>
         <a href="/#contact">Contact</a>
+        <a href="https://puenteworks.com">PuenteWorks</a>
         <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
         <a class="language-link" href="/es/blog/{{ post.slug }}" hreflang="es" lang="es">ES</a>
       </div>
     </nav>
   </header>
 
-  <main>
+  <main id="main">
     <section class="page-hero">
       <div class="container page-hero-inner">
         <div class="eyebrow">{{ post.category }}</div>
@@ -103,7 +110,7 @@
         </div>
         <div class="card trace-panel">
           <span class="mono-label">Fit boundary</span>
-          <p>Kyanite offers help grounded in its tools, products, and build practice. Broader consulting routes through PuenteWorks.</p>
+          <p>Kyanite offers help grounded in its tools, products, and build practice. Broader consulting routes through <a href="https://puenteworks.com">PuenteWorks</a>.</p>
         </div>
       </div>
     </section>
@@ -131,7 +138,7 @@
 
   <footer class="footer">
     <div class="container">
-      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by PuenteWorks LLC.</span></div>
+      <div class="footer-bottom"><span>&copy; 2026 KyaniteLabs.</span><span>KyaniteLabs is operated by <a href="https://puenteworks.com">Simon Gonzalez De Cruz / PuenteWorks</a>.</span></div>
     </div>
   </footer>
 </body>
