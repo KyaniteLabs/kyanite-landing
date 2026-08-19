@@ -550,6 +550,36 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+        "slug": 'lab-notes-cant-forget',
+        "title": "Lab Notes: the model that can't forget but can't remember",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-19',
+        "read_time": '6 min',
+        "primary_keyword": 'Gated DeltaNet Qwen3.8-27B 262k context',
+        "seo_title": "Lab Notes: the model that can't forget but can't remember — 75% GDN, 4.3GB KV",
+        "meta_description": "Night 4 on a $1,400 mini-PC: 48 of 64 layers are Gated DeltaNet. That is why the 4-bit KV flip saved 4.3GB, not 15. And why a 198k prefix can be queried in 9-27s after a 30-minute load.",
+        "excerpt": "The number first: this model is 75% not a transformer. 48 of 64 layers keep a running state. On a $1,400 rig, load 198k once (1818s), then query in 9-27s.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 4.</small></p>
+<p>The number first: <strong>this model is 75% not a transformer.</strong> 48 of its 64 layers run Gated DeltaNet: linear attention with a fixed-size running state. Only 16 layers do what you would call attention. The KV cache lives in those 16 layers only. That is why our 4-bit KV flip saved <strong>4.3GB</strong> at 262k, not the ~15GB dense-transformer math predicted.</p>
+<p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unified, <strong>$1,400</strong>. Model: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Native window 262,144 tokens.</p>
+
+<h2>The KV curve was flat because the cache is small</h2>
+<p>Paired gate, n=60, q8_0 vs q4_0: both <strong>96.67%</strong>, McNemar p=1.0, zero discordants, zero corruption tripwires. q5_0 and q5_1 matched the same accuracy. q4_0 is champion because quality did not move and we keep the 4.3GB. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/kv-curve-2026-08-19" rel="noopener">results/kv-curve-2026-08-19</a>.</p>
+
+<h2>Load once, query many</h2>
+<p>We loaded a 198k-token prefix on this $1,400 box. Cold prefill: <strong>1818s</strong> (~30 min). Then four follow-ups against the warm prefix, all <code>finish_reason=stop</code>: retrieve the planted code; quote the sentence (<strong>16s</strong>); yes/no (<strong>9s</strong>); summarize (<strong>27s</strong>). Retrieval is selective. Distinctive strings survive GDN compression. Arbitrary IDs in the Night 3 sweep did not. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">quote-results.log</a>.</p>
+<p>The decay-horizon prediction from Night 3 did not hold. A 50k haystack missed at every depth we tested. There is no depth-proportional window on that format. Night 3 already said so. The quote probe adds the product shape: <strong>loading is expensive; maintaining is cheap.</strong></p>
+
+<h2>What we got wrong</h2>
+<p>We published KV arithmetic that took three passes to land (15 → 11.5 → 7.4 → 4.3GB). We blamed &ldquo;the fork.&rdquo; The serving binary is upstream-era llama.cpp plus a small HIP cherry-pick. We treated a memorable-code hit as a position window. n=1 cells stay maps, not laws.</p>
+<p>Thinking budgets on screened-hard GSM8K: <code>think_med=241ch</code> across off/512/1024/2048/65536 in the kneemap log. Caps ≥512 were non-binding on that set. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/deep-context-2026-08-18/kneemap-gsm8k-hard.log" rel="noopener">kneemap-gsm8k-hard.log</a>.</p>
+<p>I am not publishing a spec-decode speedup number in this note. The committed writeup exists; the arm log file is empty. We do not ship that row until the log has rows.</p>
+<p><small>Conditions: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, 262,144-token window, K+V q4_0, temperature 0. Night 4. A map with linked logs.</small></p>
+""",
+    },
+{
         "slug": 'lab-notes-degenerate-basin',
         "title": "Lab Notes: it doesn't fade",
         "category": 'Local LLM / Benchmarks',
@@ -1320,6 +1350,29 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
+    "lab-notes-cant-forget": {
+        "title": 'Notas de lab: el modelo que no puede olvidar pero no puede recordar',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'Gated DeltaNet Qwen3.8-27B contexto 262k',
+        "seo_title": 'Notas de lab: 75% GDN, 4.3GB de KV, prefijo caliente 9-27s',
+        "meta_description": 'Noche 4 en un mini-PC de $1.400: 48 de 64 capas son Gated DeltaNet. Por eso el flip KV a 4 bits ahorró 4.3GB, no 15. Y por eso un prefijo de 198k se consulta en 9-27s después de una carga de 30 min.',
+        "excerpt": 'El número primero: este modelo es 75% no transformer. 48 de 64 capas guardan un estado. En un rig de $1.400, carga 198k una vez (1818s) y consulta en 9-27s.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 4.</small></p>
+<p>El número primero: <strong>este modelo es 75% no transformer.</strong> 48 de sus 64 capas corren Gated DeltaNet: atención lineal con un estado de tamaño fijo. Solo 16 capas hacen lo que llamarías atención. El KV cache vive solo en esas 16. Por eso el flip KV a 4 bits ahorró <strong>4.3GB</strong> a 262k, no los ~15GB que daba la aritmética de un transformer denso.</p>
+<p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unificados, <strong>$1.400</strong>. Modelo: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Ventana nativa 262.144 tokens.</p>
+<h2>La curva KV fue plana porque el cache es chico</h2>
+<p>Gate pareado, n=60, q8_0 vs q4_0: ambos <strong>96.67%</strong>, McNemar p=1.0, cero discordantes, cero tripwires de corrupción. q5_0 y q5_1 igualaron la misma accuracy. q4_0 es campeón porque la calidad no se movió y nos quedamos el 4.3GB. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/kv-curve-2026-08-19" rel="noopener">results/kv-curve-2026-08-19</a>.</p>
+<h2>Carga una vez, consulta muchas</h2>
+<p>Cargamos un prefijo de 198k tokens en esta caja de $1.400. Prefill en frío: <strong>1818s</strong> (~30 min). Luego cuatro follow-ups contra el prefijo caliente, todos <code>finish_reason=stop</code>: recuperar el código plantado; citar la frase (<strong>16s</strong>); sí/no (<strong>9s</strong>); resumir (<strong>27s</strong>). El retrieval es selectivo. Las cadenas distintivas sobreviven la compresión GDN. Los IDs arbitrarios de la noche 3 no. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">quote-results.log</a>.</p>
+<p>La predicción del horizonte de decay de la noche 3 no se sostuvo. Una pila de 50k falló a todas las profundidades que probamos. No hay ventana proporcional a la profundidad en ese formato. La noche 3 ya lo dijo. El quote suma la forma de producto: <strong>cargar es caro; mantener es barato.</strong></p>
+<h2>Lo que nos salió mal</h2>
+<p>Publicamos aritmética de KV que tardó tres pases (15 → 11.5 → 7.4 → 4.3GB). Culpé «el fork». El binario es llama.cpp de era upstream más un cherry-pick HIP chico. Tratamos un hit de código memorable como ventana de posición. Las celdas n=1 siguen siendo mapas, no leyes.</p>
+<p>Presupuestos de thinking en GSM8K hard filtrado: <code>think_med=241ch</code> en off/512/1024/2048/65536. Caps ≥512 no ataron en ese set. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/deep-context-2026-08-18/kneemap-gsm8k-hard.log" rel="noopener">kneemap-gsm8k-hard.log</a>.</p>
+<p>No publico un número de spec-decode en esta nota. El writeup existe; el log de brazos está vacío. Esa fila no sale hasta que el log tenga filas.</p>
+<p><small>Condiciones: mini-PC GMKtec EVO-X2 de $1.400, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, ventana 262.144, K+V q4_0, temperature 0. Noche 4. Un mapa con logs linkeados.</small></p>
+""",
+    },
     "lab-notes-degenerate-basin": {
         "title": 'Notas de lab: no se desvanece',
         "category": 'LLM local / Benchmarks',

@@ -441,11 +441,13 @@ class LandingSmokeTests(unittest.TestCase):
 
     def test_lab_notes_spanish_copies_are_first_class(self) -> None:
         slugs = [
+            "lab-notes-cant-forget",
             "lab-notes-degenerate-basin",
             "lab-notes-the-kv-verdict",
             "lab-notes-verdict-night",
         ]
         expected_h1 = {
+            "lab-notes-cant-forget": "Notas de lab: el modelo que no puede olvidar pero no puede recordar",
             "lab-notes-degenerate-basin": "Notas de lab: no se desvanece",
             "lab-notes-the-kv-verdict": "Notas de lab: el veredicto del KV",
             "lab-notes-verdict-night": "Notas de lab: la noche del veredicto",
@@ -467,6 +469,19 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                if slug == "lab-notes-cant-forget":
+                    self.assertIn("75%", en_html)
+                    self.assertIn("4.3GB", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("1818s", en_html)
+                    self.assertIn("kv-curve-2026-08-19", en_html)
+                    self.assertIn("think_med=241ch", en_html)
+                    self.assertNotIn("5×", en_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                    self.assertIn("75%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertIn("1818s", es_html)
+                    self.assertNotIn("HORIZON-TEST", es_html)
                 if slug == "lab-notes-degenerate-basin":
                     self.assertIn("Gated DeltaNet", en_html)
                     self.assertIn("4.3GB", en_html)
