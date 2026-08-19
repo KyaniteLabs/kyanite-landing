@@ -555,7 +555,7 @@ BLOG_POSTS = [
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-19',
         "date_modified": '2026-08-19',
-        "read_time": '5 min',
+        "read_time": '7 min',
         "primary_keyword": 'LLM deep context degenerate basin',
         "seo_title": "Lab Notes: it doesn't fade — deep-context collapse, not a miss",
         "meta_description": 'Night 3: a 198,227-token haystack, five depths, a 98C crash, and a model that answers a code-review it was never asked. n=1 map, not a law.',
@@ -587,6 +587,12 @@ BLOG_POSTS = [
 
 <h2>It is not the 4-bit KV</h2>
 <p>I ran the same needle under the old q8_0 KV. Same species of report. Different numbers, same &ldquo;I am reviewing a codebase&rdquo; voice. So the basin was already there when q8 was champion. The q4 crown's short-context numbers still stand on their own evidence. I will not write &ldquo;no quality loss at 200k-class context&rdquo; from n=1 cells. We have not earned that sentence.</p>
+
+<h2>Why: the model is 75% not a transformer</h2>
+<p>After this post went up we pulled the model card. Qwen3.8-27B is a hybrid: 64 layers, and only 16 of them do full attention. The other 48 are Gated DeltaNet &mdash; linear attention that keeps a fixed-size running state instead of storing keys and values. An exponential decay gate forgets old tokens as new ones arrive. That is how 262k context fits on a $1,400 mini-PC (17.2GB of attention KV at f16, not ~60GB). It is also the mechanism behind everything above.</p>
+<p>The basin is the decay gate. A needle at 25% is recent enough that the running state still carries it. At 50% or 75% it has been exponentially decayed out of the linear layers. The only exact-recall path left is those 16 attention layers, and they are carrying 198,227 tokens. When both fail, the model does not say &ldquo;I don't know.&rdquo; It falls to its most likely completion, which for a model trained this hard on agent traces is a code-review template. That is the Risk report. The 67-to-68 restart drift is the same knife-edge, measured on 198,227 tokens of accumulated decay arithmetic.</p>
+<p>This also corrects our Night 2 KV arithmetic. The KV cache only exists in the 16 attention layers &mdash; 4KB per token per layer, 64KB per token total, 17.2GB at f16 across a full 262k window. At q4_0 that is ~4.8GB. At q8_0, ~9.1GB. The 4-bit flip saved ~4.3GB of GTT on this architecture. Real margin on a 64GB budget. Nowhere near the ~15GB our dense-model math implied. The promotion verdict is untouched &mdash; the paired GSM8K result stands on its own evidence &mdash; but the absolute framing took three passes to get right. That is why instruments get labeled from the counter, not the estimate.</p>
+<p>There is a falsifiable prediction in this. If the retrieval boundary is a decay horizon, shorter haystacks should move it. At 50k tokens the same model should retrieve needles planted proportionally deeper &mdash; the horizon is a distance, not a percentage. That experiment is next. If the boundary does not move, the decay explanation dies and we are back to a mechanism we cannot name. Either way, the map gets better.</p>
 
 <h2>What I got wrong about our own stack</h2>
 <p>I blamed &ldquo;the fork.&rdquo; The serving binary is upstream-era llama.cpp plus a four-line HIP memory-reporting cherry-pick. If something is broken at 198k, that is not a secret fork bug.</p>
@@ -1347,6 +1353,12 @@ BLOG_COPY_ES = {
 
 <h2>No es el KV de 4 bits</h2>
 <p>Corrí la misma aguja con el KV q8_0 viejo. Misma especie de reporte. Otros números, la misma voz de «estoy revisando un codebase». O sea que la cuenca ya estaba cuando q8 era campeón. Los números de contexto corto de la corona q4 se aguantan con su propia evidencia. No voy a escribir «sin pérdida de calidad a contexto clase 200k» con celdas n=1. Esa oración no nos la hemos ganado.</p>
+
+<h2>Por qué: el modelo es 75% no-transformer</h2>
+<p>Después de publicar esto sacamos la model card. Qwen3.8-27B es un híbrido: 64 capas, y solo 16 hacen atención completa. Las otras 48 son Gated DeltaNet &mdash; atención lineal que guarda un estado de tamaño fijo en vez de keys y values. Un gate de decaimiento exponencial olvida tokens viejos cuando llegan tokens nuevos. Así cabe el contexto de 262k en una mini-PC de $1.400 (17,2 GB de KV de atención en f16, no ~60 GB). Y es también el mecanismo de todo lo de arriba.</p>
+<p>La cuenca es el decay gate. Una aguja al 25% todavía está lo bastante cerca para que el estado la lleve. Al 50% o al 75% ya se decayó de las capas lineales. El único camino de recall exacto que queda son esas 16 capas de atención, y van cargando 198.227 tokens. Cuando fallan las dos, el modelo no dice «no lo sé». Cae a su completion más probable, que para un modelo tan entrenado en traces de agentes es una plantilla de code review. Eso es el reporte Risk. El drift 67-a-68 del restart es el mismo filo, medido sobre 198.227 tokens de aritmética de decay acumulada.</p>
+<p>Esto también corrige nuestra aritmética de KV de la noche 2. El cache KV solo existe en las 16 capas de atención &mdash; 4 KB por token por capa, 64 KB por token en total, 17,2 GB en f16 a ventana llena de 262k. En q4_0 queda en ~4,8 GB. En q8_0, ~9,1 GB. El flip a 4 bits ahorró ~4,3 GB de GTT en esta arquitectura. Margen de verdad en un presupuesto de 64 GB. Ni cerca de los ~15 GB que implicaba la matemática de un modelo denso. El veredicto de promoción no se toca &mdash; el GSM8K pareado se aguanta solo &mdash; pero el framing absoluto nos tomó tres pases. Por eso el instrumento se etiqueta con el contador, no con el estimado.</p>
+<p>Hay una predicción falsable. Si el borde de retrieval es un horizonte de decay, haystacks más cortos deberían moverlo. A 50k tokens el mismo modelo debería recuperar agujas plantadas proporcionalmente más hondo &mdash; el horizonte es una distancia, no un porcentaje. Ese experimento es el siguiente. Si el borde no se mueve, la explicación de decay se muere y volvemos a un mecanismo que no sabemos nombrar. En cualquier caso el mapa mejora.</p>
 
 <h2>En qué me equivoqué con nuestro stack</h2>
 <p>Le eché la culpa al «fork». El binario de serving es llama.cpp de era upstream más un cherry-pick de cuatro líneas de reporte HIP. Si algo está roto a 198k, no es un bug secreto del fork.</p>
