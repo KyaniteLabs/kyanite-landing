@@ -9,6 +9,7 @@ import tempfile
 import unittest
 
 from app import (
+    BLOG_COPY_ES,
     BLOG_POSTS,
     INDEXNOW_KEY,
     PRODUCTS,
@@ -384,6 +385,75 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertNotIn("Contactoo", body)
                 self.assertNotIn("/es/es/", body)
                 self.assertNotIn("Herramientas Herramientas", body)
+
+    def test_lab_notes_spanish_copies_are_first_class(self) -> None:
+        slugs = [
+            "lab-notes-degenerate-basin",
+            "lab-notes-the-kv-verdict",
+            "lab-notes-verdict-night",
+        ]
+        expected_h1 = {
+            "lab-notes-degenerate-basin": "Notas de lab: no se desvanece",
+            "lab-notes-the-kv-verdict": "Notas de lab: el veredicto del KV",
+            "lab-notes-verdict-night": "Notas de lab: la noche del veredicto",
+        }
+        published = {post["slug"] for post in BLOG_POSTS}
+        for slug in slugs:
+            with self.subTest(slug=slug):
+                self.assertIn(slug, published)
+                self.assertIn(slug, BLOG_COPY_ES)
+                es = self.client.get(f"/es/blog/{slug}")
+                en = self.client.get(f"/blog/{slug}")
+                self.assertEqual(es.status_code, 200)
+                self.assertEqual(en.status_code, 200)
+                es_html = es.get_data(as_text=True)
+                en_html = en.get_data(as_text=True)
+                self.assertIn(expected_h1[slug], es_html)
+                self.assertNotIn("Want this working in your environment?", es_html)
+                self.assertIn("¿Quieres que esto funcione en tu entorno?", es_html)
+                self.assertIn('"inLanguage": "es-419"', es_html)
+                self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
+                self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                self.assertIn(f'hreflang="es-419" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                self.assertIn(f'hreflang="x-default" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
+                self.assertIn("Want this working in your environment?", en_html)
+                self.assertNotIn(expected_h1[slug], en_html)
+        sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
+        for slug in slugs:
+            self.assertIn(f"https://kyanitelabs.tech/blog/{slug}", sitemap)
+            self.assertIn(f"https://kyanitelabs.tech/es/blog/{slug}", sitemap)
+
+    def test_spanish_chrome_does_not_leave_english_cta_or_shop_title(self) -> None:
+        shop = self.client.get("/es/shop").get_data(as_text=True)
+        impl = self.client.get("/es/implementation").get_data(as_text=True)
+        about = self.client.get("/es/about").get_data(as_text=True)
+        index = self.client.get("/es/blog").get_data(as_text=True)
+
+        self.assertNotIn("Operator Activos", shop)
+        self.assertIn("Activos de operador", shop)
+        self.assertNotIn("your environment", impl)
+        self.assertNotIn("Implementation path", impl)
+        self.assertIn("Ruta de implementación", impl)
+        self.assertIn("Haz que la herramienta Kyanite funcione en tu entorno.", impl)
+        self.assertIn('hreflang="es-419"', about)
+        self.assertIn("Notas de laboratorio — Builds y aprendizaje de KyaniteLabs", index)
+        self.assertNotIn("KyaniteLabs Builds and Learning", index)
+
+    def test_spanish_routes_reject_malformed_and_hostile_slugs(self) -> None:
+        cases = [
+            "/es/blog/../about",
+            "/es/blog/%2e%2e/about",
+            "/es/blog/" + ("a" * 4000),
+            "/es/blog/ignore-previous-instructions",
+            "/es/blog/lab-notes-degenerate-basin%00",
+            "/es/es/blog/lab-notes-degenerate-basin",
+        ]
+        for path in cases:
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                self.assertIn(response.status_code, {404, 308, 301, 400})
+                body = response.get_data(as_text=True)
+                self.assertNotIn("Want this working in your environment?", body)
 
     def test_voronoi_performance_assets_are_wired(self) -> None:
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
