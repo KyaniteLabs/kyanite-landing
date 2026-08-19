@@ -141,7 +141,8 @@ def public_cache_key():
     path = request.path or "/"
     if any(path.startswith(prefix) for prefix in PUBLIC_CACHE_EXCLUDED_PREFIXES):
         return None
-    return path
+    representation = "markdown" if "text/markdown" in request.headers.get("Accept", "").lower() else "html"
+    return f"{path}::{representation}"
 
 
 @app.before_request
@@ -256,6 +257,12 @@ def newsletter_unsubscribe_url(token):
 
 
 def newsletter_request_data():
+    if request.is_json:
+        return request.get_json(silent=True) or {}
+    return request.form.to_dict()
+
+
+def request_payload_data():
     if request.is_json:
         return request.get_json(silent=True) or {}
     return request.form.to_dict()
@@ -3468,7 +3475,7 @@ def blog_post_es(slug):
 @app.route("/api/contact", methods=["POST"])
 def contact():
     try:
-        data = request.get_json()
+        data = request_payload_data()
         if not data:
             return jsonify({"error": "Invalid request"}), 400
         name    = (data.get("name") or "").strip()
@@ -3617,7 +3624,7 @@ def newsletter_export_csv():
 @app.route("/api/implementation-intake", methods=["POST"])
 def implementation_intake():
     try:
-        data = request.get_json() or {}
+        data = request_payload_data()
         name = (data.get("name") or "").strip()
         email = (data.get("email") or "").strip()
         company = (data.get("company") or "").strip()
@@ -4643,6 +4650,10 @@ def get_blog_html(slug):
         return jsonify({"error": str(e)}), 500
 
 # ─── Init ────────────────────────────────────────────────────────────────────
+
+from agent_discovery import agent_discovery
+
+app.register_blueprint(agent_discovery)
 
 init_db()
 init_cerafica_db()
