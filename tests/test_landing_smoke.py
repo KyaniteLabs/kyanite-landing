@@ -473,10 +473,13 @@ class LandingSmokeTests(unittest.TestCase):
                     self.assertIn("198,227", en_html)
                     self.assertIn("decay-horizon prediction failed", en_html)
                     self.assertIn("50k", en_html)
+                    self.assertIn("no longer treat as a position window", en_html)
+                    self.assertIn("did not hold as a retrieval window", en_html)
                     self.assertIn("Gated DeltaNet", es_html)
                     self.assertIn("4,3 GB", es_html)
                     self.assertIn("198.227", es_html)
                     self.assertIn("horizonte de decay falló", es_html)
+                    self.assertIn("ventana de posición", es_html)
                     self.assertNotIn("That experiment is next", en_html)
                     self.assertNotIn("NotasPosting", es_html)
                 if slug == "lab-notes-the-kv-verdict":

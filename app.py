@@ -559,10 +559,10 @@ BLOG_POSTS = [
         "primary_keyword": 'LLM deep context degenerate basin',
         "seo_title": "Lab Notes: it doesn't fade — deep-context collapse, not a miss",
         "meta_description": 'Night 3: a 198,227-token haystack, five depths, a 98C crash, and a model that answers a code-review it was never asked. n=1 map, not a law.',
-        "excerpt": 'Deep-context retrieval on this 27B does not fade. It snaps into a canned report. Then the box cut power at 98C. Here is the map from that night.',
+        "excerpt": 'Night 3: two attractors, not a smooth fade. The 25% exact hit did not hold as a retrieval window. Then 98C. n=1 map, not a law.',
         "body": """
 <p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 3 of the nightly lab notes. The box died at 98C, came back, and then answered a question I never asked.</small></p>
-<p>The number first: <strong>this model's deep-context retrieval does not fade.</strong> It snaps into a canned answer. On a haystack the server counted at 198,227 tokens, I asked for a planted access code at five depths. At 25% it handed back the exact code and stopped clean. At 35% and 75% it wrote the opening of a code-review report it was never given:</p>
+<p>The number first: <strong>this model's deep-context retrieval does not fade smoothly.</strong> It snaps into a canned answer. On a haystack the server counted at 198,227 tokens, I asked for a planted access code at five depths. At 25% it handed back the exact code and stopped clean. That hit is the one we no longer treat as a position window. At 35% and 75% it wrote the opening of a code-review report it was never given:</p>
 <pre><code>- **Risk**: Low; 67 medium/low</code></pre>
 <p>Same opening. Twice. Temperature 0.</p>
 <p>That is not a miss. A miss is &ldquo;I don't have it.&rdquo; This is the model confidently grading 48 imaginary repos.</p>
@@ -1325,10 +1325,10 @@ BLOG_COPY_ES = {
         "primary_keyword": 'contexto profundo LLM cuenca degenerada',
         "seo_title": 'Notas de lab: no se desvanece — colapso de contexto, no un miss',
         "meta_description": 'Noche 3: una pila de 198.227 tokens, cinco profundidades, un corte a 98 °C y un modelo que contesta un code review que nadie pidió. Un mapa n=1, no una ley.',
-        "excerpt": 'En este 27B el retrieval a contexto profundo no se va apagando. Brinca a un reporte de lata. Después la caja se cortó a 98 °C. Este es el mapa de esa noche.',
+        "excerpt": 'Noche 3: dos atractores, no un fade suave. El hit exacto al 25% no aguantó como ventana de retrieval. Después 98 °C. Un mapa n=1, no una ley.',
         "body": """
 <p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 3 de las notas de lab. La caja se murió a 98 °C, volvió, y contestó una pregunta que yo nunca hice.</small></p>
-<p>El número primero: <strong>el retrieval a contexto profundo de este modelo no se desvanece.</strong> Brinca a una respuesta de lata. En una pila que el server contó en 198.227 tokens, pedí un código plantado a cinco profundidades. Al 25% me devolvió el código exacto y paró limpio. Al 35% y al 75% escribió el arranque de un reporte de code review que nadie le pasó:</p>
+<p>El número primero: <strong>el retrieval a contexto profundo de este modelo no se desvanece suave.</strong> Brinca a una respuesta de lata. En una pila que el server contó en 198.227 tokens, pedí un código plantado a cinco profundidades. Al 25% me devolvió el código exacto y paró limpio. Ese hit ya no lo tratamos como ventana de posición. Al 35% y al 75% escribió el arranque de un reporte de code review que nadie le pasó:</p>
 <pre><code>- **Risk**: Low; 67 medium/low</code></pre>
 <p>El mismo arranque. Dos veces. Temperature 0.</p>
 <p>Eso no es un miss. Un miss es «no lo tengo». Aquí el modelo está calificando 48 repos imaginarios con toda la confianza del mundo.</p>
