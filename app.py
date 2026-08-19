@@ -387,19 +387,20 @@ PUBLIC_PROJECTS = [
         "tag": "Repo Intelligence",
         "tile_code": "DF",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-devarch-framework-1672x941.webp",
         "proof_role": "Shows Kyanite can turn development history into evidence, not vibes.",
     },
     {
         "name": "Kinocut",
-        "url": "https://github.com/KyaniteLabs/kinocut",
-        "description": "Guardrailed video editing MCP server for AI agents, plus the kino CLI and Video Receipts. Formerly mcp-video.",
+        "url": "https://kinocut.dev",
+        "repo": "https://github.com/KyaniteLabs/kinocut",
+        "description": "Guardrailed video editing for AI agents: MCP server, kino CLI, Video Receipts, and Hyperframes.",
         "tag": "Media MCP",
         "tile_code": "KC",
         "language": "Python",
-        "updated": "2026-08-15",
-        "image": "/static/brand/projects/kyanite-project-mcp-video-1672x941.webp",
+        "updated": "2026-08-18",
+        "image": "/static/brand/projects/kyanite-project-kinocut-1672x941.webp",
         "proof_role": "The flagship proof that agents can operate timelines, effects, and repeatable media pipelines.",
     },
     {
@@ -409,7 +410,7 @@ PUBLIC_PROJECTS = [
         "tag": "Estimation MCP",
         "tile_code": "EP",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-epoch-1672x941.webp",
         "proof_role": "Turns planning uncertainty into agent-callable forecasting tools.",
     },
@@ -420,7 +421,7 @@ PUBLIC_PROJECTS = [
         "tag": "Readiness Audit",
         "tile_code": "CY",
         "language": "Python",
-        "updated": "2026-05-30",
+        "updated": "2026-08-08",
         "image": "/static/brand/projects/kyanite-project-checkyourself-1672x941.webp",
         "proof_role": "Makes quality, security, and launch risk inspectable before an AI-built app ships.",
     },
@@ -431,7 +432,7 @@ PUBLIC_PROJECTS = [
         "tag": "Localization MCP",
         "tile_code": "DX",
         "language": "TypeScript",
-        "updated": "2026-05-30",
+        "updated": "2026-08-16",
         "image": "/static/brand/projects/kyanite-project-dialectos-1672x941.webp",
         "proof_role": "Makes Spanish launch quality inspectable instead of treating localization as generic translation.",
     },
@@ -442,7 +443,7 @@ PUBLIC_PROJECTS = [
         "tag": "Creative Coding",
         "tile_code": "LM",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-06",
         "image": "/static/brand/projects/kyanite-project-liminal-1672x941.webp",
         "proof_role": "Shows Kyanite can build creative tools where agents touch code, shaders, media, and taste.",
     },
@@ -453,7 +454,7 @@ PUBLIC_PROJECTS = [
         "tag": "Living Websites",
         "tile_code": "LS",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-liminal-sites-1672x941.webp",
         "proof_role": "Proves the website itself can evolve through constrained, inspectable design systems.",
     },
@@ -464,7 +465,7 @@ PUBLIC_PROJECTS = [
         "tag": "Pattern Synthesis",
         "tile_code": "EX",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-14",
         "image": "/static/brand/projects/kyanite-project-elixis-1672x941.webp",
         "proof_role": "Turns fuzzy identity and naming work into source-backed synthesis.",
     },
@@ -475,7 +476,7 @@ PUBLIC_PROJECTS = [
         "tag": "Personal OS",
         "tile_code": "IN",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-innerscape-1672x941.webp",
         "proof_role": "Shows the same build-and-implementation pattern applied to intimate, data-rich workflows.",
     },
@@ -486,7 +487,7 @@ PUBLIC_PROJECTS = [
         "tag": "Domain Software",
         "tile_code": "OG",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-15",
         "image": "/static/brand/projects/kyanite-project-openglaze-1672x941.webp",
         "proof_role": "Proves Kyanite can ship useful software outside the generic AI-tool bubble.",
     },
@@ -939,7 +940,7 @@ BLOG_POSTS = [
 inspect output
 compare expectation
 revise next step</code></pre>
-<p>Kinocut (formerly mcp-video) proves the media version of this pattern. Epoch proves the estimation version. DialectOS proves the localization version. devarch-framework and Dev Learning Archaeologist prove the repo-history version. OpenGlaze proves that domain software still matters when the user is not living inside the AI-tool bubble.</p>
+<p>Kinocut proves the media version of this pattern. Epoch proves the estimation version. DialectOS proves the localization version. devarch-framework and Dev Learning Archaeologist prove the repo-history version. OpenGlaze proves that domain software still matters when the user is not living inside the AI-tool bubble.</p>
 <h2>Verification changes the conversation</h2>
 <p>Without verification, an agent can sound confident and still be wrong. With verification, the system can show a command, a file, a route, a report, a test, a screenshot, or a structured result. That does not make the work perfect. It makes the next correction possible.</p>
 <blockquote>The point of a Kyanite tool is not that an agent did something. The point is that a person can inspect what the agent did.</blockquote>
@@ -1015,17 +1016,17 @@ revise next step</code></pre>
 """,
     },
     {
-        "slug": "why-mcp-video-matters",
+        "slug": "why-kinocut-matters",
         "title": "Why Kinocut matters",
         "category": "MCP / Video Automation",
         "date": "2026-05-14",
         "read_time": "5 min",
         "primary_keyword": "video editing MCP server",
         "seo_title": "Kinocut: video editing MCP server for AI agents",
-        "meta_description": "Kinocut is a guardrailed video editing MCP server that gives AI agents direct handles on FFmpeg, timelines, effects, and media pipelines. Formerly mcp-video.",
-        "excerpt": "Kinocut is a video editing MCP server that gives AI agents direct handles on timelines, effects, FFmpeg, and finished media. Formerly mcp-video.",
+        "meta_description": "Kinocut is the guardrailed video editing MCP server, kino CLI, and Video Receipts stack at kinocut.dev.",
+        "excerpt": "Kinocut gives AI agents callable handles on timelines, effects, Hyperframes, and finished media at kinocut.dev.",
         "body": """
-<p><strong>Kinocut is a video editing MCP server that lets AI agents operate real media pipelines instead of only writing prompts about them.</strong> It was formerly named mcp-video. The useful part is not the word "video"; it is that an agent gets callable handles for FFmpeg, Hyperframes, effects, inspection, and repeatable assembly.</p>
+<p><strong>Kinocut is a video editing MCP server that lets AI agents operate real media pipelines instead of only writing prompts about them.</strong> The current product lives at <a href="https://kinocut.dev">kinocut.dev</a>. The useful part is not the word "video"; it is that an agent gets callable handles for FFmpeg, Hyperframes, effects, inspection, and repeatable assembly.</p>
 <p>Most AI video workflows still depend on a strange handoff. The agent can plan the edit, describe the shot, maybe generate a prompt, and then a human has to do the actual assembly work somewhere else. That is not agent-native. That is a chatbot standing outside the studio window.</p>
 <h2>Kinocut gives the agent a timeline</h2>
 <p>The technical decision is to expose video operations as stable tools instead of one-off shell recipes. That choice accepts the cost of a larger public surface: arguments need validation, error messages need to be readable, and effects need names that survive more than one session.</p>
@@ -1047,7 +1048,7 @@ kino concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
 <p>The more direct handles the agent has, the less the work feels like prompting and the more it feels like operating a system.</p>
 <h2>FAQ</h2>
 <h3>What is Kinocut?</h3>
-<p>Kinocut is a video editing MCP server, Python client, and <code>kino</code> CLI that exposes video inspection, effects, assembly, and FFmpeg-backed operations to AI agents. It was formerly named mcp-video.</p>
+<p>Kinocut is a video editing MCP server, Python client, and <code>kino</code> CLI that exposes video inspection, effects, assembly, and FFmpeg-backed operations to AI agents. The official site is <a href="https://kinocut.dev">kinocut.dev</a>.</p>
 <h3>Who should care?</h3>
 <p>Builders who want AI agents to produce inspectable media artifacts instead of only generating prompts, scripts, and editing instructions.</p>
 """,
@@ -1225,6 +1226,7 @@ BLOG_POSTS_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS}
 LEGACY_BLOG_SLUGS = {
     "productization-audit-field-guide": "ai-tool-implementation-checklist",
     "mcp-server-productization-checklist": "mcp-server-implementation-checklist",
+    "why-mcp-video-matters": "why-kinocut-matters",
 }
 
 PROJECT_COPY_ES = {
@@ -1234,7 +1236,7 @@ PROJECT_COPY_ES = {
         "proof_role": "Muestra que Kyanite puede convertir historial de desarrollo en evidencia, no en intuicion.",
     },
     "Kinocut": {
-        "description": "Servidor MCP de edicion de video con guardrails para agentes de IA, mas el CLI kino y Video Receipts. Antes llamado mcp-video.",
+        "description": "Edicion de video con guardrails para agentes de IA: servidor MCP, CLI kino, Video Receipts e Hyperframes.",
         "tag": "MCP de medios",
         "proof_role": "La prueba principal de que los agentes pueden operar timelines, efectos y pipelines repetibles de medios.",
     },
@@ -1676,7 +1678,7 @@ BLOG_COPY_ES = {
 inspeccionar salida
 comparar expectativa
 revisar siguiente paso</code></pre>
-<p>Kinocut (antes mcp-video) prueba la version de medios. Epoch prueba la version de estimacion. DialectOS prueba la version de localizacion. devarch-framework y Dev Learning Archaeologist prueban la version de historial de repos. OpenGlaze prueba que el software de dominio sigue importando cuando el usuario no vive dentro de la burbuja de herramientas de IA.</p>
+<p>Kinocut prueba la version de medios. Epoch prueba la version de estimacion. DialectOS prueba la version de localizacion. devarch-framework y Dev Learning Archaeologist prueban la version de historial de repos. OpenGlaze prueba que el software de dominio sigue importando cuando el usuario no vive dentro de la burbuja de herramientas de IA.</p>
 <h2>La verificacion cambia la conversacion</h2>
 <p>Sin verificacion, un agente puede sonar seguro y estar equivocado. Con verificacion, el sistema puede mostrar un comando, archivo, ruta, reporte, prueba, captura o resultado estructurado. Eso no hace perfecto el trabajo. Hace posible la siguiente correccion.</p>
 <blockquote>La gracia de una herramienta Kyanite no es que un agente hizo algo. Es que una persona puede inspeccionar lo que hizo el agente.</blockquote>
@@ -1732,14 +1734,14 @@ revisar siguiente paso</code></pre>
 <blockquote>El repo prueba que la herramienta existe. La implementacion lleva la herramienta a manos que la pueden usar.</blockquote>
 """,
     },
-    "why-mcp-video-matters": {
+    "why-kinocut-matters": {
         "title": "Por que importa Kinocut",
         "category": "MCP / Automatizacion de video",
         "seo_title": "Kinocut: servidor MCP de edicion de video para agentes de IA",
-        "meta_description": "Kinocut es un servidor MCP de edicion de video con guardrails que da a los agentes de IA acceso directo a FFmpeg, timelines, efectos y pipelines de medios. Antes llamado mcp-video.",
-        "excerpt": "Kinocut da a los agentes de IA acceso directo a timelines, efectos, FFmpeg y medios terminados. Antes llamado mcp-video.",
+        "meta_description": "Kinocut es el servidor MCP de edicion de video con guardrails, el CLI kino y Video Receipts en kinocut.dev.",
+        "excerpt": "Kinocut da a los agentes de IA herramientas llamables sobre timelines, efectos, Hyperframes y medios terminados en kinocut.dev.",
         "body": """
-<p><strong>Kinocut es un servidor MCP de edicion de video que permite a los agentes operar pipelines reales de medios en vez de solo escribir prompts sobre ellos.</strong> Antes se llamaba mcp-video. Lo importante no es la palabra video; es que el agente obtiene herramientas llamables para FFmpeg, Hyperframes, efectos, inspeccion y ensamblaje repetible.</p>
+<p><strong>Kinocut es un servidor MCP de edicion de video que permite a los agentes operar pipelines reales de medios en vez de solo escribir prompts sobre ellos.</strong> El producto actual vive en <a href="https://kinocut.dev">kinocut.dev</a>. Lo importante no es la palabra video; es que el agente obtiene herramientas llamables para FFmpeg, Hyperframes, efectos, inspeccion y ensamblaje repetible.</p>
 <p>Muchos flujos de video con IA todavia dependen de un traspaso raro. El agente puede planear la edicion y describir el corte, pero un humano termina ensamblando todo en otra parte. Eso no es agent-native. Es un chatbot mirando el estudio desde afuera.</p>
 <h2>Kinocut le da al agente un timeline</h2>
 <p>La decision tecnica es exponer operaciones de video como herramientas estables, no como recetas de shell de una sola vez. Eso obliga a validar argumentos, escribir errores legibles y nombrar efectos que sobrevivan mas de una sesion.</p>
@@ -2302,7 +2304,7 @@ ABOUT_COPY = {
         "builds_label": "Selected builds",
         "builds_title": "Work people can inspect",
         "builds": [
-            ("Kinocut", "Guardrailed FFmpeg tools, Video Receipts, and the kino CLI so agents can inspect, assemble, and transform video. Formerly mcp-video."),
+            ("Kinocut", "Official site at kinocut.dev, plus the kino CLI, Video Receipts, and guardrailed media tools for agents."),
             ("DialectOS and Epoch", "Spanish dialect QA and estimation infrastructure for work where language quality and time judgment need explicit checks."),
             ("OpenGlaze and devarch-framework", "Domain software and repo archaeology: ceramic chemistry, commit-history diagnostics, HTML reports, and evidence-backed handoff."),
             ("Innerscape", "A personal workflow system for turning reflection, routines, and decision support into something structured enough to use.")
@@ -2345,7 +2347,7 @@ ABOUT_COPY = {
         "builds_label": "Builds seleccionados",
         "builds_title": "Trabajo que se puede inspeccionar",
         "builds": [
-            ("Kinocut", "Herramientas FFmpeg con guardrails, Video Receipts y el CLI kino para inspeccionar, armar y transformar video. Antes llamado mcp-video."),
+            ("Kinocut", "Sitio oficial en kinocut.dev, el CLI kino, Video Receipts y herramientas de medios con guardrails para agentes."),
             ("DialectOS y Epoch", "Infraestructura para QA de dialectos del espanol y estimacion cuando la calidad del lenguaje y el juicio de tiempo necesitan revision explicita."),
             ("OpenGlaze y devarch-framework", "Software de dominio y arqueologia de repos: quimica ceramica, diagnosticos de historial git, reportes HTML y handoff respaldado por evidencia."),
             ("Innerscape", "Un sistema personal de trabajo para convertir reflexion, rutinas y apoyo de decisiones en algo suficientemente estructurado para usarse.")
@@ -2795,6 +2797,7 @@ def spanishify(html, en_path, es_path):
     for english, spanish in ordered_replacements:
         html = html.replace(english, spanish)
     html = html.replace('"inLanguage": "en-US"', '"inLanguage": "es-419"')
+    html = html.replace("NotasPosting", "BlogPosting")
     return add_hreflang(html, en_path, es_path)
 
 
@@ -3277,7 +3280,11 @@ def ai_sitemap_json():
 @app.route("/llms.txt")
 def llms_txt():
     project_lines = "\n".join(
-        f"- [{p['name']}]({p['url']}): {p['description']}" for p in PUBLIC_PROJECTS
+        (
+            f"- [{p['name']}]({p['url']}): {p['description']}"
+            + (f" Source: {p['repo']}." if p.get("repo") else "")
+        )
+        for p in PUBLIC_PROJECTS
     )
     body = f"""# KyaniteLabs
 
@@ -3346,6 +3353,7 @@ def llms_full_txt():
         "\n".join([
             f"### {p['name']}",
             f"- URL: {p['url']}",
+            *([f"- Source: {p['repo']}"] if p.get("repo") else []),
             f"- Category: {p['tag']}",
             f"- Language: {p['language']}",
             f"- Updated: {p['updated']}",

@@ -399,22 +399,35 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertNotIn("kinocode", body.lower())
                 self.assertNotIn("87 FFmpeg", body)
                 self.assertNotIn("https://github.com/KyaniteLabs/mcp-video", body)
+                self.assertNotIn("kyanite-project-mcp-video", body)
                 if path in {"/", "/about", "/implementation", "/llms.txt", "/ai-sitemap.json"}:
                     self.assertIn("Kinocut", body)
-                if path in {"/", "/about", "/llms.txt", "/ai-sitemap.json"}:
+                if path in {"/", "/llms.txt", "/llms-full.txt", "/ai-sitemap.json"}:
+                    self.assertIn("https://kinocut.dev", body)
                     self.assertIn("https://github.com/KyaniteLabs/kinocut", body)
                 leftover = []
                 for match in re.finditer(r"mcp-video", body, flags=re.I):
-                    window = body[max(0, match.start() - 40) : match.end() + 40].lower()
-                    if "formerly" in window or "antes" in window or "antes llamado" in window:
-                        continue
-                    if "why-mcp-video-matters" in window:
-                        continue
-                    if "kyanite-project-mcp-video" in window:
-                        continue
-                    leftover.append(window.strip())
-                self.assertEqual(leftover, [], msg=f"stale current-name mcp-video on {path}")
+                    leftover.append(body[max(0, match.start() - 40) : match.end() + 40].strip())
+                self.assertEqual(leftover, [], msg=f"stale mcp-video on marketing surface {path}")
 
+    def test_kinocut_blog_slug_is_current_and_old_slug_redirects(self) -> None:
+        current = self.client.get("/blog/why-kinocut-matters")
+        self.assertEqual(current.status_code, 200)
+        self.assertIn("Why Kinocut matters", current.get_data(as_text=True))
+        self.assertIn("kinocut.dev", current.get_data(as_text=True))
+
+        legacy = self.client.get("/blog/why-mcp-video-matters", follow_redirects=False)
+        self.assertEqual(legacy.status_code, 301)
+        self.assertEqual(legacy.headers["Location"], "/blog/why-kinocut-matters")
+
+        legacy_es = self.client.get("/es/blog/why-mcp-video-matters", follow_redirects=False)
+        self.assertEqual(legacy_es.status_code, 301)
+        self.assertEqual(legacy_es.headers["Location"], "/es/blog/why-kinocut-matters")
+
+    def test_spanish_blog_json_ld_keeps_blog_posting_type(self) -> None:
+        html = self.client.get("/es/blog/why-kinocut-matters").get_data(as_text=True)
+        self.assertIn('"@type": "BlogPosting"', html)
+        self.assertNotIn("NotasPosting", html)
     def test_spanish_routes_do_not_leak_replacement_artifacts(self) -> None:
         paths = ["/es/", "/es/about", "/es/implementation", "/es/implementation/intake", "/es/blog", "/es/shop"]
 
