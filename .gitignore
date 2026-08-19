@@ -3,6 +3,8 @@ __pycache__/
 *.py.bak.*
 .DS_Store
 .env
+.omc/
+static/brand/_backup-*
 *.pem
 *.key
 .worktrees/
