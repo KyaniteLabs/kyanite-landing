@@ -441,12 +441,16 @@ class LandingSmokeTests(unittest.TestCase):
 
     def test_lab_notes_spanish_copies_are_first_class(self) -> None:
         slugs = [
+            "lab-notes-llamacpp-revert",
+            "lab-notes-humaneval-93",
             "lab-notes-cant-forget",
             "lab-notes-degenerate-basin",
             "lab-notes-the-kv-verdict",
             "lab-notes-verdict-night",
         ]
         expected_h1 = {
+            "lab-notes-llamacpp-revert": "Notas de lab: revertimos una regresión de llama.cpp",
+            "lab-notes-humaneval-93": "Notas de lab: 93% HumanEval en un rig de $1.400",
             "lab-notes-cant-forget": "Notas de lab: el modelo que no puede olvidar pero no puede recordar",
             "lab-notes-degenerate-basin": "Notas de lab: no se desvanece",
             "lab-notes-the-kv-verdict": "Notas de lab: el veredicto del KV",
@@ -469,6 +473,25 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                if slug == "lab-notes-llamacpp-revert":
+                    self.assertIn("5/6", en_html)
+                    self.assertIn("c7d8722", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("vision-v5-after-fix.log", en_html)
+                    self.assertIn("#26209", en_html)
+                    self.assertIn("This is not", en_html)
+                    self.assertIn("5/6", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                if slug == "lab-notes-humaneval-93":
+                    self.assertIn("28/30 = 93%", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("bench-results.log", en_html)
+                    self.assertIn("HumanEval/50", en_html)
+                    self.assertIn("not the Qwen card", en_html)
+                    self.assertIn("28/30 = 93%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
                 if slug == "lab-notes-cant-forget":
                     self.assertIn("75%", en_html)
                     self.assertIn("4.3GB", en_html)
