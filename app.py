@@ -387,19 +387,20 @@ PUBLIC_PROJECTS = [
         "tag": "Repo Intelligence",
         "tile_code": "DF",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-devarch-framework-1672x941.webp",
         "proof_role": "Shows Kyanite can turn development history into evidence, not vibes.",
     },
     {
-        "name": "mcp-video",
-        "url": "https://github.com/KyaniteLabs/mcp-video",
-        "description": "Video editing MCP server for AI agents with 87 FFmpeg and Hyperframes tools, Python client, and CLI.",
+        "name": "Kinocut",
+        "url": "https://kinocut.dev",
+        "repo": "https://github.com/KyaniteLabs/kinocut",
+        "description": "Guardrailed video editing for AI agents: MCP server, kino CLI, Video Receipts, and Hyperframes.",
         "tag": "Media MCP",
-        "tile_code": "MV",
+        "tile_code": "KC",
         "language": "Python",
-        "updated": "2026-06-01",
-        "image": "/static/brand/projects/kyanite-project-mcp-video-1672x941.webp",
+        "updated": "2026-08-18",
+        "image": "/static/brand/projects/kyanite-project-kinocut-1672x941.webp",
         "proof_role": "The flagship proof that agents can operate timelines, effects, and repeatable media pipelines.",
     },
     {
@@ -409,7 +410,7 @@ PUBLIC_PROJECTS = [
         "tag": "Estimation MCP",
         "tile_code": "EP",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-epoch-1672x941.webp",
         "proof_role": "Turns planning uncertainty into agent-callable forecasting tools.",
     },
@@ -420,7 +421,7 @@ PUBLIC_PROJECTS = [
         "tag": "Readiness Audit",
         "tile_code": "CY",
         "language": "Python",
-        "updated": "2026-05-30",
+        "updated": "2026-08-08",
         "image": "/static/brand/projects/kyanite-project-checkyourself-1672x941.webp",
         "proof_role": "Makes quality, security, and launch risk inspectable before an AI-built app ships.",
     },
@@ -431,7 +432,7 @@ PUBLIC_PROJECTS = [
         "tag": "Localization MCP",
         "tile_code": "DX",
         "language": "TypeScript",
-        "updated": "2026-05-30",
+        "updated": "2026-08-16",
         "image": "/static/brand/projects/kyanite-project-dialectos-1672x941.webp",
         "proof_role": "Makes Spanish launch quality inspectable instead of treating localization as generic translation.",
     },
@@ -442,7 +443,7 @@ PUBLIC_PROJECTS = [
         "tag": "Creative Coding",
         "tile_code": "LM",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-06",
         "image": "/static/brand/projects/kyanite-project-liminal-1672x941.webp",
         "proof_role": "Shows Kyanite can build creative tools where agents touch code, shaders, media, and taste.",
     },
@@ -453,7 +454,7 @@ PUBLIC_PROJECTS = [
         "tag": "Living Websites",
         "tile_code": "LS",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-liminal-sites-1672x941.webp",
         "proof_role": "Proves the website itself can evolve through constrained, inspectable design systems.",
     },
@@ -464,7 +465,7 @@ PUBLIC_PROJECTS = [
         "tag": "Pattern Synthesis",
         "tile_code": "EX",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-14",
         "image": "/static/brand/projects/kyanite-project-elixis-1672x941.webp",
         "proof_role": "Turns fuzzy identity and naming work into source-backed synthesis.",
     },
@@ -475,7 +476,7 @@ PUBLIC_PROJECTS = [
         "tag": "Personal OS",
         "tile_code": "IN",
         "language": "TypeScript",
-        "updated": "2026-05-29",
+        "updated": "2026-08-17",
         "image": "/static/brand/projects/kyanite-project-innerscape-1672x941.webp",
         "proof_role": "Shows the same build-and-implementation pattern applied to intimate, data-rich workflows.",
     },
@@ -486,7 +487,7 @@ PUBLIC_PROJECTS = [
         "tag": "Domain Software",
         "tile_code": "OG",
         "language": "Python",
-        "updated": "2026-05-29",
+        "updated": "2026-08-15",
         "image": "/static/brand/projects/kyanite-project-openglaze-1672x941.webp",
         "proof_role": "Proves Kyanite can ship useful software outside the generic AI-tool bubble.",
     },
@@ -939,7 +940,7 @@ BLOG_POSTS = [
 inspect output
 compare expectation
 revise next step</code></pre>
-<p>mcp-video proves the media version of this pattern. Epoch proves the estimation version. DialectOS proves the localization version. devarch-framework and Dev Learning Archaeologist prove the repo-history version. OpenGlaze proves that domain software still matters when the user is not living inside the AI-tool bubble.</p>
+<p>Kinocut proves the media version of this pattern. Epoch proves the estimation version. DialectOS proves the localization version. devarch-framework and Dev Learning Archaeologist prove the repo-history version. OpenGlaze proves that domain software still matters when the user is not living inside the AI-tool bubble.</p>
 <h2>Verification changes the conversation</h2>
 <p>Without verification, an agent can sound confident and still be wrong. With verification, the system can show a command, a file, a route, a report, a test, a screenshot, or a structured result. That does not make the work perfect. It makes the next correction possible.</p>
 <blockquote>The point of a Kyanite tool is not that an agent did something. The point is that a person can inspect what the agent did.</blockquote>
@@ -1015,23 +1016,23 @@ revise next step</code></pre>
 """,
     },
     {
-        "slug": "why-mcp-video-matters",
-        "title": "Why mcp-video matters",
+        "slug": "why-kinocut-matters",
+        "title": "Why Kinocut matters",
         "category": "MCP / Video Automation",
         "date": "2026-05-14",
         "read_time": "5 min",
         "primary_keyword": "video editing MCP server",
-        "seo_title": "video editing MCP server for AI agents",
-        "meta_description": "mcp-video is a video editing MCP server that gives AI agents direct handles on FFmpeg, Hyperframes, timelines, effects, and media pipelines.",
-        "excerpt": "mcp-video is a video editing MCP server that gives AI agents direct handles on timelines, effects, FFmpeg, and finished media.",
+        "seo_title": "Kinocut: video editing MCP server for AI agents",
+        "meta_description": "Kinocut is the guardrailed video editing MCP server, kino CLI, and Video Receipts stack at kinocut.dev.",
+        "excerpt": "Kinocut gives AI agents callable handles on timelines, effects, Hyperframes, and finished media at kinocut.dev.",
         "body": """
-<p><strong>mcp-video is a video editing MCP server that lets AI agents operate real media pipelines instead of only writing prompts about them.</strong> The useful part is not the word "video"; it is that an agent gets callable handles for FFmpeg, Hyperframes, effects, inspection, and repeatable assembly.</p>
+<p><strong>Kinocut is a video editing MCP server that lets AI agents operate real media pipelines instead of only writing prompts about them.</strong> The current product lives at <a href="https://kinocut.dev">kinocut.dev</a>. The useful part is not the word "video"; it is that an agent gets callable handles for FFmpeg, Hyperframes, effects, inspection, and repeatable assembly.</p>
 <p>Most AI video workflows still depend on a strange handoff. The agent can plan the edit, describe the shot, maybe generate a prompt, and then a human has to do the actual assembly work somewhere else. That is not agent-native. That is a chatbot standing outside the studio window.</p>
-<h2>mcp-video gives the agent a timeline</h2>
+<h2>Kinocut gives the agent a timeline</h2>
 <p>The technical decision is to expose video operations as stable tools instead of one-off shell recipes. That choice accepts the cost of a larger public surface: arguments need validation, error messages need to be readable, and effects need names that survive more than one session.</p>
-<pre><code>mcp-video effect-glitch input.mp4 --output take-glitch.mp4
-mcp-video inspect take-glitch.mp4 --json
-mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
+<pre><code>kino effect-glitch input.mp4 --output take-glitch.mp4
+kino inspect take-glitch.mp4 --json
+kino concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
 <p>That interface is not decoration. It is the boundary that lets an agent inspect what happened, revise the next step, and keep the work reproducible.</p>
 <h2>The product pattern behind agent video automation</h2>
 <p>Kyanite looks for workflows that already exist in rough form, then turns them into surfaces an agent and a human can both use. For video, that means:</p>
@@ -1046,8 +1047,8 @@ mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
 <p>Video is one visible example of a broader agentic pattern. Agents need tools that touch real artifacts. A useful agent should be able to inspect a repo, assemble a video, run an estimation model, check a localization string, or package a launch surface.</p>
 <p>The more direct handles the agent has, the less the work feels like prompting and the more it feels like operating a system.</p>
 <h2>FAQ</h2>
-<h3>What is mcp-video?</h3>
-<p>mcp-video is a video editing MCP server, Python client, and CLI that exposes video inspection, effects, assembly, and FFmpeg-backed operations to AI agents.</p>
+<h3>What is Kinocut?</h3>
+<p>Kinocut is a video editing MCP server, Python client, and <code>kino</code> CLI that exposes video inspection, effects, assembly, and FFmpeg-backed operations to AI agents. The official site is <a href="https://kinocut.dev">kinocut.dev</a>.</p>
 <h3>Who should care?</h3>
 <p>Builders who want AI agents to produce inspectable media artifacts instead of only generating prompts, scripts, and editing instructions.</p>
 """,
@@ -1155,7 +1156,7 @@ implementation option</code></pre>
 </ul>
 <p>That last question is where weak projects break. If verification depends on the maintainer explaining it in a chat, it is not productized yet.</p>
 <h2>Public proof compounds</h2>
-<p>mcp-video, Epoch, and DialectOS each prove a different part of the stack: media operations, estimation models, and localization QA. The shared pattern is the lab: a real workflow becomes an agent-callable capability with enough documentation and tests to survive inspection.</p>
+<p>Kinocut, Epoch, and DialectOS each prove a different part of the stack: media operations, estimation models, and localization QA. The shared pattern is the lab: a real workflow becomes an agent-callable capability with enough documentation and tests to survive inspection.</p>
 <h2>FAQ</h2>
 <h3>What makes an MCP server commercially useful?</h3>
 <p>It has to touch an expensive, repeated, or fragile workflow. If the server only wraps a trivial API call, the product is the API, not the MCP server.</p>
@@ -1225,6 +1226,7 @@ BLOG_POSTS_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS}
 LEGACY_BLOG_SLUGS = {
     "productization-audit-field-guide": "ai-tool-implementation-checklist",
     "mcp-server-productization-checklist": "mcp-server-implementation-checklist",
+    "why-mcp-video-matters": "why-kinocut-matters",
 }
 
 PROJECT_COPY_ES = {
@@ -1233,8 +1235,8 @@ PROJECT_COPY_ES = {
         "tag": "Inteligencia de repos",
         "proof_role": "Muestra que Kyanite puede convertir historial de desarrollo en evidencia, no en intuicion.",
     },
-    "mcp-video": {
-        "description": "Servidor MCP de edicion de video para agentes de IA con 87 herramientas de FFmpeg e Hyperframes, cliente Python y CLI.",
+    "Kinocut": {
+        "description": "Edicion de video con guardrails para agentes de IA: servidor MCP, CLI kino, Video Receipts e Hyperframes.",
         "tag": "MCP de medios",
         "proof_role": "La prueba principal de que los agentes pueden operar timelines, efectos y pipelines repetibles de medios.",
     },
@@ -1676,7 +1678,7 @@ BLOG_COPY_ES = {
 inspeccionar salida
 comparar expectativa
 revisar siguiente paso</code></pre>
-<p>mcp-video prueba la version de medios. Epoch prueba la version de estimacion. DialectOS prueba la version de localizacion. devarch-framework y Dev Learning Archaeologist prueban la version de historial de repos. OpenGlaze prueba que el software de dominio sigue importando cuando el usuario no vive dentro de la burbuja de herramientas de IA.</p>
+<p>Kinocut prueba la version de medios. Epoch prueba la version de estimacion. DialectOS prueba la version de localizacion. devarch-framework y Dev Learning Archaeologist prueban la version de historial de repos. OpenGlaze prueba que el software de dominio sigue importando cuando el usuario no vive dentro de la burbuja de herramientas de IA.</p>
 <h2>La verificacion cambia la conversacion</h2>
 <p>Sin verificacion, un agente puede sonar seguro y estar equivocado. Con verificacion, el sistema puede mostrar un comando, archivo, ruta, reporte, prueba, captura o resultado estructurado. Eso no hace perfecto el trabajo. Hace posible la siguiente correccion.</p>
 <blockquote>La gracia de una herramienta Kyanite no es que un agente hizo algo. Es que una persona puede inspeccionar lo que hizo el agente.</blockquote>
@@ -1732,20 +1734,20 @@ revisar siguiente paso</code></pre>
 <blockquote>El repo prueba que la herramienta existe. La implementacion lleva la herramienta a manos que la pueden usar.</blockquote>
 """,
     },
-    "why-mcp-video-matters": {
-        "title": "Por que importa mcp-video",
+    "why-kinocut-matters": {
+        "title": "Por que importa Kinocut",
         "category": "MCP / Automatizacion de video",
-        "seo_title": "servidor MCP de edicion de video para agentes de IA",
-        "meta_description": "mcp-video es un servidor MCP de edicion de video que da a los agentes de IA acceso directo a FFmpeg, Hyperframes, timelines, efectos y pipelines de medios.",
-        "excerpt": "mcp-video da a los agentes de IA acceso directo a timelines, efectos, FFmpeg y medios terminados.",
+        "seo_title": "Kinocut: servidor MCP de edicion de video para agentes de IA",
+        "meta_description": "Kinocut es el servidor MCP de edicion de video con guardrails, el CLI kino y Video Receipts en kinocut.dev.",
+        "excerpt": "Kinocut da a los agentes de IA herramientas llamables sobre timelines, efectos, Hyperframes y medios terminados en kinocut.dev.",
         "body": """
-<p><strong>mcp-video es un servidor MCP de edicion de video que permite a los agentes operar pipelines reales de medios en vez de solo escribir prompts sobre ellos.</strong> Lo importante no es la palabra video; es que el agente obtiene herramientas llamables para FFmpeg, Hyperframes, efectos, inspeccion y ensamblaje repetible.</p>
+<p><strong>Kinocut es un servidor MCP de edicion de video que permite a los agentes operar pipelines reales de medios en vez de solo escribir prompts sobre ellos.</strong> El producto actual vive en <a href="https://kinocut.dev">kinocut.dev</a>. Lo importante no es la palabra video; es que el agente obtiene herramientas llamables para FFmpeg, Hyperframes, efectos, inspeccion y ensamblaje repetible.</p>
 <p>Muchos flujos de video con IA todavia dependen de un traspaso raro. El agente puede planear la edicion y describir el corte, pero un humano termina ensamblando todo en otra parte. Eso no es agent-native. Es un chatbot mirando el estudio desde afuera.</p>
-<h2>mcp-video le da al agente un timeline</h2>
+<h2>Kinocut le da al agente un timeline</h2>
 <p>La decision tecnica es exponer operaciones de video como herramientas estables, no como recetas de shell de una sola vez. Eso obliga a validar argumentos, escribir errores legibles y nombrar efectos que sobrevivan mas de una sesion.</p>
-<pre><code>mcp-video effect-glitch input.mp4 --output take-glitch.mp4
-mcp-video inspect take-glitch.mp4 --json
-mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
+<pre><code>kino effect-glitch input.mp4 --output take-glitch.mp4
+kino inspect take-glitch.mp4 --json
+kino concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
 <p>Esa interfaz no es decoracion. Es la frontera que permite inspeccionar lo ocurrido, revisar el siguiente paso y mantener el trabajo reproducible.</p>
 <h2>El patron de producto detras del video agentico</h2>
 <p>Kyanite busca flujos que ya existen de forma torpe y los convierte en superficies que un agente y una persona pueden usar. En video, eso significa efectos invocables, recetas que sobreviven, pipelines probables y documentacion suficiente para que alguien mas instale el sistema.</p>
@@ -1813,7 +1815,7 @@ mcp-video concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
 <h2>La instalacion es parte del producto</h2>
 <p>Un README fuerte responde rapido que hace el servidor, que requiere la instalacion, que clientes soporta, cual es el ejemplo minimo y como saber que funciona.</p>
 <h2>La evidencia publica se acumula</h2>
-<p>mcp-video, Epoch y DialectOS prueban partes distintas del stack: medios, estimacion y QA de localizacion. El patron compartido es el laboratorio: un flujo real se vuelve capacidad llamable por agentes con documentacion y pruebas suficientes para sobrevivir inspeccion.</p>
+<p>Kinocut, Epoch y DialectOS prueban partes distintas del stack: medios, estimacion y QA de localizacion. El patron compartido es el laboratorio: un flujo real se vuelve capacidad llamable por agentes con documentacion y pruebas suficientes para sobrevivir inspeccion.</p>
 """,
     },
     "repo-archaeology-proof-assets": {
@@ -2296,13 +2298,13 @@ ABOUT_COPY = {
         "body": [
             "Before KyaniteLabs, I spent 12+ years in learning operations and enterprise training systems: Workday Learning for 8,000+ associates, SAP SuccessFactors, Cornerstone, global training programs, compliance reporting, Power Query and Power BI dashboards, and bilingual training delivery.",
             "That background still shapes the lab. Tools have to be inspectable, documented, and usable by people who did not build them. A clever prototype is not enough; the handoff has to survive.",
-            "KyaniteLabs is where I turn that operational instinct toward weird, useful software: mcp-video for agentic video workflows, DialectOS for Spanish localization QA, Epoch for estimation, OpenGlaze for ceramic chemistry, devarch-framework for repo archaeology, and Innerscape for personal workflow systems.",
+            "KyaniteLabs is where I turn that operational instinct toward weird, useful software: Kinocut for agentic video workflows, DialectOS for Spanish localization QA, Epoch for estimation, OpenGlaze for ceramic chemistry, devarch-framework for repo archaeology, and Innerscape for personal workflow systems.",
             "Simon Gonzalez De Cruz / PuenteWorks is the legal and business container. PuenteWorks leads when the client problem is business workflow, scope, content, or approval rhythm. KyaniteLabs leads when the work needs a technical product surface: software, MCP tools, automation, docs, deployment, or repair."
         ],
         "builds_label": "Selected builds",
         "builds_title": "Work people can inspect",
         "builds": [
-            ("mcp-video", "87 FFmpeg and Hyperframes tools that let AI agents inspect, assemble, and transform video through a real tool surface instead of a vague prompt."),
+            ("Kinocut", "Official site at kinocut.dev, plus the kino CLI, Video Receipts, and guardrailed media tools for agents."),
             ("DialectOS and Epoch", "Spanish dialect QA and estimation infrastructure for work where language quality and time judgment need explicit checks."),
             ("OpenGlaze and devarch-framework", "Domain software and repo archaeology: ceramic chemistry, commit-history diagnostics, HTML reports, and evidence-backed handoff."),
             ("Innerscape", "A personal workflow system for turning reflection, routines, and decision support into something structured enough to use.")
@@ -2339,13 +2341,13 @@ ABOUT_COPY = {
         "body": [
             "Antes de KyaniteLabs, pase mas de 12 anos en operaciones de aprendizaje y sistemas de capacitacion empresarial: Workday Learning para mas de 8,000 personas, SAP SuccessFactors, Cornerstone, programas globales de capacitacion, reportes de cumplimiento, dashboards con Power Query y Power BI, y capacitacion bilingue.",
             "Ese fondo todavia define el laboratorio. Las herramientas tienen que ser inspeccionables, documentadas y usables por personas que no las construyeron. Un prototipo inteligente no basta; el handoff tiene que sobrevivir.",
-            "KyaniteLabs es donde llevo ese instinto operativo hacia software raro y util: mcp-video para flujos de video agenticos, DialectOS para QA de localizacion al espanol, Epoch para estimacion, OpenGlaze para quimica ceramica, devarch-framework para arqueologia de repos e Innerscape para sistemas personales de trabajo.",
+            "KyaniteLabs es donde llevo ese instinto operativo hacia software raro y util: Kinocut para flujos de video agenticos, DialectOS para QA de localizacion al espanol, Epoch para estimacion, OpenGlaze para quimica ceramica, devarch-framework para arqueologia de repos e Innerscape para sistemas personales de trabajo.",
             "Simon Gonzalez De Cruz / PuenteWorks es el contenedor legal y comercial. PuenteWorks lidera cuando el problema del cliente es flujo de negocio, alcance, contenido o ritmo de aprobacion. KyaniteLabs lidera cuando el trabajo necesita una superficie tecnica de producto: software, herramientas MCP, automatizacion, docs, despliegue o reparacion."
         ],
         "builds_label": "Builds seleccionados",
         "builds_title": "Trabajo que se puede inspeccionar",
         "builds": [
-            ("mcp-video", "87 herramientas de FFmpeg y Hyperframes para que agentes de IA inspeccionen, armen y transformen video a traves de una superficie real, no un prompt vago."),
+            ("Kinocut", "Sitio oficial en kinocut.dev, el CLI kino, Video Receipts y herramientas de medios con guardrails para agentes."),
             ("DialectOS y Epoch", "Infraestructura para QA de dialectos del espanol y estimacion cuando la calidad del lenguaje y el juicio de tiempo necesitan revision explicita."),
             ("OpenGlaze y devarch-framework", "Software de dominio y arqueologia de repos: quimica ceramica, diagnosticos de historial git, reportes HTML y handoff respaldado por evidencia."),
             ("Innerscape", "Un sistema personal de trabajo para convertir reflexion, rutinas y apoyo de decisiones en algo suficientemente estructurado para usarse.")
@@ -2397,7 +2399,7 @@ COMMON_ES_REPLACEMENTS = {
     "Use the gallery as a map: install one of the tools, read the build context, or start with a smaller asset before a scoped implementation conversation.": "Usa la galeria como mapa: instala una herramienta, lee el contexto del build o empieza con un activo mas pequeno antes de una conversacion de implementacion por alcance.",
     "Scoped help": "Ayuda por alcance",
     "Get a project running": "Haz funcionar un proyecto",
-    "For builders who want mcp-video, Epoch, DialectOS, OpenGlaze, repo diagnostics, or another Kyanite build installed, adapted, and handed off cleanly.": "Para builders que quieren mcp-video, Epoch, DialectOS, OpenGlaze, diagnosticos de repo u otro build de Kyanite instalado, adaptado y entregado con claridad.",
+    "For builders who want Kinocut, Epoch, DialectOS, OpenGlaze, repo diagnostics, or another Kyanite build installed, adapted, and handed off cleanly.": "Para builders que quieren Kinocut, Epoch, DialectOS, OpenGlaze, diagnosticos de repo u otro build de Kyanite instalado, adaptado y entregado con claridad.",
     "Install path, config, and first successful run": "Ruta de instalacion, config y primer run exitoso",
     "Adaptation to your repo, workflow, or operating constraints": "Adaptacion a tu repo, flujo o restricciones operativas",
     "Documentation you can reuse after the call": "Documentacion que puedes reutilizar despues de la llamada",
@@ -2405,6 +2407,7 @@ COMMON_ES_REPLACEMENTS = {
     "Understand the build": "Entender el build",
     "Read the notes behind the project: what the tool does, where it is useful, what still needs care, and how the implementation surface should behave.": "Lee las notas detras del proyecto: que hace la herramienta, donde sirve, que todavia requiere cuidado y como debe comportarse la superficie de implementacion.",
     "MCP video editing, localization QA, and estimation notes": "Notas de video MCP, QA de localizacion y estimacion",
+    "Kinocut video editing, localization QA, and estimation notes": "Notas de video Kinocut, QA de localizacion y estimacion",
     "Implementation checklists and product decisions": "Checklists de implementacion y decisiones de producto",
     "Plain facts that make the build easier to evaluate": "Hechos claros que hacen mas facil evaluar el build",
     "Read lab notes": "Leer notas",
@@ -2524,7 +2527,7 @@ COMMON_ES_REPLACEMENTS = {
     "Understand tradeoffs and hand off": "Entender tradeoffs y dejar handoff",
     "Kyanite already builds the proof.": "Kyanite ya construye la prueba.",
     "The paid support exists so people can reach the outcome faster, not just admire the repo.": "El apoyo pagado existe para que las personas lleguen al resultado mas rapido, no solo para admirar el repo.",
-    "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow working in their environment.": "Personas que quieren mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite funcionando en su entorno.",
+    "People who want Kinocut, Epoch, DialectOS, openglaze, or a Kyanite workflow working in their environment.": "Personas que quieren Kinocut, Epoch, DialectOS, openglaze o un flujo Kyanite funcionando en su entorno.",
     "Tell KyaniteLabs what result you need from a tool, repo, media pipeline, localization QA pass, or diagnostic so the next step can be scoped.": "Dile a KyaniteLabs que resultado necesitas de una herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico para poder definir el siguiente paso.",
     "Tell Kyanite what you need working.": "Dile a Kyanite que necesitas hacer funcionar.",
     "This gives Kyanite enough context to decide whether the tool, repo, media pipeline, localization QA pass, or diagnostic can be moved toward a working handoff. It does not charge, publish, or commit you to a scope.": "Esto da a Kyanite suficiente contexto para decidir si la herramienta, repo, pipeline de medios, pase de QA de localizacion o diagnostico puede avanzar hacia un handoff funcional. No cobra, publica ni te compromete a un alcance.",
@@ -2540,7 +2543,7 @@ COMMON_ES_REPLACEMENTS = {
     "What does Kyanite implementation help include?": "Que incluye la ayuda de implementacion de Kyanite?",
     "It can include installing and configuring Kyanite tools, adapting workflows, advising on setup, writing docs and examples, and leaving a usable handoff.": "Puede incluir instalacion y configuracion de herramientas Kyanite, adaptacion de flujos, asesoria de setup, docs, ejemplos y un handoff usable.",
     "Who is implementation help for?": "Para quien es la ayuda de implementacion?",
-    "It is for people who want help using or adapting Kyanite-built tools such as mcp-video, Epoch, DialectOS, openglaze, and developer-learning diagnostics.": "Es para personas que quieren ayuda usando o adaptando herramientas Kyanite como mcp-video, Epoch, DialectOS, openglaze y diagnosticos de aprendizaje.",
+    "It is for people who want help using or adapting Kyanite-built tools such as Kinocut, Epoch, DialectOS, openglaze, and developer-learning diagnostics.": "Es para personas que quieren ayuda usando o adaptando herramientas Kyanite como Kinocut, Epoch, DialectOS, openglaze y diagnosticos de aprendizaje.",
     "Which Kyanite tool or workflow do you want help with? What are you trying to do with it?": "Con que herramienta o flujo de Kyanite quieres ayuda? Que quieres lograr con eso?",
     "What is confusing, broken, too technical, undocumented, hard to install, or hard to adapt?": "Que es confuso, roto, demasiado tecnico, indocumentado, dificil de instalar o dificil de adaptar?",
     "Installed tool, adapted workflow, docs, examples, training call, integration plan, localization QA, media pipeline, etc.": "Herramienta instalada, flujo adaptado, docs, ejemplos, llamada de entrenamiento, plan de integracion, QA de localizacion, pipeline de medios, etc.",
@@ -2678,7 +2681,10 @@ EXTRA_ES_REPLACEMENTS = {
     "Map the tool to your real process: video pipeline, estimation workflow, localization QA, glaze studio work, or dev-learning diagnostics.": "Mapea la herramienta a tu proceso real: pipeline de video, estimacion, QA de localizacion, estudio de esmaltes o diagnosticos de aprendizaje.",
     "Understand the tradeoffs, next steps, limits, and maintenance expectations so the implementation survives after the session.": "Entiende tradeoffs, siguientes pasos, limites y mantenimiento para que la implementacion sobreviva despues de la sesion.",
     "MCP video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The paid support exists so people can actually use the tools, not just admire the repo.": "Edicion de video por MCP, estimacion de tiempo, QA de localizacion en español, software de esmaltes ceramicos y diagnosticos de aprendizaje. El soporte pagado existe para que la gente use las herramientas, no solo admire el repo.",
-    "People who want mcp-video, Epoch, DialectOS, openglaze, or a Kyanite workflow implemented.": "Personas que quieren implementar mcp-video, Epoch, DialectOS, openglaze o un flujo Kyanite.",
+    "Kinocut video editing, time estimation, Spanish localization QA, ceramic glaze software, and development-learning diagnostics. The paid support exists so people can reach the outcome faster, not just admire the repo.": "Edicion de video con Kinocut, estimacion de tiempo, QA de localizacion en español, software de esmaltes ceramicos y diagnosticos de aprendizaje. El soporte pagado existe para que la gente use las herramientas, no solo admire el repo.",
+    "Build logs, MCP video notes, agent-system essays, learning notes, and implementation field notes.": "Logs de construccion, notas de Kinocut, ensayos de sistemas agenticos, notas de aprendizaje y notas de implementacion.",
+    "Build logs, Kinocut notes, agent-system essays, learning notes, and implementation field notes.": "Logs de construccion, notas de Kinocut, ensayos de sistemas agenticos, notas de aprendizaje y notas de implementacion.",
+    "People who want Kinocut, Epoch, DialectOS, openglaze, or a Kyanite workflow implemented.": "Personas que quieren implementar Kinocut, Epoch, DialectOS, openglaze o un flujo Kyanite.",
     "Builders who want advising around setup, adaptation, docs, and next steps.": "Builders que quieren asesoria sobre setup, adaptacion, docs y siguientes pasos.",
     "Not generic consulting. That belongs under PuenteWorks.": "No es consultoria generica. Eso pertenece a PuenteWorks.",
     "KyaniteLabs publishes notes after there is a real build, lesson, product, or workflow to explain.": "KyaniteLabs publica notas cuando ya hay un build, aprendizaje, producto o flujo real que explicar.",
@@ -2691,7 +2697,7 @@ EXTRA_ES_REPLACEMENTS = {
     "4 more included": "4 mas incluidos",
     "1 more included": "1 mas incluido",
     "agent-native tool protocol": "protocolo de herramienta agent-native",
-    "Open mcp-video": "Abrir mcp-video",
+    "Open Kinocut": "Abrir Kinocut",
     "Read the build note": "Leer la nota de construccion",
     "AI tool implementation": "Implementacion de herramientas de IA",
     "Public Herramientas": "Herramientas publicas",
@@ -2726,7 +2732,7 @@ EXTRA_ES_REPLACEMENTS = {
     "Designed as workflows, not prompt confetti": "Diseñados como flujos, no confeti de prompts",
     "Good entry point before scoped work": "Buen punto de entrada antes de un alcance pagado",
     "Open shop": "Abrir tienda",
-    "mcp-video, Epoch, DialectOS, openglaze, devarch tools": "mcp-video, Epoch, DialectOS, openglaze y herramientas devarch",
+    "Kinocut, Epoch, DialectOS, openglaze, devarch tools": "Kinocut, Epoch, DialectOS, openglaze y herramientas devarch",
     "Start from a workflow that actually hurts or fascinates: video editing, estimating time, localization, glaze math, learning from commits.": "Empieza desde un flujo que de verdad duele o fascina: edicion de video, estimacion de tiempo, localizacion, matematicas de esmaltes o aprendizaje desde commits.",
     "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so the work can survive outside the chat.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que el trabajo sobreviva fuera del chat.",
     "Keep the tools open where possible, sell practical implementation help when someone wants the setup, adaptation, or advising done with them.": "Mantener abiertas las herramientas cuando sea posible y vender ayuda practica de implementacion cuando alguien quiere setup, adaptacion o asesoria hecha con ellos.",
@@ -2791,6 +2797,7 @@ def spanishify(html, en_path, es_path):
     for english, spanish in ordered_replacements:
         html = html.replace(english, spanish)
     html = html.replace('"inLanguage": "en-US"', '"inLanguage": "es-419"')
+    html = html.replace("NotasPosting", "BlogPosting")
     return add_hreflang(html, en_path, es_path)
 
 
@@ -3235,7 +3242,7 @@ def ai_sitemap_json():
                 "name": "Agentic Media System",
                 "url": f"{CANONICAL_BASE}/#support",
                 "deliverables": [
-                    "mcp-video-backed media workflow",
+                    "Kinocut-backed media workflow",
                     "Repeatable video assembly recipes",
                     "Clips, captions, posting assets, and review handoff",
                 ],
@@ -3273,7 +3280,11 @@ def ai_sitemap_json():
 @app.route("/llms.txt")
 def llms_txt():
     project_lines = "\n".join(
-        f"- [{p['name']}]({p['url']}): {p['description']}" for p in PUBLIC_PROJECTS
+        (
+            f"- [{p['name']}]({p['url']}): {p['description']}"
+            + (f" Source: {p['repo']}." if p.get("repo") else "")
+        )
+        for p in PUBLIC_PROJECTS
     )
     body = f"""# KyaniteLabs
 
@@ -3296,7 +3307,7 @@ KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_U
 
 ## Kyanite Products and Paid Paths
 
-- Open-source tools: public KyaniteLabs repositories such as mcp-video, Epoch, DialectOS, openglaze, and repo-learning tools.
+- Open-source tools: public KyaniteLabs repositories such as Kinocut, Epoch, DialectOS, openglaze, and repo-learning tools.
 - Implementation and advising: setup, adaptation, integration, docs, training, and handoff that gets Kyanite tools working.
 - Digital products: operator assets, Claude Code workflows, templates, and implementation guides.
 - Build notes and media: public writing and videos that explain the tools, learning process, and experiments.
@@ -3342,6 +3353,7 @@ def llms_full_txt():
         "\n".join([
             f"### {p['name']}",
             f"- URL: {p['url']}",
+            *([f"- Source: {p['repo']}"] if p.get("repo") else []),
             f"- Category: {p['tag']}",
             f"- Language: {p['language']}",
             f"- Updated: {p['updated']}",

@@ -91,7 +91,8 @@
               "@type": "SoftwareSourceCode",
               "name": {{ project.name | tojson }},
               "description": {{ project.description | tojson }},
-              "codeRepository": {{ project.url | tojson }},
+              "url": {{ project.url | tojson }},
+              "codeRepository": {{ (project.repo or project.url) | tojson }},
               "programmingLanguage": {{ project.language | tojson }},
               "dateModified": {{ project.updated | tojson }},
               "image": "https://kyanitelabs.tech{{ project.image }}"
@@ -234,7 +235,7 @@
               <span class="tile-code">01</span>
               <span class="tag hot">Scoped help</span>
               <h3>Get a project running</h3>
-              <p>For builders who want mcp-video, Epoch, DialectOS, OpenGlaze, repo diagnostics, or another Kyanite build installed, adapted, and handed off cleanly.</p>
+              <p>For builders who want Kinocut, Epoch, DialectOS, OpenGlaze, repo diagnostics, or another Kyanite build installed, adapted, and handed off cleanly.</p>
               <ul class="clean-list">
                 <li>Install path, config, and first successful run</li>
                 <li>Adaptation to your repo, workflow, or operating constraints</li>
@@ -250,7 +251,7 @@
               <h3>Understand the build</h3>
               <p>Read the notes behind the project: what the tool does, where it is useful, what still needs care, and how the implementation surface should behave.</p>
               <ul class="clean-list">
-                <li>MCP video editing, localization QA, and estimation notes</li>
+                <li>Kinocut video editing, localization QA, and estimation notes</li>
                 <li>Implementation checklists and product decisions</li>
                 <li>Plain facts that make the build easier to evaluate</li>
               </ul>
@@ -390,7 +391,7 @@
           </div>
           <div>
             <h4>Proof</h4>
-            <a href="https://github.com/KyaniteLabs/mcp-video">mcp-video</a>
+            <a href="https://github.com/KyaniteLabs/kinocut">Kinocut</a>
             <a href="https://github.com/KyaniteLabs/Epoch">Epoch</a>
             <a href="https://github.com/KyaniteLabs/DialectOS">DialectOS</a>
           </div>
