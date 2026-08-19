@@ -550,6 +550,57 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+        "slug": 'lab-notes-llamacpp-revert',
+        "title": "Lab Notes: we reverted a llama.cpp regression",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-19',
+        "read_time": '3 min',
+        "primary_keyword": 'llama.cpp c7d8722 HIP vision NaN logits',
+        "seo_title": "llama.cpp c7d8722 revert unlocked Q4 vision on a $1,400 Strix Halo",
+        "meta_description": "We found a llama.cpp regression (c7d8722 host buffers on HIP iGPUs) and fixed it with a revert. n=6 VQA: 0/6 slashes before, 5/6 after. Same Q4_K_XL on a $1,400 mini-PC.",
+        "excerpt": "We found a llama.cpp regression and reverted it. n=6 battery on a $1,400 rig: 0/6 slashes before, 5/6 after. Same Q4_K_XL. Not a quant story.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3.</small></p>
+<p>The number first: <strong>5/6</strong> on a six-prompt VQA battery after one git revert. Before the revert: 0/6, all <code>//////</code> to length. Same Qwen3.8-27B Q4_K_XL, same mmproj-F16, same <strong>$1,400</strong> GMKtec EVO-X2.</p>
+<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisected on this hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>What we tested (n=6, thinking off):</p>
+<table>
+<thead><tr><th>Prompt</th><th>Before</th><th>After</th><th>Time</th></tr></thead>
+<tbody>
+<tr><td>System graph</td><td>slashes</td><td>MISS: &ldquo;Stacked bar chart&rdquo;</td><td>1.8s</td></tr>
+<tr><td>Red image</td><td>slashes</td><td>HIT Red</td><td>0.3s</td></tr>
+<tr><td>Blue image</td><td>slashes</td><td>HIT Blue</td><td>0.7s</td></tr>
+<tr><td>Green image</td><td>slashes</td><td>HIT Green</td><td>0.6s</td></tr>
+<tr><td>Is this red?</td><td>slashes</td><td>HIT Yes</td><td>0.6s</td></tr>
+<tr><td>Is this a gradient?</td><td>slashes</td><td>HIT Yes</td><td>0.7s</td></tr>
+</tbody>
+</table>
+<p>Five hits were sub-second. All six after the revert stopped clean (<code>finish_reason=stop</code>). This is not &ldquo;vision works great.&rdquo; It is a six-prompt battery on this $1,400 box after a one-line revert. Text HumanEval on the same binary stayed 28/30.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/vision-v5-after-fix.log" rel="noopener">vision-v5-after-fix.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/FIX-APPLIED.md" rel="noopener">FIX-APPLIED.md</a>.</p>
+""",
+    },
+{
+        "slug": 'lab-notes-humaneval-93',
+        "title": "Lab Notes: 93% HumanEval on a $1,400 rig",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-19',
+        "read_time": '3 min',
+        "primary_keyword": 'HumanEval Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": "93% HumanEval at Q4_K_XL on a $1,400 mini-PC",
+        "meta_description": "28/30 = 93% HumanEval on Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, 30-problem subset. $1,400 GMKtec EVO-X2. Not the model card.",
+        "excerpt": "28/30 = 93% HumanEval on a $1,400 mini-PC. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Failures: 50 and 145. Raw log linked.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3. Night 4 addendum.</small></p>
+<p>The number first: <strong>28/30 = 93% HumanEval</strong> on a <strong>$1,400</strong> GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified).</p>
+<p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. 262k context. K+V q4_0. Temp 0. Thinking off. Frozen 30-problem subset, seed 20260819. Failures: HumanEval/50 and HumanEval/145 (runtime errors in generated code). Passes finished in 10s or less with zero thinking tokens.</p>
+<p>This is not the Qwen card. The card is bf16, different temp, different harness. We optimized what we tested. n=30 on a subset is not a ceiling.</p>
+<p>After we reverted a llama.cpp host-buffer commit on this $1,400 box, the same subset scored 28/30 again. Text did not move.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-results.log" rel="noopener">bench-results.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-post-fix-regression.log" rel="noopener">post-fix regression</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/README.md" rel="noopener">README</a>.</p>
+""",
+    },
+{
         "slug": 'lab-notes-cant-forget',
         "title": "Lab Notes: the model that can't forget but can't remember",
         "category": 'Local LLM / Benchmarks',
@@ -1350,6 +1401,49 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
+    "lab-notes-llamacpp-revert": {
+        "title": 'Notas de lab: revertimos una regresión de llama.cpp',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'llama.cpp c7d8722 HIP visión NaN logits',
+        "seo_title": 'Revert de llama.cpp c7d8722 en un mini-PC de $1.400',
+        "meta_description": 'Encontramos una regresión de llama.cpp (c7d8722, host buffers en iGPU HIP) y la arreglamos con un revert. n=6 VQA: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL en un mini-PC de $1.400.',
+        "excerpt": 'Encontramos una regresión de llama.cpp y la revertimos. Batería n=6 en un rig de $1.400: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL. No es una historia de quant.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3.</small></p>
+<p>El número primero: <strong>5/6</strong> en una batería VQA de seis prompts después de un revert. Antes: 0/6, todo <code>//////</code> hasta length. Mismo Qwen3.8-27B Q4_K_XL, mismo mmproj-F16, mismo GMKtec EVO-X2 de <strong>$1.400</strong>.</p>
+<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisectado en este hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>Qué probamos (n=6, thinking off):</p>
+<table>
+<thead><tr><th>Prompt</th><th>Antes</th><th>Después</th><th>Tiempo</th></tr></thead>
+<tbody>
+<tr><td>System graph</td><td>slashes</td><td>MISS: «Stacked bar chart»</td><td>1.8s</td></tr>
+<tr><td>Imagen roja</td><td>slashes</td><td>HIT Red</td><td>0.3s</td></tr>
+<tr><td>Imagen azul</td><td>slashes</td><td>HIT Blue</td><td>0.7s</td></tr>
+<tr><td>Imagen verde</td><td>slashes</td><td>HIT Green</td><td>0.6s</td></tr>
+<tr><td>¿Esto es rojo?</td><td>slashes</td><td>HIT Yes</td><td>0.6s</td></tr>
+<tr><td>¿Esto es un degradado?</td><td>slashes</td><td>HIT Yes</td><td>0.7s</td></tr>
+</tbody>
+</table>
+<p>Cinco hits fueron sub-segundo. Los seis después del revert pararon limpio (<code>finish_reason=stop</code>). Esto no es «la visión anda genial». Es una batería de seis prompts en esta caja de $1.400 después de un revert de una línea. HumanEval de texto en el mismo binario se quedó en 28/30.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/vision-v5-after-fix.log" rel="noopener">vision-v5-after-fix.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/FIX-APPLIED.md" rel="noopener">FIX-APPLIED.md</a>.</p>
+""",
+    },
+    "lab-notes-humaneval-93": {
+        "title": 'Notas de lab: 93% HumanEval en un rig de $1.400',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'HumanEval Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": '93% HumanEval a Q4_K_XL en un mini-PC de $1.400',
+        "meta_description": '28/30 = 93% HumanEval en Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, subset de 30. GMKtec EVO-X2 de $1.400. No es la card.',
+        "excerpt": '28/30 = 93% HumanEval en un mini-PC de $1.400. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Fallos: 50 y 145. Log crudo linkeado.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3. Addendum de la noche 4.</small></p>
+<p>El número primero: <strong>28/30 = 93% HumanEval</strong> en un GMKtec EVO-X2 de <strong>$1.400</strong> (Ryzen AI Max+ 395, 96GB unificados).</p>
+<p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Contexto 262k. K+V q4_0. Temp 0. Thinking off. Subset congelado de 30 problemas, semilla 20260819. Fallos: HumanEval/50 y HumanEval/145 (errores de runtime en el código generado). Los pases terminaron en 10s o menos, cero tokens de thinking.</p>
+<p>Esto no es la card de Qwen. La card es bf16, otra temp, otro harness. Optimizamos lo que medimos. n=30 en un subset no es un techo.</p>
+<p>Después de revertir un commit de host-buffer de llama.cpp en esta caja de $1.400, el mismo subset volvió a dar 28/30. El texto no se movió.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-results.log" rel="noopener">bench-results.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-post-fix-regression.log" rel="noopener">regresión post-fix</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/README.md" rel="noopener">README</a>.</p>
+""",
+    },
     "lab-notes-cant-forget": {
         "title": 'Notas de lab: el modelo que no puede olvidar pero no puede recordar',
         "category": 'LLM local / Benchmarks',
