@@ -95,6 +95,7 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertIn("Kyanite Build Notes", html)
         self.assertNotIn('id="tools"', html)
         self.assertNotIn("Flagship Proof // mcp-video", html)
+        self.assertIn("Kinocut", html)
         self.assertNotIn("MENU</button>", html)
         self.assertIn('aria-label="Open menu"', html)
         self.assertIn("<span></span><span></span></button>", html)
@@ -270,7 +271,7 @@ class LandingSmokeTests(unittest.TestCase):
             json={
                 "name": "Reader Person",
                 "email": "Reader@Example.com",
-                "interest": "mcp-video and repo diagnostics",
+                "interest": "Kinocut and repo diagnostics",
                 "source_page": "/",
                 "consent": "yes",
             },
@@ -374,6 +375,45 @@ class LandingSmokeTests(unittest.TestCase):
                 body = self.client.get(path).get_data(as_text=True).lower()
                 for phrase in banned_phrases:
                     self.assertNotIn(phrase, body)
+
+    def test_public_surfaces_name_kinocut_as_current_video_product(self) -> None:
+        """mcp-video was renamed to Kinocut. Marketing surfaces must not sell the old name."""
+        marketing = [
+            "/",
+            "/about",
+            "/implementation",
+            "/implementation/intake",
+            "/shop",
+            "/es/",
+            "/es/about",
+            "/es/implementation",
+            "/es/implementation/intake",
+            "/es/shop",
+            "/llms.txt",
+            "/llms-full.txt",
+            "/ai-sitemap.json",
+        ]
+        for path in marketing:
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True)
+                self.assertNotIn("kinocode", body.lower())
+                self.assertNotIn("87 FFmpeg", body)
+                self.assertNotIn("https://github.com/KyaniteLabs/mcp-video", body)
+                if path in {"/", "/about", "/implementation", "/llms.txt", "/ai-sitemap.json"}:
+                    self.assertIn("Kinocut", body)
+                if path in {"/", "/about", "/llms.txt", "/ai-sitemap.json"}:
+                    self.assertIn("https://github.com/KyaniteLabs/kinocut", body)
+                leftover = []
+                for match in re.finditer(r"mcp-video", body, flags=re.I):
+                    window = body[max(0, match.start() - 40) : match.end() + 40].lower()
+                    if "formerly" in window or "antes" in window or "antes llamado" in window:
+                        continue
+                    if "why-mcp-video-matters" in window:
+                        continue
+                    if "kyanite-project-mcp-video" in window:
+                        continue
+                    leftover.append(window.strip())
+                self.assertEqual(leftover, [], msg=f"stale current-name mcp-video on {path}")
 
     def test_spanish_routes_do_not_leak_replacement_artifacts(self) -> None:
         paths = ["/es/", "/es/about", "/es/implementation", "/es/implementation/intake", "/es/blog", "/es/shop"]
