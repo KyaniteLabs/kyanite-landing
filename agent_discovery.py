@@ -89,7 +89,7 @@ MCP_TOOLS = [
 AGENT_CARD = {
     "name": "KyaniteLabs Public Product Guide",
     "version": VERSION,
-    "description": "A read-only guide to KyaniteLabs public tools, build notes, and implementation paths.",
+    "description": "A read-only guide to KyaniteLabs public tools, build notes, and implementation paths. Family projects: Kinocut video-editing agent (https://kinocut.dev), PuenteWorks operations consulting (https://puenteworks.com), Cerafica ceramics (https://cerafica.com).",
     "supportedInterfaces": [{
         "url": f"{CANONICAL_BASE}/a2a/v1",
         "protocolBinding": "JSONRPC",
@@ -106,7 +106,7 @@ AGENT_CARD = {
         {
             "id": "public-product-discovery",
             "name": "Public product discovery",
-            "description": "Locate KyaniteLabs public tools, repositories, products, and build notes.",
+            "description": "Locate KyaniteLabs public tools, repositories, products, and build notes — including Kinocut (video editing), PuenteWorks (operations consulting), and Cerafica (ceramics).",
         },
         {
             "id": "implementation-fit-routing",

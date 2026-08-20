@@ -441,12 +441,20 @@ class LandingSmokeTests(unittest.TestCase):
 
     def test_lab_notes_spanish_copies_are_first_class(self) -> None:
         slugs = [
+            "lab-notes-livecodebench-30",
+            "lab-notes-llamacpp-revert",
+            "lab-notes-humaneval-93",
+            "lab-notes-cant-forget",
             "lab-notes-degenerate-basin",
             "lab-notes-the-kv-verdict",
             "lab-notes-verdict-night",
         ]
         expected_h1 = {
-            "lab-notes-degenerate-basin": "Notas de lab: no se desvanece",
+            "lab-notes-livecodebench-30": "Notas de lab: 67% LiveCodeBench-30 en un rig de $1.400",
+            "lab-notes-llamacpp-revert": "Notas de lab: revertimos una regresión de llama.cpp",
+            "lab-notes-humaneval-93": "Notas de lab: 93% HumanEval en un rig de $1.400",
+            "lab-notes-cant-forget": "Notas de lab: el modelo que no puede olvidar pero no puede recordar",
+            "lab-notes-degenerate-basin": "Notas de lab: la cuenca era un bug",
             "lab-notes-the-kv-verdict": "Notas de lab: el veredicto del KV",
             "lab-notes-verdict-night": "Notas de lab: la noche del veredicto",
         }
@@ -467,21 +475,83 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                if slug == "lab-notes-livecodebench-30":
+                    self.assertIn("20/30 = 67%", en_html)
+                    self.assertIn("[49%, 81%]", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("easy 10/10", en_html)
+                    self.assertIn("lcb-30-2026-08-20", en_html)
+                    self.assertIn("not the official full-set", en_html)
+                    self.assertNotIn("90.3", en_html)
+                    self.assertNotIn("degenerate basin", en_html.lower())
+                    self.assertIn("20/30 = 67%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                if slug == "lab-notes-llamacpp-revert":
+                    self.assertIn("5/6", en_html)
+                    self.assertIn("c7d8722", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("vision-v5-after-fix.log", en_html)
+                    self.assertIn("#26209", en_html)
+                    self.assertIn("This is not", en_html)
+                    self.assertIn("5/6", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                if slug == "lab-notes-humaneval-93":
+                    self.assertIn("28/30 = 93%", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("bench-results.log", en_html)
+                    self.assertIn("HumanEval/50", en_html)
+                    self.assertIn("not the Qwen card", en_html)
+                    self.assertIn("28/30 = 93%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                if slug == "lab-notes-cant-forget":
+                    self.assertIn("75%", en_html)
+                    self.assertIn("4.3GB", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("1818s", en_html)
+                    self.assertIn("kv-curve-2026-08-19", en_html)
+                    self.assertIn("think_med=241ch", en_html)
+                    self.assertNotIn("5×", en_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                    self.assertIn("75%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertIn("1818s", es_html)
+                    self.assertNotIn("HORIZON-TEST", es_html)
                 if slug == "lab-notes-degenerate-basin":
                     self.assertIn("Gated DeltaNet", en_html)
                     self.assertIn("4.3GB", en_html)
                     self.assertIn("198,227", en_html)
+                    self.assertIn("6/6", en_html)
+                    self.assertIn("c7d8722", en_html)
+                    self.assertIn("the basin was a bug", en_html)
+                    self.assertIn("no longer treat that hit as a position window", en_html)
                     self.assertIn("decay-horizon prediction failed", en_html)
                     self.assertIn("50k", en_html)
-                    self.assertIn("no longer treat as a position window", en_html)
-                    self.assertIn("did not hold as a retrieval window", en_html)
+                    self.assertIn("1818s", en_html)
+                    self.assertIn("quote-results.log", en_html)
+                    self.assertIn("selective", en_html.lower())
+                    self.assertIn("depth-remap-results.log", en_html)
+                    self.assertNotIn("GRANITE-", en_html)
+                    self.assertNotIn("COBALT-", en_html)
+                    self.assertNotIn("TOKFLINT-", en_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
+                    self.assertNotIn("Next probe: a warm-prefix quote", en_html)
                     self.assertIn("Gated DeltaNet", es_html)
                     self.assertIn("4,3 GB", es_html)
                     self.assertIn("198.227", es_html)
-                    self.assertIn("horizonte de decay falló", es_html)
+                    self.assertIn("6/6", es_html)
+                    self.assertIn("c7d8722", es_html)
+                    self.assertIn("la cuenca era un bug", es_html)
                     self.assertIn("ventana de posición", es_html)
+                    self.assertIn("horizonte de decay falló", es_html)
+                    self.assertIn("1818s", es_html)
+                    self.assertIn("quote-results.log", es_html)
+                    self.assertNotIn("Siguiente sonda: un quote de prefijo caliente", es_html)
                     self.assertNotIn("That experiment is next", en_html)
                     self.assertNotIn("NotasPosting", es_html)
+                    self.assertNotIn("HORIZON-TEST", es_html)
                 if slug == "lab-notes-the-kv-verdict":
                     self.assertIn("~47% (4.3GB saved)", en_html)
                     self.assertIn("4.3GB saved", en_html)

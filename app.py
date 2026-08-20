@@ -550,59 +550,160 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
-        "slug": 'lab-notes-degenerate-basin',
-        "title": "Lab Notes: it doesn't fade",
+        "slug": 'lab-notes-livecodebench-30',
+        "title": "Lab Notes: 67% LiveCodeBench-30 on a $1,400 rig",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-20',
+        "date_modified": '2026-08-20',
+        "read_time": '4 min',
+        "primary_keyword": 'LiveCodeBench Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": "Lab Notes: 20/30 = 67% LiveCodeBench-30 (CI 49-81%) on a $1,400 mini-PC",
+        "meta_description": "20/30 = 67% LiveCodeBench-30 best-per-problem on Qwen3.8-27B Q4_K_XL. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1,400. Not the official full-set card.",
+        "excerpt": "20/30 = 67% LiveCodeBench-30 on a $1,400 mini-PC. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. n=30 public subset. Not the card.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p>The number first: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem across labeled arms, on a <strong>$1,400</strong> GMKtec EVO-X2. Wilson 95% CI <strong>[49%, 81%]</strong>. Always cite the interval. n=30 is small; the interval is the honest number.</p>
+<p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Champion: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, livecodebench v6 public cases only, stratified 10/10/10, seed 20260820.</p>
+<p>A single-config cell (2048 tokens, thinking off) landed 13/30, with a reproduction at 14/30 and 25/30 per-problem agreement. That is a <strong>&plusmn;2-problem noise floor at temp 0</strong>. Do not treat one run as exact.</p>
+<p>Thinking: on the 15 problems where no-thinking produced no code at 4096 tokens, thinking (budget 2048) rescued 5. Hard items leak prose that starves the code. On HumanEval-30, thinking bought nothing (28/30 identical). Citable line: reasoning pays exactly where tasks are hard, nothing where they are easy.</p>
+<p>This is not the official full-set LiveCodeBench card. Different instrument: we ran a 30-problem public subset at Q4 on this box. Band-check only, and say so.</p>
+<p>Contamination caveat: v6 problems (~May 2025) predate the model. If anything the number is inflated versus a clean window. The hard-split finding is the conservative-safe part.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/lcb-30-2026-08-20" rel="noopener">results/lcb-30-2026-08-20</a>.</p>
+""",
+    },
+{
+        "slug": 'lab-notes-llamacpp-revert',
+        "title": "Lab Notes: we reverted a llama.cpp regression",
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-19',
         "date_modified": '2026-08-19',
-        "read_time": '7 min',
-        "primary_keyword": 'LLM deep context degenerate basin',
-        "seo_title": "Lab Notes: it doesn't fade — deep-context collapse, not a miss",
-        "meta_description": 'Night 3: a 198,227-token haystack, five depths, a 98C crash, and a model that answers a code-review it was never asked. n=1 map, not a law.',
-        "excerpt": 'Night 3: two attractors, not a smooth fade. The 25% exact hit did not hold as a retrieval window. Then 98C. n=1 map, not a law.',
+        "read_time": '3 min',
+        "primary_keyword": 'llama.cpp c7d8722 HIP vision NaN logits',
+        "seo_title": "llama.cpp c7d8722 revert unlocked Q4 vision on a $1,400 Strix Halo",
+        "meta_description": "We found a llama.cpp regression (c7d8722 host buffers on HIP iGPUs) and fixed it with a revert. n=6 VQA: 0/6 slashes before, 5/6 after. Same Q4_K_XL on a $1,400 mini-PC.",
+        "excerpt": "We found a llama.cpp regression and reverted it. n=6 battery on a $1,400 rig: 0/6 slashes before, 5/6 after. Same Q4_K_XL. Not a quant story.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 3 of the nightly lab notes. The box died at 98C, came back, and then answered a question I never asked.</small></p>
-<p>The number first: <strong>this model's deep-context retrieval does not fade smoothly.</strong> It snaps into a canned answer. On a haystack the server counted at 198,227 tokens, I asked for a planted access code at five depths. At 25% it handed back the exact code and stopped clean. That hit is the one we no longer treat as a position window. At 35% and 75% it wrote the opening of a code-review report it was never given:</p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3.</small></p>
+<p>The number first: <strong>5/6</strong> on a six-prompt VQA battery after one git revert. Before the revert: 0/6, all <code>//////</code> to length. Same Qwen3.8-27B Q4_K_XL, same mmproj-F16, same <strong>$1,400</strong> GMKtec EVO-X2.</p>
+<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisected on this hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>What we tested (n=6, thinking off):</p>
+<table>
+<thead><tr><th>Prompt</th><th>Before</th><th>After</th><th>Time</th></tr></thead>
+<tbody>
+<tr><td>System graph</td><td>slashes</td><td>MISS: &ldquo;Stacked bar chart&rdquo;</td><td>1.8s</td></tr>
+<tr><td>Red image</td><td>slashes</td><td>HIT Red</td><td>0.3s</td></tr>
+<tr><td>Blue image</td><td>slashes</td><td>HIT Blue</td><td>0.7s</td></tr>
+<tr><td>Green image</td><td>slashes</td><td>HIT Green</td><td>0.6s</td></tr>
+<tr><td>Is this red?</td><td>slashes</td><td>HIT Yes</td><td>0.6s</td></tr>
+<tr><td>Is this a gradient?</td><td>slashes</td><td>HIT Yes</td><td>0.7s</td></tr>
+</tbody>
+</table>
+<p>Five hits were sub-second. All six after the revert stopped clean (<code>finish_reason=stop</code>). This is not &ldquo;vision works great.&rdquo; It is a six-prompt battery on this $1,400 box after a one-line revert. Text HumanEval on the same binary stayed 28/30.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/vision-v5-after-fix.log" rel="noopener">vision-v5-after-fix.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/FIX-APPLIED.md" rel="noopener">FIX-APPLIED.md</a>.</p>
+""",
+    },
+{
+        "slug": 'lab-notes-humaneval-93',
+        "title": "Lab Notes: 93% HumanEval on a $1,400 rig",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-19',
+        "read_time": '3 min',
+        "primary_keyword": 'HumanEval Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": "93% HumanEval at Q4_K_XL on a $1,400 mini-PC",
+        "meta_description": "28/30 = 93% HumanEval on Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, 30-problem subset. $1,400 GMKtec EVO-X2. Not the model card.",
+        "excerpt": "28/30 = 93% HumanEval on a $1,400 mini-PC. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Failures: 50 and 145. Raw log linked.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3. Night 4 addendum.</small></p>
+<p>The number first: <strong>28/30 = 93% HumanEval</strong> on a <strong>$1,400</strong> GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified).</p>
+<p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. 262k context. K+V q4_0. Temp 0. Thinking off. Frozen 30-problem subset, seed 20260819. Failures: HumanEval/50 and HumanEval/145 (runtime errors in generated code). Passes finished in 10s or less with zero thinking tokens.</p>
+<p>This is not the Qwen card. The card is bf16, different temp, different harness. We optimized what we tested. n=30 on a subset is not a ceiling.</p>
+<p>After we reverted a llama.cpp host-buffer commit on this $1,400 box, the same subset scored 28/30 again. Text did not move.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-results.log" rel="noopener">bench-results.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-post-fix-regression.log" rel="noopener">post-fix regression</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/README.md" rel="noopener">README</a>.</p>
+""",
+    },
+{
+        "slug": 'lab-notes-cant-forget',
+        "title": "Lab Notes: the model that can't forget but can't remember",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-20',
+        "read_time": '6 min',
+        "primary_keyword": 'Gated DeltaNet Qwen3.8-27B 262k context',
+        "seo_title": "Lab Notes: the model that can't forget but can't remember — 75% GDN, 4.3GB KV",
+        "meta_description": "Night 4 on a $1,400 mini-PC: 48 of 64 layers are Gated DeltaNet. That is why the 4-bit KV flip saved 4.3GB, not 15. And why a 198k prefix can be queried in 9-27s after a 30-minute load.",
+        "excerpt": "The number first: this model is 75% not a transformer. 48 of 64 layers keep a running state. On a $1,400 rig, load 198k once (1818s), then query in 9-27s.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 4.</small></p>
+<p>The number first: <strong>this model is 75% not a transformer.</strong> 48 of its 64 layers run Gated DeltaNet: linear attention with a fixed-size running state. Only 16 layers do what you would call attention. The KV cache lives in those 16 layers only. That is why our 4-bit KV flip saved <strong>4.3GB</strong> at 262k, not the ~15GB dense-transformer math predicted.</p>
+<p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unified, <strong>$1,400</strong>. Model: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Native window 262,144 tokens.</p>
+
+<h2>The KV curve was flat because the cache is small</h2>
+<p>Paired gate, n=60, q8_0 vs q4_0: both <strong>96.67%</strong>, McNemar p=1.0, zero discordants, zero corruption tripwires. q5_0 and q5_1 matched the same accuracy. q4_0 is champion because quality did not move and we keep the 4.3GB. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/kv-curve-2026-08-19" rel="noopener">results/kv-curve-2026-08-19</a>.</p>
+
+<h2>Load once, query many</h2>
+<p>We loaded a 198k-token prefix on this $1,400 box. Cold prefill: <strong>1818s</strong> (~30 min). Then four follow-ups against the warm prefix, all <code>finish_reason=stop</code>: retrieve the planted code; quote the sentence (<strong>16s</strong>); yes/no (<strong>9s</strong>); summarize (<strong>27s</strong>). Retrieval is selective. Distinctive strings survive. Night 3's arbitrary-ID misses were the same llama.cpp <code>c7d8722</code> buffer bug; the post-revert remap retrieved planted IDs at all six tested depths at 198k. See the <a href="/blog/lab-notes-degenerate-basin">Night 3 inversion</a>. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">quote-results.log</a>.</p>
+<p>The quote probe is the product shape: <strong>loading is expensive; maintaining is cheap.</strong> Pre-revert 50k misses are quarantined with the old binary. We have not re-run 50k on the fixed build.</p>
+
+<h2>What we got wrong</h2>
+<p>We published KV arithmetic that took three passes to land (15 → 11.5 → 7.4 → 4.3GB). We blamed &ldquo;the fork.&rdquo; The serving binary is upstream-era llama.cpp plus a small HIP cherry-pick. We treated a memorable-code hit as a position window. n=1 cells stay maps, not laws.</p>
+<p>Thinking budgets on screened-hard GSM8K: <code>think_med=241ch</code> across off/512/1024/2048/65536 in the kneemap log. Caps ≥512 were non-binding on that set. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/deep-context-2026-08-18/kneemap-gsm8k-hard.log" rel="noopener">kneemap-gsm8k-hard.log</a>.</p>
+<p>I am not publishing a spec-decode speedup number in this note. The committed writeup exists; the arm log file is empty. We do not ship that row until the log has rows.</p>
+<p><small>Conditions: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, 262,144-token window, K+V q4_0, temperature 0. Night 4. A map with linked logs.</small></p>
+""",
+    },
+{
+        "slug": 'lab-notes-degenerate-basin',
+        "title": "Lab Notes: the basin was a bug",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-19',
+        "date_modified": '2026-08-20',
+        "read_time": '7 min',
+        "primary_keyword": 'llama.cpp c7d8722 deep context needle retrieval',
+        "seo_title": "Lab Notes: the basin was a bug — 6/6 HIT after c7d8722 revert",
+        "meta_description": 'Night 3 inversion: the degenerate-basin map was llama.cpp c7d8722. Post-revert remap: 6/6 exact retrieval at 198k. n=1. $1,400. No planted codes.',
+        "excerpt": 'We published a basin. The serving binary was the hole. After the c7d8722 revert: 6/6 HIT at 198k. n=1 map of the fixed build.',
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Night 3 inversion, 2026-08-20. The first version of this note is still the URL. The map was wrong.</small></p>
+<p>The number first: <strong>6/6 exact needle retrieval at ~198k after we reverted llama.cpp <code>c7d8722</code>.</strong> Same seed. Byte-identical planted codes. Every cell <code>finish_reason=stop</code>. Zero attractor outputs. The &ldquo;degenerate basin&rdquo; we shipped on 2026-08-19 was substantially a host-buffer bug on this integrated GPU, not a depth law of Qwen3.8-27B.</p>
+<p>Anchor pair, token-identical prompts, server <code>prompt_tokens=198,228</code> both nights: pre-revert miss (<code>ok</code>) → post-revert exact HIT. Only delta = the revert. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/README.md" rel="noopener">needle-format-2026-08-19/README.md</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/depth-remap-results.log" rel="noopener">depth-remap-results.log</a>.</p>
+
+<h2>What that first night printed (contaminated instrument)</h2>
+<p>On a haystack the server counted at 198,227 tokens I asked for a planted access code at five depths. At 25% it handed back the exact code and stopped clean. We no longer treat that hit as a position window. At 35% and 75% it wrote the opening of a code-review report it was never given:</p>
 <pre><code>- **Risk**: Low; 67 medium/low</code></pre>
-<p>Same opening. Twice. Temperature 0.</p>
-<p>That is not a miss. A miss is &ldquo;I don't have it.&rdquo; This is the model confidently grading 48 imaginary repos.</p>
+<p>Same opening. Twice. Temperature 0. That night also died at 98C on the next prefill. Those facts are still true as a log of the old binary. They are not a model-level basin.</p>
 
 <h2>What actually ran</h2>
-<p>One seed. One haystack. Champion config: Qwen3.8-27B Q4_K_XL, K+V q4_0, 262,144-token window, on a $1,400 GMKtec EVO-X2. Depths were fractions of the <strong>server's</strong> token count, not my fill estimate. My generator said 262k. The server said 198,227. We label the instrument from the counter now.</p>
+<p>One seed. One haystack class. Champion config: Qwen3.8-27B Q4_K_XL, K+V q4_0, 262,144-token window, on a $1,400 GMKtec EVO-X2. Depths are fractions of the <strong>server's</strong> token count. My generator said 262k. The server said 198,227. We label the instrument from the counter now.</p>
 <table>
-  <thead><tr><th>Depth</th><th>Result</th><th>Stop</th><th>What it said</th></tr></thead>
+  <thead><tr><th>Depth</th><th>Pre-revert (08-18)</th><th>Post-revert remap (08-19/20)</th></tr></thead>
   <tbody>
-    <tr><td>10%</td><td>fail</td><td>stop</td><td><code>ok</code></td></tr>
-    <tr><td>25%</td><td>hit</td><td>stop</td><td>the planted code, exact</td></tr>
-    <tr><td>35%</td><td>fail</td><td>length</td><td>the Risk report, 67 findings</td></tr>
-    <tr><td>50%</td><td>fail</td><td>stop</td><td><code>ok</code></td></tr>
-    <tr><td>75%</td><td>fail</td><td>length</td><td>the Risk report again, 67 findings</td></tr>
+    <tr><td>10%</td><td>fail <code>ok</code></td><td>HIT, stop</td></tr>
+    <tr><td>25%</td><td>HIT, stop</td><td>HIT, stop</td></tr>
+    <tr><td>35%</td><td>fail, Risk report, length</td><td>HIT, stop</td></tr>
+    <tr><td>50%</td><td>fail <code>ok</code> (ptok 198,228)</td><td>HIT, stop (same ptok)</td></tr>
+    <tr><td>75%</td><td>fail, Risk report, length</td><td>HIT, stop</td></tr>
+    <tr><td>90%</td><td>sweep died</td><td>HIT, stop</td></tr>
   </tbody>
 </table>
-<p>Two attractors, not one. <code>ok</code> at 10% and 50%. The report at 35% and 75%. n=1 per cell. Treat this as a map, not a measurement. The 90% station from the earlier crown gate is a different run. This sweep died before I got there.</p>
+<p><strong>6/6</strong> on the fixed build. n=1 per cell. Treat this as a map, not a measurement. I am not quoting the planted codes.</p>
 
-<h2>Then the box cut power</h2>
-<p>During the next long prefill the EC tripped at 16:45:42Z. Journal line: <code>temp=98C -&gt; fan=100%</code>. No panic, no amdgpu, no OOM. Highest temp this chassis has logged here. The fans were already doing their job. The load was the bug: back-to-back half-hour prefills, about 6C above the 90-92C bursty envelope we treat as normal.</p>
-<p>After reboot I sent the 35% request again. Same report family. The count had moved: <strong>67 to 68</strong>. One token. Temperature still 0. That is a knife-edge, not a creative model. I do not know which kernel or batch shape flipped the digit. I am not going to pretend I do.</p>
+<h2>Then the box cut power (still true)</h2>
+<p>During the next long prefill the EC tripped at 16:45:42Z. Journal line: <code>temp=98C -&gt; fan=100%</code>. No panic, no amdgpu, no OOM. Highest temp this chassis has logged here. The fans were already doing their job. The load was the bug: back-to-back half-hour prefills, about 6C above the 90-92C bursty envelope we treat as normal. That crash is not the basin and is not walked back.</p>
 
-<h2>It is not the 4-bit KV</h2>
-<p>I ran the same needle under the old q8_0 KV. Same species of report. Different numbers, same &ldquo;I am reviewing a codebase&rdquo; voice. So the basin was already there when q8 was champion. The q4 crown's short-context numbers still stand on their own evidence. I will not write &ldquo;no quality loss at 200k-class context&rdquo; from n=1 cells. We have not earned that sentence.</p>
-
-<h2>Why: the model is 75% not a transformer</h2>
-<p>After this post went up we pulled the model card. Qwen3.8-27B is a hybrid: 64 layers, and only 16 of them do full attention. The other 48 are Gated DeltaNet &mdash; linear attention that keeps a fixed-size running state instead of storing keys and values. An exponential decay gate forgets old tokens as new ones arrive. That is how 262k context fits on a $1,400 mini-PC (17.2GB of attention KV at f16, not ~60GB).</p>
-<p>We thought the basin was that decay gate: a needle at 25% still in the running state, 50% and 75% decayed out, only the 16 attention layers left holding 198,227 tokens. When both fail, the model does not say &ldquo;I don't know.&rdquo; It falls to its most likely completion &mdash; a code-review template. That is the Risk report. The 67-to-68 restart drift is still a knife-edge. The position-window story did not survive the next run.</p>
-<p>This also corrects our Night 2 KV arithmetic. The KV cache only exists in the 16 attention layers &mdash; 4KB per token per layer, 64KB per token total, 17.2GB at f16 across a full 262k window. At q4_0 that is ~4.8GB. At q8_0, ~9.1GB. The 4-bit flip saved ~4.3GB of GTT on this architecture. Real margin on a 64GB budget. Nowhere near the ~15GB our dense-model math implied. The promotion verdict is untouched &mdash; the paired GSM8K result stands on its own evidence &mdash; but the absolute framing took three passes to get right. That is why instruments get labeled from the counter, not the estimate.</p>
-<p><strong>The decay-horizon prediction failed.</strong> A 50k-token haystack missed at 15%, 50%, and 85% &mdash; all the same <code>ok</code> attractor. The boundary did not move. There is no depth-proportional retrieval window on this task format. Needle retrieval fails at every length we tested (50k&ndash;198k) with non-memorable codes. The one long-haystack HIT at 25% was likely a memorable-code confound, not a position window. <code>ok</code> and the Risk template are the default when it does not retrieve, regardless of haystack size. GDN compression is still the likely reason exact recall is hard. The specific decay-horizon model is dead. Next probe: a warm-prefix quote &mdash; can it quote from the cached prefix even when it cannot answer from it?</p>
+<h2>The architecture still stands. The basin story does not.</h2>
+<p>Qwen3.8-27B is a hybrid: 64 layers, and only 16 of them do full attention. The other 48 are Gated DeltaNet &mdash; linear attention that keeps a fixed-size running state. That is how 262k context fits on a $1,400 mini-PC (17.2GB of attention KV at f16, not ~60GB). The KV cache only exists in the 16 attention layers &mdash; 4KB per token per layer, 64KB per token total, 17.2GB at f16 across a full 262k window. At q4_0 that is ~4.8GB. At q8_0, ~9.1GB. The 4-bit flip saved ~4.3GB of GTT. Real margin. The paired GSM8K promotion still stands on its own evidence.</p>
+<p>We <em>thought</em> the basin was that decay gate. A 50k-token haystack on the <strong>pre-revert</strong> binary missed at 15%, 50%, and 85% &mdash; all the same <code>ok</code> attractor. That is why this page once said the decay-horizon prediction failed. Those 50k cells are now suspect: same contaminated serving stack. We have not re-run 50k on the fixed build. I will not keep &ldquo;this model cannot retrieve at any length&rdquo; as a current claim.</p>
+<p>The warm-prefix quote still stands as product shape. On the same $1,400 mini-PC we loaded a 198k-token prefix once: <strong>1818s</strong> cold (~30 min). Four follow-ups against that cached prefix, all <code>finish_reason=stop</code>: retrieve the planted code; quote the sentence (<strong>16s</strong>); yes/no that a code exists (<strong>9s</strong>); summarize (<strong>27s</strong>). Retrieval is selective. Loading is expensive; maintaining is cheap. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">results/quote-probe-2026-08-19/quote-results.log</a>.</p>
 
 <h2>What I got wrong about our own stack</h2>
-<p>I blamed &ldquo;the fork.&rdquo; The serving binary is upstream-era llama.cpp plus a four-line HIP memory-reporting cherry-pick. If something is broken at 198k, that is not a secret fork bug.</p>
-<p>I almost filed an upstream issue on ngram draft caps. The gauntlet killed it. <code>--spec-draft-n-max</code> does not cap ngram-mod. <code>--spec-ngram-mod-n-max</code> does, and we never set it. Our config. Their flag. The gauntlet stays mandatory.</p>
-<p>Three reviews plus a code pass could not pin these cells on a serving-stack verification bug. Speculative decode looks like it is checking tokens the way it is supposed to. The basin looks model-level. That is an elimination, not a proof of the mechanism. I still have a spec-off rerun on the list. I have not run it.</p>
+<p>I blamed &ldquo;the fork.&rdquo; Then I blamed GDN. The hole we could name was llama.cpp <code>c7d8722</code> (host-buffer incoherence on this iGPU). The same revert that restored vision restored deep-context IDs. Issue tracker first, then another map. That is the bug-hunt. I almost filed an upstream ngram-cap issue; the gauntlet killed it. <code>--spec-draft-n-max</code> does not cap ngram-mod. <code>--spec-ngram-mod-n-max</code> does, and we never set it. Our config. Their flag.</p>
+<p>I will not write &ldquo;no quality loss at 200k-class context&rdquo; from n=1 cells. We have earned &ldquo;exact retrieval at six depths on this fixed binary, this seed, this format.&rdquo; That is all.</p>
 
 <h2>Tonight</h2>
-<p>I renamed the log labels. &ldquo;Miss&rdquo; is retired for these cells. They are degenerate-template outputs. Anyone copying the sweep should log them that way or they will &ldquo;fix retrieval&rdquo; that never reported failure.</p>
-<p>Raw logs: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> in the <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a> repo.</p>
-<p><small>Conditions: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, 262,144-token window, K+V q4_0 (q8_0 control on the same needle), temperature 0, prompt_tokens 198,227 server-reported, n=1 per depth, seed s4419, 2026-08-18. One night. A map. Not a law.</small></p>
+<p>The first title stays in the URL so the correction is findable. The live claim is the inversion: the basin was a bug. Vision note: <a href="/blog/lab-notes-llamacpp-revert">we already reverted <code>c7d8722</code> in public</a>. This is the text/retrieval half of the same commit.</p>
+<p>Raw logs: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/needle-format-2026-08-19" rel="noopener">results/needle-format-2026-08-19</a> (remap) and <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> (contaminated night) in <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>.</p>
+<p><small>Conditions: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm post-<code>c7d8722</code> revert, 262,144-token window, K+V q4_0, temperature 0, prompt_tokens ~198,227 server-reported, n=1 per depth, seed s4419. One curve. A map. Not a law.</small></p>
 """,
     },
 {
@@ -1319,56 +1420,138 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
-    "lab-notes-degenerate-basin": {
-        "title": 'Notas de lab: no se desvanece',
+    "lab-notes-livecodebench-30": {
+        "title": 'Notas de lab: 67% LiveCodeBench-30 en un rig de $1.400',
         "category": 'LLM local / Benchmarks',
-        "primary_keyword": 'contexto profundo LLM cuenca degenerada',
-        "seo_title": 'Notas de lab: no se desvanece — colapso de contexto, no un miss',
-        "meta_description": 'Noche 3: una pila de 198.227 tokens, cinco profundidades, un corte a 98 °C y un modelo que contesta un code review que nadie pidió. Un mapa n=1, no una ley.',
-        "excerpt": 'Noche 3: dos atractores, no un fade suave. El hit exacto al 25% no aguantó como ventana de retrieval. Después 98 °C. Un mapa n=1, no una ley.',
+        "primary_keyword": 'LiveCodeBench Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": 'Notas de lab: 20/30 = 67% LiveCodeBench-30 (IC 49-81%) en un mini-PC de $1.400',
+        "meta_description": '20/30 = 67% LiveCodeBench-30 best-per-problem en Qwen3.8-27B Q4_K_XL. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1.400. No es la card oficial del set completo.',
+        "excerpt": '20/30 = 67% LiveCodeBench-30 en un mini-PC de $1.400. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. Subset n=30. No es la card.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 3 de las notas de lab. La caja se murió a 98 °C, volvió, y contestó una pregunta que yo nunca hice.</small></p>
-<p>El número primero: <strong>el retrieval a contexto profundo de este modelo no se desvanece suave.</strong> Brinca a una respuesta de lata. En una pila que el server contó en 198.227 tokens, pedí un código plantado a cinco profundidades. Al 25% me devolvió el código exacto y paró limpio. Ese hit ya no lo tratamos como ventana de posición. Al 35% y al 75% escribió el arranque de un reporte de code review que nadie le pasó:</p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p>El número primero: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem entre brazos etiquetados, en un GMKtec EVO-X2 de <strong>$1.400</strong>. IC Wilson 95% <strong>[49%, 81%]</strong>. Cita siempre el intervalo. n=30 es chico; el intervalo es el número honesto.</p>
+<p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Campeón: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, casos públicos livecodebench v6, estratificado 10/10/10, semilla 20260820.</p>
+<p>Una celda de un solo config (2048 tokens, thinking off) dio 13/30, reproducción 14/30, acuerdo per-problem 25/30. Eso es un <strong>piso de ruido de &plusmn;2 problemas a temp 0</strong>. No trates una corrida como exacta.</p>
+<p>Thinking: en los 15 problemas donde no-thinking no produjo código a 4096 tokens, thinking (presupuesto 2048) rescató 5. En hard, la prosa se come el código. En HumanEval-30 thinking no compró nada (28/30 idéntico). Línea citable: el razonamiento paga exactamente donde la tarea es dura, nada donde es fácil.</p>
+<p>Esto no es la card oficial de LiveCodeBench del set completo. Otro instrumento: corrimos un subset público de 30 a Q4 en esta caja. Solo chequeo de banda, y dilo.</p>
+<p>Caveat de contaminación: los problemas v6 (~mayo 2025) son anteriores al modelo. Si acaso el número está inflado contra una ventana limpia. El hallazgo del split hard es la parte conservadora.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/lcb-30-2026-08-20" rel="noopener">results/lcb-30-2026-08-20</a>.</p>
+""",
+    },
+    "lab-notes-llamacpp-revert": {
+        "title": 'Notas de lab: revertimos una regresión de llama.cpp',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'llama.cpp c7d8722 HIP visión NaN logits',
+        "seo_title": 'Revert de llama.cpp c7d8722 en un mini-PC de $1.400',
+        "meta_description": 'Encontramos una regresión de llama.cpp (c7d8722, host buffers en iGPU HIP) y la arreglamos con un revert. n=6 VQA: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL en un mini-PC de $1.400.',
+        "excerpt": 'Encontramos una regresión de llama.cpp y la revertimos. Batería n=6 en un rig de $1.400: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL. No es una historia de quant.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3.</small></p>
+<p>El número primero: <strong>5/6</strong> en una batería VQA de seis prompts después de un revert. Antes: 0/6, todo <code>//////</code> hasta length. Mismo Qwen3.8-27B Q4_K_XL, mismo mmproj-F16, mismo GMKtec EVO-X2 de <strong>$1.400</strong>.</p>
+<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisectado en este hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>Qué probamos (n=6, thinking off):</p>
+<table>
+<thead><tr><th>Prompt</th><th>Antes</th><th>Después</th><th>Tiempo</th></tr></thead>
+<tbody>
+<tr><td>System graph</td><td>slashes</td><td>MISS: «Stacked bar chart»</td><td>1.8s</td></tr>
+<tr><td>Imagen roja</td><td>slashes</td><td>HIT Red</td><td>0.3s</td></tr>
+<tr><td>Imagen azul</td><td>slashes</td><td>HIT Blue</td><td>0.7s</td></tr>
+<tr><td>Imagen verde</td><td>slashes</td><td>HIT Green</td><td>0.6s</td></tr>
+<tr><td>¿Esto es rojo?</td><td>slashes</td><td>HIT Yes</td><td>0.6s</td></tr>
+<tr><td>¿Esto es un degradado?</td><td>slashes</td><td>HIT Yes</td><td>0.7s</td></tr>
+</tbody>
+</table>
+<p>Cinco hits fueron sub-segundo. Los seis después del revert pararon limpio (<code>finish_reason=stop</code>). Esto no es «la visión anda genial». Es una batería de seis prompts en esta caja de $1.400 después de un revert de una línea. HumanEval de texto en el mismo binario se quedó en 28/30.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/vision-v5-after-fix.log" rel="noopener">vision-v5-after-fix.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/vision-2026-08-19/FIX-APPLIED.md" rel="noopener">FIX-APPLIED.md</a>.</p>
+""",
+    },
+    "lab-notes-humaneval-93": {
+        "title": 'Notas de lab: 93% HumanEval en un rig de $1.400',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'HumanEval Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": '93% HumanEval a Q4_K_XL en un mini-PC de $1.400',
+        "meta_description": '28/30 = 93% HumanEval en Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, subset de 30. GMKtec EVO-X2 de $1.400. No es la card.',
+        "excerpt": '28/30 = 93% HumanEval en un mini-PC de $1.400. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Fallos: 50 y 145. Log crudo linkeado.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3. Addendum de la noche 4.</small></p>
+<p>El número primero: <strong>28/30 = 93% HumanEval</strong> en un GMKtec EVO-X2 de <strong>$1.400</strong> (Ryzen AI Max+ 395, 96GB unificados).</p>
+<p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Contexto 262k. K+V q4_0. Temp 0. Thinking off. Subset congelado de 30 problemas, semilla 20260819. Fallos: HumanEval/50 y HumanEval/145 (errores de runtime en el código generado). Los pases terminaron en 10s o menos, cero tokens de thinking.</p>
+<p>Esto no es la card de Qwen. La card es bf16, otra temp, otro harness. Optimizamos lo que medimos. n=30 en un subset no es un techo.</p>
+<p>Después de revertir un commit de host-buffer de llama.cpp en esta caja de $1.400, el mismo subset volvió a dar 28/30. El texto no se movió.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-results.log" rel="noopener">bench-results.log</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/bench-post-fix-regression.log" rel="noopener">regresión post-fix</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/agentic-bench-2026-08-19/README.md" rel="noopener">README</a>.</p>
+""",
+    },
+    "lab-notes-cant-forget": {
+        "title": 'Notas de lab: el modelo que no puede olvidar pero no puede recordar',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'Gated DeltaNet Qwen3.8-27B contexto 262k',
+        "seo_title": 'Notas de lab: 75% GDN, 4.3GB de KV, prefijo caliente 9-27s',
+        "meta_description": 'Noche 4 en un mini-PC de $1.400: 48 de 64 capas son Gated DeltaNet. Por eso el flip KV a 4 bits ahorró 4.3GB, no 15. Y por eso un prefijo de 198k se consulta en 9-27s después de una carga de 30 min.',
+        "excerpt": 'El número primero: este modelo es 75% no transformer. 48 de 64 capas guardan un estado. En un rig de $1.400, carga 198k una vez (1818s) y consulta en 9-27s.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 4.</small></p>
+<p>El número primero: <strong>este modelo es 75% no transformer.</strong> 48 de sus 64 capas corren Gated DeltaNet: atención lineal con un estado de tamaño fijo. Solo 16 capas hacen lo que llamarías atención. El KV cache vive solo en esas 16. Por eso el flip KV a 4 bits ahorró <strong>4.3GB</strong> a 262k, no los ~15GB que daba la aritmética de un transformer denso.</p>
+<p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unificados, <strong>$1.400</strong>. Modelo: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Ventana nativa 262.144 tokens.</p>
+<h2>La curva KV fue plana porque el cache es chico</h2>
+<p>Gate pareado, n=60, q8_0 vs q4_0: ambos <strong>96.67%</strong>, McNemar p=1.0, cero discordantes, cero tripwires de corrupción. q5_0 y q5_1 igualaron la misma accuracy. q4_0 es campeón porque la calidad no se movió y nos quedamos el 4.3GB. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/kv-curve-2026-08-19" rel="noopener">results/kv-curve-2026-08-19</a>.</p>
+<h2>Carga una vez, consulta muchas</h2>
+<p>Cargamos un prefijo de 198k tokens en esta caja de $1.400. Prefill en frío: <strong>1818s</strong> (~30 min). Luego cuatro follow-ups contra el prefijo caliente, todos <code>finish_reason=stop</code>: recuperar el código plantado; citar la frase (<strong>16s</strong>); sí/no (<strong>9s</strong>); resumir (<strong>27s</strong>). El retrieval es selectivo. Las cadenas distintivas sobreviven. Los misses de IDs arbitrarios de la noche 3 eran el mismo bug de buffer llama.cpp <code>c7d8722</code>; el remap post-revert recuperó IDs plantados a las seis profundidades a 198k. Ver la <a href="/es/blog/lab-notes-degenerate-basin">inversión de la noche 3</a>. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">quote-results.log</a>.</p>
+<p>El quote es la forma de producto: <strong>cargar es caro; mantener es barato.</strong> Los misses de 50k pre-revert quedan en cuarentena con el binario viejo. No hemos repetido 50k en el build arreglado.</p>
+<h2>Lo que nos salió mal</h2>
+<p>Publicamos aritmética de KV que tardó tres pases (15 → 11.5 → 7.4 → 4.3GB). Culpé «el fork». El binario es llama.cpp de era upstream más un cherry-pick HIP chico. Tratamos un hit de código memorable como ventana de posición. Las celdas n=1 siguen siendo mapas, no leyes.</p>
+<p>Presupuestos de thinking en GSM8K hard filtrado: <code>think_med=241ch</code> en off/512/1024/2048/65536. Caps ≥512 no ataron en ese set. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/deep-context-2026-08-18/kneemap-gsm8k-hard.log" rel="noopener">kneemap-gsm8k-hard.log</a>.</p>
+<p>No publico un número de spec-decode en esta nota. El writeup existe; el log de brazos está vacío. Esa fila no sale hasta que el log tenga filas.</p>
+<p><small>Condiciones: mini-PC GMKtec EVO-X2 de $1.400, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, ventana 262.144, K+V q4_0, temperature 0. Noche 4. Un mapa con logs linkeados.</small></p>
+""",
+    },
+    "lab-notes-degenerate-basin": {
+        "title": 'Notas de lab: la cuenca era un bug',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'llama.cpp c7d8722 retrieval contexto profundo',
+        "seo_title": 'Notas de lab: la cuenca era un bug — 6/6 HIT tras revertir c7d8722',
+        "meta_description": 'Inversión noche 3: el mapa de cuenca degenerada era llama.cpp c7d8722. Remap post-revert: 6/6 retrieval exacto a 198k. n=1. $1.400. Sin códigos plantados.',
+        "excerpt": 'Publicamos una cuenca. El hueco era el binario. Tras revertir c7d8722: 6/6 HIT a 198k. Mapa n=1 del build arreglado.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Inversión de la noche 3, 2026-08-20. La URL sigue siendo la primera. El mapa estaba mal.</small></p>
+<p>El número primero: <strong>6/6 retrieval exacto de agujas a ~198k después de revertir llama.cpp <code>c7d8722</code>.</strong> Misma semilla. Códigos plantados byte-idénticos. Todas las celdas <code>finish_reason=stop</code>. Cero atractores. La «cuenca degenerada» que publicamos el 2026-08-19 era, en lo sustancial, un bug de host-buffer en esta iGPU, no una ley de profundidad de Qwen3.8-27B.</p>
+<p>Par ancla, prompts token-idénticos, server <code>prompt_tokens=198.228</code> las dos noches: miss pre-revert (<code>ok</code>) → HIT exacto post-revert. El único delta = el revert. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/README.md" rel="noopener">needle-format-2026-08-19/README.md</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/depth-remap-results.log" rel="noopener">depth-remap-results.log</a>.</p>
+
+<h2>Lo que imprimió esa primera noche (instrumento contaminado)</h2>
+<p>En una pila que el server contó en 198.227 tokens pedí un código plantado a cinco profundidades. Al 25% me devolvió el código exacto y paró limpio. Ese hit ya no lo tratamos como ventana de posición. Al 35% y al 75% escribió el arranque de un reporte de code review que nadie le pasó:</p>
 <pre><code>- **Risk**: Low; 67 medium/low</code></pre>
-<p>El mismo arranque. Dos veces. Temperature 0.</p>
-<p>Eso no es un miss. Un miss es «no lo tengo». Aquí el modelo está calificando 48 repos imaginarios con toda la confianza del mundo.</p>
+<p>El mismo arranque. Dos veces. Temperature 0. Esa noche también se murió a 98 °C en el siguiente prefill. Esos hechos siguen siendo un log del binario viejo. No son una cuenca a nivel de modelo.</p>
 
 <h2>Lo que de verdad corrió</h2>
-<p>Una semilla. Una pila. Config campeón: Qwen3.8-27B Q4_K_XL, K+V q4_0, ventana de 262.144 tokens, en un GMKtec EVO-X2 de $1.400. Las profundidades son fracciones del conteo del <strong>server</strong>, no de mi estimado. El generador dijo 262k. El server dijo 198.227. El instrumento se etiqueta con el contador de la fuente.</p>
+<p>Una semilla. Una clase de pila. Config campeón: Qwen3.8-27B Q4_K_XL, K+V q4_0, ventana de 262.144 tokens, en un GMKtec EVO-X2 de $1.400. Las profundidades son fracciones del conteo del <strong>server</strong>. El generador dijo 262k. El server dijo 198.227. El instrumento se etiqueta con el contador de la fuente.</p>
 <table>
-  <thead><tr><th>Profundidad</th><th>Resultado</th><th>Stop</th><th>Qué dijo</th></tr></thead>
+  <thead><tr><th>Profundidad</th><th>Pre-revert (08-18)</th><th>Remap post-revert (08-19/20)</th></tr></thead>
   <tbody>
-    <tr><td>10%</td><td>fail</td><td>stop</td><td><code>ok</code></td></tr>
-    <tr><td>25%</td><td>hit</td><td>stop</td><td>el código plantado, exacto</td></tr>
-    <tr><td>35%</td><td>fail</td><td>length</td><td>el reporte Risk, 67 hallazgos</td></tr>
-    <tr><td>50%</td><td>fail</td><td>stop</td><td><code>ok</code></td></tr>
-    <tr><td>75%</td><td>fail</td><td>length</td><td>el reporte Risk otra vez, 67 hallazgos</td></tr>
+    <tr><td>10%</td><td>fail <code>ok</code></td><td>HIT, stop</td></tr>
+    <tr><td>25%</td><td>HIT, stop</td><td>HIT, stop</td></tr>
+    <tr><td>35%</td><td>fail, reporte Risk, length</td><td>HIT, stop</td></tr>
+    <tr><td>50%</td><td>fail <code>ok</code> (ptok 198.228)</td><td>HIT, stop (mismo ptok)</td></tr>
+    <tr><td>75%</td><td>fail, reporte Risk, length</td><td>HIT, stop</td></tr>
+    <tr><td>90%</td><td>el sweep se murió</td><td>HIT, stop</td></tr>
   </tbody>
 </table>
-<p>Dos atractores, no uno. <code>ok</code> al 10% y al 50%. El reporte al 35% y al 75%. n=1 por celda. Trátalo como mapa, no como medición. La estación del 90% del gate de corona anterior es otra corrida. Este sweep se murió antes de llegar ahí.</p>
+<p><strong>6/6</strong> en el build arreglado. n=1 por celda. Trátalo como mapa, no como medición. No cito los códigos plantados.</p>
 
-<h2>Después la caja cortó la corriente</h2>
-<p>En el siguiente prefill largo el EC saltó a las 16:45:42Z. Línea del journal: <code>temp=98C -&gt; fan=100%</code>. Sin panic, sin amdgpu, sin OOM. La temperatura más alta que esta chasis ha dejado aquí. Los fans ya estaban haciendo su trabajo. El load fue el bug: prefills de media hora uno detrás del otro, como 6 °C arriba del sobre 90-92 °C que tratamos como normal.</p>
-<p>Después del reboot mandé otra vez el request del 35%. Misma familia de reporte. El conteo se movió: <strong>67 a 68</strong>. Un token. Temperature sigue en 0. Eso es filo de cuchillo, no un modelo creativo. No sé qué kernel o batch shape volteó el dígito. No voy a fingir que sí.</p>
+<h2>Después la caja cortó la corriente (sigue siendo verdad)</h2>
+<p>En el siguiente prefill largo el EC saltó a las 16:45:42Z. Línea del journal: <code>temp=98C -&gt; fan=100%</code>. Sin panic, sin amdgpu, sin OOM. La temperatura más alta que esta chasis ha dejado aquí. Los fans ya estaban haciendo su trabajo. El load fue el bug: prefills de media hora uno detrás del otro, como 6 °C arriba del sobre 90-92 °C que tratamos como normal. Ese corte no es la cuenca y no se echa atrás.</p>
 
-<h2>No es el KV de 4 bits</h2>
-<p>Corrí la misma aguja con el KV q8_0 viejo. Misma especie de reporte. Otros números, la misma voz de «estoy revisando un codebase». O sea que la cuenca ya estaba cuando q8 era campeón. Los números de contexto corto de la corona q4 se aguantan con su propia evidencia. No voy a escribir «sin pérdida de calidad a contexto clase 200k» con celdas n=1. Esa oración no nos la hemos ganado.</p>
-
-<h2>Por qué: el modelo es 75% no-transformer</h2>
-<p>Después de publicar esto sacamos la model card. Qwen3.8-27B es un híbrido: 64 capas, y solo 16 hacen atención completa. Las otras 48 son Gated DeltaNet &mdash; atención lineal que guarda un estado de tamaño fijo en vez de keys y values. Un gate de decaimiento exponencial olvida tokens viejos cuando llegan tokens nuevos. Así cabe el contexto de 262k en una mini-PC de $1.400 (17,2 GB de KV de atención en f16, no ~60 GB).</p>
-<p>Pensamos que la cuenca era ese decay gate: aguja al 25% todavía en el estado, 50% y 75% decayídas, solo las 16 capas de atención con 198.227 tokens. Cuando fallan las dos, el modelo no dice «no lo sé». Cae a su completion más probable: una plantilla de code review. Eso es el reporte Risk. El drift 67-a-68 sigue siendo filo de cuchillo. La historia de ventana-por-posición no sobrevivió la siguiente corrida.</p>
-<p>Esto también corrige nuestra aritmética de KV de la noche 2. El cache KV solo existe en las 16 capas de atención &mdash; 4 KB por token por capa, 64 KB por token en total, 17,2 GB en f16 a ventana llena de 262k. En q4_0 queda en ~4,8 GB. En q8_0, ~9,1 GB. El flip a 4 bits ahorró ~4,3 GB de GTT en esta arquitectura. Margen de verdad en un presupuesto de 64 GB. Ni cerca de los ~15 GB que implicaba la matemática de un modelo denso. El veredicto de promoción no se toca &mdash; el GSM8K pareado se aguanta solo &mdash; pero el framing absoluto nos tomó tres pases. Por eso el instrumento se etiqueta con el contador, no con el estimado.</p>
-<p><strong>La predicción del horizonte de decay falló.</strong> Una pila de 50k tokens falló al 15%, 50% y 85% &mdash; el mismo atractor <code>ok</code>. El borde no se movió. No hay ventana de retrieval proporcional a la profundidad en este formato. El retrieval de agujas falla a todas las longitudes que probamos (50k&ndash;198k) con códigos no memorables. El único HIT largo al 25% probablemente fue un código memorable, no una ventana de posición. <code>ok</code> y la plantilla Risk son el default cuando no recupera, sin importar el tamaño de la pila. La compresión GDN sigue siendo la razón más probable de que el recall exacto sea difícil. El modelo específico de horizonte de decay está muerto. Siguiente sonda: un quote de prefijo caliente &mdash; ¿puede citar del prefijo en cache aunque no pueda contestar desde él?</p>
+<h2>La arquitectura se aguanta. La historia de la cuenca no.</h2>
+<p>Qwen3.8-27B es un híbrido: 64 capas, y solo 16 hacen atención completa. Las otras 48 son Gated DeltaNet &mdash; atención lineal con un estado de tamaño fijo. Así cabe el contexto de 262k en una mini-PC de $1.400 (17,2 GB de KV de atención en f16, no ~60 GB). El cache KV solo existe en las 16 capas de atención &mdash; 4 KB por token por capa, 64 KB por token en total, 17,2 GB en f16 a ventana llena de 262k. En q4_0 queda en ~4,8 GB. En q8_0, ~9,1 GB. El flip a 4 bits ahorró ~4,3 GB de GTT. Margen de verdad. El GSM8K pareado de promoción se aguanta solo.</p>
+<p><em>Pensamos</em> que la cuenca era ese decay gate. Una pila de 50k tokens en el binario <strong>pre-revert</strong> falló al 15%, 50% y 85% &mdash; el mismo atractor <code>ok</code>. Por eso esta página dijo que la predicción del horizonte de decay falló. Esas celdas de 50k ahora son sospechosas: mismo serving contaminado. No hemos repetido 50k en el build arreglado. No voy a dejar «este modelo no recupera a ninguna longitud» como claim actual.</p>
+<p>El quote de prefijo caliente se aguanta como forma de producto. En el mismo mini-PC de $1.400 cargamos un prefijo de 198k tokens una vez: <strong>1818s</strong> en frío (~30 min). Cuatro follow-ups contra ese prefijo en cache, todos <code>finish_reason=stop</code>: recuperar el código plantado; citar la frase (<strong>16s</strong>); sí/no de que existe un código (<strong>9s</strong>); resumir (<strong>27s</strong>). El retrieval es selectivo. Cargar es caro; mantener es barato. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/quote-probe-2026-08-19/quote-results.log" rel="noopener">results/quote-probe-2026-08-19/quote-results.log</a>.</p>
 
 <h2>En qué me equivoqué con nuestro stack</h2>
-<p>Le eché la culpa al «fork». El binario de serving es llama.cpp de era upstream más un cherry-pick de cuatro líneas de reporte HIP. Si algo está roto a 198k, no es un bug secreto del fork.</p>
-<p>Casi abrí un issue upstream de caps ngram. El gauntlet lo mató. <code>--spec-draft-n-max</code> no tapa ngram-mod. <code>--spec-ngram-mod-n-max</code> sí, y nunca lo pusimos. Nuestra config. Su flag. El gauntlet se queda obligatorio.</p>
-<p>Tres reviews más un pase de código no pudieron clavar estas celdas en un bug de verificación del serving stack. El speculative decode se ve como que está chequeando tokens como debe. La cuenca se ve a nivel de modelo. Eso es eliminación, no prueba del mecanismo. Todavía tengo un rerun spec-off en la lista. No lo he corrido.</p>
+<p>Le eché la culpa al «fork». Después a GDN. El hueco que sí pudimos nombrar fue llama.cpp <code>c7d8722</code> (incoherencia de host-buffer en esta iGPU). El mismo revert que devolvió la visión devolvió los IDs a contexto profundo. Primero el issue tracker, después otro mapa. Esa es la cacería. Casi abrí un issue upstream de caps ngram; el gauntlet lo mató. <code>--spec-draft-n-max</code> no tapa ngram-mod. <code>--spec-ngram-mod-n-max</code> sí, y nunca lo pusimos. Nuestra config. Su flag.</p>
+<p>No voy a escribir «sin pérdida de calidad a contexto clase 200k» con celdas n=1. Nos ganamos «retrieval exacto a seis profundidades en este binario arreglado, esta semilla, este formato». Eso es todo.</p>
 
 <h2>Esta noche</h2>
-<p>Renombré los labels del log. «Miss» se jubila para estas celdas. Son salidas de plantilla degenerada. Quien copie el sweep debería loguearlas así, o va a «arreglar retrieval» que nunca reportó falla.</p>
-<p>Logs crudos: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> en el repo <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>.</p>
-<p><small>Condiciones: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unificados), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, ventana 262.144 tokens, K+V q4_0 (control q8_0 en la misma aguja), temperature 0, prompt_tokens 198.227 reportados por el server, n=1 por profundidad, seed s4419, 2026-08-18. Una noche. Un mapa. No una ley.</small></p>
+<p>El título viejo se queda en la URL para que se encuentre la corrección. El claim en vivo es la inversión: la cuenca era un bug. Visión: <a href="/es/blog/lab-notes-llamacpp-revert">ya revertimos <code>c7d8722</code> en público</a>. Esta es la mitad de texto/retrieval del mismo commit.</p>
+<p>Logs crudos: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/needle-format-2026-08-19" rel="noopener">results/needle-format-2026-08-19</a> (remap) y <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> (noche contaminada) en <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>.</p>
+<p><small>Condiciones: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unificados), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm post-revert <code>c7d8722</code>, ventana 262.144 tokens, K+V q4_0, temperature 0, prompt_tokens ~198.227 reportados por el server, n=1 por profundidad, seed s4419. Una curva. Un mapa. No una ley.</small></p>
 """,
     },
     "lab-notes-the-kv-verdict": {
