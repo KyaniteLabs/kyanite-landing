@@ -80,3 +80,20 @@ class AgentDiscoveryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_a2a_accepts_current_spec_message_send():
+    """The /a2a/v1 endpoint accepts message/send, not just legacy SendMessage."""
+    import pytest
+
+    flask_app = pytest.importorskip("app")
+    client = flask_app.app.test_client()
+    resp = client.post(
+        "/a2a/v1",
+        json={"jsonrpc": "2.0", "id": 1, "method": "message/send", "params": {"message": {"role": "user", "parts": [{"kind": "text", "text": "hello"}]}}},
+        content_type="application/json",
+    )
+    assert resp.status_code == 200
+    body = resp.get_json()
+    assert body["jsonrpc"] == "2.0"
+    assert "result" in body
