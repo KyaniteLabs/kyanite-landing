@@ -107,6 +107,8 @@ AGENT_CARD = {
             "id": "public-product-discovery",
             "name": "Public product discovery",
             "description": "Locate KyaniteLabs public tools, repositories, products, and build notes — including Kinocut (video editing), PuenteWorks (operations consulting), and Cerafica (ceramics).",
+            "tags": ["portfolio", "directory", "kinocut", "puenteworks", "cerafica", "ai-tools", "video-editing", "consulting", "ceramics"],
+            "examples": ["What products does KyaniteLabs build?", "Find the video editing tool", "Where is the ceramics shop?"],
         },
         {
             "id": "implementation-fit-routing",
