@@ -112,6 +112,8 @@ AGENT_CARD = {
             "id": "implementation-fit-routing",
             "name": "Implementation fit routing",
             "description": "Route a stated need to public implementation guidance without submitting a form.",
+            "tags": ["routing", "implementation", "guidance", "ai-agents", "mcp", "local-ai"],
+            "examples": ["I need to automate video repurposing locally", "How do I set up a private AI stack?"],
         },
     ],
 }
@@ -326,7 +328,7 @@ def a2a_endpoint():
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict) or payload.get("jsonrpc") != "2.0" or "id" not in payload:
         return _mcp_error(payload.get("id") if isinstance(payload, dict) else None, -32600, "Invalid Request"), 400
-    if payload.get("method") != "SendMessage":
+    if payload.get("method") not in {"SendMessage", "message/send"}:
         return _mcp_error(payload.get("id"), -32601, "Method not found")
     message = (payload.get("params") or {}).get("message")
     if not isinstance(message, dict) or not _a2a_text(message):
