@@ -441,6 +441,7 @@ class LandingSmokeTests(unittest.TestCase):
 
     def test_lab_notes_spanish_copies_are_first_class(self) -> None:
         slugs = [
+            "lab-notes-livecodebench-30",
             "lab-notes-llamacpp-revert",
             "lab-notes-humaneval-93",
             "lab-notes-cant-forget",
@@ -449,6 +450,7 @@ class LandingSmokeTests(unittest.TestCase):
             "lab-notes-verdict-night",
         ]
         expected_h1 = {
+            "lab-notes-livecodebench-30": "Notas de lab: 67% LiveCodeBench-30 en un rig de $1.400",
             "lab-notes-llamacpp-revert": "Notas de lab: revertimos una regresión de llama.cpp",
             "lab-notes-humaneval-93": "Notas de lab: 93% HumanEval en un rig de $1.400",
             "lab-notes-cant-forget": "Notas de lab: el modelo que no puede olvidar pero no puede recordar",
@@ -473,6 +475,18 @@ class LandingSmokeTests(unittest.TestCase):
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
+                if slug == "lab-notes-livecodebench-30":
+                    self.assertIn("20/30 = 67%", en_html)
+                    self.assertIn("[49%, 81%]", en_html)
+                    self.assertIn("$1,400", en_html)
+                    self.assertIn("easy 10/10", en_html)
+                    self.assertIn("lcb-30-2026-08-20", en_html)
+                    self.assertIn("not the official full-set", en_html)
+                    self.assertNotIn("90.3", en_html)
+                    self.assertNotIn("degenerate basin", en_html.lower())
+                    self.assertIn("20/30 = 67%", es_html)
+                    self.assertIn("$1.400", es_html)
+                    self.assertNotIn("HORIZON-TEST", en_html)
                 if slug == "lab-notes-llamacpp-revert":
                     self.assertIn("5/6", en_html)
                     self.assertIn("c7d8722", en_html)

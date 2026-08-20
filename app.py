@@ -550,6 +550,28 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+        "slug": 'lab-notes-livecodebench-30',
+        "title": "Lab Notes: 67% LiveCodeBench-30 on a $1,400 rig",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-20',
+        "date_modified": '2026-08-20',
+        "read_time": '4 min',
+        "primary_keyword": 'LiveCodeBench Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": "Lab Notes: 20/30 = 67% LiveCodeBench-30 (CI 49-81%) on a $1,400 mini-PC",
+        "meta_description": "20/30 = 67% LiveCodeBench-30 best-per-problem on Qwen3.8-27B Q4_K_XL. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1,400. Not the official full-set card.",
+        "excerpt": "20/30 = 67% LiveCodeBench-30 on a $1,400 mini-PC. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. n=30 public subset. Not the card.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p>The number first: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem across labeled arms, on a <strong>$1,400</strong> GMKtec EVO-X2. Wilson 95% CI <strong>[49%, 81%]</strong>. Always cite the interval. n=30 is small; the interval is the honest number.</p>
+<p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Champion: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, livecodebench v6 public cases only, stratified 10/10/10, seed 20260820.</p>
+<p>A single-config cell (2048 tokens, thinking off) landed 13/30, with a reproduction at 14/30 and 25/30 per-problem agreement. That is a <strong>&plusmn;2-problem noise floor at temp 0</strong>. Do not treat one run as exact.</p>
+<p>Thinking: on the 15 problems where no-thinking produced no code at 4096 tokens, thinking (budget 2048) rescued 5. Hard items leak prose that starves the code. On HumanEval-30, thinking bought nothing (28/30 identical). Citable line: reasoning pays exactly where tasks are hard, nothing where they are easy.</p>
+<p>This is not the official full-set LiveCodeBench card. Different instrument: we ran a 30-problem public subset at Q4 on this box. Band-check only, and say so.</p>
+<p>Contamination caveat: v6 problems (~May 2025) predate the model. If anything the number is inflated versus a clean window. The hard-split finding is the conservative-safe part.</p>
+<p>Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/lcb-30-2026-08-20" rel="noopener">results/lcb-30-2026-08-20</a>.</p>
+""",
+    },
+{
         "slug": 'lab-notes-llamacpp-revert',
         "title": "Lab Notes: we reverted a llama.cpp regression",
         "category": 'Local LLM / Benchmarks',
@@ -1398,6 +1420,24 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
+    "lab-notes-livecodebench-30": {
+        "title": 'Notas de lab: 67% LiveCodeBench-30 en un rig de $1.400',
+        "category": 'LLM local / Benchmarks',
+        "primary_keyword": 'LiveCodeBench Qwen3.8-27B Q4_K_XL Strix Halo',
+        "seo_title": 'Notas de lab: 20/30 = 67% LiveCodeBench-30 (IC 49-81%) en un mini-PC de $1.400',
+        "meta_description": '20/30 = 67% LiveCodeBench-30 best-per-problem en Qwen3.8-27B Q4_K_XL. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1.400. No es la card oficial del set completo.',
+        "excerpt": '20/30 = 67% LiveCodeBench-30 en un mini-PC de $1.400. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. Subset n=30. No es la card.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p>El número primero: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem entre brazos etiquetados, en un GMKtec EVO-X2 de <strong>$1.400</strong>. IC Wilson 95% <strong>[49%, 81%]</strong>. Cita siempre el intervalo. n=30 es chico; el intervalo es el número honesto.</p>
+<p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Campeón: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, casos públicos livecodebench v6, estratificado 10/10/10, semilla 20260820.</p>
+<p>Una celda de un solo config (2048 tokens, thinking off) dio 13/30, reproducción 14/30, acuerdo per-problem 25/30. Eso es un <strong>piso de ruido de &plusmn;2 problemas a temp 0</strong>. No trates una corrida como exacta.</p>
+<p>Thinking: en los 15 problemas donde no-thinking no produjo código a 4096 tokens, thinking (presupuesto 2048) rescató 5. En hard, la prosa se come el código. En HumanEval-30 thinking no compró nada (28/30 idéntico). Línea citable: el razonamiento paga exactamente donde la tarea es dura, nada donde es fácil.</p>
+<p>Esto no es la card oficial de LiveCodeBench del set completo. Otro instrumento: corrimos un subset público de 30 a Q4 en esta caja. Solo chequeo de banda, y dilo.</p>
+<p>Caveat de contaminación: los problemas v6 (~mayo 2025) son anteriores al modelo. Si acaso el número está inflado contra una ventana limpia. El hallazgo del split hard es la parte conservadora.</p>
+<p>Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/lcb-30-2026-08-20" rel="noopener">results/lcb-30-2026-08-20</a>.</p>
+""",
+    },
     "lab-notes-llamacpp-revert": {
         "title": 'Notas de lab: revertimos una regresión de llama.cpp',
         "category": 'LLM local / Benchmarks',
