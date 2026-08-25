@@ -11,6 +11,14 @@
   <meta property="og:description" content="{{ post.get('meta_description', post.excerpt) }}">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kyanitelabs.tech/blog/{{ post.slug }}">
+  <meta property="og:image" content="{{ post.get('og_image', 'https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png') }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="KyaniteLabs — {{ post.get('seo_title', post.title) }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ post.get('seo_title', post.title) }} — KyaniteLabs">
+  <meta name="twitter:description" content="{{ post.get('meta_description', post.excerpt) }}">
+  <meta name="twitter:image" content="{{ post.get('og_image', 'https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png') }}">
   <link rel="canonical" href="https://kyanitelabs.tech/blog/{{ post.slug }}">
   <link rel="alternate" type="text/plain" title="KyaniteLabs AI-readable brief" href="https://kyanitelabs.tech/llms.txt">
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
@@ -29,6 +37,7 @@
         "dateModified": "{{ post.get('date_modified', post.date) }}",
         "inLanguage": "en-US",
         "keywords": "{{ post.get('primary_keyword', '') }}",
+        "image": {"@type": "ImageObject", "url": "{{ post.get('og_image', 'https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png') }}", "width": 1200, "height": 630},
         "author": {
           "@type": "Person",
           "name": "Simon Gonzalez De Cruz",
