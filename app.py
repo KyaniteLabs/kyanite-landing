@@ -85,7 +85,7 @@ ADMIN_API_PATHS = {
 }
 CONTENT_SECURITY_POLICY = "; ".join([
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
+    "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://puenteworks.com https://app.posthog.com https://us.i.posthog.com https://*.posthog.com",
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     "font-src 'self' https://fonts.gstatic.com",
     "img-src 'self' data: https:",
@@ -550,6 +550,303 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+    "slug": 'two-models-one-mini-pc-paired-numbers',
+    "title": 'Two models, one $1,400 mini-PC: the paired numbers, failures included',
+    "category": 'Local AI Infrastructure',
+    "date": '2026-08-25',
+    "date_modified": '2026-08-25',
+    "read_time": '8 min',
+    "primary_keyword": 'run two local llms on one mini pc paired benchmark',
+    "seo_title": 'Two Local Models on One $1,400 Mini-PC: Paired Benchmarks, Failures Included',
+    "meta_description": 'A 27B daily driver and a 35B reasoning model resident together on one AMD Strix Halo mini-PC. Every number paired, same problems, same machine. Failures and wrong turns included, raw logs cited.',
+    "excerpt": 'A 35B reasoning model now runs shoulder to shoulder with our daily 27B on one $1,400 box, at the same time. Every number paired, same problems, same machine. The failures are in here too.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. 2026-08-25. Every number below was re-read from raw result files on this machine before writing.</small></p>
+<p><strong>We run a small AI lab on hardware that fits under a TV: one AMD Strix Halo mini-PC with 64GB of shared memory.</strong> A Qwen3.8-27B has been our main model and daily engine here since mid-August. This week we asked a harder question: can this same box also run Ornith-1.5-35B, a bigger open-weights model, at the same time, and is it actually any good when you measure it fairly?</p>
+<p>The answer is yes, with three caveats. Here is everything, including what failed. One number below was first measured wrong by our own tool. Story at the end.</p>
+<h2>The setup</h2>
+<p>One machine. Two models, resident at the same time, no switching:</p>
+<ul>
+<li><strong>Qwen3.8-27B</strong> (our "champion", serving the product): 262k context, vision attached.</li>
+<li><strong>Ornith-1.5-35B-A3B</strong> (the newcomer, thinking-on lane): a Mixture-of-Experts build that only activates ~3B parameters per token. We run an APEX-Compact quantization at 17.4GB. Together the two models use 43.4 of 64GB, with about 20GB to spare.</li>
+</ul>
+<p>That "to spare" matters: this only fits because of a memory trick we checked (see below). The stock quant at ~22GB also fits, but with less headroom.</p>
+<h2>The scoreboard, every number paired, same problems, same machine</h2>
+<p>We never compare two numbers that came from different places. Both models ran the same fixed problem sets, back to back, on the same box:</p>
+<table>
+<thead><tr><th>Test</th><th>Champion 27B</th><th>Ornith 35B</th><th>Read</th></tr></thead>
+<tbody>
+<tr><td>Grade-school math (GSM8K, strict grading, paired 2&times;2, same 60 problems, n=60/cell)</td><td><strong>96.7%</strong> thinking off; <strong>96.7%</strong> thinking on (identical outcomes, McNemar p=1.0)</td><td><strong>90.0%</strong> thinking off; <strong>98.3%</strong> thinking on (p=0.0625, marginal at n=60)</td><td>At each model's best config: a one-problem tie (p=1.0). Thinking costs the champion 2.4&times; time for zero gain; Ornith needs it</td></tr>
+<tr><td>Code, clean problems (HumanEval, same frozen 30)</td><td>28/30</td><td>26/30</td><td>Tie within noise</td></tr>
+<tr><td>Code, real-world (LiveCodeBench, same 30)</td><td>20/30</td><td>17/30</td><td>Slight edge champion, not decisive at n=30</td></tr>
+<tr><td>Vision, same 6 real screenshots</td><td>6/6</td><td>5/6</td><td>Ornith misread an email address in a form (typo'd the domain)</td></tr>
+</tbody>
+</table>
+<p>If you only remember one row: <strong>a 35B reasoning model now runs shoulder to shoulder with our daily driver on this class of hardware.</strong> Until paired measurements like this, that was a forum argument.</p>
+<h2>The three caveats</h2>
+<ol>
+<li><strong>Thinking is a dial, not a model gap.</strong> Measured paired (2&times;2, same problems, same protocol): the champion scores 96.7% with thinking off AND on (identical outcomes, p=1.0), so its thinking switch buys nothing here at 2.4&times; the time. Ornith scores 90.0% without thinking and 98.3% with it. At best configs the two models tie within one problem (p=1.0). Earlier numbers that compared Qwen thinking-off against Ornith thinking-on were regime-mismatched; this paired table is the truth and it replaces them.</li>
+<li><strong>Code is a tie, not a win.</strong> 26/30 vs 28/30 on identical problems is within noise. We will not claim a code champion from this data.</li>
+<li><strong>Vision has one miss.</strong> On a real signup-form screenshot, Ornith returned an email with the domain misread. That is a wrong answer, not a near-miss. Our champion got all 6. Small sample, labeled: 5/6.</li>
+</ol>
+<h2>What did NOT work (the part few publish)</h2>
+<p>We tested speculative decoding two ways, because it promised free speed:</p>
+<ul>
+<li>The <strong>trained draft head</strong> shipped in APEX builds: accepted only ~33% of draft tokens, and made generation ~9% <em>slower</em> end to end. Dead on this hardware, measured, twice.</li>
+<li>An <strong>improvised draft</strong>: same ~33% class. Same verdict.</li>
+</ul>
+<p>Speculative decoding is a memory-bandwidth trick, and this machine's bandwidth goes to the two resident models. The right setting is OFF, and anyone running a similar box should start there instead of paying our discovery cost.</p>
+<h2>The memory trick that made it fit</h2>
+<p>The APEX-Compact build packs the 35B into 17.4GB (vs ~22GB stock at the same Q4 quality tier). We could not measure a quality cost at these sample sizes: grade-school math 95.0% vs 96.7% stock on n=60, and identical results on a 15-problem code reasoning set. That ~4.3GB saving is the difference between "one model at a time" and "both models always on," which is the whole point of the machine.</p>
+<h2>Speed, labeled</h2>
+<ul>
+<li><strong>Writing a long answer:</strong> ~55 tokens/second sustained. A 200-word reply lands in about 6-7 seconds. A full thinking run on a hard problem: minutes.</li>
+<li><strong>Reading long documents (prefill):</strong> we ingested 130,715 tokens, a whole book, in 359 seconds (~364 tokens/second), with the chip at 72&deg;C the whole way. Long-context work is where this MoE build earns its keep.</li>
+</ul>
+<h2>Our settings card (if you have the same box)</h2>
+<p>Greedy decoding (temperature 0), q4_0 KV cache, speculative decoding OFF, APEX-Compact Q4 weights, math budget 2048 tokens, hard-code budget 8192 (2/30 problems still hit the cap, labeled, not hidden). Nothing here is exotic; all of it was measured against at least one alternative on this machine before we kept it.</p>
+<h2>Why publish all of it</h2>
+<p>Most "I ran a big model locally" posts show one screenshot and one tokens-per-second number. We think the valuable artifact is the paired, same-fixture table with the failures included, including the run where our own grading tool truncated the model's output and briefly told us the model was bad at math (0.467). It wasn't; our instrument was wrong. That difference is visible in the two saved configs. Same problems: 0.967. Both JSONs are cited below, because the instrument should be suspect as often as the model.</p>
+<p><small>Sources (raw result files, on-box paths): GSM8K paired 2&times;2 <code>~/exp/2x2-gsm8k/summary.json</code> (champ 58/60 both cells; orn 54/60 off, 59/60 on; McNemar p=1.0/0.0625/1.0; median walls 28.3/68.5/11.4/23.3s; run 2026-08-24T19:42Z, live doors, self-test read before scoring). GSM8K Ornith stock corrected <code>~/exp/w1-35b/gsm-full-b/Ornith35B/results_2026-08-22T01-26-41.json</code> (strict 0.9667); the false start <code>results_2026-08-22T01-00-27.json</code> (strict 0.4667, instrument truncation). APEX-Compact <code>~/exp/w4-35b/gsm-run.log</code> (0.9500). HumanEval-30 Ornith <code>~/exp/w1-35b/bench-results-default.log</code> (26/30); champion 28/30 (<code>~/exp/bench-results-default.log</code>, verified 2026-08-24). LiveCodeBench-30 Ornith <code>~/exp/w3b-35b/verdict.txt</code> (17/30, trunc 2/30); champion 20/30 (recorded in the comparison design doc, READ; result bytes not yet located, labeled). LCB-15 parity <code>~/exp/w4-35b/lcb15-run.log</code> (7/15, identical to stock). Vision real-UI: Ornith <code>~/exp/vision35b-results.log</code> (5/6); champion <code>~/exp/vision-real-results.log</code> (6/6). Decode speed <code>~/exp/w4-fire.log</code> (no-spec 55.9 tok/s; spec slower 50.4 vs 55.2, paired, same binary). Prefill <code>~/exp/ornith-window-results.log</code> (wall=359s, 130,715 tokens, 72&deg;C). Speculative acceptance ~0.33: window-4 banked comparators. Memory: APEX-Compact 17.4GB weights; dual-resident 43.4/64GB GTT (live readback 2026-08-23). Regime note: earlier champion GSM8K readings of 70% strict and 98% predate the paired protocol and are superseded by the 2&times;2 for this piece.</small></p>
+""",
+},
+{
+    "slug": 'how-i-became-a-forward-deployed-engineer',
+    "title": "How I became a forward deployed engineer without a software engineer title",
+    "category": 'Forward Deployed Engineering',
+    "date": '2026-08-24',
+    "date_modified": '2026-08-24',
+    "read_time": '6 min',
+    "primary_keyword": 'how to become a forward deployed engineer without degree',
+    "seo_title": "How I Became a Forward Deployed Engineer Without a Software Title",
+    "meta_description": 'No software engineer title, no AI lab on my resume. Twelve years deploying enterprise systems plus public, measured AI work is the whole path. Artifacts included.',
+    "excerpt": 'The title is new; the work is old. Twelve years of enterprise deployments plus public, measured AI work. The honest path, artifacts included.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The honest version, no resume inflation.</small></p>
+<p><strong>You do not need a software engineer title to do forward deployed work, and my path is the proof.</strong> I hold no FDE badge from an AI lab. What I have is twelve years of deploying enterprise systems for real organizations, then a period of building and measuring AI on my own hardware with everything published. That combination is the job. This post is the path exactly as it happened, with the artifacts, and without inventing anything.</p>
+<p>Let me be precise about what I am not claiming, because this industry runs on inflated claims. I was never employed as a software engineer. I never worked at Palantir or an AI lab. If you want those lines on a resume, this is not your post. If you want to do the work and be findable by it, it is.</p>
+<h2>Phase one: twelve years of deployments nobody called FDE</h2>
+<p>Enterprise learning systems: Workday, SuccessFactors, Cornerstone, for organizations of more than 8,000 people. That work was forward deployment in everything but name. Configuration for a real customer's strange requirements. Integrations with whatever systems already existed. Data migrations where an error means a person's training record disappears. Rollout, training, and then ownership in production, for years.</p>
+<p>The transferable skills from that world: reading a messy real workflow and finding where it actually breaks, writing for non-engineers, and treating go-live as the beginning, not the end. If you have done this kind of work in ERP, CRM, medical systems, or industrial software, you already have phase one. You just have not labeled it.</p>
+<h2>Phase two: own the whole stack, then measure it</h2>
+<p>The modern version of the job needs AI-specific skills. I built them in public, on my own hardware, because that removes every excuse. The rig is a $1,400 GMKtec EVO-X2 mini-PC running a 27B model locally. Everything below is linked and reproducible.</p>
+<ul>
+<li><strong>Serving in production.</strong> The model runs always-on with watchdogs, restart recovery, and queue discipline. The complete measured serving story, with the upstream llama.cpp bug we caught, bisected, and validated the fix for, is <a href="/blog/qwen-27b-strix-halo-complete">on this blog</a>.</li>
+<li><strong>Benchmarking with intervals.</strong> <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81). Published with conditions, seeds, and raw logs.</li>
+<li><strong>An eval with my name on it.</strong> <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>: 495 trials, 29 cells, certified floors, a sabotage cell, walk-away certification. This artifact does more work than any title. Details in <a href="/blog/evals-are-the-fde-skill">evals are the FDE skill nobody lists</a>.</li>
+<li><strong>Shipped open source people actually use.</strong> A video-editing MCP server, <a href="https://github.com/simongonzalezdc" rel="noopener">Kinocut</a>, with merged upstream contributions. Integration glue is the daily texture of forward deployed work.</li>
+</ul>
+<h2>The exact recipe, if you want to copy it</h2>
+<p>Step one: take a domain where you already know what "working" means. Step two: buy or rent hardware you control, or use cloud if you must, and run a real model workload on it. Step three: measure something honestly and publish the number with its interval and its conditions. Step four: build an eval for a decision someone actually makes. Step five: keep the system running unattended and write down what breaks.</p>
+<p>Do those five things and you will have what interviewers for these roles are actually probing for: evidence you can find the leverage point, build with evals, and own it in production. None of the five steps requires a title. All of them produce artifacts with your name on them.</p>
+<h2>The honest gaps</h2>
+<p>What this path does not give you: the internal referral networks of a big lab, experience with frontier-scale training runs, and the specific brand names that recruiters filter on. Those are real costs and I will not pretend otherwise. The compensation is that everything you claim is checkable, and the buyers who care about checkable are the buyers worth having.</p>
+<p>Start with the series: <a href="/blog/what-does-a-forward-deployed-engineer-do">what a forward deployed engineer actually does</a>, <a href="/blog/fde-title-decoder">the title decoder</a>, and <a href="/blog/evals-are-the-fde-skill">the eval skill</a>.</p>
+<p><small>Want this work done in your environment instead of reading about it? <a href="/implementation/intake">Implementation intake</a>. Every artifact cited: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a> (evals), <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a> (serving), <a href="https://github.com/simongonzalezdc" rel="noopener">simongonzalezdc</a> (Kinocut and other repos). Conditions for all numbers: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp.</small></p>
+""",
+},
+{
+    "slug": 'evals-are-the-fde-skill',
+    "title": "Evals are the FDE skill nobody lists: my 495-trial public benchmark",
+    "category": 'Forward Deployed Engineering',
+    "date": '2026-08-24',
+    "date_modified": '2026-08-24',
+    "read_time": '7 min',
+    "primary_keyword": 'AI evaluation benchmark LLM evals',
+    "seo_title": "Evals Are the FDE Skill Nobody Lists (495-Trial Public Benchmark)",
+    "meta_description": 'Every AI deployment eventually asks one question: can you trust it with real work? Evals answer it with numbers. My 495-trial benchmark is open source, with certified floors.',
+    "excerpt": 'The market says it cannot find people who can build AI evals. The skill is learnable and I published mine: 495 trials, certified floors, sabotage cell, open source.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The case for evals as the core forward deployed skill, proven on a public artifact.</small></p>
+<p><strong>Evals are the one forward deployed engineering skill the market says it cannot find, and almost no job posting lists it.</strong> An eval is a test you build that answers the only question a customer eventually asks: can I hand this system real work and walk away? If you can design that test, run it honestly, and report it with exact statistics, you can de-risk any AI deployment. That is the whole job in one skill. Mine is public: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>, 495 trials, open source. This post walks through what it measures and why the design is the part worth copying.</p>
+<p>First, why evals and not prompting or fine-tuning. Those are model-side skills. The forward deployed engineer sits on the other side of the model, where the questions are: which of this customer's jobs can this system take over, how reliably, and what happens when it fails. Vibes cannot answer that. Leaderboards cannot either, because they test the model in the abstract, not inside your workflow. Only an eval composed for the real decision answers it.</p>
+<h2>What the benchmark measures</h2>
+<p>delegation-bench asks one question: which of the operator's real jobs can be safely delegated to a local AI, consistently? Nine job classes taken from actual work: code, debugging, document search, summarization, data extraction, translation, chained reasoning, decisions, and safety. Each class runs size ladders, meaning small, medium, and large versions of the task. The tests are hidden: the system under test never sees them. The sealed holdout sets will never be published, and that is what keeps our own green honest.</p>
+<p>The design was <strong>pre-registered</strong>: published before any run, so nothing could be tuned after the fact. If you are building an eval for a customer, pre-registration is the trust move. It converts "trust me" into "I committed in writing first."</p>
+<h2>The numbers</h2>
+<p><strong>495 trials across 29 cells.</strong> Every capability cell passed 20/20, with certified floors of 81.9 to 86.1 percent. Eight cells earned walk-away certification, meaning 35/35 or 30/30 untouched confirmation trials, with floors of 90.5 to 91.8 percent: code, debugging, document search, reasoning, decisions, vision charts, vision terminals. "Certified floor" means exact Clopper-Pearson statistics: "at least 90.5 percent reliable," not "felt solid."</p>
+<p>There is a sabotage cell: a planted bad instruction that the system must refuse. And a decision table where every green carries its floor printed on it, so a non-engineer can read the verdict without knowing what a confidence interval is.</p>
+<h2>The part everyone skips: judging the judge</h2>
+<p>The hardest layer of an eval is not testing the model. It is testing your grader. Our first automated judges failed two cells. Reading the raw answers showed the model was right and our judges were wrong. One broke on a Spanish accent. One could not tell "mentioned the false number in order to reject it" from "repeated it as fact." Both bugs are now permanent regression cases in the repo.</p>
+<p>This is the skill in one story. A customer's deployment "fails" and the question is: model, pipeline, or measurement? The eval builder is the person who can answer, because they built all three layers and tested each. When long context and vision silently broke on my rig, the eval discipline was what caught it: bisected to one upstream llama.cpp commit, reported as <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed and validated 9/9 paired. Without evals, that failure is invisible until a customer finds it.</p>
+<h2>The honest misses, published</h2>
+<p>Giant documents around 130k tokens are impractical on this rig. The ceiling is measured and the product now fast-fails with an estimate instead of hanging. Tiny-text transcription drops one letter in long email addresses: 12/15, labeled as such. Publishing the misses is not a weakness in an eval. It is the eval.</p>
+<h2>How to start building this skill</h2>
+<p>Pick one repeated task you actually do. Write ten test cases with answers you would stake money on. Run the system, grade blind, count honestly, and compute a floor (20/20 means at least about 82 percent, 30/30 at least about 90 percent). You now have the seed of everything I described. The full method, the statistics, and the code are in <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">the repo</a>.</p>
+<p>Related reading: <a href="/blog/what-does-a-forward-deployed-engineer-do">what a forward deployed engineer actually does</a> and <a href="/blog/how-i-became-a-forward-deployed-engineer">how I became one without a software title</a>.</p>
+<p><small>Need evals like this for a deployment you are responsible for? <a href="/implementation/intake">Implementation intake</a>. Conditions: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp, tested through the real product (tokflint/tokpal). Exact stats: Clopper-Pearson floors, Holm correction across cells. Everything public except the sealed holdouts.</small></p>
+""",
+},
+{
+    "slug": 'fde-title-decoder',
+    "title": "Forward deployed vs solutions engineer vs implementation vs customer engineer: the title decoder",
+    "category": 'Forward Deployed Engineering',
+    "date": '2026-08-24',
+    "date_modified": '2026-08-24',
+    "read_time": '6 min',
+    "primary_keyword": 'forward deployed engineer vs solutions engineer',
+    "seo_title": "FDE vs Solutions Engineer vs Implementation vs Customer Engineer",
+    "meta_description": 'These four titles describe mostly one job with different coding bars and different owners. A working decoder: what changes, what does not, and three questions that reveal the real role.',
+    "excerpt": 'Four titles, one job family, different coding bars. A decoder that reads any posting and tells you what you are actually signing up for.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Written for people comparing offers or postings at 1am.</small></p>
+<p><strong>These four titles describe mostly the same job: an engineer who sits close to the customer and makes the product work inside the customer's reality.</strong> What actually differs is the coding bar, where you sit in the sales funnel, and who owns the outcome after launch. At many companies the titles are interchangeable. At a few, they are different careers. This post gives you the decoder: what each title signals, what does not change, and the three questions that reveal what a posting really wants.</p>
+<p>A note on stakes: the AI labs are hiring forward deployed engineers aggressively right now, and enterprises are starting to demand the same shape for AI that touches banks, insurers, and airlines. Title inflation is guaranteed. The decoder matters more than the name.</p>
+<h2>The one-paragraph version of each title</h2>
+<p><strong>Forward deployed engineer (FDE):</strong> the engineer embedded with the customer's hardest real problem. Ships production code into the customer's environment, builds the evals that prove it works, and stays until it runs unattended. Highest coding bar of the four. The title comes out of Palantir and is now standard at the AI labs.</p>
+<p><strong>Solutions engineer:</strong> the technical half of a sales motion. Runs demos, answers deep technical questions, builds proof-of-concepts, and unblocks evaluations. Coding happens, but the deliverable is the deal. You sit before the sale.</p>
+<p><strong>Implementation engineer:</strong> the engineer who executes a defined rollout. The scope exists, the contract is signed, your job is configuration, integration, data migration, and go-live. Deep in the last mile, narrower in scope than an FDE, and usually no sales pressure.</p>
+<p><strong>Customer engineer:</strong> the post-sale technical counterpart. Health checks, escalations, enablement, and a lot of "why is it slow this week." Closest to support of the four, with real engineering when escalations go deep. Google and several infrastructure companies use this name.</p>
+<h2>The table</h2>
+<table>
+<thead><tr><th></th><th>Forward deployed</th><th>Solutions</th><th>Implementation</th><th>Customer</th></tr></thead>
+<tbody>
+<tr><td>Where you sit</td><td>Inside the hardest problem</td><td>Before the sale</td><td>After the sale, during rollout</td><td>After go-live</td></tr>
+<tr><td>Coding bar</td><td>Highest, production code</td><td>Medium, demos and POCs</td><td>Medium, configs and integrations</td><td>Medium, escalations</td></tr>
+<tr><td>Typical deliverable</td><td>Working system plus evals</td><td>Closed deal</td><td>Go-live</td><td>Retained account</td></tr>
+<tr><td>Evals in the job?</td><td>Core skill</td><td>Unblocks the buyer's eval</td><td>Sometimes</td><td>Rarely</td></tr>
+<tr><td>Pager?</td><td>Often yes</td><td>No</td><td>Go-live windows</td><td>Escalation rotation</td></tr>
+<tr><td>You will like it if you want...</td><td>Hard, messy, real problems</td><td>Variety and velocity</td><td>Finish lines</td><td>Long relationships</td></tr>
+</tbody>
+</table>
+<h2>What does not change across all four</h2>
+<p>You translate between two languages: the customer's workflow and the product's machinery. That skill is identical in every variant. So is the need to write plainly for people who are not engineers. If you have that translation muscle from any deploy-it-in-the-real-world job, you can move between these titles. I spent twelve years doing this shape of work in enterprise learning systems, Workday, SuccessFactors, Cornerstone, for organizations of 8,000+ people. The title on my badge was never any of these four. The work was.</p>
+<h2>The three questions that decode any posting</h2>
+<p><strong>Question one: who writes code, me or the product team?</strong> If the answer is "you, in the customer's repo," it is an FDE job whatever the title says. If it is "you configure what exists," it is implementation.</p>
+<p><strong>Question two: who owns the number?</strong> After launch, someone is accountable for the system actually working. If it is you, you are forward deployed. If it is sales, you are solutions. If it is support, you are customer engineering.</p>
+<p><strong>Question three: where is the pager?</strong> Follow the on-call rotation. It tells you the truth about the role faster than any job description.</p>
+<h2>How to prove you can do it, whatever the title</h2>
+<p>Every variant of this job interview asks the same thing in different words: show me you made something real work somewhere hostile. The strongest artifact you can carry is an eval with your name on it. Mine is public: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>, 495 trials, certified floors, walk-away certification, sabotage cell. It has opened more doors than any title on my resume. Start here: <a href="/blog/what-does-a-forward-deployed-engineer-do">what a forward deployed engineer actually does</a>, and <a href="/blog/how-i-became-a-forward-deployed-engineer">how I became one without a software title</a>.</p>
+<p><small>Part of the FDE series. Need this kind of work in your environment? <a href="/implementation/intake">Implementation intake</a>. Conditions and raw logs for every number cited: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">github.com/KyaniteLabs/delegation-bench</a>.</small></p>
+""",
+},
+{
+    "slug": 'what-does-a-forward-deployed-engineer-do',
+    "title": "What does a forward deployed engineer actually do? A demo on a $1,400 mini-PC",
+    "category": 'Forward Deployed Engineering',
+    "date": '2026-08-24',
+    "date_modified": '2026-08-24',
+    "read_time": '7 min',
+    "primary_keyword": 'what does a forward deployed engineer do',
+    "seo_title": "What Does a Forward Deployed Engineer Do? (Demoed on a $1,400 Mini-PC)",
+    "meta_description": 'A forward deployed engineer ships AI into real environments and owns the last mile. The job demonstrated on a $1,400 mini-PC, with public evals and raw numbers.',
+    "excerpt": 'The straight answer, then the receipts: the whole FDE job run end to end on a $1,400 mini-PC, with public evals.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. A straight answer first, then the receipts.</small></p>
+<p><strong>A forward deployed engineer is the engineer who goes to where the AI has to actually work, and makes it work there.</strong> Not the person who trains the model. The person who takes a model that looks good on a benchmark and turns it into a system a real business can run every day. The job has three parts: find the leverage point in a real workflow, build the smallest thing that moves it, then stay and own it in production. The rest of this post is that sentence unpacked, demonstrated on a mini-PC that costs $1,400.</p>
+<p>The title is loud right now because the AI labs are hiring humans for it as fast as they can. The work is older than the name. Anyone who ever shipped software into a bank branch, a hospital, or a factory floor has done forward deployed work. I did versions of it for twelve years in enterprise learning systems. Now I run the whole job on my own hardware, and every number I will show you is public.</p>
+<h2>Part one: find the leverage point</h2>
+<p>Ten things in a business look automatable. Usually one of them matters. The forward deployed engineer finds it by watching real work, not by reading a pitch deck. The tool for this is measurement, not opinion.</p>
+<p>Here is a measured leverage decision from this desk. Should the local model think by default? We ran it both ways on a fixed problem set. On 40 hard problems, thinking rescued 15 that failed without it. On HumanEval-30, thinking bought nothing: 28/30 either way. So the shipped default is thinking off, with a manual override for hard tasks. That one routing decision saves tokens all day and costs nothing where the work is easy. Full method in <a href="/blog/lab-notes-measured-knees">the measured-knees note</a>.</p>
+<p>Scale that pattern up and you get model routing: work moves across five lanes here, chosen by measured cost and speed, not by brand. Same discipline, bigger surface.</p>
+<h2>Part two: build with evals</h2>
+<p>The customer never asks "is it smart." They ask "can I hand it work and walk away." No leaderboard answers that. So the FDE builds the test that does.</p>
+<p>We built one. It is open source: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>. Nine job classes from real work. Hidden tests the system never sees. A sabotage cell with a planted bad instruction. Certified floors, meaning exact statistics that say "at least this reliable," not vibes. Result on this machine: <strong>495 trials, 29 cells</strong>, every capability cell passed 20/20, and eight cells earned walk-away certification at 35/35 or 30/30 with floors of 90.5 to 91.8 percent. Code, debugging, document search, reasoning, decisions, two vision types: all at the walk-away bar.</p>
+<p>The coding skill underneath that is measurable too: <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset, seed published) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81, always cite the interval) on the same $1,400 box.</p>
+<h2>Part three: own it in production</h2>
+<p>This is the part that separates the title from the demo. The system runs unattended. It is always on, with automated watchdogs, restart recovery, and queue discipline. When it breaks, the FDE is the pager.</p>
+<p>A real production story from this rig: mid-project, long context and vision silently broke. The easy read was "the model got worse." We did not take the easy read. We bisected nights of changes to one upstream llama.cpp commit, reported it as <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix on our silicon with 9/9 identical paired answers. Then we re-ran the frozen benchmarks to confirm nothing moved. That is the job. The <a href="/blog/qwen-27b-strix-halo-complete">full serving story</a> is on this blog with raw logs.</p>
+<h2>The actual FDE skills list</h2>
+<p>People search for "fde skills" and find wish lists. Here is the honest one, each skill proven by an artifact above:</p>
+<ul>
+<li><strong>Evals and basic statistics.</strong> You can prove "at least 90 percent reliable" with exact intervals, or you cannot claim it.</li>
+<li><strong>Integration glue.</strong> The AI never works alone. It sits in a pipeline with document stores, queues, and approvals.</li>
+<li><strong>Environment debugging.</strong> When output turns to garbage, you find the layer that broke. Here it was a host buffer commit, not the model.</li>
+<li><strong>Production ownership.</strong> Watchdogs, restarts, logs, and the willingness to be paged.</li>
+<li><strong>Plain talk with non-engineers.</strong> The decision table ships with floors printed on it so an operator can read "walk away" without knowing what a quant is.</li>
+</ul>
+<h2>What the job is not</h2>
+<p>It is not prompt tricks. It is not a demo that works once on stage. And it is not data science: the FDE ships systems, not notebooks. If you like the last mile more than the lab, this is the job. If you like clean problems, stay near the model.</p>
+<p>Every claim in this post has a raw log or a public repo behind it. That is the standard. Point it at your own machine and see what your floors look like.</p>
+<p><small>Next in this series: <a href="/blog/fde-title-decoder">the FDE title decoder</a> (forward deployed vs solutions vs implementation vs customer engineer) and <a href="/blog/evals-are-the-fde-skill">why evals are the FDE skill nobody lists</a>. Need this kind of work in your environment? <a href="/implementation/intake">Implementation intake</a>. Conditions for every number: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp, raw logs in <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a> and <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">the stack repo</a>.</small></p>
+""",
+},
+    {
+        "slug": 'the-delegation-card',
+        "title": "The Delegation Card: we asked a $1,400 mini-PC to take our jobs",
+        "category": 'Local LLM / Benchmarks',
+        "date": '2026-08-22',
+        "date_modified": '2026-08-25',
+        "read_time": '6 min',
+        "primary_keyword": "local LLM delegation benchmark certified floors Strix Halo",
+        "seo_title": "The Delegation Card: certified walk-away floors for a $1,400 local AI",
+        "meta_description": '965 trials across certified + re-gate runs, 29 cells, 9 job types. Walk-away floors 92.8%. Certified floors, not vibes.',
+        "excerpt": 'Not is-it-smart but can-you-hand-it-work-and-walk-away. 495 certified trials, then re-validated at deeper n after the product changed: 965 total, floors to 92.8%.',
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-22. The complete measured answer.</small></p>
+<p>We ended the 27B story with a <a href="/blog/qwen-27b-strix-halo-complete">frozen, measured machine</a>. The next question was obvious: what work can it actually take over? Not &ldquo;is it smart&rdquo; &mdash; every benchmark answers that. &ldquo;Can you hand it a job and walk away?&rdquo; No published benchmark answers that. So we built one.</p>
+<h2>The method</h2>
+<p>Nine job classes from real work. Size ladders. Hidden tests the system never sees. A sabotage cell with a planted bad instruction. Certified floors &mdash; exact statistics that say &ldquo;at least X percent reliable.&rdquo; A walk-away tier: thirty-five perfect trials before any cell earns the &ldquo;leave it alone&rdquo; stamp.</p>
+<p>The benchmark is <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">open source</a>. The sealed test sets never publish.</p>
+<h2>The results</h2>
+<p><strong>495 trials, 29 cells.</strong> Every capability cell passed 20/20 (floors 81.9-86.1%). Eight cells earned walk-away certification at 35/35 or 30/30 (floors 90.5-91.8%).</p>
+<p>Code: 20/20 at every size. Debugging: 20/20. Document search: 20/20. Trap-bait summaries: 20/20. Data extraction: 20/20. Translation: 20/20. Chained reasoning: 20/20. Decisions: 20/20. Safety: 20/20. Vision: 15/15 on five of six types.</p>
+<h2>Walk-away certification</h2>
+<p>Eight cells each ran fifteen additional untouched confirmation trials. Every single one passed: <strong>code 35/35, debugging 35/35, document search 35/35, reasoning 35/35, decisions 35/35, vision charts 30/30, vision terminals 30/30.</strong> Certified floors: at least 90.5-91.8 percent.</p>
+<h2>Re-gate update (2026-08-25): deeper n, stronger floors, one honest yellow</h2>
+<p>The product changed after certification (new front-door work orders, an outage-continuity branch merged to main). So we re-ran the whole benchmark instead of trusting the old card: capability cells at n=25 (350 trials), walk-away confirmations at combined n=40 (90 trials), vision re-gate (30 trials). Total across both runs: <strong>965 trials.</strong></p>
+<p><strong>Capability: 13 of 14 cells green at 25/25, floors 88.7%</strong> (deeper evidence than the certified 20/20). <strong>Walk-away: 6 of 6 cells at 40/40, floors 92.8%</strong> &mdash; up from 90.5-91.8%. Vision re-gate: 5/6 at 5/5, the form cell an honest near-miss (tiny-print OCR class, labeled). One yellow we kept: debug-medium 23/25 &mdash; two genuine misses where the model fixed the described symptom but not the dedup contract. Raw JSONL for everything is in the repo.</p>
+<p>Methods receipt: the re-gate caught our own harness in an attribution race under concurrent load &mdash; it scored an in-flight session&rsquo;s empty interim message as the model&rsquo;s answer. Patched, rescores documented, engine exonerated. The instrument gets audited like the model.</p>
+<h2>The judge story</h2>
+<p>Our first graders failed two cells. Reading the raw answers showed the model was RIGHT &mdash; our judges were wrong. One broke on a Spanish accent. One could not tell &ldquo;mentioned the false number to reject it&rdquo; from &ldquo;repeated it as fact.&rdquo; Both bugs are now permanent regression cases.</p>
+<h2>The honest misses</h2>
+<p>Giant documents (130k tokens) are impractical &mdash; the ceiling is measured; the product now fast-fails with an estimate. Tiny-text transcription: one letter dropped in long email addresses (12/15, labeled).</p>
+<h2>What this proves</h2>
+<p>A complete serving story on hardware anyone can buy, measured through a real product, every number reproducible.</p>
+<p>The card is public. The benchmark is open source. Point it at your own machine.</p>
+<p><small>Conditions: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, tokflint/tokpal. <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">github.com/KyaniteLabs/delegation-bench</a>.</small></p>
+""",
+    },
+    {
+        "slug": 'qwen-27b-strix-halo-complete',
+        "title": "Qwen 3.8 27B on Strix Halo: the complete measured story",
+        "category": 'Local LLM / Serving',
+        "date": '2026-08-21',
+        "date_modified": '2026-08-21',
+        "read_time": '4 min',
+        "primary_keyword": 'Qwen 27B Strix Halo optimal serving config llama.cpp',
+        "seo_title": "Qwen 3.8 27B on Strix Halo: the complete measured serving story",
+        "meta_description": 'Arc closed: exact retrieval at the 262k ceiling, vision fixed and validated upstream, spec verified by paired walls, KV trade measured. $1,400, no cloud, raw logs.',
+        "excerpt": 'Every dial measured, every number public: the frozen optimal config for a 27B on a $1,400 mini-PC.',
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Arc close, 2026-08-21. The whole story, corrected on the record.</small></p>
+<p>We asked a simple question: can a $1,400 mini-PC serve a 27B model the way big rigs do? This note closes the book. Every claim below has a raw log behind it, in the public repo, with its methodology.</p>
+<h2>The rig</h2>
+<p>AMD Strix Halo, 64 GB shared memory, open tooling (llama.cpp), one free Apache-2.0 model. No cloud, no rentals.</p>
+<h2>The ceiling</h2>
+<p>Exact needle retrieval at every tested depth, two seeds, up to <strong>261,130 of 262,144 tokens &mdash; 99.6% of the window</strong>, the literal ceiling. Warm follow-ups on a loaded 198k-token document: exact quote in <strong>23.8s</strong>, yes/no in <strong>10.0s</strong>, one-line summary in <strong>17.5s</strong>. Format does not matter: prose or code, exact either way; described-in-words, every part comes back in order. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
+<h2>The bug we owed you</h2>
+<p>Mid-arc, long-context and vision silently broke on this GPU class. Our first read blamed the model &mdash; wrong. We bisected it to one upstream change (<code>c7d8722</code>), reported it, fixed it locally, and validated the upstream fix on our silicon: <strong>9/9 identical answers, paired</strong>. The correction is in the repo, on the record. Degeneration was the instrument, not the model. Raw: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<h2>The frozen config</h2>
+<p>Weights Q4. KV cache light (<code>q4_0</code>) &mdash; after measuring the trade: the heavy option buys up to ~3 seconds on follow-up questions (sub-second to 2.8s measured at the half window) for ~4 GB; we kept the room. Speculation: the shipped setup, verified fastest of four by paired walls (<strong>15.1s per 200-word answer vs 17.8s with it off</strong>). Context: the full 262,144. Thinking: off by default, hard problems think &mdash; measured across three difficulty bands. Vision: works, 6/6 on real browser screenshots. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
+<h2>What this proves</h2>
+<p>A complete serving story &mdash; speed, memory, quality, failure modes, and the fix trail &mdash; measured on hardware anyone can buy, with every number reproducible from the repo. That is the standard we wanted to set.</p>
+<p>The rig stays on this frozen config. Next chapter when we open it.</p>
+<p><small>Conditions: $1,400 GMKtec EVO-X2, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, 262,144-token window, K+V q4_0, temperature 0. Arc close. A table with linked logs: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">github.com/KyaniteLabs/qwen38-27b-strix-halo</a>.</small></p>
+""",
+    },
+    {
+        "slug": 'lab-notes-measured-knees',
+        "title": "Lab Notes: the measured-knees method for reasoning effort",
+        "category": 'Local LLM / Methods',
+        "date": '2026-08-20',
+        "date_modified": '2026-08-20',
+        "read_time": '3 min',
+        "primary_keyword": 'reasoning effort calibration knee Qwen3.8-27B',
+        "seo_title": "Measured knees: where reasoning effort stops paying (methods note)",
+        "meta_description": "A methods note on calibrating reasoning effort: hard tasks buy thinking, easy tasks don't. 15/40 vs 4/40 hard-class; HumanEval-30 identical. Publish the knee, not the hype.",
+        "excerpt": "A methods note on reasoning-effort calibration. Thinking rescued 15/40 hards vs 4/40 off. On easy tasks it bought nothing. Publish the knee.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-20. Canon: FACTS-PACK; research lane: DSH/ICCO.</small></p>
+<p>This is a methods note, not a benchmark. We are publishing our calibration procedure because the interesting number is not a single tok/s or a single score &mdash; it is the <strong>knee</strong> where paying for more effort stops buying accuracy.</p>
+<p><strong>The method.</strong> Take a fixed problem set, split by difficulty. Run each arm twice: once with the cheap configuration, once with the expensive one, everything else identical (same model, same quant, same temperature, same grader). Plot accuracy against cost. The point where the expensive arm stops beating the cheap one is the knee. Below it, you are paying for nothing.</p>
+<p><strong>Our numbers.</strong> On a 40-problem hard/medium set, thinking-on rescued 15/40 hards vs 4/40 with thinking-off at temp 0 &mdash; a real gain exactly where the tasks are hard. On HumanEval-30, the same thinking budget bought <em>nothing</em> (28/30 identical). Full-sample: reasoning pays where tasks are hard, nothing where they are easy.</p>
+<p><strong>Why publish it.</strong> The industry shipped this shape (effort-as-dial in reasoning models, complexity routers in coding assistants), but nobody publishes the local calibration curve &mdash; the number that says "on <em>this</em> hardware, with <em>this</em> quant, thinking stops paying past <em>this</em> difficulty." That curve is hardware-specific, and it is what we measure before we ship a default.</p>
+<p><strong>The rule we run.</strong> Think-off by default. Think-on per request when the task is hard-class. Let the data, not the hype, decide the default. If a model ever auto-thinks, it must keep a manual override &mdash; every shipped auto-think without an escape hatch produces the same complaint: burnt tokens, no better output.</p>
+""",
+    },
+
+{
         "slug": 'lab-notes-livecodebench-30',
         "title": "Lab Notes: 67% LiveCodeBench-30 on a $1,400 rig",
         "category": 'Local LLM / Benchmarks',
@@ -701,7 +998,7 @@ BLOG_POSTS = [
 <p>I will not write &ldquo;no quality loss at 200k-class context&rdquo; from n=1 cells. We have earned &ldquo;exact retrieval at six depths on this fixed binary, this seed, this format.&rdquo; That is all.</p>
 
 <h2>Tonight</h2>
-<p>The first title stays in the URL so the correction is findable. The live claim is the inversion: the basin was a bug. Vision note: <a href="/blog/lab-notes-llamacpp-revert">we already reverted <code>c7d8722</code> in public</a>. This is the text/retrieval half of the same commit.</p>
+<p>The first title stays in the URL so the correction is findable. The live claim is the inversion: the basin was a bug. Vision note: <a href="/blog/lab-notes-llamacpp-revert">we already reverted <code>c7d8722</code> in public</a>.  This is the text/retrieval half of the same commit. <strong>Update:</strong> the inversion now replicates cross-seed — second seed 6/6, 13/13 cells post-revert at 198k (canon <code>66afc21</code>).</p>
 <p>Raw logs: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/needle-format-2026-08-19" rel="noopener">results/needle-format-2026-08-19</a> (remap) and <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> (contaminated night) in <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>.</p>
 <p><small>Conditions: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm post-<code>c7d8722</code> revert, 262,144-token window, K+V q4_0, temperature 0, prompt_tokens ~198,227 server-reported, n=1 per depth, seed s4419. One curve. A map. Not a law.</small></p>
 """,
@@ -1420,6 +1717,164 @@ PUBLIC_PROJECTS_ES = [
 ]
 
 BLOG_COPY_ES = {
+    "two-models-one-mini-pc-paired-numbers": {
+        "slug": 'two-models-one-mini-pc-paired-numbers',
+        "title": 'Dos modelos, una mini-PC de $1,400: los números emparejados, fracasos incluidos',
+        "seo_title": 'Dos modelos locales en una mini-PC de $1,400: benchmarks emparejados, fracasos incluidos',
+        "meta_description": 'Un 27B de uso diario y un 35B de razonamiento residentes juntos en una mini-PC AMD Strix Halo. Cada número emparejado, mismos problemas, misma máquina. Fracasos incluidos, logs crudos citados.',
+        "excerpt": 'Un modelo de razonamiento de 35B ya corre junto a nuestro 27B diario en una caja de $1,400, al mismo tiempo. Cada número emparejado, mismos problemas, misma máquina. Los fracasos también están aquí.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (sigue la construcción en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), asistido por GLM-5.3. 2026-08-25. Cada número fue re-leído de archivos de resultados crudos en esta máquina antes de escribir.</small></p>
+<p><strong>Operamos un pequeño laboratorio de IA en hardware que cabe bajo un televisor: una mini-PC AMD Strix Halo con 64GB de memoria compartida.</strong> Un Qwen3.8-27B ha sido nuestro modelo principal y motor diario desde mediados de agosto. Esta semana hicimos una pregunta más difícil: ¿puede esta misma máquina correr también Ornith-1.5-35B, un modelo abierto más grande, al mismo tiempo, y es realmente bueno cuando lo mides con justicia?</p>
+<p>La respuesta es sí, con tres advertencias. Aquí está todo, incluido lo que falló. Un número abajo fue medido mal primero por nuestra propia herramienta. La historia, al final.</p>
+<h2>La configuración</h2>
+<p>Una máquina. Dos modelos, residentes al mismo tiempo, sin intercambio:</p>
+<ul>
+<li><strong>Qwen3.8-27B</strong> (nuestro "campeón", sirviendo el producto): contexto de 262k, visión adjunta.</li>
+<li><strong>Ornith-1.5-35B-A3B</strong> (el recién llegado, carril de razonamiento): una construcción Mixture-of-Experts que solo activa ~3B parámetros por token. Corremos una cuantización APEX-Compact de 17.4GB. Juntos, los dos modelos usan 43.4 de 64GB, con unos 20GB de margen.</li>
+</ul>
+<p>Ese margen importa: esto solo cabe gracias a un truco de memoria que verificamos (ver abajo). La cuantización de fábrica de ~22GB también cabe, pero con menos holgura.</p>
+<h2>El marcador, cada número emparejado, mismos problemas, misma máquina</h2>
+<p>Nunca comparamos dos números que vienen de lugares distintos. Ambos modelos corrieron los mismos conjuntos fijos de problemas, uno tras otro, en la misma máquina:</p>
+<table>
+<thead><tr><th>Prueba</th><th>Campeón 27B</th><th>Ornith 35B</th><th>Lectura</th></tr></thead>
+<tbody>
+<tr><td>Mate de primaria (GSM8K, calificación estricta, 2&times;2 emparejado, mismos 60 problemas, n=60/celda)</td><td><strong>96.7%</strong> sin razonamiento; <strong>96.7%</strong> con razonamiento (resultados idénticos, McNemar p=1.0)</td><td><strong>90.0%</strong> sin razonamiento; <strong>98.3%</strong> con razonamiento (p=0.0625, marginal con n=60)</td><td>En la mejor configuración de cada modelo: empate a un problema (p=1.0). El razonamiento le cuesta al campeón 2.4&times; tiempo para cero ganancia; Ornith lo necesita</td></tr>
+<tr><td>Código, problemas limpios (HumanEval, mismos 30 congelados)</td><td>28/30</td><td>26/30</td><td>Empate dentro del ruido</td></tr>
+<tr><td>Código, mundo real (LiveCodeBench, mismos 30)</td><td>20/30</td><td>17/30</td><td>Ventaja ligera del campeón, no decisiva con n=30</td></tr>
+<tr><td>Visión, mismas 6 capturas reales</td><td>6/6</td><td>5/6</td><td>Ornith malleyó un correo en un formulario (dominio con error)</td></tr>
+</tbody>
+</table>
+<p>Si solo recuerdas una fila: <strong>un modelo de razonamiento de 35B ya corre a la par de nuestro motor diario en esta clase de hardware.</strong> Hasta mediciones emparejadas como esta, eso era una discusión de foro.</p>
+<h2>Las tres advertencias</h2>
+<ol>
+<li><strong>Razonar es un dial, no una brecha de modelo.</strong> Medido emparejado (2&times;2, mismos problemas, mismo protocolo): el campeón obtiene 96.7% con razonamiento apagado Y encendido (resultados idénticos, p=1.0), así que su interruptor no compra nada aquí a 2.4&times; el tiempo. Ornith obtiene 90.0% sin razonamiento y 98.3% con él. En las mejores configuraciones, los dos modelos empatan dentro de un problema (p=1.0). Números anteriores que comparaban Qwen sin razonamiento contra Ornith con razonamiento tenían regímenes mezclados; esta tabla emparejada es la verdad y los reemplaza.</li>
+<li><strong>Código es un empate, no una victoria.</strong> 26/30 contra 28/30 en problemas idénticos está dentro del ruido. No reclamaremos un campeón de código con estos datos.</li>
+<li><strong>Visión tiene un fallo.</strong> En una captura real de un formulario de registro, Ornith devolvió un correo con el dominio mal leído. Es una respuesta incorrecta, no un casi. Nuestro campeón obtuvo los 6. Muestra pequeña, etiquetada: 5/6.</li>
+</ol>
+<h2>Lo que NO funcionó (la parte que pocos publican)</h2>
+<p>Probamos la decodificación especulativa de dos maneras, porque prometía velocidad gratis:</p>
+<ul>
+<li>La <strong>cabeza de borrador entrenada</strong> que viene en las builds APEX: aceptó solo ~33% de los tokens de borrador, y hizo la generación ~9% <em>más lenta</em> de punta a punta. Muerta en este hardware, medido, dos veces.</li>
+<li>Un <strong>borrador improvisado</strong>: misma clase de ~33%. Mismo veredicto.</li>
+</ul>
+<p>La decodificación especulativa es un truco de ancho de banda de memoria, y el ancho de banda de esta máquina se va en los dos modelos residentes. La configuración correcta es APAGADA, y cualquiera con una máquina similar debería empezar ahí en vez de pagar nuestro costo de descubrimiento.</p>
+<h2>El truco de memoria que lo hizo caber</h2>
+<p>La build APEX-Compact empaqueta el 35B en 17.4GB (contra ~22GB de fábrica en el mismo nivel de calidad Q4). No pudimos medir un costo de calidad con estos tamaños de muestra: mate de primaria 95.0% contra 96.7% de fábrica con n=60, y resultados idénticos en un conjunto de 15 problemas de razonamiento de código. Esos ~4.3GB de ahorro son la diferencia entre "un modelo a la vez" y "dos modelos siempre encendidos", que es todo el punto de la máquina.</p>
+<h2>Velocidad, etiquetada</h2>
+<ul>
+<li><strong>Escribir una respuesta larga:</strong> ~55 tokens/segundo sostenidos. Una respuesta de 200 palabras llega en 6-7 segundos. Una corrida completa de razonamiento en un problema difícil: minutos.</li>
+<li><strong>Leer documentos largos (prefill):</strong> ingresamos 130,715 tokens, un libro entero, en 359 segundos (~364 tokens/segundo), con el chip a 72&deg;C todo el camino. El trabajo de contexto largo es donde esta build MoE se gana su lugar.</li>
+</ul>
+<h2>Nuestra tarjeta de configuración (si tienes la misma máquina)</h2>
+<p>Decodificación greedy (temperatura 0), caché KV q4_0, decodificación especulativa APAGADA, pesos APEX-Compact Q4, presupuesto de mate 2048 tokens, presupuesto de código difícil 8192 (2/30 problemas aún toparon el tope, etiquetado, no oculto). Nada aquí es exótico; todo fue medido contra al menos una alternativa en esta máquina antes de conservarlo.</p>
+<h2>Por qué publicar todo</h2>
+<p>La mayoría de los posts de "corrí un modelo grande localmente" muestran una captura y un número de tokens por segundo. Pensamos que el artefacto valioso es la tabla emparejada con fixture fijo y los fracasos incluidos, incluyendo la corrida donde nuestra propia herramienta de calificación truncó la salida del modelo y brevemente nos dijo que era malo en mate (0.467). No lo era; nuestro instrumento estaba equivocado. Esa diferencia es visible en las dos configuraciones guardadas. Mismos problemas: 0.967. Ambos JSON citados abajo, porque el instrumento debería ser sospechado tan seguido como el modelo.</p>
+<p><small>Fuentes (archivos de resultados crudos, rutas en la máquina): GSM8K 2&times;2 emparejado <code>~/exp/2x2-gsm8k/summary.json</code> (campeón 58/60 en ambas celdas; orn 54/60 sin, 59/60 con; McNemar p=1.0/0.0625/1.0; medianas 28.3/68.5/11.4/23.3s; corrida 2026-08-24T19:42Z, puertas vivas, auto-prueba leída antes de calificar). GSM8K Ornith de fábrica corregido <code>~/exp/w1-35b/gsm-full-b/Ornith35B/results_2026-08-22T01-26-41.json</code> (estricto 0.9667); el falso arranque <code>results_2026-08-22T01-00-27.json</code> (estricto 0.4667, truncamiento de instrumento). APEX-Compact <code>~/exp/w4-35b/gsm-run.log</code> (0.9500). HumanEval-30 Ornith <code>~/exp/w1-35b/bench-results-default.log</code> (26/30); campeón 28/30 (<code>~/exp/bench-results-default.log</code>, verificado 2026-08-24). LiveCodeBench-30 Ornith <code>~/exp/w3b-35b/verdict.txt</code> (17/30, truncados 2/30); campeón 20/30 (registrado en el diseño de comparación, LEÍDO; bytes de resultado aún no localizados, etiquetado). LCB-15 paridad <code>~/exp/w4-35b/lcb15-run.log</code> (7/15, idéntico a fábrica). Visión UI real: Ornith <code>~/exp/vision35b-results.log</code> (5/6); campeón <code>~/exp/vision-real-results.log</code> (6/6). Velocidad de decodificación <code>~/exp/w4-fire.log</code> (sin espec 55.9 tok/s; espec más lento 50.4 contra 55.2, emparejado, mismo binario). Prefill <code>~/exp/ornith-window-results.log</code> (359s, 130,715 tokens, 72&deg;C). Aceptación especulativa ~0.33: comparadores window-4. Memoria: pesos APEX-Compact 17.4GB; doble residente 43.4/64GB GTT (lectura viva 2026-08-23). Nota de régimen: lecturas anteriores del campeón GSM8K de 70% estricto y 98% son anteriores al protocolo emparejado y quedan reemplazadas por el 2&times;2 para esta pieza.</small></p>
+""",
+    },
+
+    "fde-title-decoder": {
+        "title": 'Forward deployed vs solutions engineer vs implementation vs customer engineer: el decodificador',
+        "category": 'Forward Deployed Engineering',
+        "primary_keyword": 'forward deployed engineer vs solutions engineer',
+        "seo_title": 'FDE vs Solutions vs Implementation vs Customer Engineer: Decodificador',
+        "meta_description": 'Cuatro títulos que describen casi el mismo trabajo, con barras de código y dueños distintos. Un decodificador: qué cambia, qué no, y tres preguntas que revelan el rol real.',
+        "excerpt": 'Cuatro títulos, una familia de trabajo, barras de código distintas. Un decodificador para leer cualquier vacante y saber en qué te estás metiendo.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Escrito para quien compara ofertas o vacantes a la 1am.</small></p>
+<p><strong>Estos cuatro títulos describen casi el mismo trabajo: un ingeniero que trabaja cerca del cliente y logra que el producto funcione dentro de la realidad del cliente.</strong> Lo que cambia de verdad es la barra de código, dónde te sientas en el embudo de ventas y quién es dueño del resultado después del lanzamiento. En muchas empresas los títulos son intercambiables. En unas pocas, son carreras distintas. Este post te da el decodificador: qué señala cada título, qué no cambia, y las tres preguntas que revelan lo que una vacante realmente pide.</p>
+<p>Una nota sobre el contexto: los laboratorios de IA están contratando forward deployed engineers de forma agresiva, y las empresas empiezan a pedir el mismo perfil para IA que toca bancos, aseguradoras y aerolíneas. La inflación de títulos está garantizada. El decodificador importa más que el nombre.</p>
+<h2>La versión de un párrafo de cada título</h2>
+<p><strong>Forward deployed engineer (FDE):</strong> el ingeniero incrustado en el problema real más duro del cliente. Entrega código de producción en el entorno del cliente, construye las evals que prueban que funciona, y se queda hasta que corre sin atención. La barra de código más alta de los cuatro. El título viene de Palantir y hoy es estándar en los labs de IA.</p>
+<p><strong>Solutions engineer:</strong> la mitad técnica de un movimiento de ventas. Corre demos, responde preguntas técnicas profundas, arma pruebas de concepto y desbloquea evaluaciones. Hay código, pero lo que se entrega es el contrato. Te sientas antes de la venta.</p>
+<p><strong>Implementation engineer:</strong> el ingeniero que ejecuta un rollout definido. El alcance existe, el contrato está firmado, tu trabajo es configuración, integración, migración de datos y go-live. Metido en la última milla, con alcance más angosto que un FDE, y normalmente sin presión de ventas.</p>
+<p><strong>Customer engineer:</strong> el par técnico después de la venta. Chequeos de salud, escalaciones, habilitación, y mucho "por qué está lento esta semana". Es el más cercano a soporte de los cuatro, con ingeniería real cuando las escalaciones van profundo. Google y varias empresas de infraestructura usan este nombre.</p>
+<h2>La tabla</h2>
+<table>
+<thead><tr><th></th><th>Forward deployed</th><th>Solutions</th><th>Implementation</th><th>Customer</th></tr></thead>
+<tbody>
+<tr><td>Dónde te sientas</td><td>Dentro del problema más duro</td><td>Antes de la venta</td><td>Después de la venta, durante el rollout</td><td>Después del go-live</td></tr>
+<tr><td>Barra de código</td><td>La más alta, código de producción</td><td>Media, demos y POCs</td><td>Media, configs e integraciones</td><td>Media, escalaciones</td></tr>
+<tr><td>Entregable típico</td><td>Sistema funcionando más evals</td><td>Contrato cerrado</td><td>Go-live</td><td>Cuenta retenida</td></tr>
+<tr><td>¿Evals en el puesto?</td><td>Habilidad central</td><td>Desbloquea la eval del comprador</td><td>A veces</td><td>Rara vez</td></tr>
+<tr><td>¿Pager?</td><td>Suele haber</td><td>No</td><td>Ventanas de go-live</td><td>Rotación de escalación</td></tr>
+<tr><td>Te va a gustar si quieres...</td><td>Problemas duros y sucios, reales</td><td>Variedad y velocidad</td><td>Líneas de meta</td><td>Relaciones largas</td></tr>
+</tbody>
+</table>
+<h2>Lo que no cambia entre los cuatro</h2>
+<p>Traduces entre dos idiomas: el flujo del cliente y la maquinaria del producto. Esa habilidad es idéntica en todas las variantes. Igual la necesidad de escribir claro para gente que no es ingeniera. Si tienes ese músculo de traducción de cualquier trabajo de instalar-en-el-mundo-real, puedes moverte entre estos títulos. Yo pasé doce años haciendo este tipo de trabajo en sistemas de aprendizaje empresariales, Workday, SuccessFactors, Cornerstone, para organizaciones de más de 8.000 personas. El título en mi credencial nunca fue ninguno de estos cuatro. El trabajo sí.</p>
+<h2>Las tres preguntas que decodifican cualquier vacante</h2>
+<p><strong>Pregunta uno: quién escribe código, ¿yo o el equipo de producto?</strong> Si la respuesta es "tú, en el repo del cliente", es un puesto FDE sin importar el título. Si es "tú configuras lo que existe", es implementation.</p>
+<p><strong>Pregunta dos: quién es dueño del número?</strong> Después del lanzamiento, alguien responde por el sistema funcionando. Si eres tú, eres forward deployed. Si es ventas, eres solutions. Si es soporte, eres customer engineering.</p>
+<p><strong>Pregunta tres: dónde está el pager?</strong> Sigue la rotación de guardia. Te dice la verdad del rol más rápido que cualquier descripción de puesto.</p>
+<h2>Cómo probar que puedes hacerlo, sea cual sea el título</h2>
+<p>Toda variante de este trabajo pregunta lo mismo en palabras distintas: muéstrame que hiciste que algo real funcionara en un lugar hostil. El artefacto más fuerte que puedes cargar es un eval con tu nombre. El mío es público: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>, 495 trials, pisos certificados, certificación walk-away, celda de sabotaje. Ha abierto más puertas que cualquier título en mi resume. Empieza aquí: <a href="/es/blog/what-does-a-forward-deployed-engineer-do">qué hace realmente un forward deployed engineer</a> y <a href="/es/blog/how-i-became-a-forward-deployed-engineer">cómo llegué a serlo sin título de software</a>.</p>
+<p><small>Parte de la serie FDE. Necesitas este tipo de trabajo en tu entorno? <a href="/es/implementation/intake">Intake de implementacion</a>. Condiciones y logs crudos de cada número citado: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">github.com/KyaniteLabs/delegation-bench</a>.</small></p>
+""",
+    },
+
+    "what-does-a-forward-deployed-engineer-do": {
+        "title": 'Qué hace realmente un forward deployed engineer',
+        "category": 'Forward Deployed Engineering',
+        "primary_keyword": 'que hace un forward deployed engineer',
+        "seo_title": 'Qué Hace un Forward Deployed Engineer? (Demostrado en un Mini-PC de $1.400)',
+        "meta_description": 'Un forward deployed engineer lleva la IA adonde tiene que funcionar y se queda a cargo de la última milla. El trabajo demostrado en un mini-PC de $1.400, con evals públicas y números crudos.',
+        "excerpt": 'La respuesta directa y luego los recibos: todo el trabajo de un FDE sobre un mini-PC de $1.400, con evals públicas.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Primero la respuesta directa, después los recibos.</small></p>
+<p><strong>Un forward deployed engineer es el ingeniero que va adonde la IA tiene que funcionar de verdad, y logra que funcione ahí.</strong> No es quien entrena el modelo. Es quien toma un modelo que se ve bien en un benchmark y lo convierte en un sistema que un negocio real puede usar todos los días. El trabajo tiene tres partes: encontrar el punto de palanca en un flujo real, construir lo más pequeño que lo mueva, y quedarse a cargo en producción. El resto del post es esa frase desempacada, demostrada en un mini-PC de $1.400.</p>
+<p>El título suena fuerte ahora porque los laboratorios de IA están contratando gente para este puesto tan rápido como pueden. El trabajo es más viejo que el nombre. Cualquiera que haya instalado software en una sucursal bancaria, un hospital o una planta ha hecho trabajo forward deployed. Yo hice versiones de esto durante doce años en sistemas de aprendizaje empresariales. Hoy corro el trabajo completo en mi propio hardware, y cada número que vas a ver es público.</p>
+<h2>Parte uno: encontrar el punto de palanca</h2>
+<p>En un negocio hay diez cosas que parecen automatizables. Normalmente solo una importa. El FDE la encuentra mirando el trabajo real, no leyendo un pitch. La herramienta para esto es la medición, no la opinión.</p>
+<p>Una decisión de palanca medida en este escritorio: ¿el modelo local debe razonar por defecto? Lo corrimos de las dos formas sobre un set fijo de problemas. En 40 problemas duros, pensar rescató 15 que fallaban sin él. En HumanEval-30, pensar no compró nada: 28/30 en ambos casos. Así que el default que se entrega es pensar apagado, con override manual para tareas duras. Esa sola decisión de ruteo ahorra tokens todo el día y no cuesta nada donde el trabajo es fácil. Método completo en <a href="/es/blog/lab-notes-measured-knees">la nota de knees medidos</a>.</p>
+<p>Ese patrón escalado se vuelve ruteo de modelos: aquí el trabajo se mueve entre cinco lanes, elegidos por costo y velocidad medidos, no por marca. La misma disciplina, más superficie.</p>
+<h2>Parte dos: construir con evals</h2>
+<p>El cliente nunca pregunta "es inteligente". Pregunta "puedo entregarle trabajo e irme". Ningún leaderboard responde eso. Así que el FDE construye la prueba que sí.</p>
+<p>Construimos una. Es open source: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>. Nueve clases de trabajo real. Tests ocultos que el sistema nunca ve. Una celda de sabotaje con una instrucción mala plantada. Pisos certificados, es decir estadística exacta que dice "al menos esto de confiable", no vibras. Resultado en esta máquina: <strong>495 trials, 29 celdas</strong>, todas las celdas de capacidad en 20/20, y ocho celdas con certificación walk-away en 35/35 o 30/30 con pisos de 90.5 a 91.8 por ciento. Código, debugging, búsqueda en documentos, razonamiento, decisiones, dos tipos de visión: todos en el nivel walk-away.</p>
+<p>La habilidad de código debajo de eso también es medible. <a href="/es/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, subset congelado, semilla publicada) y <a href="/es/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, intervalo Wilson 95% de 49 a 81). Siempre cita el intervalo. Misma caja de $1.400.</p>
+<h2>Parte tres: quedarse a cargo en producción</h2>
+<p>Esta es la parte que separa el título del demo. El sistema corre sin atención. Está siempre encendido, con watchdogs automáticos, recuperación de reinicios y disciplina de cola. Cuando se rompe, el FDE es el pager.</p>
+<p>Una historia real de producción de este rig: a mitad de proyecto, el contexto largo y la visión se rompieron en silencio. La lectura fácil era "el modelo empeoró". No nos quedamos con la lectura fácil. Hicimos bisect de noches de cambios hasta un commit upstream de llama.cpp, lo reportamos como <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, lo arreglamos local y validamos el fix upstream en nuestro silicio con 9/9 respuestas idénticas pareadas. Después re-corrimos los benchmarks congelados para confirmar que nada se movió. Ese es el trabajo. La <a href="/es/blog/qwen-27b-strix-halo-complete">historia completa de serving</a> está en este blog con logs crudos.</p>
+<h2>La lista real de habilidades FDE</h2>
+<p>La gente busca "habilidades fde" y encuentra listas de deseos. Esta es la honesta, cada habilidad probada con un artefacto de arriba:</p>
+<ul>
+<li><strong>Evals y estadística básica.</strong> Puedes probar "al menos 90 por ciento confiable" con intervalos exactos, o no puedes afirmarlo.</li>
+<li><strong>Pegamento de integración.</strong> La IA nunca trabaja sola. Vive en un pipeline con documentos, colas y aprobaciones.</li>
+<li><strong>Debugging de entorno.</strong> Cuando la salida se vuelve basura, encuentras la capa que se rompió. Aquí fue un commit de host buffers, no el modelo.</li>
+<li><strong>Ownership de producción.</strong> Watchdogs, reinicios, logs, y la disposición a que te llamen de noche.</li>
+<li><strong>Hablar claro con no ingenieros.</strong> La tabla de decisión se entrega con los pisos impresos, para que un operador lea "puedes irte" sin saber qué es un quant.</li>
+</ul>
+<h2>Lo que el trabajo no es</h2>
+<p>No es trucos de prompt. No es un demo que funciona una vez en el escenario. Y no es data science: el FDE entrega sistemas, no notebooks. Si te gusta más la última milla que el laboratorio, este es tu trabajo. Si te gustan los problemas limpios, quédate cerca del modelo.</p>
+<p>Cada afirmación de este post tiene un log crudo o un repo público detrás. Ese es el estándar. Apúntalo a tu propia máquina y mira cómo se ven tus pisos.</p>
+<p><small>Siguiente en la serie: <a href="/es/blog/fde-title-decoder">el decodificador de títulos FDE</a> y <a href="/es/blog/evals-are-the-fde-skill">por qué las evals son la habilidad FDE que nadie lista</a>. Necesitas este tipo de trabajo en tu entorno? <a href="/es/implementation/intake">Intake de implementacion</a>. Condiciones de cada número: GMKtec EVO-X2 de $1.400, Qwen3.8-27B Q4_K_XL, llama.cpp, logs crudos en <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a> y <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">el repo del stack</a>.</small></p>
+""",
+    },
+    "qwen-27b-strix-halo-complete": {
+        "title": 'Qwen 3.8 27B en Strix Halo: la historia completa, medida',
+        "category": 'LLM local / Serving',
+        "primary_keyword": 'Qwen 27B Strix Halo configuracion optima de serving llama.cpp',
+        "seo_title": 'Qwen 3.8 27B en Strix Halo: la historia completa de serving, medida',
+        "meta_description": 'Arco cerrado: retrieval exacto en el techo de 262k, vision arreglada y validada upstream, spec verificado con paredes pareadas, trade de KV medido. $1.400, sin nube, logs crudos.',
+        "excerpt": 'Cada dial medido, cada numero publico: la configuracion optima congelada para un 27B en un mini-PC de $1.400.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en publico en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Cierre del arco, 2026-08-21. Toda la historia, corregida en el registro.</small></p>
+<p>Nos hicimos una pregunta simple: &iquest;puede un mini-PC de $1.400 servir un modelo 27B como los rigs grandes? Esta nota cierra el libro. Cada afirmacion de abajo tiene un log crudo detras, en el repo publico, con su metodologia.</p>
+<h2>El rig</h2>
+<p>AMD Strix Halo, 64 GB de memoria compartida, tooling abierto (llama.cpp), un modelo libre Apache-2.0. Sin nube, sin alquileres.</p>
+<h2>El techo</h2>
+<p>Retrieval exacto de agujas en cada profundidad probada, dos semillas, hasta <strong>261.130 de 262.144 tokens &mdash; el 99.6% de la ventana</strong>, el techo literal. Follow-ups en caliente sobre un documento cargado de 198k tokens: cita exacta en <strong>23.8s</strong>, si/no en <strong>10.0s</strong>, resumen de una linea en <strong>17.5s</strong>. El formato no importa: prosa o codigo, exacto en ambos casos; descrito en palabras, cada parte vuelve en orden. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
+<h2>El bug que les debiamos</h2>
+<p>A mitad del arco, el contexto largo y la vision se rompieron en silencio en esta clase de GPU. Nuestra primera lectura culpo al modelo &mdash; mal. Hicimos bisect a un cambio upstream (<code>c7d8722</code>), lo reportamos, lo arreglamos local y despues validamos el fix upstream en nuestro silicio: <strong>9/9 respuestas identicas, pareadas</strong>. La correccion esta en el repo, en el registro. La degeneracion era el instrumento, no el modelo. Crudo: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<h2>La configuracion congelada</h2>
+<p>Pesos Q4. KV cache liviano (<code>q4_0</code>) &mdash; despues de medir el trade: la opcion pesada compra hasta ~3 segundos en follow-ups (sub-segundo a 2.8s medido en la media ventana) por ~4 GB; nos quedamos con el espacio. Especulacion: la configuracion en servicio, verificada la mas rapida de cuatro con paredes pareadas (<strong>15.1s por respuesta de 200 palabras vs 17.8s sin ella</strong>). Contexto: los 262.144 completos. Thinking: apagado por defecto, los problemas dificiles piensan &mdash; medido en tres bandas de dificultad. Vision: funciona, 6/6 en screenshots reales de navegador. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
+<h2>Que prueba esto</h2>
+<p>Una historia completa de serving &mdash; velocidad, memoria, calidad, modos de falla y el rastro del fix &mdash; medida en hardware que cualquiera puede comprar, con cada numero reproducible desde el repo. Ese es el estandar que quisimos fijar.</p>
+<p>El rig se queda en esta configuracion congelada. El proximo capitulo cuando lo abramos.</p>
+<p><small>Condiciones: mini-PC GMKtec EVO-X2 de $1.400, Qwen3.8-27B Q4_K_XL, llama.cpp ROCm, ventana de 262.144 tokens, K+V q4_0, temperature 0. Cierre del arco. Una tabla con logs linkeados: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">github.com/KyaniteLabs/qwen38-27b-strix-halo</a>.</small></p>
+""",
+    },
     "lab-notes-livecodebench-30": {
         "title": 'Notas de lab: 67% LiveCodeBench-30 en un rig de $1.400',
         "category": 'LLM local / Benchmarks',
@@ -1549,7 +2004,7 @@ BLOG_COPY_ES = {
 <p>No voy a escribir «sin pérdida de calidad a contexto clase 200k» con celdas n=1. Nos ganamos «retrieval exacto a seis profundidades en este binario arreglado, esta semilla, este formato». Eso es todo.</p>
 
 <h2>Esta noche</h2>
-<p>El título viejo se queda en la URL para que se encuentre la corrección. El claim en vivo es la inversión: la cuenca era un bug. Visión: <a href="/es/blog/lab-notes-llamacpp-revert">ya revertimos <code>c7d8722</code> en público</a>. Esta es la mitad de texto/retrieval del mismo commit.</p>
+<p>El título viejo se queda en la URL para que se encuentre la corrección. El claim en vivo es la inversión: la cuenca era un bug. Visión: <a href="/es/blog/lab-notes-llamacpp-revert">ya revertimos <code>c7d8722</code> en público</a>.  Esta es la mitad de texto/retrieval del mismo commit. <strong>Actualización:</strong> la inversión replica entre semillas — segunda semilla 6/6, 13/13 celdas post-revert a 198k (canon <code>66afc21</code>).</p>
 <p>Logs crudos: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/needle-format-2026-08-19" rel="noopener">results/needle-format-2026-08-19</a> (remap) y <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/deep-context-2026-08-18" rel="noopener">results/deep-context-2026-08-18</a> (noche contaminada) en <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>.</p>
 <p><small>Condiciones: GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unificados), Qwen3.8-27B Q4_K_XL, llama.cpp ROCm post-revert <code>c7d8722</code>, ventana 262.144 tokens, K+V q4_0, temperature 0, prompt_tokens ~198.227 reportados por el server, n=1 por profundidad, seed s4419. Una curva. Un mapa. No una ley.</small></p>
 """,
