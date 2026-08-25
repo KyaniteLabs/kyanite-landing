@@ -4370,3 +4370,17 @@ body::after {
   }
 }
 
+
+/* Product imagery covers (fix/product-imagery-2026-08-24) */
+.artifact-cover.artifact-cover-image {
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+.artifact-cover.artifact-cover-image img {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  display: block;
+}

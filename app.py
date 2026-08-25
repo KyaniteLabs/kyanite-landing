@@ -2101,6 +2101,8 @@ PRODUCTS = {
         "keywords": "claude code setup, claude code skills, claude code subagents, claude code hooks, CLAUDE.md, claude code MCP, ai coding agent, claude code configuration, coding automation",
         "kofi_product_url": "https://ko-fi.com/kyanitelabs",
         "file_path": "products/ai-coding-agent-blueprint.md",
+        "image": "/static/products/ai-coding-agent-blueprint.png",
+        "image_alt": "Abstract crystalline blueprint lattice product artwork",
     },
     "claude-code-productivity-pack": {
         "slug": "claude-code-productivity-pack",
@@ -2136,6 +2138,8 @@ PRODUCTS = {
         "keywords": "claude code prompts, claude code tips, claude code skills, claude code best practices, claude code workflow, claude code subagents, developer productivity, ai coding prompts",
         "kofi_product_url": "https://ko-fi.com/kyanitelabs",
         "file_path": "products/claude-code-productivity-pack.md",
+        "image": "/static/products/claude-code-productivity-pack.png",
+        "image_alt": "Abstract modular clay-tile toolkit product artwork",
     },
 }
 

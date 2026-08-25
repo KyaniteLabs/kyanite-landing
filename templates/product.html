@@ -11,6 +11,7 @@
   <meta property="og:description" content="{{ product.get('seo_description', product.tagline) }}">
   <meta property="og:type" content="product">
   <meta property="og:url" content="https://kyanitelabs.tech/shop/{{ slug }}">
+  {% if product.get('image') %}<meta property="og:image" content="https://kyanitelabs.tech{{ product.image }}">{% endif %}
   <meta property="product:price:amount" content="{{ product.price }}">
   <meta property="product:price:currency" content="USD">
   <link rel="canonical" href="https://kyanitelabs.tech/shop/{{ slug }}">
@@ -95,10 +96,16 @@
         </article>
 
         <aside class="card product-panel fade-up">
+          {% if product.get('image') %}
+          <div class="artifact-cover artifact-cover-image artifact-cover-small">
+            <img src="{{ product.image }}" alt="{{ product.get('image_alt', product.name) }}">
+          </div>
+          {% else %}
           <div class="artifact-cover artifact-cover-small" aria-hidden="true">
             <span>{{ product.category }}</span>
             <strong>{{ product.name }}</strong>
           </div>
+          {% endif %}
           <span class="tile-code">{{ product.name[0] }}</span>
           <span class="tag green">Instant download</span>
           <h3>{{ product.name }}</h3>
