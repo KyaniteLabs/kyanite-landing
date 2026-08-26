@@ -550,6 +550,101 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+    "slug": 'how-to-choose-an-llm',
+    "title": 'How to Choose an LLM: A Decision Framework That Actually Works',
+    "category": 'AI Tools',
+    "date": "2026-08-26",
+    "date_modified": "2026-08-26",
+    "read_time": "5 min",
+    "primary_keyword": 'how to choose an llm',
+    "seo_title": 'How to Choose an LLM in 2026: Speed, Cost, Intelligence (Practical Guide)',
+    "meta_description": 'Stop reading benchmark tables. Set an intelligence floor, compare on cost and speed, find the Pareto frontier. A practical framework with a free 3D tool that does it for you.',
+    "excerpt": 'Most LLM comparison advice is wrong because it starts with benchmarks instead of your task. Here is the framework we use: set a floor, compare the survivors, ship.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. The framework we use at Kyanite Labs, built into a free tool.</small></p>
+<p><strong>Every LLM comparison article makes the same mistake: it starts with the models instead of your task.</strong></p>
+<p>"GPT-5.6 is the smartest." "Claude Opus 4.6 is the safest." "Gemini 3.7 Pro is the best value." These are answers to questions nobody asked. The real question is always: <strong>what is the cheapest model that is smart enough for the specific work I am doing?</strong></p>
+<h2>Step 1: Set an intelligence floor, not a target</h2>
+<p>You do not need the smartest model. You need one that clears a minimum bar for your task. That bar is your floor.</p>
+<p>For most product work in 2026, the Artificial Analysis Index floor is around 45-55. Below that, models hallucinate enough to require human review on every output. Above it, you are buying intelligence you may not use.</p>
+<p><strong>The floor is task-specific.</strong> A summarization pipeline may clear at Index 40. A code-review agent may need 60+. A creative-writing assistant may be better below the frontier entirely, because frontier models optimize for correctness, not voice.</p>
+<h2>Step 2: Compare survivors on cost and speed</h2>
+<p>Once the floor eliminates the models that will waste your time with errors, the remaining question is purely economic: which of the survivors is cheapest per million tokens, or fastest to first token, or best balanced for your workload?</p>
+<p>This is where benchmark tables fail and visualization works. The <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a> plots 314 models on three axes (cost, intelligence, speed) so the Pareto frontier is visible at a glance. The white filament through the cloud of points is the set of models where nothing is simultaneously cheaper, faster, and smarter.</p>
+<h2>Step 3: Check the frontier, not the leaderboard</h2>
+<p>A model on the Pareto frontier means no other model dominates it. A model off the frontier means you are paying a premium or accepting a penalty you could avoid.</p>
+<p>The frontier in late August 2026 is crowded. A year ago, the frontier had 5-6 models. Now it has 20+, which means the real question has shifted from "which model should I use?" to "which frontier model fits my cost envelope?"</p>
+<h2>Step 4: Validate with your own eval</h2>
+<p>Benchmark scores are proxies. Before committing, run 20-50 of YOUR actual prompts through the top 2-3 candidates. We built <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a> for exactly this: hidden tests, certified floors, a sabotage cell. Your eval does not need to be that elaborate, but it needs to exist.</p>
+<h2>The shortcut</h2>
+<p><a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> does steps 1-3 in about 30 seconds. Set a floor, pick your objective (cost, speed, or balanced), get a named shortlist with exact numbers. Free, no account, open source.</p>
+""",
+},
+
+{
+    "slug": 'llm-cost-comparison-guide',
+    "title": 'LLM Cost Comparison: What Models Actually Cost to Use in 2026',
+    "category": 'AI Tools',
+    "date": "2026-08-26",
+    "date_modified": "2026-08-26",
+    "read_time": "5 min",
+    "primary_keyword": 'llm cost comparison',
+    "seo_title": 'LLM Cost Comparison 2026: Real Prices for 314 Models (Interactive Chart)',
+    "meta_description": 'Blended API prices for 314 LLMs in one interactive chart. See which models are actually cheap, which are marketing-cheap, and how prices moved this month.',
+    "excerpt": 'Open weights are not free to use. API prices moved 22-60% in one weekend. Here is what LLMs actually cost to use, with the data to back it.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. Data from the <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a>, rebuilt three times daily from Artificial Analysis and OpenRouter.</small></p>
+<p><strong>LLM pricing is a mess, and most comparison sites make it worse.</strong></p>
+<p>Here are the five things that make LLM cost comparison harder than it looks, and one tool that handles all of them.</p>
+<h2>1. Blended price, not input/output separately</h2>
+<p>A model that charges $0.25/M input and $1.25/M output is not "$0.25 per million tokens." For a typical task mix (long context in, shorter response out), the real cost is somewhere between the two. The Observatory uses a blended price: input and output weighted by real task distributions, so the number on the cost axis is the number you actually pay.</p>
+<h2>2. Open weights are not free to use</h2>
+<p>A model with downloadable weights costs nothing to download. It costs real money to <em>use</em>: either the electricity and hardware to self-host, or the hosted API price that someone else charges to run it for you. The Observatory prices everything at the hosted API rate, because that is the only number comparable across all 314 models.</p>
+<h2>3. Prices move fast</h2>
+<p>In August 2026, three Qwen models repriced 22-60% in one weekend. The Observatory's pipeline detects repricing as an alert, not a silent drift. When you look at the chart, you are seeing prices as of the latest rebuild (three times daily), not a cached snapshot.</p>
+<h2>4. Free promotional pricing is flagged</h2>
+<p>When a lab launches a model at $0 for a promotional period, the Observatory shows the promotional price flagged as non-durable, with a canary that watches for the real price to appear. Free-tier pricing disappears; the chart should not pretend otherwise.</p>
+<h2>5. The Pareto frontier is the honest answer</h2>
+<p>"What is the cheapest LLM?" has no single answer, because the cheapest model that clears your intelligence floor depends on your floor. The 3D chart at <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> shows the cost-intelligence-speed frontier visually. Set your floor in Decide mode and the shortlist ranks survivors by your objective.</p>
+<p>Every price is traceable to its source (Artificial Analysis API, OpenRouter list, or provider), per-field, with a timestamp. No number on the chart was invented by us.</p>
+""",
+},
+
+{
+    "slug": 'pareto-frontier-llm-explained',
+    "title": 'The LLM Pareto Frontier: What It Is and Why It Matters for Model Selection',
+    "category": 'AI Tools',
+    "date": "2026-08-26",
+    "date_modified": "2026-08-26",
+    "read_time": "5 min",
+    "primary_keyword": 'pareto frontier llm model selection',
+    "seo_title": 'LLM Pareto Frontier Explained: How to Visualize Model Trade-offs (3D)',
+    "meta_description": 'The Pareto frontier is the set of LLMs where nothing is simultaneously cheaper, faster, and smarter. Here is why visualizing it changes how you pick models.',
+    "excerpt": 'Most LLM comparison advice ignores trade-offs. The Pareto frontier makes them visible. Here is what it means and how to use it.',
+    "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. Try the interactive version at <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a>.</small></p>
+<p><strong>If you only learn one concept for choosing LLMs, learn the Pareto frontier.</strong></p>
+<h2>What it is</h2>
+<p>A model is on the <strong>Pareto frontier</strong> if no other model is simultaneously cheaper, faster, <em>and</em> smarter. A model off the frontier is dominated: something else beats it on at least one dimension without losing on any other.</p>
+<p>In the <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a>, the frontier is the white filament burning through the cloud of 314 model-points in 3D space. It is the ridge of non-dominated models, and it is the honest answer to "which model should I use?"</p>
+<h2>Why it matters</h2>
+<p>Benchmark leaderboards rank by a single score. That score collapses cost and speed into "intelligence per dollar" or similar, hiding the trade-off. But real decisions are multi-dimensional:</p>
+<ul>
+<li><strong>A real-time chat product</strong> cares about speed to first token. It will pay more per token for lower latency.</li>
+<li><strong>A batch summarization pipeline</strong> cares about cost per million tokens. It will wait minutes for cheaper inference.</li>
+<li><strong>A code-review agent</strong> cares about intelligence above all. It will accept higher cost and lower speed for fewer hallucinated reviews.</li>
+</ul>
+<p>Each of these picks a different point on the frontier. The frontier is not a single answer; it is the surface from which your answer comes.</p>
+<h2>How to use it</h2>
+<p>Set an intelligence floor (the minimum quality you can accept). The survivors are now ranked purely on the cost-speed trade. Pick your objective: cheapest, fastest, or balanced. The Observatory's Decide mode does exactly this and returns a named shortlist with exact numbers.</p>
+<h2>The frontier is crowded in 2026</h2>
+<p>In 2024, the frontier had 4-5 models. In August 2026, it has 20+. That crowding is good news: it means the "which model?" question has more valid answers than ever, and the differentiator is your cost envelope and latency requirement, not model quality.</p>
+<p>The frontier updates three times daily with new measurements and pricing. When a new model launches, you can see within hours whether it lands on the frontier or falls into the dominated cloud.</p>
+<p><strong>Try it:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> (free, no account, open source).</p>
+""",
+},
+
+{
     "slug": 'model-observatory-3d-llm-comparison',
     "title": "We Built an Open-Source Model Observatory: Every LLM Compared in One 3D Chart",
     "category": "AI Tools",
@@ -3411,6 +3506,7 @@ LANDING_ES_REPLACEMENTS = {
     "KyaniteLabs is operated by <a href=\"https://puenteworks.com\">Simon Gonzalez De Cruz / PuenteWorks</a>.": "KyaniteLabs es operado por <a href=\"https://puenteworks.com\">Simon Gonzalez De Cruz / PuenteWorks</a>.",
     "KyaniteLabs is operated by Simon Gonzalez De Cruz / PuenteWorks.": "KyaniteLabs es operado por Simon Gonzalez De Cruz / PuenteWorks.",
     "Subscribe": "Suscribirse",
+    "Free Resources": "Recursos gratis",
     "Kyanite Build Notes": "Notas de construccion Kyanite",
     "Follow the useful builds.": "Sigue los builds utiles.",
     "Get short notes when a Kyanite tool, product, or field note is worth inspecting: MCP servers, media pipelines, repo diagnostics, localization QA, implementation lessons, and useful weird software.": "Recibe notas cortas cuando una herramienta, producto o nota de campo de Kyanite merece inspeccionarse: servidores MCP, pipelines de medios, diagnosticos de repos, QA de localizacion, aprendizajes de implementacion y software raro util.",
@@ -3624,6 +3720,48 @@ def about_es():
     return render_template_file(
         "about.html",
         copy=ABOUT_COPY["es"],
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+# ─── Lead magnets (free resources) ──────────────────────────────────────────
+
+@app.route("/magnets")
+def magnets_index():
+    return render_template_file(
+        "magnet-index.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+@app.route("/magnets/settings-card")
+def magnet_settings_card():
+    return render_template_file(
+        "magnet-settings-card.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+@app.route("/magnets/delegation-worksheet")
+def magnet_delegation_worksheet():
+    return render_template_file(
+        "magnet-delegation-worksheet.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+@app.route("/magnets/eval-checklist")
+def magnet_eval_checklist():
+    return render_template_file(
+        "magnet-eval-checklist.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
+
+@app.route("/magnets/llm-cheat-sheet")
+def magnet_llm_cheat_sheet():
+    return render_template_file(
+        "magnet-llm-cheat-sheet.html",
         canonical_base=CANONICAL_BASE,
     )
 
@@ -3900,6 +4038,11 @@ def sitemap_xml():
         ("/privacy", "0.45", "yearly"),
         ("/terms", "0.45", "yearly"),
         ("/blog", "0.88", "weekly"),
+        ("/magnets", "0.8", "monthly"),
+        ("/magnets/settings-card", "0.78", "monthly"),
+        ("/magnets/delegation-worksheet", "0.78", "monthly"),
+        ("/magnets/eval-checklist", "0.78", "monthly"),
+        ("/magnets/llm-cheat-sheet", "0.78", "monthly"),
         ("/implementation", "0.9", "monthly"),
         ("/implementation/intake", "0.75", "monthly"),
         ("/shop", "0.65", "monthly"),
