@@ -550,6 +550,132 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
 {
+    "slug": 'model-observatory-3d-llm-comparison',
+    "title": "We Built an Open-Source Model Observatory: Every LLM Compared in One 3D Chart",
+    "category": "AI Tools",
+    "date": "2026-08-26",
+    "date_modified": "2026-08-26",
+    "read_time": "6 min",
+    "primary_keyword": "llm comparison tool 3d visualization",
+    "seo_title": "Open-Source LLM Comparison: 3D Model Observatory (Speed, Cost, Intelligence)",
+    "meta_description": "Interactive 3D chart comparing 314 LLMs on speed, cost, and intelligence. See the Pareto frontier, set a floor, get a shortlist. Free, open source, data never invented.",
+    "excerpt": "314 LLMs in one 3D chart. Speed, cost, intelligence, the Pareto frontier visible at a glance. Free, open source, honest data. Set a floor, get a shortlist.",
+    "body": """<p>*Published 2026-08-24 · Kyanite Labs · 6-minute read*</p>
+<p><strong>TL;DR:</strong> The Model Observatory is a free, open-source interactive 3D visualization that plots 314 large language models on three axes — output speed (tokens/second), blended price ($/M tokens), and intelligence (Artificial Analysis Index) — so you can see the entire Pareto frontier at a glance instead of reading fifty benchmark tables. It updates itself three times a day from public data, never invents a number, and ships with a 573-test suite that makes lying structurally difficult. This post explains what it is, how the data pipeline enforces honesty, and what four independent AI vision critics taught us about shipping presentation-grade data visualization.</p>
+<p><strong>Try it:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> · <strong>Fork it:</strong> <a href="https://github.com/KyaniteLabs/llm-3d-viz" rel="noopener">github.com/KyaniteLabs/llm-3d-viz</a> (MIT)</p>
+<h2>What is the Model Observatory?</h2>
+<p>The Model Observatory is an <strong>interactive 3D LLM benchmark comparison tool</strong>. Every model is a point in a three-dimensional space:</p>
+<li><strong>X — Cost:</strong> blended price per million tokens (input/output weighted by real task mixes, from Artificial Analysis and OpenRouter list prices)</li>
+<li><strong>Y — Intelligence:</strong> the Artificial Analysis Index (AA's cross-benchmark intelligence score)</li>
+<li><strong>Z — Speed:</strong> output tokens per second</li>
+<p>The white "filament" burning through the cloud of points is the <strong>Pareto frontier</strong> — the set of models where no other model is simultaneously cheaper, faster, *and* smarter. That ridge is the whole point of the visualization. Reading benchmark tables, you reconstruct that frontier in your head, badly. Here you see it: which models are on it, how crowded it has become, and which marketing claims fall off it the moment you plot them.</p>
+<p>Three questions the observatory answers in seconds:</p>
+<p>1. <strong>"What's the cheapest model that's still smart enough for my task?"</strong> — Set an intelligence floor in Decide mode; the panel shortlists eligible models ranked by cost, speed, or balance.</p>
+<p>2. <strong>"Is the new model actually better, or just newer?"</strong> — Multi-effort tiers (low/medium/high reasoning) plot as labeled clusters per family, so you see what you're really buying per tier.</p>
+<p>3. <strong>"Open weights or closed API — what does each really cost to *use*?"</strong> — Open-weight models appear at their hosted API prices. Open ≠ free to use, and the cost axis makes that visible instead of implied.</p>
+<h2>The data honesty core: never invent a number</h2>
+<p>Most comparison sites fail quietly: a missing benchmark becomes a zero, a stale price becomes today's price, a vendor's claimed score gets copied into a column that implies independent measurement. The observatory is built around the opposite contract:</p>
+<li><strong>One authoritative spine.</strong> The AA Intelligence Index, tokens/second, and time-to-first-token come from exactly one source (Artificial Analysis). No other data producer can write those fields. Ever.</li>
+<li><strong>Nulls are data.</strong> If a model's speed hasn't been measured, the row shows null with a reason code — it joins an *awaiting measurement* annex instead of polluting the chart. When Artificial Analysis briefly un-measured Gemini 3.7 Flash's speed in August 2026, the model correctly left the main view for four days and returned when the measurement returned.</li>
+<li><strong>Per-field provenance stamps.</strong> Every populated field carries its origin (<code>aa</code>, <code>aa-api</code>, <code>openrouter</code>, <code>provider</code>, <code>curated</code>) and kind (<code>measured</code> vs <code>list</code>). A meta-assertion in the test suite fails the build if any field lacks a stamp.</li>
+<li><strong>Preliminary data, labeled as preliminary.</strong> When a lab announces a model before anyone measures it (GLM-5.3, Seed 2.1 Turbo, Ornith 1.5, the anonymous "Ox Alpha"), a curated row can carry the *provider-published* numbers with PRELIMINARY provenance — and auto-supersedes the moment an independent measurement exists. Vendor numbers are never mixed into measured columns.</li>
+<li><strong>Prices are real API prices.</strong> Free promotional pricing (like Ox Alpha's launch-week $0) is flagged as non-durable, and a canary watches for price divergence between sources so repricing (three Qwen models repriced 22–60% in one August weekend) surfaces as an alert, not a silent drift.</li>
+<p>The pipeline runs three times daily, rebuilds the dataset from scratch, records a spine-keyed diff (rename-aware, so a superseded manual row pairing with its measured successor counts as a rename, not a churn event), and deploys. 573 tests gate it. The failure modes we cared about — families silently vanishing, duplicate rows, un-gated data commits — each have a regression test named after the day they happened.</p>
+<h2>What four AI vision critics taught us about visual QA</h2>
+<p>Getting a 3D scatter plot to presentation grade is mostly about collisions: labels overlapping ticks, ticks overlapping titles, callouts slicing through the legend. We ran an iterative fix-and-verify program where <strong>four independent vision models</strong> (from different vendors, one rubric) reviewed screenshots of the four key UI states, and every claim they made was adjudicated against DOM geometry measurements — the actual bounding boxes of every rendered label.</p>
+<p>Findings from that program:</p>
+<li><strong>Harsh critics hallucinate plausibly.</strong> Critics repeatedly "read" label collisions that the geometry proved impossible, and cited model names that weren't on screen. Roughly 40% of vision claims were refuted by measurement. Automated visual QA needs a ground-truth adjudicator, not a vote.</li>
+<li><strong>Your verifier can be vacuously true.</strong> Our "zero tick collisions" check passed on panels that were empty — no ticks, no collisions. Every "zero X" assertion needs a denominator.</li>
+<li><strong>The ceiling is philosophy, not defects.</strong> After every mechanical defect was fixed (verified: zero overlapping elements, zero truncated labels, zero off-canvas, across desktop, Decide, Cinema, and 390px mobile), the four critics still spread 15+ points on the same screenshots — the strictest grader wants a dashboard, the design wants an observatory. At that point more critics don't converge the score; the design owner makes one call (we raised secondary text one step, from 10px/55% opacity to 11px/70–85%) and the residual disagreement is taste, not truth.</li>
+<p>That last point is why the project is open source: the argument "is this presentation-grade?" is only worth having when the mechanical bar is provably cleared.</p>
+<h2>Decide mode: from chart to shortlist</h2>
+<p>The 3D stage is for orientation; <strong>Decide mode</strong> is for action. Set an intelligence floor (e.g., "AA Index ≥ 50"), and the panel:</p>
+<p>1. filters to models that clear the floor with complete measurements,</p>
+<p>2. ranks the survivors by your objective — minimum cost, maximum speed, or balanced,</p>
+<p>3. names a shortlist with the exact trade (e.g., "GPT-5.6 Luna: Index 50.1 · $0.17/M · 169 tok/s"), and</p>
+<p>4. syncs the whole state to the URL, so a shortlist is a link you can send.</p>
+<p>The floor and filters also drive the stage: models below the floor dim to near-invisibility — the chart shows you what you're excluding while the panel counts exactly what you're including, and the two numbers must agree (a consistency check verifies the copy against the DOM every build).</p>
+<h2>Fork-friendly by design</h2>
+<p>The repository is MIT-licensed and built to be adapted: swap the catalog source for your own data, change the axis metrics (the axis system is metric-mapped, not hard-coded), or re-theme the whole observatory from one token file. A forkers' guide covers the seams. The data layer is plain JSON with a documented schema and per-field provenance — if you run your own evaluation harness, you can feed it.</p>
+<li><strong>Live:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a></li>
+<li><strong>Source:</strong> <a href="https://github.com/KyaniteLabs/llm-3d-viz" rel="noopener">github.com/KyaniteLabs/llm-3d-viz</a></li>
+<li><strong>Data sources:</strong> <a href="https://artificialanalysis.ai" rel="noopener">Artificial Analysis</a> (API) · <a href="https://openrouter.ai" rel="noopener">OpenRouter</a> (list prices) · LMArena (Elo, CC BY 4.0)</li>
+<h2>FAQ</h2>
+<p><strong>Is the Model Observatory free?</strong></p>
+<p>Yes. No account, no paywall. The code is MIT open source.</p>
+<p><strong>How current is the data?</strong></p>
+<p>The catalog rebuilds three times daily from source APIs, plus on-demand refreshes when new models are announced. Each model row shows its data date and per-field sources.</p>
+<p><strong>Why do open-weight models show prices?</strong></p>
+<p>The cost axis prices *using* a model through an API — the comparable number across all models. Weights being downloadable doesn't make hosted tokens free, and conflating the two is how comparisons go wrong.</p>
+<p><strong>What is the Artificial Analysis Index?</strong></p>
+<p>A cross-benchmark intelligence score published by Artificial Analysis, blending expert-domain evaluations. We use it as the single authoritative intelligence axis precisely because it is one consistent methodology across all models — and we never let any other source write that field.</p>
+<p><strong>Can I use my own benchmarks?</strong></p>
+<p>Yes — fork the repo and point the catalog pipeline at your data. The provenance system expects you to stamp origins; it will refuse unlabeled fields.</p>
+<p><strong>Does it work on mobile?</strong></p>
+<p>Yes — a compact decode layer (compact axis titles, a collapsible stage key, a scrollable ranked list) ships at 390px, verified by the same screenshot-critic program as desktop.</p>""",
+},
+
+    {
+        "slug": 'the-one-line-bug',
+        "title": "The One-Line Bug That Crashed Our Fast Lane: finding, fixing, and measuring a speculative-decoding crash on a $1,400 mini-PC",
+        "category": 'Local LLM / Serving',
+        "date": '2026-08-25',
+        "date_modified": '2026-08-25',
+        "read_time": '7 min',
+        "primary_keyword": "speculative decoding llama.cpp draft model iGPU speedup",
+        "seo_title": "One missing line crashed our fast lane: a speculative-decoding fix, measured",
+        "meta_description": 'A fork drift crashed DSpark speculative decoding on Strix Halo. One line fixed it: +17.7% measured, byte-identical outputs, and a counter-intuitive Q8 draft result.',
+        "excerpt": 'Spec decoding crashed our fastest lane on day one. The bug was one missing line in our fork; the fix bought +17.7% and a surprise about draft quantization.',
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-25. The complete measured answer.</small></p>
+<p>Everything below happened on one machine: an AMD Strix Halo mini-PC (Ryzen AI Max+ 395, gfx1151, ROCm/HIP) that serves our models 24/7. We measured every step on the box itself, published every failure, and changed nothing we couldn&rsquo;t verify. The receipts are at the bottom.</p>
+<h2>The short version</h2>
+<p>Speculative decoding &mdash; a small &ldquo;draft&rdquo; model guessing ahead of the big model &mdash; should have made our fastest model 20-40% faster. Instead, it crashed our server instantly. The bug was in our own fork, it boiled down to a single missing line of code, and fixing it delivered +17.7% measured speedup with byte-identical outputs. Along the way we found a counter-intuitive result about draft-model quantization that we haven&rsquo;t seen published anywhere: the &ldquo;cheaper&rdquo; quantized draft was SLOWER than no draft at all.</p>
+<h2>The setup</h2>
+<p>Our lab serves a 27B champion model around the clock from a $1,400 consumer mini-PC. For cheap, high-volume jobs (formatting, glue code, summaries of short text), we keep a second, tiny model loaded alongside: LFM2.5-2.6B, a 2.6B model that decodes at ~94 tokens/second on this box &mdash; the fastest thing we&rsquo;ve ever measured here.</p>
+<p>DSpark is a draft model for the LFM2 family: a small companion network trained to predict the big model&rsquo;s next few tokens. The server drafts with it, the main model verifies all drafted tokens in one pass, and accepted tokens come out in batches. (The <em>acceptance rate</em> is the share of drafted tokens the main model approves.) When it works, you get the main model&rsquo;s exact outputs, faster.</p>
+<h2>The crash</h2>
+<p>We fired up the 2.6B with its DSpark draft attached. The server loaded both models, announced the speculative implementation, and hard-aborted at the first decode step:</p>
+<p><code>GGML_ASSERT(t_layer_inp[il] != nullptr)</code> &mdash; llama-graph.cpp, draft graph_reserve</p>
+<p>Every time. Both draft quantizations. Every draft-length setting. Before a single token came out.</p>
+<p>The natural suspects were the draft model itself, or upstream &mdash; llama.cpp, the open-source inference engine everything here runs on. We eliminated both: stock upstream llama.cpp, with the recently merged &ldquo;support DSpark for LFM2 models&rdquo; patch (<a href="https://github.com/ggml-org/llama.cpp/pull/27383" rel="noopener">#27383</a>), ran the exact same model pair cleanly. The crash lived in our fork.</p>
+<h2>The bug</h2>
+<p>Our fork (like many production forks) carries a stack of patches, and it had drifted: upstream&rsquo;s LFM2 support had gained three pieces ours lacked &mdash; registering LFM2 for recurrent-state rollback, snapshotting the convolutional state into per-step slots, and, crucially, one line in the layer loop:</p>
+<p><code>res-&gt;t_layer_inp[il] = cur;</code></p>
+<p>That line hands each layer its input tensor so the graph builder can record the dataflow. Without it, the draft graph reserved memory for layer inputs that were null &mdash; and the first null check aborted the server. One line of missing wiring; total speedup, zero.</p>
+<h2>The fix and the numbers</h2>
+<p>We ported the three upstream pieces into our fork (a 2-file diff, +18/&minus;8), built in an isolated directory, and ran the same paired measurement on each arm: same prompt, temperature 0 (deterministic, greedy output), three runs per arm, on the live box &mdash; quiet-box state: only the three product-floor residents loaded.</p>
+<table>
+<thead><tr><th>arm</th><th>runs (tok/s)</th><th>median</th><th>vs baseline</th></tr></thead>
+<tbody>
+<tr><td>no draft</td><td>93.5 / 94.1 / 93.9</td><td>93.9</td><td>&mdash;</td></tr>
+<tr><td>DSpark F16 draft</td><td>102.7 / 110.5 / 130.0</td><td><strong>110.5</strong></td><td><strong>+17.7%</strong></td></tr>
+<tr><td>DSpark Q8_0 draft</td><td>65.6 / 74.4 / 80.3</td><td>74.4</td><td><strong>&minus;20.8%</strong></td></tr>
+<tr><td>DSpark F16, long-horizon (1,200 tok)</td><td>141.4</td><td><strong>141.4</strong></td><td><strong>+50.6%*</strong></td></tr>
+</tbody>
+</table>
+<p>Acceptance (the share of drafted tokens the main model approves) ran 0.64&ndash;0.80 on short prose across the session&rsquo;s raw logs and climbed to <strong>0.89 on a sustained 1,200-token generation</strong> &mdash; the speedup grows with horizon as the draft warms into the text: 110.5 &rarr; 141.4 tok/s on the same arm. *Cross-horizon comparison, labeled: the no-draft arm was not run at 1,200 tokens &mdash; the +50.6% is the 1,200-token drafted run against the 93.9 no-draft <em>short</em> baseline.</p>
+<p>And the speedup is free: a 120-token greedy completion (one spot check, n=1) came out byte-identical with and without drafting, and a full GSM8K run (the standard grade-school-math benchmark; first 100 problems, strict final-answer grading, temperature 0) scored <strong>57.0% with the draft</strong> (57/100, zero errors) against a <strong>53.3% spec-off control</strong> (32/60, our separate control run) &mdash; unpaired arms, still statistically indistinguishable (two-proportion p&asymp;0.65), no degradation signal. The two code paths give identical bytes on the greedy check; where capped batch runs differ, they differ at the truncation margin. Speculative decoding here changes the clock, not the answers that matter.</p>
+<h2>The surprise: quantizing the draft makes it slower</h2>
+<p>We expected the Q8_0 draft &mdash; half the memory, the usual &ldquo;basically free&rdquo; quantization &mdash; to land between baseline and F16. It came in 21% BELOW baseline, with essentially the same acceptance rate (~0.80). The drafts were equally good; verifying them was equally fast; the draft model itself got slower to run. On this iGPU, dequantizing the small draft network on every drafting step costs more than the memory savings buys back. For 2.6B-class drafting on gfx1151, the F16 draft is the only arm that pays.</p>
+<p>We haven&rsquo;t seen this datapoint published for this hardware class. It&rsquo;s a small result, but it&rsquo;s the kind you only get by running all three arms on the same silicon instead of assuming the quant tradeoff transfers from the big-model world.</p>
+<h2>What this means for us</h2>
+<p>The 2.6B lane now serves with identical outputs at a 110.5 tok/s median on the quiet-box band where we certified it (an evening re-read after a champion restart read 96.4/88.8 short/long &mdash; decode on this box is load-dependent and every number carries its box state) &mdash; roughly 18% faster for the cost of one line of wiring and a fork-rebase. The lane keeps the job description our published delegation benchmark gave it (open source, <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>): superb for small, simple, high-volume jobs; wrong for long-context, trap-detection, or anything safety-shaped. Speed doesn&rsquo;t change the job description; it changes the throughput of the jobs it already does.</p>
+<h2>Reproducibility</h2>
+<ul>
+<li>Hardware: AMD Strix Halo (Ryzen AI Max+ 395, gfx1151), 64GB unified, ROCm/HIP build, Release, GGML_HIP_GRAPHS on.</li>
+<li>Main model: LFM2.5-2.6B Q4_K_M; drafts: DSpark F16 and Q8_0.</li>
+<li>Server flags: defaults (draft auto-detected, n_max=3), -ngl 99, ctx 8192, temperature 0, 3 runs/arm at 200 tokens/run (prose prompt; the long-horizon arm is one 1,200-token run, the byte-check 120 tokens).</li>
+<li>Fix: port of upstream <a href="https://github.com/ggml-org/llama.cpp/pull/27383" rel="noopener">#27383</a> &mdash; fork branch dspark-lfm2-fix; 2 files, +18/&minus;8.</li>
+<li>Upstream thread with our confirmation comment on gfx1151: <a href="https://github.com/ggml-org/llama.cpp/pull/27383" rel="noopener">github.com/ggml-org/llama.cpp/pull/27383</a></li>
+<li>Crash logs, build logs, and per-run raw numbers preserved on the box.</li>
+</ul>
+<h2>Caveats we mean</h2>
+<p>Speed arms are n=3 on one prose prompt (pilot-class); the long-horizon run is n=1 at 1,200 tokens. Acceptance is content-dependent (other tasks have read 0.50 and 0.53). The GSM8K pair is n=100 strict with a 512-token cap (52/100 answers hit the cap &mdash; the strict ceiling there is truncation, on both arms&rsquo; grading style). GSM8K set source: HF <code>openai/gsm8k</code> test split, first 100. Every number above came from the box that serves our traffic, during a normal day, with our production 27B serving throughout (it self-restarted once mid-network-outage during this work &mdash; unit-recovered, unrelated to the lane).</p>
+<p><em>Questions, corrections, or &ldquo;we see the same Q8 regression on [your hardware]&rdquo; &mdash; that&rsquo;s exactly the conversation we want. Find us through the lab.</em></p>
+""",
+},
+{
     "slug": 'two-models-one-mini-pc-paired-numbers',
     "title": 'Two models, one $1,400 mini-PC: the paired numbers, failures included',
     "category": 'Local AI Infrastructure',
