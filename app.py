@@ -3726,6 +3726,14 @@ def about_es():
 
 # ─── Lead magnets (free resources) ──────────────────────────────────────────
 
+@app.route("/rutile")
+def rutile_product():
+    return render_template_file(
+        "rutile.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
+
 @app.route("/magnets")
 def magnets_index():
     return render_template_file(
