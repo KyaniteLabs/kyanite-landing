@@ -549,6 +549,46 @@ PUBLIC_PROJECTS = [
 ]
 
 BLOG_POSTS = [
+    {
+        "slug": 'uncensored-models-measured',
+        "title": "We Measured Every 'Uncensored' Model That Fits Our $1,400 Box — Most of Them Are Lobotomized",
+        "category": "Local AI Infrastructure",
+        "date": "2026-08-28",
+        "date_modified": "2026-08-28",
+        "read_time": "7 min",
+        "primary_keyword": "uncensored local llm tested on mini pc",
+        "seo_title": "Every Uncensored LLM That Fits a $1,400 Mini-PC, Measured: Most Are Lobotomized",
+        "meta_description": "We benchmarked every uncensored model that fits a 64GB Strix Halo mini-PC — RVN, Huihui, CRACK — with paired GSM8K, hardened coverage sets, and failures included. Raw logs cited.",
+        "excerpt": "Our champion model refuses half the blunt asks. We measured every uncensored model that fits our $1,400 box to find one that doesn't — and most of them paid for it in capability. The numbers, including the ones that make us look sloppy.",
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. 2026-08-28. Disclosure: one candidate below, GLM-5.3-Flash, is a sibling of the writing assistant — it lost on arithmetic before any benchmark ran. Every number below was re-read from raw result files on this machine before writing.</small></p>
+<p><strong>Our daily model is a hedger.</strong> Qwen3.8-27B, the champion that runs this lab, almost never flat-out refuses — it wraps half the blunt asks in disclaimers. For the work this lab does — edge-case testing, red-teaming our own products, writing a corporate model won't touch — we wanted one uncensored model that <em>runs well on this machine</em>. We found every uncensored release we could in the fits-a-64GB-box class and measured all of them, on the same box, against the same bars. Including the failures. Especially the failures.</p>
+<h2>The bars</h2>
+<p>Two gates, both measured. <strong>Math</strong> (the not-lobotomized check): a fixed 60-problem GSM8K battery, 5-shot, temperature 0. Strict grading means the answer must end with <code>#### &lt;number&gt;</code> exactly matching the key; lenient means the right number appears in the final prose. Champion control: <strong>96.7% strict</strong>. <strong>Coverage</strong> (the actual job): 30 benchmark-class prompts across over-refusal, blunt writing, and research lanes, plus a hardened 10-prompt set with the polite framing stripped out.</p>
+<h2>The failures first</h2>
+<ul>
+<li><strong>RVN</strong> (an "abliterated" build whose model card promises near-lossless capability, KL 0.0085): <strong>68.3% strict</strong>. And we re-read its raw failures the same way we re-read the winner's below: 10 of its 19 misses were outright wrong arithmetic; 9 more were format stops. Even granting every format stop as prose-correct, RVN tops out at 83% — the card's number did not predict the task cost.</li>
+<li><strong>Huihui</strong> (a crude direction-ablation of the same base model and quant class as our champion — the clean comparison): <strong>55.0% strict</strong>, and its raw failures were 23 outright wrong against only 4 format stops. This is capability damage, not a grading artifact: with the base model and compression held constant, the surgery itself — not the quantization — accounts for the ~42-point gap on our battery.</li>
+<li><strong>LFM2.5-8B-A1B</strong> (the mid-tier question): failed its pre-registered kill criterion — <strong>zero jobs we could route to it that our other models don't already do</strong>. Killed before scoring further. That is a usefulness failure, not a lobotomy finding; its capability was never measured.</li>
+<li><strong>GLM-5.3-Flash</strong>: released mid-investigation at 320B total parameters. No quantization of 320B fits 64GB of shared memory. Walk-away in ten minutes of arithmetic — total parameters, not active ones, gate what fits this hardware class.</li>
+</ul>
+<h2>The catch that almost got misfiled</h2>
+<p>The eventual winner's first score was <strong>6.7% strict</strong> — implausible for a model whose card reports above-baseline benchmarks. Reading every raw answer showed correct arithmetic stated in prose while the model announced "let me format the answer" and stopped: the uncensoring broke <em>format-following</em>, not math. Re-scored lenient for final-prose correctness: <strong>93.3%</strong>. The strict number is real and stays reported — nothing that can't finish an answer in format serves a parser — but it measures a different thing than capability. The 87-point spread between the two gradings <em>is</em> the format break, made visible.</p>
+<h2>The winner</h2>
+<p><strong>CRACK Ornith-1.5-35B (Q3_K_M, 17GB)</strong> — a Mixture-of-Experts build that activates ~3B parameters per token, so it runs fast even beside the two resident models:</p>
+<ul>
+<li>Math: 93.3% lenient (6.7% strict, the format break above) — the lenient score lands inside the stock Ornith-1.5-35B's own measured band (90.0% thinking-off, 98.3% thinking-on, strict, from <a href="/blog/two-models-one-mini-pc-paired-numbers">our paired 2&times;2</a>). Modes labeled; we don't mix them silently.</li>
+<li>Coverage, standard 30-prompt set: <strong>30/30 full answers</strong> (champion 29/30, with the one miss a serving error on our side, not a refusal; RVN 29/30 plus one caveated).</li>
+<li>Coverage, hardened 10 with polite framing stripped: <strong>10/10 full answers</strong> where our champion returned 5/10 full + 5/10 hedged, zero hard refusals. The felt gap is disclaimers, not refusals.</li>
+</ul>
+<p>Adopted as the standing uncensored subject: regular work routes to the champion, the blunt lane routes to CRACK, loaded on demand.</p>
+<h2>The method is the moat</h2>
+<p>Paired same-box measurements. Pre-registered kill criteria. Vendor and community claims treated as priors — <strong>two were falsified on our hardware</strong> (RVN's near-lossless card claim; a viral "65 tok/s" speculative-decoding fork that ran at <em>half</em> our frozen engine's speed on our stack). Raw answers always recorded — every failure set quoted above was re-read by hand before we called it a capability loss. Zero spend. Every artifact path retained.</p>
+<h2>One more honesty check, at scale</h2>
+<p>Because we almost got burned by a screen: a first single-pass read of our champion's long-context recall said "~32k-class usable." The pre-registered replication — four depths from 6k to 96k words (~8k to ~128k tokens), 3 passes per depth, both thinking modes, 24 cells — returned <strong>24/24 perfect recall</strong>, and the retraction issued <em>before</em> this piece published. Single-pass screens are not findings. Then the math battery got the same treatment: 60 problems first (96.7%, with one miss traced to our own generation-budget dial and one real — it answered "break-even" where the question asked when profits start), then <strong>500 fresh problems: 97.8%, zero truncation failures</strong>. The numbers hold at scale; the instruments had to be proven first.</p>
+<p>That's the whole story: an uncensored lane that works, a champion we keep trying to falsify, and a method that keeps us honest about both.</p>
+""",
+    },
 {
     "slug": 'how-to-choose-an-llm',
     "title": 'How to Choose an LLM: A Decision Framework That Actually Works',
