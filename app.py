@@ -2570,10 +2570,78 @@ kino concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
     },
 }
 
+# ES-only originals — the interpretation lane is Spanish-first by design
+# (CEO word 2026-09-02). These have no EN twin on purpose; the /es edition
+# is the canonical home of interpretation pieces.
+BLOG_POSTS_ES_ORIGINALS = [
+    {
+        "slug": 'resonant-contribution-economy-explained',
+        "title": "La Contribution Economy de ResonantDAO, explicada con recibos",
+        "category": 'Contribution Economy',
+        "date": '2026-09-02',
+        "date_modified": '2026-09-02',
+        "read_time": '6 min',
+        "primary_keyword": "contribution economy ResonantDAO",
+        "seo_title": "La Contribution Economy de ResonantDAO, Explicada (Con Recibos)",
+        "meta_description": 'El primer análisis en español de la Contribution Economy de ResonantDAO: 22 dimensiones, contextual authority, tokens que aún no existen y un producto real en GitHub. Con los recibos de lo que construí contra su alpha.',
+        "excerpt": 'Lo contrario de un DAO normal: primero la contribución verificada, el token después. El primer análisis en español del movimiento, con recibos.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-02. Primero la respuesta directa, después los recibos.</small></p>
+<p>La historia normal de un DAO nuevo: lanzar el token primero, mirar el precio y llamar a la comunidad a abrir la cartera. Es comprensible: el dinero es legible, la contribución no. Pero lo que no se puede medir, no se puede pagar.</p>
+<p>ResonantDAO hace lo contrario. Puso la Contribution Economy primero y el dinero después, mucho después. Su whitepaper lo dice plano: "The first phase is not a financial-token launch." Y hasta ahora cumplen: la fase 1 ya está en marcha y todavía no hay token en circulación.</p>
+<p>Si suena a otro experimento de gobernanza con palabras bonitas, sigue leyendo. Esta vez hay un producto real, repos públicos y un merge detrás.</p>
+<h2>Primero la respuesta directa</h2>
+<p>ResonantDAO es una "community for communities" que quiere una economía human-first para la era de la IA: el capital nunca pesa en los votos. La Contribution Economy es su pieza central: un sistema para registrar y recompensar las distintas formas en que alguien crea valor en una comunidad. Construir, enseñar, cuidar, investigar, resolver conflictos, terminar cosas. No contar tareas, no contar horas, no un puntaje global.</p>
+<p>La regla gobernante, textual: "contribution pays on outcome, never on activity."</p>
+<p>Cada acción real se convierte en un contribution record: se junta evidencia y la acción se puntúa como perfil, no como etiqueta.</p>
+<h2>Las 22 dimensiones</h2>
+<p>La medición usa 22 dimensiones de contribución nombradas según los arcanos mayores del Tarot: The Fool es 0, The World es 21. Antes de poner los ojos en blanco: ellos mismos lo llaman "a design hypothesis, not a claim of metaphysical completeness". Es un mapa de acción, no una lectura del futuro.</p>
+<p>Cada acción verificada activa un perfil disperso: un curso puede ser creación, preservación y enseñanza a la vez. Cada persona acumula 22 saldos no transferibles, uno por dimensión.</p>
+<p>Lo mejor del diseño es lo que prohíbe: no hay leaderboard. Su razón textual: "ranking forces contributions onto one scale, which quietly reinstates the single score this model exists to replace".</p>
+<h2>Contextual authority</h2>
+<p>Aquí está la idea más fuerte del whitepaper. En vez de un reputation score universal, cada decisión declara qué dimensiones importan y el peso viene de resultados verificados exactamente en esas dimensiones. Una decisión educativa da peso a la evidencia de enseñanza. Una disputa da peso a la evidencia de resolución y equidad. Ni puntaje global, ni capital, ni actividad.</p>
+<p>Se llama contextual authority. Es lo que un sistema de reputación bien hecho debería hacer y casi ninguno hace.</p>
+<h2>Los tokens que todavía no existen</h2>
+<p>Dos tokens con roles distintos, cero números finales.</p>
+<p>$RCT sería el resumen derivado de los 22 saldos: no transferible, aproximado, y nunca reemplaza el perfil. Cuenta para umbrales de elegibilidad. Nunca escala votos. Su fórmula todavía no existe: el spec dice "Formula pending calibration". No hay coeficiente aprobado, no hay emisión aprobada.</p>
+<p>$RES sería el token transferible de la fase 1, con la regla que separa esto de toda la cripto normal: "Holding or receiving $RES does not create contribution value." El dinero no compra standing ni votos.</p>
+<p>La membresía iría por otro lado: la Symbiotic Licence, una credencial soulbound on-chain, una por wallet, que no se vende. ¿Qué derechos otorga? El texto legal todavía no está definido en ninguna parte. Su propia página advierte "intentionally not final legal text". Cuando lo publiquen, hay que leerlo.</p>
+<p>Nada de esto está vivo hoy. Todo corre en testnet, en ensayo general.</p>
+<h2>ResonantOS, el producto</h2>
+<p>Detrás de la economía hay software de verdad: ResonantOS, "the operating layer for cultivating a trusted AI strategist". Un Augmentor que opera como estratega, no como bot de tareas. Un Living Archive que acumula memoria con el tiempo. Add-ons de especialistas, límites de confianza definidos por el usuario, modelos configurables.</p>
+<p>La 2.0.0-alpha está pública en GitHub con licencia MIT, un SDK de add-ons y un validador de manifests que de verdad valida. Hay código, hay contribuidores construyendo, hay merges. Esto no es un whitepaper con logo.</p>
+<h2>El túnel de viento</h2>
+<p>Lo que más respeto del proyecto es su propio freno. Su repo de investigación se define como "a research wind tunnel, not an economy factory": las ideas de reconocimiento y recompensa chocan contra evidencia y ejemplos duros antes de que alguien las trate como política. Sus fixtures son muñecos de choque para el pipeline de evidencia.</p>
+<p>Ningún mecanismo de esta economía está vigente hoy. Pre-mainnet, pre-calibración, en ensayo general. Que lo digan ellos mismos es la señal más confiable que he visto en este espacio.</p>
+<h2>Los recibos</h2>
+<p>Yo no leo un sistema y opino. Construyo contra él y mido.</p>
+<ul>
+<li><strong>resonant-authority</strong>: una implementación de contextual authority como add-on local. Pasa su validador de manifests. MIT.</li>
+<li><strong>resonant-stack-bench</strong> y <strong>resonant-delegation-bench</strong>: bancos de medición para el ecosistema. Públicos, MIT.</li>
+<li>Un fix de seguridad que mandé llegó como PR 333 y su contribuidor top lo mergeó el 31 de agosto.</li>
+</ul>
+<p>Cada afirmación de este post tiene un repo público detrás. Ese es el estándar.</p>
+<h2>Lo que falta</h2>
+<p>La fórmula del $RCT no existe. Las emisiones del $RES no existen. El texto de la licencia no existe. El salto a mainnet (Solana, con meta en Q4 2026) depende de auditorías y checks que todavía no pasan. Este proyecto puede fallar como cualquier otro. Mis recibos no son excepción: que resonant-authority pase el validador prueba compatibilidad, no utilidad.</p>
+<p>La diferencia: hoy cada afirmación se puede verificar desde repos públicos.</p>
+<h2>Por qué en español</h2>
+<p>Toda la superficie pública de Resonant está en inglés: whitepaper, specs, repos, sitio. No encontré ni un solo análisis en español. Si esta economía llega a mainnet y funciona, la conversación en español va a existir igual. La pregunta es si empieza antes o después de la calibración.</p>
+<p>Empieza aquí.</p>
+<h2>Dónde seguir</h2>
+<ul>
+<li>Whitepaper y Contribution Economy: <a href="https://resonantdao.com" rel="noopener">resonantdao.com</a> (en inglés)</li>
+<li>El túnel de viento: <a href="https://github.com/ResonantOS/resonantos-economy-research" rel="noopener">github.com/ResonantOS/resonantos-economy-research</a></li>
+<li>El alpha del producto: <a href="https://github.com/ResonantOS/2.0.0-alpha" rel="noopener">github.com/ResonantOS/2.0.0-alpha</a></li>
+<li>Mis recibos: <a href="https://github.com/simongonzalezdc" rel="noopener">github.com/simongonzalezdc</a></li>
+</ul>
+""",
+    },
+]
+
 BLOG_POSTS_ES = [
     {**post, **BLOG_COPY_ES.get(post["slug"], {})}
     for post in BLOG_POSTS
-]
+] + BLOG_POSTS_ES_ORIGINALS
 BLOG_POSTS_ES_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS_ES}
 
 # ─── Products ────────────────────────────────────────────────────────────────
