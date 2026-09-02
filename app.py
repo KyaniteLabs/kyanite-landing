@@ -549,167 +549,6 @@ PUBLIC_PROJECTS = [
 ]
 
 BLOG_POSTS = [
-{
-    "slug": 'how-to-choose-an-llm',
-    "title": 'How to Choose an LLM: A Decision Framework That Actually Works',
-    "category": 'AI Tools',
-    "date": "2026-08-26",
-    "date_modified": "2026-08-26",
-    "read_time": "5 min",
-    "primary_keyword": 'how to choose an llm',
-    "seo_title": 'How to Choose an LLM in 2026: Speed, Cost, Intelligence (Practical Guide)',
-    "meta_description": 'Stop reading benchmark tables. Set an intelligence floor, compare on cost and speed, find the Pareto frontier. A practical framework with a free 3D tool that does it for you.',
-    "excerpt": 'Most LLM comparison advice is wrong because it starts with benchmarks instead of your task. Here is the framework we use: set a floor, compare the survivors, ship.',
-    "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. The framework we use at Kyanite Labs, built into a free tool.</small></p>
-<p><strong>Every LLM comparison article makes the same mistake: it starts with the models instead of your task.</strong></p>
-<p>"GPT-5.6 is the smartest." "Claude Opus 4.6 is the safest." "Gemini 3.7 Pro is the best value." These are answers to questions nobody asked. The real question is always: <strong>what is the cheapest model that is smart enough for the specific work I am doing?</strong></p>
-<h2>Step 1: Set an intelligence floor, not a target</h2>
-<p>You do not need the smartest model. You need one that clears a minimum bar for your task. That bar is your floor.</p>
-<p>For most product work in 2026, the Artificial Analysis Index floor is around 45-55. Below that, models hallucinate enough to require human review on every output. Above it, you are buying intelligence you may not use.</p>
-<p><strong>The floor is task-specific.</strong> A summarization pipeline may clear at Index 40. A code-review agent may need 60+. A creative-writing assistant may be better below the frontier entirely, because frontier models optimize for correctness, not voice.</p>
-<h2>Step 2: Compare survivors on cost and speed</h2>
-<p>Once the floor eliminates the models that will waste your time with errors, the remaining question is purely economic: which of the survivors is cheapest per million tokens, or fastest to first token, or best balanced for your workload?</p>
-<p>This is where benchmark tables fail and visualization works. The <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a> plots 314 models on three axes (cost, intelligence, speed) so the Pareto frontier is visible at a glance. The white filament through the cloud of points is the set of models where nothing is simultaneously cheaper, faster, and smarter.</p>
-<h2>Step 3: Check the frontier, not the leaderboard</h2>
-<p>A model on the Pareto frontier means no other model dominates it. A model off the frontier means you are paying a premium or accepting a penalty you could avoid.</p>
-<p>The frontier in late August 2026 is crowded. A year ago, the frontier had 5-6 models. Now it has 20+, which means the real question has shifted from "which model should I use?" to "which frontier model fits my cost envelope?"</p>
-<h2>Step 4: Validate with your own eval</h2>
-<p>Benchmark scores are proxies. Before committing, run 20-50 of YOUR actual prompts through the top 2-3 candidates. We built <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a> for exactly this: hidden tests, certified floors, a sabotage cell. Your eval does not need to be that elaborate, but it needs to exist.</p>
-<h2>The shortcut</h2>
-<p><a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> does steps 1-3 in about 30 seconds. Set a floor, pick your objective (cost, speed, or balanced), get a named shortlist with exact numbers. Free, no account, open source.</p>
-""",
-},
-
-{
-    "slug": 'llm-cost-comparison-guide',
-    "title": 'LLM Cost Comparison: What Models Actually Cost to Use in 2026',
-    "category": 'AI Tools',
-    "date": "2026-08-26",
-    "date_modified": "2026-08-26",
-    "read_time": "5 min",
-    "primary_keyword": 'llm cost comparison',
-    "seo_title": 'LLM Cost Comparison 2026: Real Prices for 314 Models (Interactive Chart)',
-    "meta_description": 'Blended API prices for 314 LLMs in one interactive chart. See which models are actually cheap, which are marketing-cheap, and how prices moved this month.',
-    "excerpt": 'Open weights are not free to use. API prices moved 22-60% in one weekend. Here is what LLMs actually cost to use, with the data to back it.',
-    "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. Data from the <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a>, rebuilt three times daily from Artificial Analysis and OpenRouter.</small></p>
-<p><strong>LLM pricing is a mess, and most comparison sites make it worse.</strong></p>
-<p>Here are the five things that make LLM cost comparison harder than it looks, and one tool that handles all of them.</p>
-<h2>1. Blended price, not input/output separately</h2>
-<p>A model that charges $0.25/M input and $1.25/M output is not "$0.25 per million tokens." For a typical task mix (long context in, shorter response out), the real cost is somewhere between the two. The Observatory uses a blended price: input and output weighted by real task distributions, so the number on the cost axis is the number you actually pay.</p>
-<h2>2. Open weights are not free to use</h2>
-<p>A model with downloadable weights costs nothing to download. It costs real money to <em>use</em>: either the electricity and hardware to self-host, or the hosted API price that someone else charges to run it for you. The Observatory prices everything at the hosted API rate, because that is the only number comparable across all 314 models.</p>
-<h2>3. Prices move fast</h2>
-<p>In August 2026, three Qwen models repriced 22-60% in one weekend. The Observatory's pipeline detects repricing as an alert, not a silent drift. When you look at the chart, you are seeing prices as of the latest rebuild (three times daily), not a cached snapshot.</p>
-<h2>4. Free promotional pricing is flagged</h2>
-<p>When a lab launches a model at $0 for a promotional period, the Observatory shows the promotional price flagged as non-durable, with a canary that watches for the real price to appear. Free-tier pricing disappears; the chart should not pretend otherwise.</p>
-<h2>5. The Pareto frontier is the honest answer</h2>
-<p>"What is the cheapest LLM?" has no single answer, because the cheapest model that clears your intelligence floor depends on your floor. The 3D chart at <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> shows the cost-intelligence-speed frontier visually. Set your floor in Decide mode and the shortlist ranks survivors by your objective.</p>
-<p>Every price is traceable to its source (Artificial Analysis API, OpenRouter list, or provider), per-field, with a timestamp. No number on the chart was invented by us.</p>
-""",
-},
-
-{
-    "slug": 'pareto-frontier-llm-explained',
-    "title": 'The LLM Pareto Frontier: What It Is and Why It Matters for Model Selection',
-    "category": 'AI Tools',
-    "date": "2026-08-26",
-    "date_modified": "2026-08-26",
-    "read_time": "5 min",
-    "primary_keyword": 'pareto frontier llm model selection',
-    "seo_title": 'LLM Pareto Frontier Explained: How to Visualize Model Trade-offs (3D)',
-    "meta_description": 'The Pareto frontier is the set of LLMs where nothing is simultaneously cheaper, faster, and smarter. Here is why visualizing it changes how you pick models.',
-    "excerpt": 'Most LLM comparison advice ignores trade-offs. The Pareto frontier makes them visible. Here is what it means and how to use it.',
-    "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-26. Try the interactive version at <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a>.</small></p>
-<p><strong>If you only learn one concept for choosing LLMs, learn the Pareto frontier.</strong></p>
-<h2>What it is</h2>
-<p>A model is on the <strong>Pareto frontier</strong> if no other model is simultaneously cheaper, faster, <em>and</em> smarter. A model off the frontier is dominated: something else beats it on at least one dimension without losing on any other.</p>
-<p>In the <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a>, the frontier is the white filament burning through the cloud of 314 model-points in 3D space. It is the ridge of non-dominated models, and it is the honest answer to "which model should I use?"</p>
-<h2>Why it matters</h2>
-<p>Benchmark leaderboards rank by a single score. That score collapses cost and speed into "intelligence per dollar" or similar, hiding the trade-off. But real decisions are multi-dimensional:</p>
-<ul>
-<li><strong>A real-time chat product</strong> cares about speed to first token. It will pay more per token for lower latency.</li>
-<li><strong>A batch summarization pipeline</strong> cares about cost per million tokens. It will wait minutes for cheaper inference.</li>
-<li><strong>A code-review agent</strong> cares about intelligence above all. It will accept higher cost and lower speed for fewer hallucinated reviews.</li>
-</ul>
-<p>Each of these picks a different point on the frontier. The frontier is not a single answer; it is the surface from which your answer comes.</p>
-<h2>How to use it</h2>
-<p>Set an intelligence floor (the minimum quality you can accept). The survivors are now ranked purely on the cost-speed trade. Pick your objective: cheapest, fastest, or balanced. The Observatory's Decide mode does exactly this and returns a named shortlist with exact numbers.</p>
-<h2>The frontier is crowded in 2026</h2>
-<p>In 2024, the frontier had 4-5 models. In August 2026, it has 20+. That crowding is good news: it means the "which model?" question has more valid answers than ever, and the differentiator is your cost envelope and latency requirement, not model quality.</p>
-<p>The frontier updates three times daily with new measurements and pricing. When a new model launches, you can see within hours whether it lands on the frontier or falls into the dominated cloud.</p>
-<p><strong>Try it:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> (free, no account, open source).</p>
-""",
-},
-
-{
-    "slug": 'model-observatory-3d-llm-comparison',
-    "title": "We Built an Open-Source Model Observatory: Every LLM Compared in One 3D Chart",
-    "category": "AI Tools",
-    "date": "2026-08-26",
-    "date_modified": "2026-08-26",
-    "read_time": "6 min",
-    "primary_keyword": "llm comparison tool 3d visualization",
-    "seo_title": "Open-Source LLM Comparison: 3D Model Observatory (Speed, Cost, Intelligence)",
-    "meta_description": "Interactive 3D chart comparing 314 LLMs on speed, cost, and intelligence. See the Pareto frontier, set a floor, get a shortlist. Free, open source, data never invented.",
-    "excerpt": "314 LLMs in one 3D chart. Speed, cost, intelligence, the Pareto frontier visible at a glance. Free, open source, honest data. Set a floor, get a shortlist.",
-    "body": """<p>*Published 2026-08-24 · Kyanite Labs · 6-minute read*</p>
-<p><strong>TL;DR:</strong> The Model Observatory is a free, open-source interactive 3D visualization that plots 314 large language models on three axes — output speed (tokens/second), blended price ($/M tokens), and intelligence (Artificial Analysis Index) — so you can see the entire Pareto frontier at a glance instead of reading fifty benchmark tables. It updates itself three times a day from public data, never invents a number, and ships with a 573-test suite that makes lying structurally difficult. This post explains what it is, how the data pipeline enforces honesty, and what four independent AI vision critics taught us about shipping presentation-grade data visualization.</p>
-<p><strong>Try it:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> · <strong>Fork it:</strong> <a href="https://github.com/KyaniteLabs/llm-3d-viz" rel="noopener">github.com/KyaniteLabs/llm-3d-viz</a> (MIT)</p>
-<h2>What is the Model Observatory?</h2>
-<p>The Model Observatory is an <strong>interactive 3D LLM benchmark comparison tool</strong>. Every model is a point in a three-dimensional space:</p>
-<li><strong>X — Cost:</strong> blended price per million tokens (input/output weighted by real task mixes, from Artificial Analysis and OpenRouter list prices)</li>
-<li><strong>Y — Intelligence:</strong> the Artificial Analysis Index (AA's cross-benchmark intelligence score)</li>
-<li><strong>Z — Speed:</strong> output tokens per second</li>
-<p>The white "filament" burning through the cloud of points is the <strong>Pareto frontier</strong> — the set of models where no other model is simultaneously cheaper, faster, *and* smarter. That ridge is the whole point of the visualization. Reading benchmark tables, you reconstruct that frontier in your head, badly. Here you see it: which models are on it, how crowded it has become, and which marketing claims fall off it the moment you plot them.</p>
-<p>Three questions the observatory answers in seconds:</p>
-<p>1. <strong>"What's the cheapest model that's still smart enough for my task?"</strong> — Set an intelligence floor in Decide mode; the panel shortlists eligible models ranked by cost, speed, or balance.</p>
-<p>2. <strong>"Is the new model actually better, or just newer?"</strong> — Multi-effort tiers (low/medium/high reasoning) plot as labeled clusters per family, so you see what you're really buying per tier.</p>
-<p>3. <strong>"Open weights or closed API — what does each really cost to *use*?"</strong> — Open-weight models appear at their hosted API prices. Open ≠ free to use, and the cost axis makes that visible instead of implied.</p>
-<h2>The data honesty core: never invent a number</h2>
-<p>Most comparison sites fail quietly: a missing benchmark becomes a zero, a stale price becomes today's price, a vendor's claimed score gets copied into a column that implies independent measurement. The observatory is built around the opposite contract:</p>
-<li><strong>One authoritative spine.</strong> The AA Intelligence Index, tokens/second, and time-to-first-token come from exactly one source (Artificial Analysis). No other data producer can write those fields. Ever.</li>
-<li><strong>Nulls are data.</strong> If a model's speed hasn't been measured, the row shows null with a reason code — it joins an *awaiting measurement* annex instead of polluting the chart. When Artificial Analysis briefly un-measured Gemini 3.7 Flash's speed in August 2026, the model correctly left the main view for four days and returned when the measurement returned.</li>
-<li><strong>Per-field provenance stamps.</strong> Every populated field carries its origin (<code>aa</code>, <code>aa-api</code>, <code>openrouter</code>, <code>provider</code>, <code>curated</code>) and kind (<code>measured</code> vs <code>list</code>). A meta-assertion in the test suite fails the build if any field lacks a stamp.</li>
-<li><strong>Preliminary data, labeled as preliminary.</strong> When a lab announces a model before anyone measures it (GLM-5.3, Seed 2.1 Turbo, Ornith 1.5, the anonymous "Ox Alpha"), a curated row can carry the *provider-published* numbers with PRELIMINARY provenance — and auto-supersedes the moment an independent measurement exists. Vendor numbers are never mixed into measured columns.</li>
-<li><strong>Prices are real API prices.</strong> Free promotional pricing (like Ox Alpha's launch-week $0) is flagged as non-durable, and a canary watches for price divergence between sources so repricing (three Qwen models repriced 22–60% in one August weekend) surfaces as an alert, not a silent drift.</li>
-<p>The pipeline runs three times daily, rebuilds the dataset from scratch, records a spine-keyed diff (rename-aware, so a superseded manual row pairing with its measured successor counts as a rename, not a churn event), and deploys. 573 tests gate it. The failure modes we cared about — families silently vanishing, duplicate rows, un-gated data commits — each have a regression test named after the day they happened.</p>
-<h2>What four AI vision critics taught us about visual QA</h2>
-<p>Getting a 3D scatter plot to presentation grade is mostly about collisions: labels overlapping ticks, ticks overlapping titles, callouts slicing through the legend. We ran an iterative fix-and-verify program where <strong>four independent vision models</strong> (from different vendors, one rubric) reviewed screenshots of the four key UI states, and every claim they made was adjudicated against DOM geometry measurements — the actual bounding boxes of every rendered label.</p>
-<p>Findings from that program:</p>
-<li><strong>Harsh critics hallucinate plausibly.</strong> Critics repeatedly "read" label collisions that the geometry proved impossible, and cited model names that weren't on screen. Roughly 40% of vision claims were refuted by measurement. Automated visual QA needs a ground-truth adjudicator, not a vote.</li>
-<li><strong>Your verifier can be vacuously true.</strong> Our "zero tick collisions" check passed on panels that were empty — no ticks, no collisions. Every "zero X" assertion needs a denominator.</li>
-<li><strong>The ceiling is philosophy, not defects.</strong> After every mechanical defect was fixed (verified: zero overlapping elements, zero truncated labels, zero off-canvas, across desktop, Decide, Cinema, and 390px mobile), the four critics still spread 15+ points on the same screenshots — the strictest grader wants a dashboard, the design wants an observatory. At that point more critics don't converge the score; the design owner makes one call (we raised secondary text one step, from 10px/55% opacity to 11px/70–85%) and the residual disagreement is taste, not truth.</li>
-<p>That last point is why the project is open source: the argument "is this presentation-grade?" is only worth having when the mechanical bar is provably cleared.</p>
-<h2>Decide mode: from chart to shortlist</h2>
-<p>The 3D stage is for orientation; <strong>Decide mode</strong> is for action. Set an intelligence floor (e.g., "AA Index ≥ 50"), and the panel:</p>
-<p>1. filters to models that clear the floor with complete measurements,</p>
-<p>2. ranks the survivors by your objective — minimum cost, maximum speed, or balanced,</p>
-<p>3. names a shortlist with the exact trade (e.g., "GPT-5.6 Luna: Index 50.1 · $0.17/M · 169 tok/s"), and</p>
-<p>4. syncs the whole state to the URL, so a shortlist is a link you can send.</p>
-<p>The floor and filters also drive the stage: models below the floor dim to near-invisibility — the chart shows you what you're excluding while the panel counts exactly what you're including, and the two numbers must agree (a consistency check verifies the copy against the DOM every build).</p>
-<h2>Fork-friendly by design</h2>
-<p>The repository is MIT-licensed and built to be adapted: swap the catalog source for your own data, change the axis metrics (the axis system is metric-mapped, not hard-coded), or re-theme the whole observatory from one token file. A forkers' guide covers the seams. The data layer is plain JSON with a documented schema and per-field provenance — if you run your own evaluation harness, you can feed it.</p>
-<li><strong>Live:</strong> <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a></li>
-<li><strong>Source:</strong> <a href="https://github.com/KyaniteLabs/llm-3d-viz" rel="noopener">github.com/KyaniteLabs/llm-3d-viz</a></li>
-<li><strong>Data sources:</strong> <a href="https://artificialanalysis.ai" rel="noopener">Artificial Analysis</a> (API) · <a href="https://openrouter.ai" rel="noopener">OpenRouter</a> (list prices) · LMArena (Elo, CC BY 4.0)</li>
-<h2>FAQ</h2>
-<p><strong>Is the Model Observatory free?</strong></p>
-<p>Yes. No account, no paywall. The code is MIT open source.</p>
-<p><strong>How current is the data?</strong></p>
-<p>The catalog rebuilds three times daily from source APIs, plus on-demand refreshes when new models are announced. Each model row shows its data date and per-field sources.</p>
-<p><strong>Why do open-weight models show prices?</strong></p>
-<p>The cost axis prices *using* a model through an API — the comparable number across all models. Weights being downloadable doesn't make hosted tokens free, and conflating the two is how comparisons go wrong.</p>
-<p><strong>What is the Artificial Analysis Index?</strong></p>
-<p>A cross-benchmark intelligence score published by Artificial Analysis, blending expert-domain evaluations. We use it as the single authoritative intelligence axis precisely because it is one consistent methodology across all models — and we never let any other source write that field.</p>
-<p><strong>Can I use my own benchmarks?</strong></p>
-<p>Yes — fork the repo and point the catalog pipeline at your data. The provenance system expects you to stamp origins; it will refuse unlabeled fields.</p>
-<p><strong>Does it work on mobile?</strong></p>
-<p>Yes — a compact decode layer (compact axis titles, a collapsible stage key, a scrollable ranked list) ships at 390px, verified by the same screenshot-critic program as desktop.</p>""",
-},
-
     {
         "slug": 'the-one-line-bug',
         "title": "The One-Line Bug That Crashed Our Fast Lane: finding, fixing, and measuring a speculative-decoding crash on a $1,400 mini-PC",
@@ -2731,10 +2570,78 @@ kino concat beat-01.mp4 beat-02.mp4 --output final-cut.mp4</code></pre>
     },
 }
 
+# ES-only originals — the interpretation lane is Spanish-first by design
+# (CEO word 2026-09-02). These have no EN twin on purpose; the /es edition
+# is the canonical home of interpretation pieces.
+BLOG_POSTS_ES_ORIGINALS = [
+    {
+        "slug": 'resonant-contribution-economy-explained',
+        "title": "La Contribution Economy de ResonantDAO, explicada con recibos",
+        "category": 'Contribution Economy',
+        "date": '2026-09-02',
+        "date_modified": '2026-09-02',
+        "read_time": '6 min',
+        "primary_keyword": "contribution economy ResonantDAO",
+        "seo_title": "La Contribution Economy de ResonantDAO, Explicada (Con Recibos)",
+        "meta_description": 'El primer análisis en español de la Contribution Economy de ResonantDAO: 22 dimensiones, contextual authority, tokens que aún no existen y un producto real en GitHub. Con los recibos de lo que construí contra su alpha.',
+        "excerpt": 'Lo contrario de un DAO normal: primero la contribución verificada, el token después. El primer análisis en español del movimiento, con recibos.',
+        "body": """
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-02. Primero la respuesta directa, después los recibos.</small></p>
+<p>La historia normal de un DAO nuevo: lanzar el token primero, mirar el precio y llamar a la comunidad a abrir la cartera. Es comprensible: el dinero es legible, la contribución no. Pero lo que no se puede medir, no se puede pagar.</p>
+<p>ResonantDAO hace lo contrario. Puso la Contribution Economy primero y el dinero después, mucho después. Su whitepaper lo dice plano: "The first phase is not a financial-token launch." Y hasta ahora cumplen: la fase 1 ya está en marcha y todavía no hay token en circulación.</p>
+<p>Si suena a otro experimento de gobernanza con palabras bonitas, sigue leyendo. Esta vez hay un producto real, repos públicos y un merge detrás.</p>
+<h2>Primero la respuesta directa</h2>
+<p>ResonantDAO es una "community for communities" que quiere una economía human-first para la era de la IA: el capital nunca pesa en los votos. La Contribution Economy es su pieza central: un sistema para registrar y recompensar las distintas formas en que alguien crea valor en una comunidad. Construir, enseñar, cuidar, investigar, resolver conflictos, terminar cosas. No contar tareas, no contar horas, no un puntaje global.</p>
+<p>La regla gobernante, textual: "contribution pays on outcome, never on activity."</p>
+<p>Cada acción real se convierte en un contribution record: se junta evidencia y la acción se puntúa como perfil, no como etiqueta.</p>
+<h2>Las 22 dimensiones</h2>
+<p>La medición usa 22 dimensiones de contribución nombradas según los arcanos mayores del Tarot: The Fool es 0, The World es 21. Antes de poner los ojos en blanco: ellos mismos lo llaman "a design hypothesis, not a claim of metaphysical completeness". Es un mapa de acción, no una lectura del futuro.</p>
+<p>Cada acción verificada activa un perfil disperso: un curso puede ser creación, preservación y enseñanza a la vez. Cada persona acumula 22 saldos no transferibles, uno por dimensión.</p>
+<p>Lo mejor del diseño es lo que prohíbe: no hay leaderboard. Su razón textual: "ranking forces contributions onto one scale, which quietly reinstates the single score this model exists to replace".</p>
+<h2>Contextual authority</h2>
+<p>Aquí está la idea más fuerte del whitepaper. En vez de un reputation score universal, cada decisión declara qué dimensiones importan y el peso viene de resultados verificados exactamente en esas dimensiones. Una decisión educativa da peso a la evidencia de enseñanza. Una disputa da peso a la evidencia de resolución y equidad. Ni puntaje global, ni capital, ni actividad.</p>
+<p>Se llama contextual authority. Es lo que un sistema de reputación bien hecho debería hacer y casi ninguno hace.</p>
+<h2>Los tokens que todavía no existen</h2>
+<p>Dos tokens con roles distintos, cero números finales.</p>
+<p>$RCT sería el resumen derivado de los 22 saldos: no transferible, aproximado, y nunca reemplaza el perfil. Cuenta para umbrales de elegibilidad. Nunca escala votos. Su fórmula todavía no existe: el spec dice "Formula pending calibration". No hay coeficiente aprobado, no hay emisión aprobada.</p>
+<p>$RES sería el token transferible de la fase 1, con la regla que separa esto de toda la cripto normal: "Holding or receiving $RES does not create contribution value." El dinero no compra standing ni votos.</p>
+<p>La membresía iría por otro lado: la Symbiotic Licence, una credencial soulbound on-chain, una por wallet, que no se vende. ¿Qué derechos otorga? El texto legal todavía no está definido en ninguna parte. Su propia página advierte "intentionally not final legal text". Cuando lo publiquen, hay que leerlo.</p>
+<p>Nada de esto está vivo hoy. Todo corre en testnet, en ensayo general.</p>
+<h2>ResonantOS, el producto</h2>
+<p>Detrás de la economía hay software de verdad: ResonantOS, "the operating layer for cultivating a trusted AI strategist". Un Augmentor que opera como estratega, no como bot de tareas. Un Living Archive que acumula memoria con el tiempo. Add-ons de especialistas, límites de confianza definidos por el usuario, modelos configurables.</p>
+<p>La 2.0.0-alpha está pública en GitHub con licencia MIT, un SDK de add-ons y un validador de manifests que de verdad valida. Hay código, hay contribuidores construyendo, hay merges. Esto no es un whitepaper con logo.</p>
+<h2>El túnel de viento</h2>
+<p>Lo que más respeto del proyecto es su propio freno. Su repo de investigación se define como "a research wind tunnel, not an economy factory": las ideas de reconocimiento y recompensa chocan contra evidencia y ejemplos duros antes de que alguien las trate como política. Sus fixtures son muñecos de choque para el pipeline de evidencia.</p>
+<p>Ningún mecanismo de esta economía está vigente hoy. Pre-mainnet, pre-calibración, en ensayo general. Que lo digan ellos mismos es la señal más confiable que he visto en este espacio.</p>
+<h2>Los recibos</h2>
+<p>Yo no leo un sistema y opino. Construyo contra él y mido.</p>
+<ul>
+<li><strong>resonant-authority</strong>: una implementación de contextual authority como add-on local. Pasa su validador de manifests. MIT.</li>
+<li><strong>resonant-stack-bench</strong> y <strong>resonant-delegation-bench</strong>: bancos de medición para el ecosistema. Públicos, MIT.</li>
+<li>Un fix de seguridad que mandé llegó como PR 333 y su contribuidor top lo mergeó el 31 de agosto.</li>
+</ul>
+<p>Cada afirmación de este post tiene un repo público detrás. Ese es el estándar.</p>
+<h2>Lo que falta</h2>
+<p>La fórmula del $RCT no existe. Las emisiones del $RES no existen. El texto de la licencia no existe. El salto a mainnet (Solana, con meta en Q4 2026) depende de auditorías y checks que todavía no pasan. Este proyecto puede fallar como cualquier otro. Mis recibos no son excepción: que resonant-authority pase el validador prueba compatibilidad, no utilidad.</p>
+<p>La diferencia: hoy cada afirmación se puede verificar desde repos públicos.</p>
+<h2>Por qué en español</h2>
+<p>Toda la superficie pública de Resonant está en inglés: whitepaper, specs, repos, sitio. No encontré ni un solo análisis en español. Si esta economía llega a mainnet y funciona, la conversación en español va a existir igual. La pregunta es si empieza antes o después de la calibración.</p>
+<p>Empieza aquí.</p>
+<h2>Dónde seguir</h2>
+<ul>
+<li>Whitepaper y Contribution Economy: <a href="https://resonantdao.com" rel="noopener">resonantdao.com</a> (en inglés)</li>
+<li>El túnel de viento: <a href="https://github.com/ResonantOS/resonantos-economy-research" rel="noopener">github.com/ResonantOS/resonantos-economy-research</a></li>
+<li>El alpha del producto: <a href="https://github.com/ResonantOS/2.0.0-alpha" rel="noopener">github.com/ResonantOS/2.0.0-alpha</a></li>
+<li>Mis recibos: <a href="https://github.com/simongonzalezdc" rel="noopener">github.com/simongonzalezdc</a></li>
+</ul>
+""",
+    },
+]
+
 BLOG_POSTS_ES = [
     {**post, **BLOG_COPY_ES.get(post["slug"], {})}
     for post in BLOG_POSTS
-]
+] + BLOG_POSTS_ES_ORIGINALS
 BLOG_POSTS_ES_BY_SLUG = {post["slug"]: post for post in BLOG_POSTS_ES}
 
 # ─── Products ────────────────────────────────────────────────────────────────
@@ -3725,6 +3632,14 @@ def about_es():
 
 
 # ─── Lead magnets (free resources) ──────────────────────────────────────────
+
+@app.route("/rutile")
+def rutile_product():
+    return render_template_file(
+        "rutile.html",
+        canonical_base=CANONICAL_BASE,
+    )
+
 
 @app.route("/magnets")
 def magnets_index():

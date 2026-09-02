@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rutile — Local-first Native Markdown Editor (Rust, no Electron) — KyaniteLabs</title>
+  <meta name="description" content="Rutile is a local-first native Markdown editor written in Rust: typed core, Iced/AppKit on macOS, GTK3 on Linux, sanitized live preview. No Electron, no cloud, no plugins, no telemetry. Free, MIT licensed.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta property="og:title" content="Rutile — Local-first Native Markdown Editor">
+  <meta property="og:description" content="A Markdown editor that trusts your text to Rust, not the cloud. Reproducible builds, signed provenance records, no Electron.">
+  <meta property="og:type" content="product">
+  <meta property="og:url" content="https://kyanitelabs.tech/rutile">
+  <link rel="canonical" href="https://kyanitelabs.tech/rutile">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
+  <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <nav class="nav container" aria-label="Primary">
+        <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+        <div class="nav-links">
+          <a class="active" href="/#proof">Projects</a>
+          <a href="/implementation">Implementation</a>
+          <a href="/blog">Lab Notes</a>
+          <a href="/magnets">Free Resources</a>
+          <a href="/shop">Shop</a>
+          <a href="/about">About</a>
+          <a href="https://puenteworks.com">PuenteWorks</a>
+          <a class="nav-cta" href="/implementation/intake">Implementation Help</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="page-hero">
+        <div class="container">
+          <h1>Rutile</h1>
+          <p class="hero-lede">A local-first native Markdown editor written in Rust. A fast source editor and a live preview in one small app — no Electron, no cloud, no plugins, no telemetry.</p>
+          <p><a class="btn btn-primary" href="https://github.com/KyaniteLabs/rutile/releases/tag/v0.2.3-preview">Download 0.2.3 preview (macOS)</a>
+             <a class="btn" href="https://github.com/KyaniteLabs/rutile">Source on GitHub</a></p>
+          <p class="note">Free, MIT licensed. Your notes stay plain Markdown files on your disk.</p>
+        </div>
+      </section>
+
+      <section class="container">
+        <h2>Why local-first matters for writers</h2>
+        <p>Your notes are the one dataset you keep for decades. Rutile treats every file as yours: it reads and writes plain Markdown on your disk, keeps a checksummed crash-recovery journal so unsaved work survives a crash, and never phones home — there is no home to phone.</p>
+
+        <h2>What's inside</h2>
+        <ul>
+          <li><strong>Typed Rust core</strong> — a rope-based editor with revisioned, stale-rejecting edit transactions.</li>
+          <li><strong>Native shells</strong> — Iced/AppKit on macOS, GTK3 on Linux. The system webview renders only your sanitized preview, under a strict CSP; untrusted raw HTML never executes.</li>
+          <li><strong>Find, format, export, tabs, focus mode, command palette</strong> — the writing stack, without IDE baggage.</li>
+          <li><strong>Evidence-first engineering</strong> — reproducible release builds, per-artifact provenance records, and ed25519-signed publication authorizations you can verify yourself (below).</li>
+        </ul>
+
+        <h2>Verify what you download</h2>
+        <p>Every release artifact carries a reproducible-build provenance record and a release-authority signature over that exact file. Check the SHA-256 of your download:</p>
+        <pre>Rutile-0.2.3-macos-arm64.app.zip
+4979ec396cf43ef4e0da10fe5984d5d5060069567bb37256d9749e833a4f4363
+Rutile-0.2.3-macos-arm64.dmg
+16269b3935a305fa4eac19f9ea50eb406d92abf7b5b23d1e7d3072775dfc0368</pre>
+        <p>The signing key's fingerprint is pinned in the repository (<code>release/keys/release-authority-v1.pub.hex</code>); the <code>.preview-authorization.json</code> beside each download is that key's signature binding the artifact to its provenance record.</p>
+
+        <h2>Honest status: preview tier</h2>
+        <p>0.2.3 ships at the preview tier: every artifact is provenance-backed and signed, but the macOS build is ad-hoc codesigned (not notarized) and the full production tier — an independent-verifier readiness ceremony over a five-runner matrix — is still ahead. Linux packages follow that ceremony. We'd rather tell you the exact state of the software than round up.</p>
+
+        <h2>Build it yourself</h2>
+        <pre>git clone https://github.com/KyaniteLabs/rutile
+cd rutile &amp;&amp; cargo run --locked -p rutile-app --no-default-features --features macos-shell</pre>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p><a href="/">KyaniteLabs</a> · <a href="https://github.com/KyaniteLabs/rutile">Rutile on GitHub</a> · <a href="/about">About</a></p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
