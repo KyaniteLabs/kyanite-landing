@@ -546,6 +546,36 @@ PUBLIC_PROJECTS = [
         "image": "/static/brand/projects/kyanite-project-healthadvocate-1672x941.webp",
         "proof_role": "Explores private, local-first health tooling without treating care context as generic chat.",
     },
+    {
+        "name": "resonant-gifts",
+        "url": "https://github.com/simongonzalezdc/resonant-gifts",
+        "description": "An honest index of the Resonant gift line: 19 open-source gifts built for the ResonantOS ecosystem — measurement benches, security tooling, local-service add-ons, and receipted knowledge.",
+        "tag": "ResonantOS Ecosystem",
+        "tile_code": "RG",
+        "language": None,
+        "updated": "2026-09-04",
+        "proof_role": "Indexes the full line — every gift public, licensed, and independently reviewed.",
+    },
+    {
+        "name": "resonant-constable",
+        "url": "https://github.com/simongonzalezdc/resonant-constable",
+        "description": "Injection defense + contest for the ResonantOS ecosystem: the doctrine, a labeled corpus of known public attack classes on synthetic fixtures, and a stdlib-only reference checker.",
+        "tag": "ResonantOS Ecosystem",
+        "tile_code": "IC",
+        "language": "Python",
+        "updated": "2026-09-03",
+        "proof_role": "The defense discipline behind a merged upstream security fix, made reusable.",
+    },
+    {
+        "name": "resonant-authority",
+        "url": "https://github.com/simongonzalezdc/resonant-authority",
+        "description": "The ResonantDAO whitepaper's contextual-authority mechanism as a self-contained add-on: weight from verified outcomes in exactly the dimensions a question declares salient.",
+        "tag": "ResonantOS Ecosystem",
+        "tile_code": "RA",
+        "language": "Shell",
+        "updated": "2026-09-02",
+        "proof_role": "The whitepaper's governance mechanism as working code — non-canonical, MIT.",
+    },
 ]
 
 BLOG_POSTS = [
@@ -4142,6 +4172,7 @@ KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_U
 - [Shop]({CANONICAL_BASE}/shop): digital products and operator assets.
 - [PuenteWorks]({PUENTEWORKS_URL}): parent business, consulting, workflow, and broader AI operations home.
 - [Spanish homepage]({CANONICAL_BASE}/es/): one-to-one Spanish public site.
+- [Blog en español]({CANONICAL_BASE}/es/blog): the Spanish edition — translated notes plus Spanish-first interpretation pieces.
 
 ## Kyanite Products and Paid Paths
 
