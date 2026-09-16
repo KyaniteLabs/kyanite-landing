@@ -38,3 +38,7 @@ open(log, 'a').write('\n'.join(lines) + '\n')
 print('\n'.join(lines))
 sys.exit(1)
 EOF
+rc=$?
+[ "$rc" -eq 1 ] && knotify -t "deploy drift detected" -m "landing VPS != repo — see $LOG" -c stale -g DEPLOY --page-in 86400 --duration 300 >/dev/null 2>&1 || true
+[ "$rc" -eq 2 ] && knotify -t "deploy drift probe failed" -m "cannot hash VPS — check $LOG" -c error -g DEPLOY --duration 120 >/dev/null 2>&1 || true
+exit "$rc"

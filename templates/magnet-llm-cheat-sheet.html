@@ -7,7 +7,7 @@
   <meta name="description" content="A printable reference for choosing LLMs: the Pareto frontier explained, what Artificial Analysis Index scores mean practically, real cost bands, and the 5-question decision framework. From the Model Observatory data.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:title" content="The LLM Comparison Cheat Sheet">
-  <meta property="og:description" content="The frontier, the tiers, the bands, and the five questions — on one card. Numbers from the live Model Observatory dataset.">
+  <meta property="og:description" content="The frontier, the tiers, the bands, and the five questions — on one card. Numbers from the Model Observatory snapshot dated 2026-08-26.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://kyanitelabs.tech/magnets/llm-cheat-sheet">
   <link rel="canonical" href="https://kyanitelabs.tech/magnets/llm-cheat-sheet">
@@ -72,8 +72,8 @@
         <div class="container page-hero-inner">
           <div class="eyebrow">Free Resource — Cheat Sheet</div>
           <h1>The LLM Comparison Cheat Sheet</h1>
-          <p>Stop reading benchmark tables. One card with the one concept that matters (the Pareto frontier), what intelligence scores mean practically, what models actually cost, and the five questions that pick a model for your task. Numbers from the live Model Observatory dataset.</p>
-          <div class="post-meta"><span>313 models measured</span><span>cost · intelligence · speed</span><span>snapshot 2026-08-26</span></div>
+          <p>Stop reading benchmark tables. One card with the one concept that matters (the Pareto frontier), what intelligence scores mean practically, what models actually cost, and the five questions that pick a model for your task. Numbers from the Model Observatory snapshot dated 2026-08-26.</p>
+          <div class="post-meta"><span>323 models measured</span><span>cost · intelligence · speed</span><span>snapshot 2026-08-26</span></div>
         </div>
       </section>
 
@@ -82,7 +82,7 @@
           <div class="compact-capture">
             <div>
               <h2>The chart moves. The card prints.</h2>
-              <p>Prices reprice and the frontier shifts — three Qwen models repriced 22&ndash;60% in one August weekend. Build Notes carries the monthly shifts; the live chart has the current numbers. No spam, unsubscribe any time.</p>
+              <p>Prices reprice and the frontier shifts — three Qwen models repriced 22&ndash;60% in one August weekend. Build Notes carries the monthly shifts; the chart and this card name their snapshot date. No spam, unsubscribe any time.</p>
             </div>
             <form data-newsletter action="/api/newsletter/subscribe" method="post">
               <div class="status ok" data-role="success" role="status" aria-live="polite">You are on the Kyanite Build Notes list.</div>
@@ -161,13 +161,13 @@
                 <tr><td>~40</td><td>Clears the bar for summarization pipelines with spot checks and machine-verifiable extraction.</td></tr>
                 <tr><td>45&ndash;55</td><td><strong>The typical product floor.</strong> Below this band you pay for errors; far above it you buy intelligence your task may not use.</td></tr>
                 <tr><td>60+</td><td>Verification-heavy work: code-review agents, multi-step reasoning, decisions where a miss is expensive.</td></tr>
-                <tr><td>Frontier region</td><td>This snapshot tops out at AA 63.1, with 51 of 313 measured models clearing AA 45 and 20+ crowding the frontier itself.</td></tr>
+                <tr><td>Frontier region</td><td>This snapshot tops out at AA 63.1, with 51 of 323 measured models clearing AA 45 and 20+ crowding the frontier itself.</td></tr>
               </tbody>
             </table>
             <p class="note-line"><strong>The floor is task-specific.</strong> A creative-writing assistant may be better <em>below</em> the frontier entirely — frontier models optimize for correctness, not voice. Set the floor for your task, not for your ego.</p>
 
             <h2>Cost bands — what models actually cost</h2>
-            <p>Blended price per million tokens (input and output weighted by real task mixes — the number you actually pay, not the marketing input price). Snapshot 2026-08-26 from the live dataset; the chart rebuilds three times daily:</p>
+            <p>Blended price per million tokens (input and output weighted by real task mixes — the number you actually pay, not the marketing input price). Published dataset snapshot: 2026-08-26.</p>
             <table class="magnet-table">
               <thead><tr><th>Band</th><th>Blended $/M</th><th>What lives here / what it is for</th></tr></thead>
               <tbody>
@@ -188,7 +188,7 @@
                 </tr>
               </tbody>
             </table>
-            <p class="note-line"><strong>Open weights are not free to use.</strong> They cost nothing to download and real money to run — the chart prices everything at the hosted API rate because that is the only number comparable across all 313 models. And prices move fast: three Qwen models repriced 22&ndash;60% in one August weekend. Free promotional pricing is flagged non-durable in the live data, with a canary watching for the real price.</p>
+            <p class="note-line"><strong>Open weights are not free to use.</strong> They cost nothing to download and real money to run — the chart prices everything at the hosted API rate because that is the only number comparable across all 323 models. And prices move fast: three Qwen models repriced 22&ndash;60% in one August weekend. Free promotional pricing is flagged non-durable in the published data.</p>
 
             <h2>The five questions that pick the model</h2>
             <p>Every LLM comparison article starts with the models. Start with your task instead:</p>
@@ -201,14 +201,14 @@
             </ol>
 
             <h2>Do steps 1&ndash;4 in thirty seconds</h2>
-            <p>The <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a> plots all 313 models in 3D — cost, intelligence, speed — with the frontier visible as the white filament. Decide mode sets your floor, picks your objective (cheapest / fastest / balanced), and returns a named shortlist with exact numbers. Free, no account, open source (MIT), every price traceable to its source with a timestamp.</p>
+            <p>The <a href="https://viz.kyanitelabs.tech/" rel="noopener">Model Observatory</a> plots all 323 models in 3D — cost, intelligence, speed — with the frontier visible as the white filament. Decide mode sets your floor, picks your objective (cheapest / fastest / balanced), and returns a named shortlist with exact numbers. Free, no account, open source (MIT), every price traceable to its source with a timestamp.</p>
             <div class="button-row">
               <a class="btn btn-primary" href="https://viz.kyanitelabs.tech/" rel="noopener">Open the Model Observatory</a>
               <a class="btn btn-secondary" href="https://github.com/KyaniteLabs/llm-3d-viz" rel="noopener">Fork it on GitHub</a>
             </div>
 
             <h2>Sources</h2>
-            <p class="source-line">Live dataset: <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> (snapshot 2026-08-26; blended-price distribution and frontier points read from the published dataset) &middot; Framework: <a href="https://kyanitelabs.tech/blog/how-to-choose-an-llm">How to Choose an LLM</a> &middot; Costs: <a href="https://kyanitelabs.tech/blog/llm-cost-comparison-guide">LLM Cost Comparison</a> &middot; Frontier: <a href="https://kyanitelabs.tech/blog/pareto-frontier-llm-explained">The LLM Pareto Frontier</a> &middot; Observatory build: <a href="https://kyanitelabs.tech/blog/model-observatory-3d-llm-comparison">We Built an Open-Source Model Observatory</a>.</p>
+            <p class="source-line">Dataset: <a href="https://viz.kyanitelabs.tech/" rel="noopener">viz.kyanitelabs.tech</a> (snapshot 2026-08-26; blended-price distribution and frontier points read from the published dataset) &middot; Framework: How to Choose an LLM &middot; Costs: LLM Cost Comparison &middot; Frontier: The LLM Pareto Frontier &middot; Observatory build: We Built an Open-Source Model Observatory.</p>
           </article>
         </div>
       </section>
