@@ -8,7 +8,7 @@
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta property="og:title" content="Operator Assets — KyaniteLabs">
   <meta property="og:description" content="Downloadable systems for people building with AI agents: prompts, repo structures, Claude Code workflows, and implementation templates.">
-  <meta property="og:image" content="https://kyanitelabs.tech/static/products/ai-coding-agent-blueprint.webp">
+  <meta property="og:image" content="https://kyanitelabs.tech/static/brand/kyanitelabs-mark-primary-transparent-v2.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kyanitelabs.tech/shop">
   <link rel="canonical" href="https://kyanitelabs.tech/shop">
@@ -51,6 +51,7 @@
 
     <section>
       <div class="container">
+        {% if products %}
         <div class="grid-2">
           {% for slug, p in products.items() %}
           <article class="product-card fade-up">
@@ -85,6 +86,9 @@
           </article>
           {% endfor %}
         </div>
+        {% else %}
+        <p class="section-sub">More tools in development.</p>
+        {% endif %}
       </div>
     </section>
   </main>

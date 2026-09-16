@@ -409,7 +409,7 @@ PUBLIC_PROJECTS = [
         "tag": "Estimation MCP",
         "tile_code": "EP",
         "language": "TypeScript",
-        "updated": "2026-08-17",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-epoch-1672x941.webp",
         "proof_role": "Turns planning uncertainty into agent-callable forecasting tools.",
     },
@@ -420,7 +420,7 @@ PUBLIC_PROJECTS = [
         "tag": "Readiness Audit",
         "tile_code": "CY",
         "language": "Python",
-        "updated": "2026-08-08",
+        "updated": "2026-09-04",
         "image": "/static/brand/projects/kyanite-project-checkyourself-1672x941.webp",
         "proof_role": "Makes quality, security, and launch risk inspectable before an AI-built app ships.",
     },
@@ -431,7 +431,7 @@ PUBLIC_PROJECTS = [
         "tag": "Localization MCP",
         "tile_code": "DX",
         "language": "TypeScript",
-        "updated": "2026-08-16",
+        "updated": "2026-09-04",
         "image": "/static/brand/projects/kyanite-project-dialectos-1672x941.webp",
         "proof_role": "Makes Spanish launch quality inspectable instead of treating localization as generic translation.",
     },
@@ -472,18 +472,18 @@ PUBLIC_PROJECTS = [
         "tag": "Creative Coding",
         "tile_code": "LM",
         "language": "TypeScript",
-        "updated": "2026-08-06",
+        "updated": "2026-09-01",
         "image": "/static/brand/projects/kyanite-project-liminal-1672x941.webp",
         "proof_role": "Shows Kyanite can build creative tools where agents touch code, shaders, media, and taste.",
     },
     {
         "name": "liminal-sites",
         "url": "https://github.com/KyaniteLabs/liminal-sites",
-        "description": "Living website evolution engine for AI design directions, runtime skins, taste memory, previews, and repo-native patch planning.",
+        "description": "Site surfaces and public faces for the Liminal / Sinter stack, focused on shipping Liminal product sites.",
         "tag": "Living Websites",
         "tile_code": "LS",
         "language": "TypeScript",
-        "updated": "2026-08-17",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-liminal-sites-1672x941.webp",
         "proof_role": "Proves the website itself can evolve through constrained, inspectable design systems.",
     },
@@ -494,7 +494,7 @@ PUBLIC_PROJECTS = [
         "tag": "Pattern Synthesis",
         "tile_code": "EX",
         "language": "Python",
-        "updated": "2026-08-14",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-elixis-1672x941.webp",
         "proof_role": "Turns fuzzy identity and naming work into source-backed synthesis.",
     },
@@ -505,7 +505,7 @@ PUBLIC_PROJECTS = [
         "tag": "Personal OS",
         "tile_code": "IN",
         "language": "TypeScript",
-        "updated": "2026-08-17",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-innerscape-1672x941.webp",
         "proof_role": "Shows the same build-and-implementation pattern applied to intimate, data-rich workflows.",
     },
@@ -516,18 +516,18 @@ PUBLIC_PROJECTS = [
         "tag": "Repo Intelligence",
         "tile_code": "DF",
         "language": "Python",
-        "updated": "2026-08-17",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-devarch-framework-1672x941.webp",
         "proof_role": "Shows Kyanite can turn development history into evidence, not vibes.",
     },
     {
         "name": "Dev Learning Archaeologist",
-        "url": "https://github.com/KyaniteLabs/dev-learning-archaeologist",
+        "url": "https://github.com/simongonzalezdc/dev-learning-archaeologist",
         "description": "Forensic git-history learning diagnostic for AI-assisted developers that turns commit history into evidence-backed study plans and HTML reports.",
         "tag": "Learning Diagnostics",
         "tile_code": "DA",
         "language": "JavaScript",
-        "updated": "2026-05-31",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-dev-learning-archaeologist-1672x941.webp",
         "proof_role": "Turns repo behavior into a readable diagnostic artifact.",
     },
@@ -538,7 +538,7 @@ PUBLIC_PROJECTS = [
         "tag": "Food Memory",
         "tile_code": "AC",
         "language": "Claude Project",
-        "updated": "2026-05-31",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-achiote-food-memory-1672x941.webp",
         "proof_role": "Extends Kyanite's evidence style into cultural memory and research assistants.",
     },
@@ -549,7 +549,7 @@ PUBLIC_PROJECTS = [
         "tag": "Executive Function",
         "tile_code": "UC",
         "language": "CSS",
-        "updated": "2026-05-30",
+        "updated": "2026-09-01",
         "image": "/static/brand/projects/kyanite-project-unstuck-coach-1672x941.webp",
         "proof_role": "Applies agentic tooling to accessibility, pacing, and human next-step design.",
     },
@@ -560,7 +560,7 @@ PUBLIC_PROJECTS = [
         "tag": "Field Operations",
         "tile_code": "TF",
         "language": "TypeScript",
-        "updated": "2026-05-30",
+        "updated": "2026-09-01",
         "image": "/static/brand/projects/kyanite-project-tradesflow-1672x941.webp",
         "proof_role": "Shows implementation thinking for real-world operators with assets, visits, and billing handoffs.",
     },
@@ -571,7 +571,7 @@ PUBLIC_PROJECTS = [
         "tag": "Health Advocacy",
         "tile_code": "HA",
         "language": "Python",
-        "updated": "2026-05-30",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-healthadvocate-1672x941.webp",
         "proof_role": "Explores private, local-first health tooling without treating care context as generic chat.",
     },
@@ -582,7 +582,7 @@ PUBLIC_PROJECTS = [
         "tag": "Domain Software",
         "tile_code": "OG",
         "language": "Python",
-        "updated": "2026-08-15",
+        "updated": "2026-09-02",
         "image": "/static/brand/projects/kyanite-project-openglaze-1672x941.webp",
         "proof_role": "Proves Kyanite can ship useful software outside the generic AI-tool bubble.",
     },
@@ -1285,7 +1285,7 @@ BLOG_POSTS = [
         "title": "GPT-5.6 Sol vs. Terra vs. Luna: an evidence-based routing policy for coding agents",
         "category": "Model Routing / Agent Systems",
         "date": "2026-07-12",
-        "date_modified": "2026-07-12",
+        "date_modified": "2026-09-04",
         "read_time": "12 min",
         "primary_keyword": "GPT-5.6 Sol vs Terra vs Luna",
         "seo_title": "GPT-5.6 Sol vs Terra vs Luna: Agent Routing Policy",
@@ -1298,8 +1298,8 @@ BLOG_POSTS = [
   <li><strong>Terra Medium is the execution lane.</strong> Use it after the decision is made and the work has explicit files, behaviors, boundaries, and acceptance gates.</li>
   <li><strong>Luna is the processing lane.</strong> Use it for narrow, repeatable, high-volume tasks whose outputs can be checked by a schema, deterministic test, or sample audit.</li>
   <li><strong>Max is an escalation, not a default.</strong> DataCurve's current DeepSWE result shows a modest observed gain over High at roughly 2.4 times the estimated task cost, with slightly overlapping confidence intervals.</li>
-  <li><strong>Fast and Ultra are separate controls.</strong> Fast is not currently documented for GPT-5.6; Ultra is multi-agent orchestration, not a reasoning level.</li>
-  <li><strong>Current usage note:</strong> the five-hour restriction for Codex and ChatGPT Work is temporarily absent for Plus, Business, and Pro, but weekly limits remain. The reported reduced internal “juice values” were experiments that OpenAI says it reverted.</li>
+  <li><strong>Fast and Ultra are separate controls.</strong> Fast is a higher-credit option for supported models. Ultra uses maximum reasoning and may add agents for eligible users.</li>
+  <li><strong>Current usage note:</strong> eligible Plus and Pro personal accounts may be offered an instant reset that restores both five-hour and weekly Work/Codex usage. The reset starts a new weekly schedule; it does not add a separate allowance.</li>
 </ul>
 <p><strong>BLUF: do not choose a GPT-5.6 model by prestige. Route by uncertainty and by the cost of proving the answer is correct.</strong></p>
 
@@ -1335,11 +1335,11 @@ BLOG_POSTS = [
 <h2>First constrain the router to the product surface</h2>
 <p>A routing policy cannot select a model the current product does not expose. “GPT-5.6” means different controls in ChatGPT, Codex, and the API, so record the surface as part of the route.</p>
 <ul>
-  <li><strong>Standard ChatGPT:</strong> OpenAI's current help documentation says GPT-5.6 uses Sol for Medium, High, and Extra High. Terra and Luna are not selected there.</li>
-  <li><strong>ChatGPT Work and Codex:</strong> eligible paid plans can expose Sol, Terra, and Luna. Max and Ultra depend on the product and plan.</li>
+  <li><strong>Standard ChatGPT:</strong> OpenAI's current rate card says Medium, High, and Extra High all use GPT-5.6 Sol at the same per-message credit rate. Instant may switch a request to Medium.</li>
+  <li><strong>ChatGPT Work and Codex:</strong> the current rate card lists Sol, Terra, and Luna with token-based credit rates. Availability and included limits still depend on the account and plan.</li>
   <li><strong>API:</strong> the three models support <code>none</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code>, and <code>max</code> reasoning effort.</li>
 </ul>
-<p>Check <a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">GPT-5.6 in ChatGPT</a> and the API model pages when implementing the policy. A model-picker screenshot is not an architecture contract; availability can change independently across products and plans.</p>
+<p>Check the <a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">current ChatGPT rate card</a> and <a href="https://developers.openai.com/api/docs/models" rel="noopener">API model catalog</a> when implementing the policy. A model-picker screenshot is not an architecture contract; availability can change independently across products and plans.</p>
 
 <h2>Escalate reasoning effort only after diagnosing the failure</h2>
 <p>Reasoning effort is a second routing dimension. Higher effort gives the same model more room to explore, use tools, and revise, but it cannot repair a wrong premise, missing permission, broken test environment, or underspecified deliverable.</p>
@@ -1355,19 +1355,19 @@ BLOG_POSTS = [
 <p>That makes Max a diagnosed escalation: use it after High failed because exploration ended too soon or a hard branch was not followed. It is poor compensation for a bad brief. The benchmark is evidence from one harness, not a guaranteed gain on a particular repository.</p>
 
 <h2>Keep three cost systems separate</h2>
-<p>API price, benchmark-estimated cost, and Codex credits are not interchangeable units. OpenAI currently publishes API prices of $5/$30 per million input/output tokens for Sol, $2.50/$15 for Terra, and $1/$6 for Luna. For most plans, the current Codex card maps those same input/output quantities to 125/750 credits for Sol, 62.5/375 for Terra, and 25/150 for Luna, with lower cached-input rates.</p>
-<p>A benchmark's dollars-per-task number belongs to its own harness. A real agent run also pays for context, cached input, tool output, retries, validation, and any parallel branches. Use the <a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">live Codex rate card</a> for credits and measure verified completion cost in the system itself.</p>
+<p>API price, benchmark-estimated cost, and Codex credits are not interchangeable units. OpenAI currently publishes API prices per million input/output tokens of $4/$20 for Sol, $2/$12 for Terra, and $0.20/$1.20 for Luna. The current Business and Enterprise/Edu Work/Codex rate card lists input/cached-input/output rates of 100/10/500 credits for Sol, 50/5/300 for Terra, and 5/0.5/30 for Luna.</p>
+<p>A benchmark's dollars-per-task number belongs to its own harness. A real agent run also pays for context, cached input, tool output, retries, validation, and any parallel branches. Use the <a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">current ChatGPT Work and Codex rate card</a> for the plan it covers, then measure verified completion cost in the system itself.</p>
 
-<h2>P.S. Current limits and the reported “juice” change</h2>
-<p><strong>As of July 12, 2026, the five-hour usage window for Codex and ChatGPT Work does not currently apply to Plus, Business, or Pro.</strong> OpenAI product lead <a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux wrote that the change is temporary</a>; an <a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">accessible contemporaneous report reproduces the announcement</a>. Weekly limits remain. Treat this as a live operating condition, not a permanent entitlement or unlimited usage.</p>
-<p>A separate <a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">public follow-up reproduced in this screenshot thread</a> addressed the smaller internal reasoning budgets - the “juice values” discussed online. Sottiaux said OpenAI tested those values while diagnosing unexpectedly high consumption and then reverted the experiment. The exact reduced numbers circulating in screenshots are therefore not a current documented interface or stable API contract.</p>
-<p>For a production router, treat both facts as current-state notes. Target published model and effort controls, watch the live usage surface, and re-measure behavior rather than encoding temporary limits or inferred internal budgets.</p>
+<h2>P.S. Current five-hour and weekly limits</h2>
+<p>OpenAI's current reset guidance explicitly treats Work and Codex as having five-hour and weekly usage allowances. Eligible Plus and Pro personal accounts can buy an instant reset from Usage settings, subject to account availability. The option is not available on Free, Go, Business, Enterprise, or Edu plans.</p>
+<p>A completed purchase restores both five-hour and weekly usage immediately. It pulls the normal weekly allowance forward instead of adding another entitlement, and it cannot be banked or scheduled.</p>
+<p>The new weekly period begins with the first Work or Codex request after the reset. The next automatic weekly reset is seven days after that request, not necessarily seven days after payment. Usage credits are a separate pay-as-you-go balance.</p>
 
 <h2>Do not collapse Max, Fast, and Ultra into one ladder</h2>
 <ul>
   <li><strong>Max</strong> expands reasoning effort for one GPT-5.6 model.</li>
-  <li><strong>Fast</strong> is a higher-credit Codex inference option, but the current <a href="https://developers.openai.com/codex/speed" rel="noopener">Speed documentation</a> lists GPT-5.5 and GPT-5.4 - not GPT-5.6 - as supported.</li>
-  <li><strong>Ultra</strong> is a separate multi-agent setting that coordinates four agents by default. It is not another single-agent reasoning level above Max.</li>
+  <li><strong>Fast</strong> exists as a higher-credit Codex option for supported models. The current rate card does not identify which GPT-5.6 models support it or publish a GPT-5.6 multiplier, so do not hardcode either claim.</li>
+  <li><strong>Ultra</strong> uses maximum reasoning and may run additional agents for eligible users. It is not a separate model row; credits still depend on the chosen model and the tokens produced by the task and its agents.</li>
 </ul>
 <p>Ultra earns its overhead when branches can produce independent evidence: separate subsystem reviews, competing implementations, or research questions without shared mutable state. It wastes context and creates collision risk when every worker needs the same files, decision, or sequential dependency.</p>
 
@@ -1402,26 +1402,18 @@ BLOG_POSTS = [
 <p>It can run a constrained session, but its strongest system role is often inside a workflow: classification, extraction, naming, summaries, and other repeated work whose output can be checked automatically.</p>
 <h3>Is Ultra more intelligent than Max?</h3>
 <p>No. Max increases reasoning effort for one model. Ultra coordinates multiple agents. Parallelism helps only when the work can be decomposed without duplicating context or colliding on shared state.</p>
-<h3>Do Codex and ChatGPT Work currently have a five-hour usage window?</h3>
-<p>As of July 12, 2026, OpenAI says the five-hour restriction for Codex and ChatGPT Work temporarily does not apply to Plus, Business, or Pro. Weekly limits remain, so this is not unlimited access or a permanent contract.</p>
-<h3>Were GPT-5.6 juice values permanently reduced?</h3>
-<p>No current public specification says that. Tibo Sottiaux said the internal reasoning-budget experiments were reverted. Route against published effort controls and verify behavior on your own workload.</p>
+<h3>What happens when I buy an instant Work or Codex reset?</h3>
+<p>For eligible Plus and Pro personal accounts, it immediately restores both five-hour and weekly usage. The next weekly period starts with the first request afterward, and the next automatic reset lands seven days after that request. It is not extra banked usage.</p>
 
 <h2>Sources and limits</h2>
 <ul>
-  <li><a href="https://openai.com/index/gpt-5-6/" rel="noopener">OpenAI: GPT-5.6</a></li>
-  <li><a href="https://openai.com/index/previewing-gpt-5-6-sol/" rel="noopener">OpenAI: previewing GPT-5.6 Sol</a></li>
-  <li><a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">OpenAI Help Center: GPT-5.6 in ChatGPT</a></li>
-  <li><a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">OpenAI Help Center: Codex rate card</a></li>
-  <li><a href="https://developers.openai.com/codex/speed" rel="noopener">OpenAI: Codex Speed</a></li>
   <li><a href="https://developers.openai.com/api/docs/models" rel="noopener">OpenAI API: models and model selection</a></li>
+  <li><a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">OpenAI Help Center: ChatGPT Work and Codex rate card</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001507-paid-weekly-work-and-codex-rate-limit-resets" rel="noopener">OpenAI Help Center: paid weekly Work and Codex rate limit resets</a></li>
   <li><a href="https://deepswe.datacurve.ai/" rel="noopener">DataCurve: DeepSWE v1.1 leaderboard</a></li>
   <li><a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">DataCurve: raw DeepSWE v1.1 leaderboard artifact</a></li>
-  <li><a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux: temporary removal of the five-hour restriction</a></li>
-  <li><a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">All-AI: accessible report reproducing the temporary-limit announcement</a></li>
-  <li><a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">Tibo Sottiaux follow-up on usage and reverted juice-value experiments</a></li>
 </ul>
-<p><small>Fact-checked July 12, 2026. Product availability, prices, rate cards, usage limits, and benchmark results can change. The field notes are observational, and the routing policy should be validated against your own repositories and verification costs.</small></p>
+<p><small>Fact-checked September 4, 2026. Product availability, prices, rate cards, usage limits, and benchmark results can change. The field notes are observational, and the routing policy should be validated against your own repositories and verification costs.</small></p>
 """,
     },
     {
@@ -2288,8 +2280,8 @@ BLOG_COPY_ES = {
   <li><strong>Terra Medium es la ruta de ejecucion.</strong> Usalo cuando la decision ya esta tomada y el trabajo tiene archivos, limites, comportamiento esperado y gates de aceptacion.</li>
   <li><strong>Luna es la ruta de procesamiento.</strong> Usalo para tareas estrechas, repetibles y de alto volumen que un schema, prueba determinista o auditoria por muestra pueda verificar.</li>
   <li><strong>Max es una escalada diagnosticada.</strong> En DeepSWE, el salto observado desde High fue modesto frente a un costo estimado por tarea unas 2.4 veces mayor, con intervalos de confianza que se superponen ligeramente.</li>
-  <li><strong>Fast y Ultra son controles distintos.</strong> Fast no esta documentado actualmente para GPT-5.6. Ultra coordina varios agentes; no es otro nivel de razonamiento.</li>
-  <li><strong>Nota de uso actual:</strong> la restriccion de cinco horas para Codex y ChatGPT Work esta suspendida temporalmente para Plus, Business y Pro, aunque siguen los limites semanales. OpenAI dice que revirtio los “juice values” internos reducidos que estaba probando.</li>
+  <li><strong>Fast y Ultra son controles distintos.</strong> Fast es una opcion de mayor consumo de creditos para modelos compatibles. Ultra usa razonamiento maximo y puede agregar agentes para usuarios elegibles.</li>
+  <li><strong>Nota de uso actual:</strong> algunas cuentas personales Plus y Pro elegibles pueden comprar un reset instantaneo que restaura el uso de cinco horas y el uso semanal de Work/Codex. El reset inicia un nuevo calendario semanal; no agrega una asignacion separada.</li>
 </ul>
 <p><strong>BLUF: no elijas el modelo por prestigio. Elige segun la incertidumbre del trabajo y el costo de demostrar que el resultado es correcto.</strong></p>
 
@@ -2325,11 +2317,11 @@ BLOG_COPY_ES = {
 <h2>Primero limita el router a la superficie real</h2>
 <p>Una politica no puede seleccionar un modelo que el producto actual no expone. “GPT-5.6” ofrece controles distintos en ChatGPT, Codex y el API, asi que la superficie debe formar parte de la decision.</p>
 <ul>
-  <li><strong>ChatGPT estandar:</strong> la documentacion actual indica que GPT-5.6 usa Sol para Medium, High y Extra High. Terra y Luna no se eligen ahi.</li>
-  <li><strong>ChatGPT Work y Codex:</strong> los planes elegibles pueden mostrar Sol, Terra y Luna. Max y Ultra dependen del producto y del plan.</li>
+  <li><strong>ChatGPT estandar:</strong> la tabla actual dice que Medium, High y Extra High usan GPT-5.6 Sol con la misma tarifa por mensaje. Instant puede cambiar una solicitud a Medium.</li>
+  <li><strong>ChatGPT Work y Codex:</strong> la tabla actual lista Sol, Terra y Luna con tarifas de creditos por token. La disponibilidad y los limites incluidos todavia dependen de la cuenta y el plan.</li>
   <li><strong>API:</strong> los tres modelos soportan <code>none</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>xhigh</code> y <code>max</code>.</li>
 </ul>
-<p>Revisa <a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">GPT-5.6 en ChatGPT</a> y las paginas actuales del API al implementar el router. Una captura del selector no es un contrato de arquitectura: la disponibilidad puede cambiar por producto y por plan.</p>
+<p>Revisa la <a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">tabla vigente de ChatGPT</a> y el <a href="https://developers.openai.com/api/docs/models" rel="noopener">catalogo de modelos del API</a> al implementar el router. Una captura del selector no es un contrato de arquitectura: la disponibilidad puede cambiar por producto y por plan.</p>
 
 <h2>Escala el esfuerzo solo despues de diagnosticar la falla</h2>
 <p>El esfuerzo de razonamiento es una segunda dimension del ruteo. Un nivel mayor deja mas espacio para explorar, usar herramientas y revisar, pero no corrige una premisa equivocada, permisos faltantes, un entorno de pruebas roto o un entregable ambiguo.</p>
@@ -2345,19 +2337,19 @@ BLOG_COPY_ES = {
 <p>Eso convierte a Max en una escalada diagnosticada: usalo cuando High fallo porque abandono demasiado pronto una rama dificil o no exploro lo suficiente. El benchmark aporta evidencia de un harness; no promete la misma ganancia en un repo particular.</p>
 
 <h2>Manten separados los tres sistemas de costo</h2>
-<p>Precio del API, costo estimado por un benchmark y creditos Codex no son unidades intercambiables. OpenAI publica actualmente $5/$30 por millon de tokens de entrada/salida para Sol, $2.50/$15 para Terra y $1/$6 para Luna. Para la mayoria de planes, la tabla Codex asigna 125/750 creditos a Sol, 62.5/375 a Terra y 25/150 a Luna por la misma cantidad de entrada/salida, con tasas menores para entrada en cache.</p>
-<p>El numero en dolares de un benchmark pertenece a su propio harness. Una corrida real tambien paga contexto, cache, salida de herramientas, reintentos, validacion y ramas paralelas. Usa la <a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">tabla Codex vigente</a> y mide costo hasta una finalizacion verificada dentro del sistema.</p>
+<p>Precio del API, costo estimado por un benchmark y creditos Codex no son unidades intercambiables. OpenAI publica actualmente $4/$20 por millon de tokens de entrada/salida para Sol, $2/$12 para Terra y $0.20/$1.20 para Luna. La tabla vigente para Business y Enterprise/Edu lista entrada/entrada en cache/salida a 100/10/500 creditos para Sol, 50/5/300 para Terra y 5/0.5/30 para Luna.</p>
+<p>El numero en dolares de un benchmark pertenece a su propio harness. Una corrida real tambien paga contexto, cache, salida de herramientas, reintentos, validacion y ramas paralelas. Usa la <a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">tabla vigente de ChatGPT Work y Codex</a> para el plan que cubre y mide costo hasta una finalizacion verificada dentro del sistema.</p>
 
-<h2>P. D. Limites actuales y el cambio reportado de “juice”</h2>
-<p><strong>Al 12 de julio de 2026, la ventana de uso de cinco horas para Codex y ChatGPT Work no aplica actualmente a Plus, Business o Pro.</strong> <a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux escribio que el cambio es temporal</a>; un <a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">reporte contemporaneo accesible reproduce el anuncio</a>. Los limites semanales siguen vigentes. Es una condicion operativa actual, no un derecho permanente ni uso ilimitado.</p>
-<p>En otro <a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">seguimiento publico reproducido en este hilo con captura</a>, Sottiaux hablo de los presupuestos internos de razonamiento mas bajos que circularon como “juice values”. Dijo que OpenAI los probo mientras investigaba un consumo mayor al esperado y luego revirtio el experimento. Esos numeros reducidos no son una interfaz documentada actual ni un contrato estable.</p>
-<p>Para un router de produccion, ambos datos son notas de estado presente. Usa controles publicados, observa la superficie de consumo en vivo y vuelve a medir antes de codificar limites temporales o presupuestos internos inferidos.</p>
+<h2>P. D. Limites actuales de cinco horas y semanales</h2>
+<p>La guia vigente de OpenAI trata Work y Codex como productos con limites de cinco horas y semanales. Las cuentas personales Plus y Pro elegibles pueden comprar un reset instantaneo desde Usage, sujeto a disponibilidad por cuenta. La opcion no esta disponible para Free, Go, Business, Enterprise o Edu.</p>
+<p>La compra restaura de inmediato tanto el uso de cinco horas como el semanal. Adelanta la asignacion semanal normal en vez de agregar otro derecho y no se puede guardar ni programar.</p>
+<p>El nuevo periodo semanal comienza con la primera solicitud de Work o Codex despues del reset. El siguiente reset automatico ocurre siete dias despues de esa solicitud, no necesariamente siete dias despues del pago. Los creditos de uso son un saldo separado.</p>
 
 <h2>No conviertas Max, Fast y Ultra en una sola escalera</h2>
 <ul>
   <li><strong>Max</strong> da mas tiempo de razonamiento a un modelo GPT-5.6.</li>
-  <li><strong>Fast</strong> es una opcion de inferencia de Codex que consume mas creditos, pero la <a href="https://developers.openai.com/codex/speed" rel="noopener">documentacion actual de Speed</a> lista GPT-5.5 y GPT-5.4, no GPT-5.6.</li>
-  <li><strong>Ultra</strong> es una configuracion multiagente separada que coordina cuatro agentes por defecto. No es otro nivel de razonamiento de un solo agente por encima de Max.</li>
+  <li><strong>Fast</strong> existe como opcion de Codex que consume mas creditos para modelos compatibles. La tabla actual no identifica cuales modelos GPT-5.6 lo soportan ni publica un multiplicador para GPT-5.6, asi que no codifiques ninguna de esas afirmaciones.</li>
+  <li><strong>Ultra</strong> usa razonamiento maximo y puede ejecutar agentes adicionales para usuarios elegibles. No es una fila de modelo separada; los creditos dependen del modelo elegido y de los tokens producidos por la tarea y sus agentes.</li>
 </ul>
 <p>Ultra justifica su overhead cuando cada rama puede producir evidencia independiente: revisar subsistemas separados, comparar implementaciones o investigar preguntas sin estado mutable compartido. Desperdicia contexto y genera colisiones cuando todos necesitan los mismos archivos, la misma decision o una dependencia secuencial.</p>
 
@@ -2390,26 +2382,18 @@ BLOG_COPY_ES = {
 <p>Empieza el trabajo dificil e incierto en Sol High. Escala a Max solo despues de identificar que la causa fue exploracion insuficiente, no un brief o entorno defectuoso.</p>
 <h3>¿Ultra es mas inteligente que Max?</h3>
 <p>No. Max aumenta el esfuerzo de un modelo. Ultra coordina varios agentes. El paralelo ayuda solo cuando el trabajo puede separarse sin duplicar contexto ni chocar sobre estado compartido.</p>
-<h3>¿Codex y ChatGPT Work tienen actualmente una ventana de uso de cinco horas?</h3>
-<p>Al 12 de julio de 2026, OpenAI dice que la restriccion de cinco horas para Codex y ChatGPT Work no aplica temporalmente a Plus, Business o Pro. Los limites semanales siguen vigentes; no es acceso ilimitado ni un contrato permanente.</p>
-<h3>¿Los juice values de GPT-5.6 se redujeron permanentemente?</h3>
-<p>No hay una especificacion publica actual que diga eso. Tibo Sottiaux dijo que los experimentos internos con presupuestos de razonamiento fueron revertidos. Usa los controles publicados y verifica el comportamiento en tu propio workload.</p>
+<h3>¿Que pasa cuando compro un reset instantaneo de Work o Codex?</h3>
+<p>Para cuentas personales Plus y Pro elegibles, restaura de inmediato el uso de cinco horas y el semanal. El siguiente periodo semanal empieza con la primera solicitud posterior y el reset automatico ocurre siete dias despues. No es uso adicional guardado.</p>
 
 <h2>Fuentes y limites</h2>
 <ul>
-  <li><a href="https://openai.com/index/gpt-5-6/" rel="noopener">OpenAI: GPT-5.6</a></li>
-  <li><a href="https://openai.com/index/previewing-gpt-5-6-sol/" rel="noopener">OpenAI: preview de GPT-5.6 Sol</a></li>
-  <li><a href="https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt" rel="noopener">OpenAI Help Center: GPT-5.6 en ChatGPT</a></li>
-  <li><a href="https://help.openai.com/en/articles/20001106-codex-rate-card" rel="noopener">OpenAI Help Center: tabla de creditos Codex</a></li>
-  <li><a href="https://developers.openai.com/codex/speed" rel="noopener">OpenAI: Codex Speed</a></li>
   <li><a href="https://developers.openai.com/api/docs/models" rel="noopener">OpenAI API: modelos y seleccion</a></li>
+  <li><a href="https://help.openai.com/en/articles/11481834-chatgpt-rate-card" rel="noopener">OpenAI Help Center: tabla de ChatGPT Work y Codex</a></li>
+  <li><a href="https://help.openai.com/en/articles/20001507-paid-weekly-work-and-codex-rate-limit-resets" rel="noopener">OpenAI Help Center: resets pagados para Work y Codex</a></li>
   <li><a href="https://deepswe.datacurve.ai/" rel="noopener">DataCurve: DeepSWE v1.1</a></li>
   <li><a href="https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json" rel="noopener">DataCurve: artefacto crudo de DeepSWE v1.1</a></li>
-  <li><a href="https://x.com/thsottiaux/status/2076365965915467978" rel="noopener">Tibo Sottiaux: retiro temporal de la restriccion de cinco horas</a></li>
-  <li><a href="https://www.all-ai.de/news/news26/openai-gpt-sol-app-limits" rel="noopener">All-AI: reporte accesible que reproduce el anuncio del limite temporal</a></li>
-  <li><a href="https://www.reddit.com/r/codex/comments/1uv07tv/tibo_about_the_juice_values/" rel="noopener">Seguimiento de Tibo Sottiaux sobre uso y experimentos de juice revertidos</a></li>
 </ul>
-<p><small>Verificado el 12 de julio de 2026. Disponibilidad, precios, limites, tablas de uso y benchmarks pueden cambiar. Las notas de campo son observacionales; valida la politica contra tus propios repos y costos de verificacion.</small></p>
+<p><small>Verificado el 4 de septiembre de 2026. Disponibilidad, precios, limites, tablas de uso y benchmarks pueden cambiar. Las notas de campo son observacionales; valida la politica contra tus propios repos y costos de verificacion.</small></p>
 """,
     },
     "agents-need-verifiable-tools": {
@@ -2826,6 +2810,39 @@ PRODUCTS_ES = {
     slug: {**product, **PRODUCT_COPY_ES.get(slug, {})}
     for slug, product in PRODUCTS.items()
 }
+
+# Products stay defined above so a later release is reversible. Public routes and
+# discovery surfaces only read these explicitly published maps.
+PUBLISHED_PRODUCTS = {}
+PUBLISHED_PRODUCTS_ES = {}
+
+PUBLIC_MAGNETS = [
+    {
+        "title": "Free Resources",
+        "path": "/magnets",
+        "description": "Index of KyaniteLabs worksheets, checklists, settings cards, and model-selection references.",
+    },
+    {
+        "title": "Qwen3.8-27B Settings Card",
+        "path": "/magnets/settings-card",
+        "description": "A practical local-model settings reference.",
+    },
+    {
+        "title": "Agent Delegation Worksheet",
+        "path": "/magnets/delegation-worksheet",
+        "description": "A worksheet for splitting agent work into bounded, verifiable lanes.",
+    },
+    {
+        "title": "Evaluation Design Checklist",
+        "path": "/magnets/eval-checklist",
+        "description": "A checklist for designing evaluations with evidence and failure controls.",
+    },
+    {
+        "title": "LLM Comparison Cheat Sheet",
+        "path": "/magnets/llm-cheat-sheet",
+        "description": "A snapshot-based model-selection reference for intelligence, cost, and speed.",
+    },
+]
 
 
 # ─── Database ────────────────────────────────────────────────────────────────
@@ -3302,6 +3319,7 @@ COMMON_ES_REPLACEMENTS = {
     "Something went wrong. Email info@kyanitelabs.tech.": "Algo salio mal. Escribe a info@kyanitelabs.tech.",
     "Work with Kyanite": "Trabajar con Kyanite",
     "Operator Assets": "Activos de operador",
+    "More tools in development.": "Más herramientas en desarrollo.",
     "Get the Kyanite tool working in your environment.": "Haz que la herramienta Kyanite funcione en tu entorno.",
     "Implementation path": "Ruta de implementación",
     "Send the implementation brief": "Enviar el brief de implementación",
@@ -3569,12 +3587,19 @@ EXTRA_ES_REPLACEMENTS = {
 SPANISH_REPLACEMENTS = {**COMMON_ES_REPLACEMENTS, **LANDING_ES_REPLACEMENTS, **EXTRA_ES_REPLACEMENTS}
 
 
-def add_hreflang(html, en_path, es_path):
+def add_hreflang(html, en_path, es_path, *, es_original=False):
     html = re.sub(
         r'\n?  <link rel="alternate" hreflang="(?:en|es|es-419|x-default)" href="[^"]+">',
         "",
         html,
     )
+    if es_original:
+        alternates = f"""
+  <link rel="alternate" hreflang="es" href="{CANONICAL_BASE}{es_path}">
+  <link rel="alternate" hreflang="es-419" href="{CANONICAL_BASE}{es_path}">
+  <link rel="alternate" hreflang="x-default" href="{CANONICAL_BASE}{es_path}">
+"""
+        return html.replace("</head>", alternates + "</head>", 1)
     alternates = f"""
   <link rel="alternate" hreflang="en" href="{CANONICAL_BASE}{en_path}">
   <link rel="alternate" hreflang="es" href="{CANONICAL_BASE}{es_path}">
@@ -3584,7 +3609,7 @@ def add_hreflang(html, en_path, es_path):
     return html.replace("</head>", alternates + "</head>", 1)
 
 
-def spanishify(html, en_path, es_path):
+def spanishify(html, en_path, es_path, *, es_original=False):
     html = html.replace('<html lang="en">', '<html lang="es">', 1)
     url_pairs = [
         ('href="/implementation/intake"', 'href="/es/implementation/intake"'),
@@ -3612,6 +3637,11 @@ def spanishify(html, en_path, es_path):
     html = html.replace(f'<link rel="canonical" href="{CANONICAL_BASE}{en_path}">', f'<link rel="canonical" href="{CANONICAL_BASE}{es_path}">')
     html = html.replace(f'content="{CANONICAL_BASE}{en_path}"', f'content="{CANONICAL_BASE}{es_path}"')
     html = html.replace('>ES</a>', '>EN</a>')
+    if es_original:
+        html = html.replace(
+            f'<a class="language-link" href="{en_path}" hreflang="en" lang="en">EN</a>',
+            "",
+        )
     html = html.replace(f'href="{CANONICAL_BASE}/es/es/', f'href="{CANONICAL_BASE}/es/')
     html = html.replace('href="/es/es/', 'href="/es/')
     html = html.replace('href="/es/static/', 'href="/static/')
@@ -3621,7 +3651,7 @@ def spanishify(html, en_path, es_path):
         html = html.replace(english, spanish)
     html = html.replace('"inLanguage": "en-US"', '"inLanguage": "es-419"')
     html = html.replace("NotasPosting", "BlogPosting")
-    return add_hreflang(html, en_path, es_path)
+    return add_hreflang(html, en_path, es_path, es_original=es_original)
 
 
 # ─── Routes ──────────────────────────────────────────────────────────────────
@@ -3672,14 +3702,6 @@ def about_es():
 
 
 # ─── Lead magnets (free resources) ──────────────────────────────────────────
-
-@app.route("/rutile")
-def rutile_product():
-    return render_template_file(
-        "rutile.html",
-        canonical_base=CANONICAL_BASE,
-    )
-
 
 @app.route("/magnets")
 def magnets_index():
@@ -3993,29 +4015,21 @@ def sitemap_xml():
         ("/privacy", "0.45", "yearly"),
         ("/terms", "0.45", "yearly"),
         ("/blog", "0.88", "weekly"),
-        ("/magnets", "0.8", "monthly"),
-        ("/magnets/settings-card", "0.78", "monthly"),
-        ("/magnets/delegation-worksheet", "0.78", "monthly"),
-        ("/magnets/eval-checklist", "0.78", "monthly"),
-        ("/magnets/llm-cheat-sheet", "0.78", "monthly"),
         ("/implementation", "0.9", "monthly"),
         ("/implementation/intake", "0.75", "monthly"),
         ("/shop", "0.65", "monthly"),
-        ("/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
-        ("/shop/claude-code-productivity-pack", "0.55", "monthly"),
         ("/es/", "1.0", "weekly"),
         ("/es/about", "0.9", "monthly"),
         ("/es/blog", "0.88", "weekly"),
         ("/es/implementation", "0.9", "monthly"),
         ("/es/implementation/intake", "0.75", "monthly"),
         ("/es/shop", "0.65", "monthly"),
-        ("/es/shop/ai-coding-agent-blueprint", "0.55", "monthly"),
-        ("/es/shop/claude-code-productivity-pack", "0.55", "monthly"),
         ("/llms.txt", "0.7", "weekly"),
         ("/llms-full.txt", "0.65", "weekly"),
         ("/ai-sitemap.json", "0.7", "weekly"),
         ("/feed.xml", "0.6", "weekly"),
     ]
+    pages.extend((magnet["path"], "0.78", "monthly") for magnet in PUBLIC_MAGNETS)
     pages.extend((f"/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS)
     pages.extend((f"/es/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS_ES)
     urls = []
@@ -4135,6 +4149,15 @@ def ai_sitemap_json():
                 ],
             },
         ],
+        "products": [],
+        "magnets": [
+            {
+                "title": magnet["title"],
+                "url": f"{CANONICAL_BASE}{magnet['path']}",
+                "description": magnet["description"],
+            }
+            for magnet in PUBLIC_MAGNETS
+        ],
         "publicRepositories": PUBLIC_PROJECTS,
         "founder": {
             "name": "Simon Gonzalez de Cruz",
@@ -4151,6 +4174,20 @@ def ai_sitemap_json():
             }
             for post in BLOG_POSTS
         ],
+        "spanishBlogPosts": [
+            {
+                "title": post["title"],
+                "url": f"{CANONICAL_BASE}/es/blog/{post['slug']}",
+                **(
+                    {"englishUrl": f"{CANONICAL_BASE}/blog/{post['slug']}"}
+                    if post["slug"] in BLOG_POSTS_BY_SLUG
+                    else {}
+                ),
+                "primaryKeyword": post.get("primary_keyword"),
+                "description": post["excerpt"],
+            }
+            for post in BLOG_POSTS_ES
+        ],
         "contact": "info@kyanitelabs.tech",
     })
 
@@ -4163,6 +4200,14 @@ def llms_txt():
             + (f" Source: {p['repo']}." if p.get("repo") else "")
         )
         for p in PUBLIC_PROJECTS
+    )
+    magnet_lines = "\n".join(
+        f"- [{magnet['title']}]({CANONICAL_BASE}{magnet['path']}): {magnet['description']}"
+        for magnet in PUBLIC_MAGNETS
+    )
+    spanish_blog_lines = "\n".join(
+        f"- [{post['title']}]({CANONICAL_BASE}/es/blog/{post['slug']}): {post['excerpt']}"
+        for post in BLOG_POSTS_ES
     )
     body = f"""# KyaniteLabs
 
@@ -4179,16 +4224,15 @@ KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_U
 - [Blog]({CANONICAL_BASE}/blog): build notes, learning notes, agent-system essays, and tool implementation field notes.
 - [Implementation help]({CANONICAL_BASE}/implementation): paid help for getting Kyanite-built tools working in a real environment.
 - [Implementation intake]({CANONICAL_BASE}/implementation/intake): structured intake for implementation and advising work.
-- [Shop]({CANONICAL_BASE}/shop): digital products and operator assets.
+- [Shop]({CANONICAL_BASE}/shop): no products currently listed; more tools are in development.
 - [PuenteWorks]({PUENTEWORKS_URL}): parent business, consulting, workflow, and broader AI operations home.
-- [Spanish homepage]({CANONICAL_BASE}/es/): one-to-one Spanish public site.
+- Spanish edition: blog, about, and implementation pages (translation parity in progress).
 - [Blog en español]({CANONICAL_BASE}/es/blog): the Spanish edition — translated notes plus Spanish-first interpretation pieces.
 
 ## Kyanite Products and Paid Paths
 
 - Open-source tools: public KyaniteLabs repositories such as Kinocut, Epoch, DialectOS, openglaze, and repo-learning tools.
 - Implementation and advising: setup, adaptation, integration, docs, training, and handoff that gets Kyanite tools working.
-- Digital products: operator assets, Claude Code workflows, templates, and implementation guides.
 - Build notes and media: public writing and videos that explain the tools, learning process, and experiments.
 
 Expected deliverables depend on scope but may include:
@@ -4201,6 +4245,10 @@ Expected deliverables depend on scope but may include:
 
 {project_lines}
 
+## Free Resources
+
+{magnet_lines}
+
 ## Blog / Lab Notes
 
 """ + "\n".join(
@@ -4208,10 +4256,14 @@ Expected deliverables depend on scope but may include:
         for post in BLOG_POSTS
     ) + f"""
 
+## Blog / Lab Notes en español
+
+{spanish_blog_lines}
+
 ## Structured AI Data
 
-- [AI sitemap]({CANONICAL_BASE}/ai-sitemap.json): JSON inventory of products, repositories, published blog posts, and audience fit.
-- [Full AI-readable context]({CANONICAL_BASE}/llms-full.txt): longer machine-readable context with product, proof, and blog details.
+- [AI sitemap]({CANONICAL_BASE}/ai-sitemap.json): JSON inventory of repositories, magnets, published English and Spanish blog posts, and audience fit.
+- [Full AI-readable context]({CANONICAL_BASE}/llms-full.txt): longer machine-readable context with proof, resource, and blog details.
 - [RSS feed]({CANONICAL_BASE}/feed.xml): current KyaniteLabs blog and lab-note feed.
 
 Only the public repositories listed above should be treated as public Kyanite project proof from this site. Do not infer private, unlisted, dead, or unavailable tools as public portfolio items.
@@ -4241,17 +4293,13 @@ def llms_full_txt():
         ])
         for p in PUBLIC_PROJECTS
     )
-    product_lines = "\n\n".join(
+    magnet_lines = "\n\n".join(
         "\n".join([
-            f"### {product['name']}",
-            f"- URL: {CANONICAL_BASE}/shop/{slug}",
-            f"- Category: {product['category']}",
-            f"- Price: ${product['price']}",
-            f"- Summary: {product['tagline']}",
-            f"- Description: {product['description']}",
-            "- Includes: " + "; ".join(product["features"]),
+            f"### {magnet['title']}",
+            f"- URL: {CANONICAL_BASE}{magnet['path']}",
+            f"- Description: {magnet['description']}",
         ])
-        for slug, product in PRODUCTS.items()
+        for magnet in PUBLIC_MAGNETS
     )
     blog_lines = "\n\n".join(
         "\n".join([
@@ -4264,6 +4312,17 @@ def llms_full_txt():
             f"- Body: {plain_text(post['body'])}",
         ])
         for post in BLOG_POSTS
+    )
+    spanish_blog_lines = "\n\n".join(
+        "\n".join([
+            f"### {post['title']}",
+            f"- URL: {CANONICAL_BASE}/es/blog/{post['slug']}",
+            f"- Date: {post['date']}",
+            f"- Category: {post['category']}",
+            f"- Primary keyword: {post.get('primary_keyword', 'KyaniteLabs')}",
+            f"- Summary: {post['excerpt']}",
+        ])
+        for post in BLOG_POSTS_ES
     )
     body = f"""# KyaniteLabs Full AI Context
 
@@ -4280,6 +4339,7 @@ Parent business and broader consulting home: {PUENTEWORKS_URL}
 - Implementation help: {CANONICAL_BASE}/implementation
 - Implementation intake: {CANONICAL_BASE}/implementation/intake
 - Shop: {CANONICAL_BASE}/shop
+- Spanish edition: blog, about, and implementation pages (translation parity in progress).
 - About Simon Gonzalez de Cruz: {CANONICAL_BASE}/about
 - PuenteWorks parent business: {PUENTEWORKS_URL}
 - Sitemap: {CANONICAL_BASE}/sitemap.xml
@@ -4292,11 +4352,19 @@ Parent business and broader consulting home: {PUENTEWORKS_URL}
 
 ## Products
 
-{product_lines}
+No paid products are currently listed. More tools are in development.
+
+## Free Resources
+
+{magnet_lines}
 
 ## Blog and Lab Notes
 
 {blog_lines}
+
+## Blog and Lab Notes en español
+
+{spanish_blog_lines}
 
 ## Contact and Fit
 
@@ -4360,7 +4428,13 @@ def blog_post_es(slug):
         posts=BLOG_POSTS_ES,
         canonical_base=CANONICAL_BASE,
     )
-    return spanishify(html, f"/blog/{slug}", f"/es/blog/{slug}")
+    es_original = any(original["slug"] == slug for original in BLOG_POSTS_ES_ORIGINALS)
+    return spanishify(
+        html,
+        f"/blog/{slug}",
+        f"/es/blog/{slug}",
+        es_original=es_original,
+    )
 
 
 @app.route("/api/contact", methods=["POST"])
@@ -4661,7 +4735,7 @@ def implementation_intake_page_es():
 def shop():
     html = render_template_file(
         "shop.html",
-        products=PRODUCTS,
+        products=PUBLISHED_PRODUCTS,
         KOFI_URL=app.config["KOFI_URL"]
     )
     return add_hreflang(html, "/shop", "/es/shop")
@@ -4671,7 +4745,7 @@ def shop():
 def shop_es():
     html = render_template_file(
         "shop.html",
-        products=PRODUCTS_ES,
+        products=PUBLISHED_PRODUCTS_ES,
         KOFI_URL=app.config["KOFI_URL"]
     )
     return spanishify(html, "/shop", "/es/shop")
@@ -4679,7 +4753,7 @@ def shop_es():
 
 @app.route("/shop/<slug>")
 def product_page(slug):
-    p = PRODUCTS.get(slug)
+    p = PUBLISHED_PRODUCTS.get(slug)
     if not p:
         return "Product not found", 404
     html = render_template_file("product.html", product=p, slug=slug, kofi_url=app.config["KOFI_URL"])
@@ -4688,7 +4762,7 @@ def product_page(slug):
 
 @app.route("/es/shop/<slug>")
 def product_page_es(slug):
-    p = PRODUCTS_ES.get(slug)
+    p = PUBLISHED_PRODUCTS_ES.get(slug)
     if not p:
         return "Producto no encontrado", 404
     html = render_template_file("product.html", product=p, slug=slug, kofi_url=app.config["KOFI_URL"])

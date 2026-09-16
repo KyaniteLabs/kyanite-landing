@@ -11,7 +11,11 @@ import unittest
 from app import (
     BLOG_COPY_ES,
     BLOG_POSTS,
+    BLOG_POSTS_ES,
+    BLOG_POSTS_ES_ORIGINALS,
     INDEXNOW_KEY,
+    PUBLIC_MAGNETS,
+    PUBLIC_PROJECTS,
     PRODUCTS,
     PUENTEWORKS_URL,
     TIKTOK_SITE_VERIFICATION_BODY,
@@ -169,9 +173,6 @@ class LandingSmokeTests(unittest.TestCase):
         ]
         paths.extend(f"/blog/{post['slug']}" for post in BLOG_POSTS)
         paths.extend(f"/es/blog/{post['slug']}" for post in BLOG_POSTS)
-        paths.extend(f"/shop/{slug}" for slug in PRODUCTS)
-        paths.extend(f"/es/shop/{slug}" for slug in PRODUCTS)
-
         for path in paths:
             with self.subTest(path=path):
                 body = self.client.get(path).get_data(as_text=True)
@@ -185,6 +186,90 @@ class LandingSmokeTests(unittest.TestCase):
         llms_full = self.client.get("/llms-full.txt").get_data(as_text=True)
         self.assertIn(f"[Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_URL})", llms)
         self.assertIn(f"Parent business and broader consulting home: {PUENTEWORKS_URL}", llms_full)
+
+    def test_ceo_ordered_take_downs_are_unpublished_but_reversible(self) -> None:
+        self.assertEqual(set(PRODUCTS), {"ai-coding-agent-blueprint", "claude-code-productivity-pack"})
+
+        for path, empty_state in [
+            ("/shop", "More tools in development."),
+            ("/es/shop", "Más herramientas en desarrollo."),
+        ]:
+            with self.subTest(path=path):
+                response = self.client.get(path)
+                body = response.get_data(as_text=True)
+                self.assertEqual(response.status_code, 200)
+                self.assertIn(empty_state, body)
+                for slug, product in PRODUCTS.items():
+                    self.assertNotIn(slug, body)
+                    self.assertNotIn(product["name"], body)
+
+        self.assertEqual(self.client.get("/rutile").status_code, 404)
+        for slug in PRODUCTS:
+            with self.subTest(slug=slug):
+                self.assertEqual(self.client.get(f"/shop/{slug}").status_code, 404)
+                self.assertEqual(self.client.get(f"/es/shop/{slug}").status_code, 404)
+
+        sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
+        llms = self.client.get("/llms.txt").get_data(as_text=True)
+        llms_full = self.client.get("/llms-full.txt").get_data(as_text=True)
+        ai_sitemap = self.client.get("/ai-sitemap.json").get_json()
+        self.assertEqual(ai_sitemap["products"], [])
+        for body in (sitemap, llms, llms_full, json.dumps(ai_sitemap)):
+            self.assertNotIn("/rutile", body)
+            for slug in PRODUCTS:
+                self.assertNotIn(slug, body)
+
+    def test_discovery_inventories_magnets_and_every_spanish_post(self) -> None:
+        ai_sitemap = self.client.get("/ai-sitemap.json").get_json()
+        expected_magnets = {f"https://kyanitelabs.tech{magnet['path']}" for magnet in PUBLIC_MAGNETS}
+        expected_es_posts = {f"https://kyanitelabs.tech/es/blog/{post['slug']}" for post in BLOG_POSTS_ES}
+
+        self.assertEqual({item["url"] for item in ai_sitemap["magnets"]}, expected_magnets)
+        self.assertEqual({item["url"] for item in ai_sitemap["spanishBlogPosts"]}, expected_es_posts)
+        for path in ("/sitemap.xml", "/llms.txt", "/llms-full.txt"):
+            body = self.client.get(path).get_data(as_text=True)
+            with self.subTest(path=path):
+                for url in expected_magnets:
+                    self.assertIn(url, body)
+                for url in expected_es_posts:
+                    self.assertIn(url, body)
+
+    def test_authoritative_project_dates_and_moved_repo_are_rendered(self) -> None:
+        expected_dates = {
+            "devarch-framework": "2026-09-02",
+            "Kinocut": "2026-09-01",
+            "Epoch": "2026-09-02",
+            "checkyourself": "2026-09-04",
+            "DialectOS": "2026-09-04",
+            "liminal": "2026-09-01",
+            "liminal-sites": "2026-09-02",
+            "Elixis": "2026-09-02",
+            "Innerscape": "2026-09-02",
+            "openglaze": "2026-09-02",
+            "Dev Learning Archaeologist": "2026-09-02",
+            "achiote-food-memory-researcher": "2026-09-02",
+            "unstuck-coach": "2026-09-01",
+            "tradesflow": "2026-09-01",
+            "healthadvocate": "2026-09-02",
+        }
+        projects = {project["name"]: project for project in PUBLIC_PROJECTS}
+        for name, expected in expected_dates.items():
+            with self.subTest(project=name):
+                self.assertEqual(projects[name]["updated"], expected)
+        self.assertEqual(
+            projects["Dev Learning Archaeologist"]["url"],
+            "https://github.com/simongonzalezdc/dev-learning-archaeologist",
+        )
+        self.assertIn("site surfaces and public faces", projects["liminal-sites"]["description"].lower())
+
+    def test_magnet_blog_links_only_target_published_slugs(self) -> None:
+        published = {post["slug"] for post in BLOG_POSTS}
+        for magnet in PUBLIC_MAGNETS:
+            with self.subTest(path=magnet["path"]):
+                html = self.client.get(magnet["path"]).get_data(as_text=True)
+                paths = re.findall(r'href="(?:https://kyanitelabs\.tech)?/blog/([^"/#?]+)', html)
+                for slug in paths:
+                    self.assertIn(slug, published)
 
     def test_public_typography_uses_zoom_safe_scale_and_brand_fonts(self) -> None:
         css = self.client.get("/static/css/kyanite-system.css").get_data(as_text=True)
@@ -564,6 +649,42 @@ class LandingSmokeTests(unittest.TestCase):
         for slug in slugs:
             self.assertIn(f"https://kyanitelabs.tech/blog/{slug}", sitemap)
             self.assertIn(f"https://kyanitelabs.tech/es/blog/{slug}", sitemap)
+
+    def test_spanish_original_uses_only_its_real_canonical_alternates(self) -> None:
+        slug = BLOG_POSTS_ES_ORIGINALS[0]["slug"]
+        es_url = f"https://kyanitelabs.tech/es/blog/{slug}"
+        response = self.client.get(f"/es/blog/{slug}")
+        html = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.get(f"/blog/{slug}").status_code, 404)
+        self.assertNotIn('hreflang="en"', html)
+        for hreflang in ("es", "es-419", "x-default"):
+            self.assertIn(f'hreflang="{hreflang}" href="{es_url}"', html)
+
+    def test_resonant_surfaces_survive_site_alignment(self) -> None:
+        for path in ("/", "/es/", "/llms.txt"):
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True).lower()
+                self.assertIn("resonant", body)
+
+    def test_gpt_56_article_uses_current_official_cost_and_reset_claims(self) -> None:
+        for path in (
+            "/blog/gpt-5-6-sol-terra-luna-routing-guide",
+            "/es/blog/gpt-5-6-sol-terra-luna-routing-guide",
+        ):
+            with self.subTest(path=path):
+                body = self.client.get(path).get_data(as_text=True)
+                self.assertIn("$4/$20", body)
+                self.assertIn("$2/$12", body)
+                self.assertIn("$0.20/$1.20", body)
+                self.assertIn("100/10/500", body)
+                self.assertIn("50/5/300", body)
+                self.assertIn("5/0.5/30", body)
+                self.assertIn("20001507-paid-weekly-work-and-codex-rate-limit-resets", body)
+                self.assertNotIn("$5/$30", body)
+                self.assertNotIn("125/750", body)
+                self.assertNotIn("juice values", body.lower())
 
     def test_spanish_chrome_does_not_leave_english_cta_or_shop_title(self) -> None:
         shop = self.client.get("/es/shop").get_data(as_text=True)
