@@ -1,0 +1,30 @@
+# Kyanite Labs
+
+> Kyanite Labs builds local-first tools and agent workflows for people who want useful software with evidence, guardrails, and recoverable operations.
+
+## Public hub
+
+Kyanite Labs is the public organization landing surface at https://kyanitelabs.tech/. The source repository is `kyanite-landing`.
+
+## Products and tools
+
+- Kinocut: guardrailed local-first video editing MCP server, Python library, and CLI — https://kinocut.dev/
+- TasteCheck: evidence-backed frontend taste and ship-gate toolkit — https://github.com/KyaniteLabs/tastecheck
+- CheckYourself: local-first completion-evidence review for AI-built apps — https://github.com/KyaniteLabs/checkyourself
+- ComplyOS: L&D compliance and learning-operations MCP server — https://github.com/KyaniteLabs/complyos
+- DialectOS: Spanish dialect localization MCP server, CLI, and QA toolkit — https://github.com/KyaniteLabs/DialectOS
+- Achiote: food-memory reconstruction MCP server, CLI, and HTTP API — https://github.com/KyaniteLabs/achiote-icm
+
+## Agent discovery
+
+Use the linked product repositories for canonical installation commands, release facts, tool counts, and safety boundaries. This hub does not invent package commands or pricing where the product source does not publish them.
+
+## Verify
+
+```bash
+curl -fsSL https://kyanitelabs.tech/llms.txt
+```
+
+## Keywords
+
+Kyanite Labs, local-first software, MCP servers, AI agent tools, evidence-backed workflows, guardrails, recoverable operations
