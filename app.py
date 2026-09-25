@@ -590,6 +590,54 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
     {
+        "slug": 'equalizer-bench-small-models-video',
+        "title": "The Equalizer Bench: a 3B that can't write ffmpeg, the same 3B shipping video edits, and the bug our own benchmark caught",
+        "category": 'Benchmarks / Agents',
+        "date": '2026-09-25',
+        "date_modified": '2026-09-25',
+        "read_time": '6 min',
+        "primary_keyword": "small model benchmark video editing MCP guardrails",
+        "seo_title": "The Equalizer Bench: small models + a typed video surface, measured",
+        "meta_description": 'A raw 3B writes 0/12 working ffmpeg commands. The same 3B on Kinocut\'s typed surface ships 4/12, faster than a 35B writing raw commands. Method, tables, and the kinocut bug the bench caught.',
+        "excerpt": 'We benchmarked our own thesis: tiny model + deterministic guardrail layer vs raw capability. The curve is textbook, the trim trap is real, and the bench indicted our own product before anyone else could.',
+        "body": """
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-25. Numbers measured 2026-09-24; every artifact on disk.</small></p>
+<p>Our working thesis, stated publicly enough times that it deserved measurement: a small local model plus a deterministic tool layer should match a frontier model working alone. For video editing we now have the numbers, and they are cleaner than the thesis predicted.</p>
+<h2>The short version</h2>
+<p>A 3-billion-parameter local model, asked to write raw ffmpeg commands, produced <strong>zero working commands out of twelve attempts</strong>. The same model, driving <a href="https://kinocut.dev">Kinocut</a>&rsquo;s typed surface instead, shipped <strong>4 of 12</strong> &mdash; at <em>lower</em> latency than a 35B MoE writing raw commands. At 2B the lift is +80%. At 27B it is +10%. At 35B, parity. The guardrail compensates exactly where the model cannot, and stops mattering where the model is already competent. That curve is the whole product argument, now with cells instead of adjectives.</p>
+<h2>The rig</h2>
+<p>Twelve representative edit tasks (trim, resize, audio extract to mp3 and wav, 2&times; speed, rotate, thumbnail, WebM, center crop, 1fps frame export, animated GIF, self-concat) on one deterministic fixture: testsrc2 + sine, 10 seconds, 1280&times;720, H.264 + AAC. Two arms per seat. <em>Alone</em>: the model writes a raw ffmpeg command &mdash; what an unguarded agent does. <em>+ Kinocut</em>: the model drives the <code>kino</code> CLI with its real help text in context, exactly as an MCP client sees the tool schema, and the deterministic engine builds and runs the actual ffmpeg. One verifier, blind to arm: the artifact must exist and pass every ffprobe check (duration, dimensions, codecs, streams, frame count). Commands execute argv-only &mdash; no shell &mdash; sandboxed, 240-second cap, temperature 0, fixed seed.</p>
+<table>
+<thead><tr><th>local model</th><th>alone (raw ffmpeg)</th><th>+ Kinocut</th><th>latency, median</th></tr></thead>
+<tbody>
+<tr><td>3B VL</td><td>0 / 12</td><td><strong>4 / 12</strong></td><td>540 ms &rarr; 337 ms</td></tr>
+<tr><td>2B</td><td>5 / 12</td><td><strong>9 / 12</strong> (+80% rel.)</td><td>5.6 s &rarr; 2.2 s</td></tr>
+<tr><td>27B</td><td>10 / 12</td><td><strong>11 / 12</strong></td><td>2.2 s &rarr; 2.6 s</td></tr>
+<tr><td>35B MoE</td><td>11 / 12</td><td>11 / 12 (parity)</td><td>18.3 s &rarr; 9.6 s</td></tr>
+</tbody>
+</table>
+<p>Full tables, method, and the per-cell caveats live at <a href="https://kinocut.dev/bench">kinocut.dev/bench</a>.</p>
+<h2>The trim trap</h2>
+<p>Every seat&rsquo;s raw-arm &ldquo;canonical&rdquo; trim was the command an experienced human writes:</p>
+<p><code>ffmpeg -i input.mp4 -ss 2 -to 5 -c copy out.mp4</code></p>
+<p>It exits zero. It reports the right duration. It <strong>silently drops the video stream</strong> &mdash; the stream-copy and output-seek interaction. A 27B model still writes it. This is the failure class that makes operators distrust agent-driven editing, and it is invisible unless you probe the output file. Our verifier probes the output file; that is the entire point of the blind-verification design.</p>
+<h2>The bug our own bench caught</h2>
+<p>The bench also indicted Kinocut itself. The documented absolute-end trim form (<code>kino trim -s 2 -e 5</code>) produced a 5.00-second clip instead of a 2&rarr;5 cut: validation treated the end time as absolute while execution &mdash; input-seek rebasing timestamps to zero &mdash; treated it as relative. Two different seats used the documented form correctly and were scored FAIL by the rubric; the layer&rsquo;s own bug cost it the task. Fixed in 1.15.2: the engine now converts the absolute end explicitly when input-seeking. With the fix, the capable seats read 10&ndash;12/12 on the Kinocut arm. A benchmark that cannot fail your product is marketing; this one filed the defect before any user could.</p>
+<h2>Why this matters beyond kinocut</h2>
+<p>The same harness shape &mdash; deterministic layer as the independent variable, blind verifier as the judge &mdash; now runs across our portfolio (tastecheck&rsquo;s rubric unlock, checkyourself&rsquo;s guaranteed floor). The pattern generalizes: stop asking whether models are smart, start measuring what your tool surface does to the competence floor. The frontier row in our tables is empty by policy until a sanctioned credential exists; we do not fabricate reference rows.</p>
+<h2>Reproducibility</h2>
+<ul>
+<li>Fixture: <code>ffmpeg -f lavfi -i testsrc2... -f lavfi -i sine...</code> 10s 1280&times;720 h264+aac, built by script, checksummed.</li>
+<li>Seats: four local models on the lab floor (3B VL, 2B, 27B, 35B MoE), on-disk weights, zero paid APIs, zero spend.</li>
+<li>Scoring: ffprobe-based blind verifier; argv-only execution; 240s cap; temperature 0, seed 42; single-shot (no repair rounds in either arm).</li>
+<li>Artifacts: runner scripts, fixture builder, and per-cell result JSON preserved in the bench directory; the public distillation is <a href="https://kinocut.dev/bench" rel="noopener">kinocut.dev/bench</a>.</li>
+</ul>
+<h2>Caveats we mean</h2>
+<p>n=12 tasks, one run per cell; per-cell differences of &plusmn;1 are noise. Frontier hosted models were not run (no sanctioned credential; the row stays empty rather than invented). ASR/transcription and GPU-heavy renders were out of scope for the headless loop. The latency column is median single-shot latency under the bench harness, not a serving benchmark. And the K-1 bug means the published table understates the Kinocut arm on capable seats &mdash; we are leaving the measured numbers, not the flattering ones, in the table.</p>
+<p><em>Build on it, break it, or show us your hardware&rsquo;s curve &mdash; that&rsquo;s the conversation. Find us through the lab.</em></p>
+""",
+},
+    {
         "slug": 'the-one-line-bug',
         "title": "The One-Line Bug That Crashed Our Fast Lane: finding, fixing, and measuring a speculative-decoding crash on a $1,400 mini-PC",
         "category": 'Local LLM / Serving',
