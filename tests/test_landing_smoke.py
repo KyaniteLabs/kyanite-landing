@@ -668,23 +668,16 @@ class LandingSmokeTests(unittest.TestCase):
                 body = self.client.get(path).get_data(as_text=True).lower()
                 self.assertIn("resonant", body)
 
-    def test_gpt_56_article_uses_current_official_cost_and_reset_claims(self) -> None:
+    def test_sol_terra_luna_post_purged_404_both_languages(self) -> None:
+        # Law 20 purge (2026-09-26): the post described unreleased model
+        # variants as current routing policy. Removed at the root; both
+        # language routes must 404 forever.
         for path in (
             "/blog/gpt-5-6-sol-terra-luna-routing-guide",
             "/es/blog/gpt-5-6-sol-terra-luna-routing-guide",
         ):
             with self.subTest(path=path):
-                body = self.client.get(path).get_data(as_text=True)
-                self.assertIn("$4/$20", body)
-                self.assertIn("$2/$12", body)
-                self.assertIn("$0.20/$1.20", body)
-                self.assertIn("100/10/500", body)
-                self.assertIn("50/5/300", body)
-                self.assertIn("5/0.5/30", body)
-                self.assertIn("20001507-paid-weekly-work-and-codex-rate-limit-resets", body)
-                self.assertNotIn("$5/$30", body)
-                self.assertNotIn("125/750", body)
-                self.assertNotIn("juice values", body.lower())
+                self.assertEqual(self.client.get(path).status_code, 404)
 
     def test_spanish_chrome_does_not_leave_english_cta_or_shop_title(self) -> None:
         shop = self.client.get("/es/shop").get_data(as_text=True)
