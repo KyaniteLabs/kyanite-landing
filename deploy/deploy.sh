@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Kyanite landing deploy — repo truth -> Hetzner VPS (deploy audit 2026-08-25)
+# Kyanite landing deploy — repo truth -> org VPS srv1542844 via ssh alias "vps" (deploy audit 2026-08-25; provider label corrected 2026-09-26 — was wrongly "Hetzner" per CEO)
 # Usage: deploy.sh [--dry-run] [--health-only]
 # Law: repo is TRUTH after the 08-25 fold-back; live-patching the VPS without
 # a commit is the drift class that ate this site twice (lazy-media.js Jul 17,
