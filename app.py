@@ -590,6 +590,54 @@ PUBLIC_PROJECTS = [
 
 BLOG_POSTS = [
     {
+        "slug": 'gpt-6-sol-luna-astra-routing-guide',
+        "title": "GPT-6 Sol vs. Luna vs. Astra: a routing policy for coding agents — and when local still wins",
+        "category": 'Model Routing / Agent Systems',
+        "date": '2026-09-26',
+        "date_modified": '2026-09-26',
+        "read_time": '8 min',
+        "primary_keyword": "GPT-6 Sol vs Luna routing for agents",
+        "seo_title": "GPT-6 Sol vs Luna vs Astra: Agent Routing Policy",
+        "meta_description": "Route the real GPT-6 family — Sol for complex coding work, Luna for high-volume clerical, Astra for the frontier lane — by task shape, verification cost, and when a local model still wins.",
+        "excerpt": "A routing policy for the actual GPT-6 lineup: Sol for discovery and coding, Luna for bounded high-volume processing, Astra when nothing else holds — each with a verification contract, and the lanes where a local 27B still beats all three.",
+        "body": """
+<h2>Correction first, policy second</h2>
+<p>We previously published a routing guide for "GPT-5.6 Sol, Terra, and Luna." That naming was wrong: there is no GPT-5.6 generation and no Terra model. The real lineup is the <strong>GPT-6 family</strong> — <a href="https://openai.com/index/gpt-6-astra" rel="noopener">Astra</a> (September 3, 2026) and <a href="https://openai.com/index/introducing-gpt-6-sol-and-luna" rel="noopener">Sol and Luna</a> (September 22, 2026). We deleted the social posts carrying the old names and kept this page as published history. This post replaces the policy with verified facts and labels everything we could not verify.</p>
+
+<h2>The verified lineup (as of 2026-09-26)</h2>
+<ul>
+  <li><strong>GPT-6 Astra</strong> — launched 2026-09-03 as the frontier lane: the most capable model in the family, positioned for the hardest reasoning work.</li>
+  <li><strong>GPT-6 Sol</strong> — built for complex work, coding first among it. OpenAI states Sol makes about half as many mistakes as its 5.6-series predecessor, reaching Astra-level reliability at lower cost.</li>
+  <li><strong>GPT-6 Luna</strong> — high-volume tasks with a clear goal: summarizing, extraction, quick answers. The only one of the three in the desktop app and on Free/Go plans.</li>
+  <li><strong>Price:</strong> the 6-series API costs half of the 5.6-series Sol/Luna, attributed to caching and inference gains.</li>
+  <li><strong>Availability:</strong> Sol and Luna are in ChatGPT Work, Codex, and the API for most paid accounts; Astra on Pro, Enterprise, and Business Premium.</li>
+</ul>
+<p><em>Labeled uncertainty:</em> the factuality and comparison claims above are OpenAI's own; the context window for Sol/Luna was not published at launch and we will not guess it. Public coverage: <a href="https://techcrunch.com/2026/09/22/openai-launches-gpt-6-sol-and-luna" rel="noopener">TechCrunch, 2026-09-22</a>.</p>
+
+<h2>The routing policy</h2>
+<p>The lanes that mattered in our GPT-5.6-era policy survive intact — only the model names change, because the task shapes they map to did not:</p>
+<ul>
+  <li><strong>Discovery lane → Sol.</strong> Unknown path, unknown failure mode, or a coding task where the spec itself is shaky. Give Sol an evidence target and an exit condition, not a step list. The completion contract is a finding, not a file.</li>
+  <li><strong>Volume lane → Luna.</strong> Bounded, repeatable, high-count: extraction, summaries, classification, quick answers. The completion contract is a schema — Luna's job is to never be interesting. If a Luna output surprises you, that is a routing bug, not a model win.</li>
+  <li><strong>Frontier lane → Astra.</strong> The problems that are only expensive until they are solved: novel architecture, deep debugging across systems, anything where the cost of a wrong answer dwarfs the token bill. Astra is the model you route to when the routing question itself is the hard part.</li>
+</ul>
+
+<h2>Verification contracts, per lane</h2>
+<p>The routing decision is half the policy; the other half is what you check:</p>
+<ul>
+  <li><strong>Sol output:</strong> verify the <em>claims</em> — run the tests, execute the diff, re-derive the reasoning. Sol-grade code still needs a harness before it is trusted.</li>
+  <li><strong>Luna output:</strong> verify the <em>shape</em> — schema validation, spot-check sampling, count reconciliation. Deep review of every Luna output means Luna was the wrong lane.</li>
+  <li><strong>Astra output:</strong> verify the <em>premise</em> — the expensive lane earns review of whether the problem was framed right, since a confident wrong frame is the failure mode that survives every test suite.</li>
+</ul>
+
+<h2>Where a local model still wins</h2>
+<p>We route a 27B-class local model on a $1,400 mini-PC for real work, and the GPT-6 price cut does not close that gap. The local lane wins on: egress (nothing leaves the machine), marginal cost (tokens are electricity), and latency floor (no network hop). Our measured Qwen3.8-27B numbers — throughput sweeps, acceptance rates, the failures included — live in <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">the public repo</a>. The policy is not "local versus cloud"; it is: local for the volume lane when the task fits, cloud Sol/Astra for the lanes where capability is the bottleneck, Luna for cheap clerical volume that is not sensitive.</p>
+
+<h2>What we do differently this time</h2>
+<p>The retired guide failed on model names we did not verify. This post's facts were checked against the launch announcements and dated coverage the day of publication, every unverifiable claim is labeled, and the routing policy is ours — argued, not sourced. When the family changes again, the correction goes at the top of this page, the same way our benchmark re-baselines live beside the numbers they corrected.</p>
+""",
+    },
+    {
         "slug": 'equalizer-bench-small-models-video',
         "title": "The Equalizer Bench: a 3B that can't write ffmpeg, the same 3B shipping video edits, and the bug our own benchmark caught",
         "category": 'Benchmarks / Agents',
