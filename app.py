@@ -394,17 +394,19 @@ PUBLIC_PROJECTS = [
     },
     {
         "name": "tastecheck",
-        "url": "https://github.com/KyaniteLabs/tastecheck",
-        "description": "20 craft skills for AI coding agents that fix AI-website sameness: interviews you into a real design system before code, then gates every frontend ship on evidence — typography, OKLCH color, states, forms, charts, a11y, anti-slop.",
+        "url": "https://kyanitelabs.github.io/tastecheck/",
+        "repo": "https://github.com/KyaniteLabs/tastecheck",
+        "description": "Design review skills and recorded evidence for typography, color, spacing, accessibility, interface states, and frontend ship decisions. Judgments are scoped assessments, not an effectiveness guarantee.",
         "tag": "Frontend Craft",
         "tile_code": "TC",
         "language": "Markdown",
         "updated": "2026-09-04",
-        "proof_role": "The pack's own landing page is the proof — every demo on it gated by the skills it ships.",
+        "proof_role": "The public landing page shows the review workflow and example systems; release evidence and effectiveness are separate claims.",
     },
     {
         "name": "Epoch",
-        "url": "https://github.com/KyaniteLabs/Epoch",
+        "url": "https://kyanitelabs.github.io/Epoch/",
+        "repo": "https://github.com/KyaniteLabs/Epoch",
         "description": "Time estimation MCP server for PERT, COCOMO II, Monte Carlo, sprint forecasting, token-to-time mapping, cost estimation, and schedule risk tools.",
         "tag": "Estimation MCP",
         "tile_code": "EP",
@@ -415,8 +417,9 @@ PUBLIC_PROJECTS = [
     },
     {
         "name": "checkyourself",
-        "url": "https://github.com/KyaniteLabs/checkyourself",
-        "description": "Local-first production-readiness system for AI-built apps: read-only audits, evidence scores, guided fixes, learning plans, dashboards, CLI, and MCP.",
+        "url": "https://kyanitelabs.github.io/checkyourself/",
+        "repo": "https://github.com/KyaniteLabs/checkyourself",
+        "description": "Local completion-evidence review for AI-built apps: read-only audits, verifier challenges, bounded scores, guided fixes, learning plans, CLI, and MCP. Scores do not certify production safety.",
         "tag": "Readiness Audit",
         "tile_code": "CY",
         "language": "Python",
@@ -589,6 +592,110 @@ PUBLIC_PROJECTS = [
 ]
 
 BLOG_POSTS = [
+    {
+        "slug": "play1-numbers",
+        "title": "Play-1: the acceptance-inversion result",
+        "category": "Measured Research / Speculative Decoding",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "3 min",
+        "primary_keyword": "Play-1 speculative decoding acceptance",
+        "seo_title": "Play-1: the acceptance-inversion result",
+        "meta_description": "The measured nmax2 acceptance inversion: 72.2% versus 22.7% for the draft-12 control. Throughput and engine comparisons, with single-lab limits.",
+        "excerpt": "The measured nmax2 acceptance inversion: 72.2% versus 22.7% for the draft-12 control. Throughput and engine comparisons, with single-lab limits.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-play1-numbers.html",
+        "research_origin_sha256": "90583226daa0b87a048eb0980971d11a4859656abc62760263917a82f9052ea2",
+        "body": """
+<p><strong>The nmax2 drafter accepted 72.2% against 22.7% for the draft-12 control in this measured workload.</strong> Acceptance is one result. The throughput figures and the limits belong beside it.</p>
+<h2>The reported measurements</h2>
+<ul>
+<li>Draft-12 control: <strong>17.5 tokens per second</strong>.</li>
+<li>nmax2-np2: <strong>25.4 tokens per second</strong>.</li>
+<li>nmax3: <strong>28.5 tokens per second</strong>.</li>
+<li>nmax4: <strong>23.9 tokens per second</strong>.</li>
+<li>Engine comparison on the same box: <strong>HIP 20.8 tokens per second; Vulkan 9.2</strong>.</li>
+</ul>
+<p>The nmax3 figure is higher than nmax2-np2 in the reported run. That does not turn this short report into a universal configuration ranking. The original report does not supply sample counts, confidence intervals, every comparison table or a full reproduction recipe.</p>
+<h2>What backs these numbers</h2>
+<p>The September 28 report states that every figure was dual-verified. Its named verification record is <code>research/floor-optimization/window4/W4-VERIFICATION-RECEIPT-20260925.md</code>. That is the original report's provenance statement; this page does not claim a new independent verification of the underlying experiment.</p>
+<h2>Limits</h2>
+<p>One lab, one box class and the lab's own workloads. No external reproduction is claimed. Acceptance percentages are not tokens per second, and these figures do not establish a general speedup for other hardware or models.</p>
+<p>This edition preserves the already-public measurements. It adds no new experimental result.</p>
+""",
+    },
+    {
+        "slug": "adversarial-custody-chains",
+        "title": "Adversarial custody chains: keep the attacks in the record",
+        "category": "Measured Research / Evidence Custody",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "4 min",
+        "primary_keyword": "adversarial custody chains research evidence",
+        "seo_title": "Adversarial custody chains: keep the attacks in the record",
+        "meta_description": "Signed permissions and hash-chained receipts catch real bypasses. Two acceptance-path defects were still open in the source report.",
+        "excerpt": "Signed permissions and hash-chained receipts catch real bypasses. Two acceptance-path defects were still open in the source report.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-adversarial-custody-chains.html",
+        "research_origin_sha256": "9d5357f46ed772f5c37b5aa8e08ff81c8b2d87f37da96dd44fe212cf5781ff78",
+        "body": """
+<p><strong>A lab that generates its own test data needs to show how its evidence can fail.</strong> The September 28 report records attacks against a small lab's custody chain and the defenses those attacks forced.</p>
+<h2>The attack ledger</h2>
+<ul>
+<li><strong>Forged permissions.</strong> Fabricated authorization attempted to admit test-pool items. The reported defense uses signed permission from a key held outside the producing system and an issuer ratified by the organization.</li>
+<li><strong>Fake receipts.</strong> Outputs were claimed without generation. Append-only, hash-chained indexes and per-item content hashes make acceptance depend on resolving the chain.</li>
+<li><strong>Frozen-field replacement.</strong> A verified record could still be mutated through language-level escape hatches. The proposed repair re-derives the registry from signed canonical bytes inside the trust boundary.</li>
+<li><strong>Marker forgery.</strong> A reachable module marker allowed an attacker key to construct an accepted state. The proposed repair removes caller-constructible acceptance paths.</li>
+</ul>
+<h2>Two defects remained open</h2>
+<p>The source explicitly marks frozen-field replacement and marker forgery as open, with repairs under review. This historical report does not establish that either repair later passed. A new verdict would need its own evidence.</p>
+<h2>The method worth copying</h2>
+<p>Separate producer and reviewer custody. Pin artifact hashes when outputs are created. Run probes that construct bypasses, then require the repaired path to refuse those same probes. Keep failed runs and rejected claims in the record.</p>
+<h2>Limits</h2>
+<p>One team and one measurement program. The reviewer was separate from the producer, but was not an independent organization. No external red team, external audit or proof of unforgeability is claimed.</p>
+<p>The report offers an attack ledger and a repeatable method. It leaves open defects visible rather than treating internal review as a security certification.</p>
+""",
+    },
+    {
+        "slug": "local-image-stack-measured",
+        "title": "Local image generation, measured on a consumer APU",
+        "category": "Measured Research / Local Image Generation",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "4 min",
+        "primary_keyword": "local image generation consumer APU measurements",
+        "seo_title": "Local image generation, measured on a consumer APU",
+        "meta_description": "Measured sampler costs, guidance timing and model reload overhead. Quality judgments remain single-judge observations, not a leaderboard.",
+        "excerpt": "Measured sampler costs, guidance timing and model reload overhead. Quality judgments remain single-judge observations, not a leaderboard.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-local-image-stack-measured.html",
+        "research_origin_sha256": "a0f106a748324627cb2a937fa92bf468d8cf58889c3868e328f701c5f1d61332",
+        "body": """
+<p><strong>The useful question is what this image stack actually did on this machine.</strong> The September 28 report describes an approximately $1,000 consumer APU, an 8-core Strix Halo, 80 GiB of GTT shared memory and a 7B diffusion transformer in Q4_K.</p>
+<h2>Measured timing and memory</h2>
+<ul>
+<li><strong>Co-residency:</strong> 5.84–5.88 seconds per iteration across the measured memory modes, with both resident LLM services live. Peak GTT was 58.8 GiB out of 80, with approximately 15.5 GiB RAM free.</li>
+<li><strong>Sampler cost:</strong> at 30 steps, euler and euler-a were speed-identical. dpm++2m added 5.6% at guidance 4 and 15.9% at guidance 6. At 6 and 10 steps, the report found no speed separation.</li>
+<li><strong>Guidance timing:</strong> 191.7 seconds at guidance 4 versus 211.4 at guidance 6 per 768×512 image, with n=10+10. That is a timing comparison; paired quality assessment remained pending.</li>
+<li><strong>Reload overhead:</strong> approximately 15–20 seconds per fresh CLI invocation. A 20-image batch spent about 6 minutes of roughly 65 minutes reloading. The suggested approximately 9% throughput improvement was an estimate, not a measured adoption result.</li>
+<li><strong>Full-quality run:</strong> roughly 3.2 minutes per 768×512 image at about 54 W GPU-package power. The reported CPU-only comparison was roughly 29 minutes per image and failed under sustained load.</li>
+</ul>
+<h2>Quality was a human judgment</h2>
+<p>One internal human judge preferred dpm++2m at 30 steps and found it usable at 6 steps. The same judge reported successful stitched lettering. Those are labeled single-judge observations. An empty OCR result on those images was reported as an instrument artifact; this page does not extend that finding to other images.</p>
+<h2>Limits and unresolved work</h2>
+<p>One machine class, one model family, no blind scoring and no inter-rater statistics. The source still listed paired guidance-quality judgments and like-for-like comparison cells as unresolved. These historical findings are not a current model ranking, a hardware guarantee or permission to use particular weights commercially.</p>
+<p>The transferable method is a frozen run plan, paired seeds, append-only indexes, per-image sidecars and exact output hashes. The numbers stay attached to the conditions that produced them.</p>
+""",
+    },
     {
         "slug": 'gpt-6-sol-luna-astra-routing-guide',
         "title": "GPT-6 Sol vs. Luna vs. Astra: a routing policy for coding agents — and when local still wins",
@@ -1702,7 +1809,7 @@ PROJECT_COPY_ES = {
         "proof_role": "Convierte la incertidumbre de planificacion en herramientas de pronostico que un agente puede llamar.",
     },
     "checkyourself": {
-        "description": "Sistema local-first de preparacion para produccion en apps creadas con IA: auditorias, puntajes con evidencia, fixes guiados, dashboard, CLI y MCP.",
+        "description": "Revision local de evidencia de finalizacion para apps creadas con IA: auditorias de solo lectura, desafios de verificacion, puntajes acotados, fixes guiados, planes de aprendizaje, CLI y MCP. Los puntajes no certifican seguridad en produccion.",
         "tag": "Auditoria de readiness",
         "proof_role": "Hace inspeccionables la calidad, seguridad y riesgo de lanzamiento antes de enviar una app creada con IA.",
     },

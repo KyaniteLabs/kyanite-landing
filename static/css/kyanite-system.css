@@ -4088,6 +4088,34 @@ body::after {
   }
 }
 
+/* Use the existing compact menu when the actual link row cannot fit. */
+.page-hero .post-meta {
+  color: var(--muted);
+}
+
+.page-hero .eyebrow {
+  max-width: 100%;
+}
+
+.page-hero .eyebrow > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.nav.nav--measured .nav-links a {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav.nav--compact .nav-links {
+  display: none;
+}
+
+.nav.nav--compact .menu-button {
+  display: inline-grid;
+  place-items: center;
+}
+
 @media (max-width: 760px) {
   .hero {
     padding: 88px 0 50px;

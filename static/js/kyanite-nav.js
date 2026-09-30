@@ -44,7 +44,23 @@
     });
 
     nav.appendChild(button);
+    nav.classList.add("nav--measured");
     header.insertAdjacentElement("afterend", menu);
+
+    function fitMenu() {
+      nav.classList.remove("nav--compact");
+      if (getComputedStyle(links).display === "none") return;
+      var style = getComputedStyle(nav);
+      var brand = nav.querySelector(".brand-mark");
+      var available = nav.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      var needed = links.scrollWidth + (brand ? brand.getBoundingClientRect().width : 0) + parseFloat(style.columnGap || "0");
+      nav.classList.toggle("nav--compact", needed > available);
+      if (!nav.classList.contains("nav--compact")) setMenuState(button, menu, false);
+    }
+
+    fitMenu();
+    window.addEventListener("resize", fitMenu);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMenu);
   }
 
   if (document.readyState === "loading") {
