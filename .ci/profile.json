@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "test_globs": ["tests/test_*.py"],
+  "dependency_files": ["requirements.txt", ".ci/profile.json"],
+  "junit_reports": [".ci-results/tests.xml"],
+  "steps": [
+    {"name": "Install production Python 3.14 and pinned test tools", "phase": "install", "argv": ["bash", "-euo", "pipefail", "-c", "apt-get update -qq && apt-get install -y -qq python3-venv && python3 -m venv /tmp/uv-bootstrap && /tmp/uv-bootstrap/bin/pip install --quiet uv==0.10.2 && /tmp/uv-bootstrap/bin/uv venv --python 3.14 .venv && /tmp/uv-bootstrap/bin/uv pip install --python .venv -r requirements.txt pytest==9.1.1 ruff==0.17.2"], "timeout_seconds": 900},
+    {"name": "Lint for correctness errors", "phase": "verify", "argv": [".venv/bin/ruff", "check", "--isolated", "--select", "E9,F", "app.py", "agent_discovery.py", "tests"]},
+    {"name": "Compile shipped modules", "phase": "build", "argv": [".venv/bin/python", "-m", "compileall", "-q", "app.py", "agent_discovery.py"]},
+    {"name": "Run all tests", "phase": "test", "argv": [".venv/bin/python", "-m", "pytest", "tests", "-q", "--tb=short", "--junitxml=.ci-results/tests.xml"]},
+    {"name": "Serve the site under gunicorn and fetch public pages", "phase": "acceptance", "argv": ["bash", "-euo", "pipefail", "-c", ".venv/bin/gunicorn --bind 127.0.0.1:3002 --workers 1 app:app & pid=$!; trap 'kill $pid' EXIT; for i in $(seq 1 30); do curl -sf -o /dev/null http://127.0.0.1:3002/ && break; sleep 1; done; for path in / /es/ /llms.txt; do code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3002$path); echo \"$path $code\"; test \"$code\" = 200; done"], "timeout_seconds": 120}
+  ]
+}
