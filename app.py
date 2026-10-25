@@ -14,6 +14,7 @@ import smtplib
 import sqlite3
 import subprocess
 import tempfile
+import urllib.request
 try:
     import psycopg2
     import psycopg2.extras
@@ -25,7 +26,7 @@ from email.utils import format_datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
-from urllib.parse import quote, urlencode
+from urllib.parse import quote
 from flask import Flask, request, jsonify, render_template_string, Response, redirect
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -3514,7 +3515,6 @@ EXTRA_ES_REPLACEMENTS = {
     "Start from a workflow that actually hurts or fascinates: video editing, estimating time, localization, glaze math, learning from commits.": "Empieza desde un flujo que de verdad duele o fascina: edicion de video, estimacion de tiempo, localizacion, matematicas de esmaltes o aprendizaje desde commits.",
     "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so the work can survive outside the chat.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que el trabajo sobreviva fuera del chat.",
     "Keep the tools open where possible, sell practical implementation help when someone wants the setup, adaptation, or advising done with them.": "Mantener abiertas las herramientas cuando sea posible y vender ayuda practica de implementacion cuando alguien quiere setup, adaptacion o asesoria hecha con ellos.",
-    "Servidores MCP, CLIs, domain tools, experiments, and build notes that you can inspect, install, fork, learn from, or use as starting points.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que puedes inspeccionar, instalar, bifurcar, estudiar o usar como punto de partida.",
     "Tool you need running, repo you need installed, video pipeline you need usable, Spanish QA you need trusted, diagnostic you need explained, or a build you need handed off. If it connects to Kyanite's tools and practice, bring the blocker.": "Herramienta que necesitas corriendo, repo que necesitas instalado, pipeline de video que necesitas usable, QA de espanol que necesitas confiable, diagnostico que necesitas explicado o build que necesitas entregar. Si conecta con las herramientas y practica de Kyanite, trae el bloqueo.",
     "© 2026 KyaniteLabs. All rights reserved.": "© 2026 KyaniteLabs. Todos los derechos reservados.",
     "&copy; 2026 KyaniteLabs. All rights reserved.": "&copy; 2026 KyaniteLabs. Todos los derechos reservados.",
@@ -3603,7 +3603,7 @@ def index():
             canonical_base=CANONICAL_BASE,
         )
         return add_hreflang(html, "/", "/es/")
-    except Exception as e:
+    except Exception:
         # Fallback to old HTML if v2 fails
         return render_template_string(HTML, KOFI_URL=app.config["KOFI_URL"])
 
@@ -4832,6 +4832,7 @@ CERAFICA_STRIPE_KEY = os.environ.get("CERAFICA_STRIPE_KEY", "")
 CERAFICA_WEBHOOK_SECRET = os.environ.get("CERAFICA_WEBHOOK_SECRET", "")
 CERAFICA_FREE_SHIPPING_THRESHOLD = 10000  # cents
 CERAFICA_FLAT_SHIPPING = 800  # cents
+CERAFICA_PRODUCTS_URL = os.environ.get("PRODUCTS_URL", "https://cerafica.com/data/products.json")
 
 CERAFICA_ORIGINS = ["https://cerafica.com", "https://www.cerafica.com", "http://localhost:5500", "http://127.0.0.1:5500"]
 
@@ -5103,10 +5104,10 @@ def cerafica_orders():
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def calculate_shipping(subtotal_cents: int) -> int:
-    return 0 if subtotal_cents >= FREE_SHIPPING_THRESHOLD else FLAT_SHIPPING_RATE
+    return 0 if subtotal_cents >= CERAFICA_FREE_SHIPPING_THRESHOLD else CERAFICA_FLAT_SHIPPING
 
 
-def cerafica_cerafica_send_email(to_email, subject, html_body, text_body=None):
+def cerafica_send_email(to_email, subject, html_body, text_body=None):
     """Send email via internal SMTP relay."""
     try:
         msg = MIMEMultipart("alternative")
@@ -5135,7 +5136,7 @@ def format_currency(cents):
 def get_products():
     """Fetch products.json from the live site."""
     try:
-        with urllib.request.urlopen(PRODUCTS_URL, timeout=10) as response:
+        with urllib.request.urlopen(CERAFICA_PRODUCTS_URL, timeout=10) as response:
             return json.loads(response.read().decode())
     except Exception as e:
         print(f"[PRODUCTS ERROR] {e}")
@@ -5432,6 +5433,98 @@ def request_ugc(order_id):
 # ═══════════════════════════════════════════════════════════════════════════════
 # CERAFICA CONTENT ROUTES
 # ═══════════════════════════════════════════════════════════════════════════════
+
+def generate_blog_post(product):
+    """Generate a blog post from product metadata."""
+    name = product.get("name", "")
+    desc = product.get("description", "")
+    materials = product.get("materials", "")
+    care = product.get("care", "")
+    dims_in = product.get("dimensions_in", "")
+    dims_cm = product.get("dimensions_cm", "")
+    food_safe = product.get("food_safe", False)
+
+    slug = f"the-story-of-{name.lower().replace(' ', '-')}"
+    title = f"The Story of {name}"
+
+    food_safe_text = "Food-safe and ready for daily use. " if food_safe else ""
+
+    html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | Cerafica Journal</title>
+    <meta name="description" content="{desc}">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{desc}">
+    <meta property="og:image" content="https://cerafica.com/images/products/{product.get('image', '')}">
+    <link rel="canonical" href="https://cerafica.com/journal/{slug}.html">
+    <style>
+        body {{ font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; color: #1a1a1a; background: #fafafa; }}
+        h1 {{ font-size: 2rem; margin-bottom: 0.2em; }}
+        .meta {{ color: #666; font-size: 0.9rem; margin-bottom: 2em; }}
+        .lead {{ font-size: 1.15rem; color: #444; margin-bottom: 1.5em; }}
+        img {{ width: 100%; border-radius: 4px; margin: 1.5em 0; }}
+        .specs {{ background: #fff; padding: 20px; border-radius: 4px; margin: 1.5em 0; }}
+        .specs h3 {{ margin-top: 0; font-size: 1rem; }}
+        .specs ul {{ margin: 0; padding-left: 1.2em; }}
+        .cta {{ margin-top: 2em; padding: 20px; background: #1a1a1a; color: #fff; border-radius: 4px; text-align: center; }}
+        .cta a {{ color: #c9a227; font-weight: bold; text-decoration: none; }}
+    </style>
+</head>
+<body>
+    <article>
+        <h1>{title}</h1>
+        <p class="meta">Cerafica Journal · {datetime.now().strftime('%B %d, %Y')}</p>
+        <p class="lead">{desc}</p>
+        <img src="/images/products/{product.get('image', '')}" alt="{name}">
+        <p>Each Cerafica vessel begins as raw stoneware clay, shaped by hand and fired in a reduction atmosphere that transforms glaze into something unpredictable and alive. <strong>{name}</strong> is no exception. {materials}. {dims_in} ({dims_cm}).</p>
+        <p>{food_safe_text}{care}</p>
+        <p>Because every piece is one-of-one, the vessel you see is the only one that exists. Once it finds a home, it will not be made again.</p>
+        <div class="specs">
+            <h3>Details</h3>
+            <ul>
+                <li><strong>Materials:</strong> {materials}</li>
+                <li><strong>Dimensions:</strong> {dims_in} / {dims_cm}</li>
+                <li><strong>Care:</strong> {care}</li>
+                <li><strong>Edition:</strong> One of one</li>
+            </ul>
+        </div>
+        <div class="cta">
+            <p>See {name} in the shop → <a href="/shop.html">Cerafica Shop</a></p>
+        </div>
+    </article>
+</body>
+</html>"""
+
+    markdown = f"""# {title}
+
+*{datetime.now().strftime('%B %d, %Y')}*
+
+> {desc}
+
+![{name}](/images/products/{product.get('image', '')})
+
+Each Cerafica vessel begins as raw stoneware clay, shaped by hand and fired in a reduction atmosphere that transforms glaze into something unpredictable and alive. **{name}** is no exception. {materials}. {dims_in} ({dims_cm}).
+
+{food_safe_text}{care}
+
+Because every piece is one-of-one, the vessel you see is the only one that exists. Once it finds a home, it will not be made again.
+
+## Details
+
+- **Materials:** {materials}
+- **Dimensions:** {dims_in} / {dims_cm}
+- **Care:** {care}
+- **Edition:** One of one
+
+[See {name} in the shop →](https://cerafica.com/shop.html)
+"""
+
+    meta = f"The story of {name} — {desc}"
+    return slug, title, html, markdown, meta
+
 
 @app.route("/api/cerafica/content/generate-blog", methods=["POST"])
 def generate_blog():
