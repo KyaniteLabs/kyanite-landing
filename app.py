@@ -649,7 +649,7 @@ BLOG_POSTS = [
         "meta_description": 'A raw 3B writes 0/12 working ffmpeg commands. The same 3B on Kinocut\'s typed surface ships 4/12, faster than a 35B writing raw commands. Method, tables, and the kinocut bug the bench caught.',
         "excerpt": 'We benchmarked our own thesis: tiny model + deterministic guardrail layer vs raw capability. The curve is textbook, the trim trap is real, and the bench indicted our own product before anyone else could.',
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-25. Numbers measured 2026-09-24; every artifact on disk.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-25. Numbers measured 2026-09-24; every artifact on disk.</small></p>
 <p>Our working thesis, stated publicly enough times that it deserved measurement: a small local model plus a deterministic tool layer should match a frontier model working alone. For video editing we now have the numbers, and they are cleaner than the thesis predicted.</p>
 <h2>The short version</h2>
 <p>A 3-billion-parameter local model, asked to write raw ffmpeg commands, produced <strong>zero working commands out of twelve attempts</strong>. The same model, driving <a href="https://kinocut.dev">Kinocut</a>&rsquo;s typed surface instead, shipped <strong>4 of 12</strong> &mdash; at <em>lower</em> latency than a 35B MoE writing raw commands. At 2B the lift is +80%. At 27B it is +10%. At 35B, parity. The guardrail compensates exactly where the model cannot, and stops mattering where the model is already competent. That curve is the whole product argument, now with cells instead of adjectives.</p>
@@ -697,7 +697,7 @@ BLOG_POSTS = [
         "meta_description": 'A fork drift crashed DSpark speculative decoding on Strix Halo. One line fixed it: +17.7% measured, byte-identical outputs, and a counter-intuitive Q8 draft result.',
         "excerpt": 'Spec decoding crashed our fastest lane on day one. The bug was one missing line in our fork; the fix bought +17.7% and a surprise about draft quantization.',
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-25. The complete measured answer.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-25. The complete measured answer.</small></p>
 <p>Everything below happened on one machine: an AMD Strix Halo mini-PC (Ryzen AI Max+ 395, gfx1151, ROCm/HIP) that serves our models 24/7. We measured every step on the box itself, published every failure, and changed nothing we couldn&rsquo;t verify. The receipts are at the bottom.</p>
 <h2>The short version</h2>
 <p>Speculative decoding &mdash; a small &ldquo;draft&rdquo; model guessing ahead of the big model &mdash; should have made our fastest model 20-40% faster. Instead, it crashed our server instantly. The bug was in our own fork, it boiled down to a single missing line of code, and fixing it delivered +17.7% measured speedup with byte-identical outputs. Along the way we found a counter-intuitive result about draft-model quantization that we haven&rsquo;t seen published anywhere: the &ldquo;cheaper&rdquo; quantized draft was SLOWER than no draft at all.</p>
@@ -757,7 +757,7 @@ BLOG_POSTS = [
     "meta_description": 'A 27B daily driver and a 35B reasoning model resident together on one AMD Strix Halo mini-PC. Every number paired, same problems, same machine. Failures and wrong turns included, raw logs cited.',
     "excerpt": 'A 35B reasoning model now runs shoulder to shoulder with our daily 27B on one $1,400 box, at the same time. Every number paired, same problems, same machine. The failures are in here too.',
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. 2026-08-25. Every number below was re-read from raw result files on this machine before writing.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. 2026-08-25. Every number below was re-read from raw result files on this machine before writing.</small></p>
 <p><strong>We run a small AI lab on hardware that fits under a TV: one AMD Strix Halo mini-PC with 64GB of shared memory.</strong> A Qwen3.8-27B has been our main model and daily engine here since mid-August. This week we asked a harder question: can this same box also run Ornith-1.5-35B, a bigger open-weights model, at the same time, and is it actually any good when you measure it fairly?</p>
 <p>The answer is yes, with three caveats. Here is everything, including what failed. One number below was first measured wrong by our own tool. Story at the end.</p>
 <h2>The setup</h2>
@@ -818,7 +818,7 @@ BLOG_POSTS = [
     "meta_description": 'No software engineer title, no AI lab on my resume. Twelve years deploying enterprise systems plus public, measured AI work is the whole path. Artifacts included.',
     "excerpt": 'The title is new; the work is old. Twelve years of enterprise deployments plus public, measured AI work. The honest path, artifacts included.',
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The honest version, no resume inflation.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The honest version, no resume inflation.</small></p>
 <p><strong>You do not need a software engineer title to do forward deployed work, and my path is the proof.</strong> I hold no FDE badge from an AI lab. What I have is twelve years of deploying enterprise systems for real organizations, then a period of building and measuring AI on my own hardware with everything published. That combination is the job. This post is the path exactly as it happened, with the artifacts, and without inventing anything.</p>
 <p>Let me be precise about what I am not claiming, because this industry runs on inflated claims. I was never employed as a software engineer. I never worked at Palantir or an AI lab. If you want those lines on a resume, this is not your post. If you want to do the work and be findable by it, it is.</p>
 <h2>Phase one: twelve years of deployments nobody called FDE</h2>
@@ -853,7 +853,7 @@ BLOG_POSTS = [
     "meta_description": 'Every AI deployment eventually asks one question: can you trust it with real work? Evals answer it with numbers. My 495-trial benchmark is open source, with certified floors.',
     "excerpt": 'The market says it cannot find people who can build AI evals. The skill is learnable and I published mine: 495 trials, certified floors, sabotage cell, open source.',
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The case for evals as the core forward deployed skill, proven on a public artifact.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. The case for evals as the core forward deployed skill, proven on a public artifact.</small></p>
 <p><strong>Evals are the one forward deployed engineering skill the market says it cannot find, and almost no job posting lists it.</strong> An eval is a test you build that answers the only question a customer eventually asks: can I hand this system real work and walk away? If you can design that test, run it honestly, and report it with exact statistics, you can de-risk any AI deployment. That is the whole job in one skill. Mine is public: <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>, 495 trials, open source. This post walks through what it measures and why the design is the part worth copying.</p>
 <p>First, why evals and not prompting or fine-tuning. Those are model-side skills. The forward deployed engineer sits on the other side of the model, where the questions are: which of this customer's jobs can this system take over, how reliably, and what happens when it fails. Vibes cannot answer that. Leaderboards cannot either, because they test the model in the abstract, not inside your workflow. Only an eval composed for the real decision answers it.</p>
 <h2>What the benchmark measures</h2>
@@ -885,7 +885,7 @@ BLOG_POSTS = [
     "meta_description": 'These four titles describe mostly one job with different coding bars and different owners. A working decoder: what changes, what does not, and three questions that reveal the real role.',
     "excerpt": 'Four titles, one job family, different coding bars. A decoder that reads any posting and tells you what you are actually signing up for.',
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Written for people comparing offers or postings at 1am.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Written for people comparing offers or postings at 1am.</small></p>
 <p><strong>These four titles describe mostly the same job: an engineer who sits close to the customer and makes the product work inside the customer's reality.</strong> What actually differs is the coding bar, where you sit in the sales funnel, and who owns the outcome after launch. At many companies the titles are interchangeable. At a few, they are different careers. This post gives you the decoder: what each title signals, what does not change, and the three questions that reveal what a posting really wants.</p>
 <p>A note on stakes: the AI labs are hiring forward deployed engineers aggressively right now, and enterprises are starting to demand the same shape for AI that touches banks, insurers, and airlines. Title inflation is guaranteed. The decoder matters more than the name.</p>
 <h2>The one-paragraph version of each title</h2>
@@ -928,7 +928,7 @@ BLOG_POSTS = [
     "meta_description": 'A forward deployed engineer ships AI into real environments and owns the last mile. The job demonstrated on a $1,400 mini-PC, with public evals and raw numbers.',
     "excerpt": 'The straight answer, then the receipts: the whole FDE job run end to end on a $1,400 mini-PC, with public evals.',
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. A straight answer first, then the receipts.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. A straight answer first, then the receipts.</small></p>
 <p><strong>A forward deployed engineer is the engineer who goes to where the AI has to actually work, and makes it work there.</strong> Not the person who trains the model. The person who takes a model that looks good on a benchmark and turns it into a system a real business can run every day. The job has three parts: find the leverage point in a real workflow, build the smallest thing that moves it, then stay and own it in production. The rest of this post is that sentence unpacked, demonstrated on a mini-PC that costs $1,400.</p>
 <p>The title is loud right now because the AI labs are hiring humans for it as fast as they can. The work is older than the name. Anyone who ever shipped software into a bank branch, a hospital, or a factory floor has done forward deployed work. I did versions of it for twelve years in enterprise learning systems. Now I run the whole job on my own hardware, and every number I will show you is public.</p>
 <h2>Part one: find the leverage point</h2>
@@ -969,7 +969,7 @@ BLOG_POSTS = [
         "meta_description": '965 trials across certified + re-gate runs, 29 cells, 9 job types. Walk-away floors 92.8%. Certified floors, not vibes.',
         "excerpt": 'Not is-it-smart but can-you-hand-it-work-and-walk-away. 495 certified trials, then re-validated at deeper n after the product changed: 965 total, floors to 92.8%.',
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-22. The complete measured answer.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-22. The complete measured answer.</small></p>
 <p>We ended the 27B story with a <a href="/blog/qwen-27b-strix-halo-complete">frozen, measured machine</a>. The next question was obvious: what work can it actually take over? Not &ldquo;is it smart&rdquo; &mdash; every benchmark answers that. &ldquo;Can you hand it a job and walk away?&rdquo; No published benchmark answers that. So we built one.</p>
 <h2>The method</h2>
 <p>Nine job classes from real work. Size ladders. Hidden tests the system never sees. A sabotage cell with a planted bad instruction. Certified floors &mdash; exact statistics that say &ldquo;at least X percent reliable.&rdquo; A walk-away tier: thirty-five perfect trials before any cell earns the &ldquo;leave it alone&rdquo; stamp.</p>
@@ -1005,7 +1005,7 @@ BLOG_POSTS = [
         "meta_description": 'Arc closed: exact retrieval at the 262k ceiling, vision fixed and validated upstream, spec verified by paired walls, KV trade measured. $1,400, no cloud, raw logs.',
         "excerpt": 'Every dial measured, every number public: the frozen optimal config for a 27B on a $1,400 mini-PC.',
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Arc close, 2026-08-21. The whole story, corrected on the record.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Arc close, 2026-08-21. The whole story, corrected on the record.</small></p>
 <p>We asked a simple question: can a $1,400 mini-PC serve a 27B model the way big rigs do? This note closes the book. Every claim below has a raw log behind it, in the public repo, with its methodology.</p>
 <h2>The rig</h2>
 <p>AMD Strix Halo, 64 GB shared memory, open tooling (llama.cpp), one free Apache-2.0 model. No cloud, no rentals.</p>
@@ -1033,7 +1033,7 @@ BLOG_POSTS = [
         "meta_description": "A methods note on calibrating reasoning effort: hard tasks buy thinking, easy tasks don't. 15/40 vs 4/40 hard-class; HumanEval-30 identical. Publish the knee, not the hype.",
         "excerpt": "A methods note on reasoning-effort calibration. Thinking rescued 15/40 hards vs 4/40 off. On easy tasks it bought nothing. Publish the knee.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>. 2026-08-20. Canon: FACTS-PACK; research lane: DSH/ICCO.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>. 2026-08-20. Canon: FACTS-PACK; research lane: DSH/ICCO.</small></p>
 <p>This is a methods note, not a benchmark. We are publishing our calibration procedure because the interesting number is not a single tok/s or a single score &mdash; it is the <strong>knee</strong> where paying for more effort stops buying accuracy.</p>
 <p><strong>The method.</strong> Take a fixed problem set, split by difficulty. Run each arm twice: once with the cheap configuration, once with the expensive one, everything else identical (same model, same quant, same temperature, same grader). Plot accuracy against cost. The point where the expensive arm stops beating the cheap one is the knee. Below it, you are paying for nothing.</p>
 <p><strong>Our numbers.</strong> On a 40-problem hard/medium set, thinking-on rescued 15/40 hards vs 4/40 with thinking-off at temp 0 &mdash; a real gain exactly where the tasks are hard. On HumanEval-30, the same thinking budget bought <em>nothing</em> (28/30 identical). Full-sample: reasoning pays where tasks are hard, nothing where they are easy.</p>
@@ -1054,7 +1054,7 @@ BLOG_POSTS = [
         "meta_description": "20/30 = 67% LiveCodeBench-30 best-per-problem on Qwen3.8-27B Q4_K_XL. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1,400. Not the official full-set card.",
         "excerpt": "20/30 = 67% LiveCodeBench-30 on a $1,400 mini-PC. Wilson 95% CI 49-81%. Easy 10/10, medium 8/10, hard 2/10. n=30 public subset. Not the card.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
 <p>The number first: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem across labeled arms, on a <strong>$1,400</strong> GMKtec EVO-X2. Wilson 95% CI <strong>[49%, 81%]</strong>. Always cite the interval. n=30 is small; the interval is the honest number.</p>
 <p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Champion: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, livecodebench v6 public cases only, stratified 10/10/10, seed 20260820.</p>
 <p>A single-config cell (2048 tokens, thinking off) landed 13/30, with a reproduction at 14/30 and 25/30 per-problem agreement. That is a <strong>&plusmn;2-problem noise floor at temp 0</strong>. Do not treat one run as exact.</p>
@@ -1076,7 +1076,7 @@ BLOG_POSTS = [
         "meta_description": "We found a llama.cpp regression (c7d8722 host buffers on HIP iGPUs) and fixed it with a revert. n=6 VQA: 0/6 slashes before, 5/6 after. Same Q4_K_XL on a $1,400 mini-PC.",
         "excerpt": "We found a llama.cpp regression and reverted it. n=6 battery on a $1,400 rig: 0/6 slashes before, 5/6 after. Same Q4_K_XL. Not a quant story.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, assisted by GLM-5.3.</small></p>
 <p>The number first: <strong>5/6</strong> on a six-prompt VQA battery after one git revert. Before the revert: 0/6, all <code>//////</code> to length. Same Qwen3.8-27B Q4_K_XL, same mmproj-F16, same <strong>$1,400</strong> GMKtec EVO-X2.</p>
 <p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisected on this hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>What we tested (n=6, thinking off):</p>
@@ -1107,7 +1107,7 @@ BLOG_POSTS = [
         "meta_description": "28/30 = 93% HumanEval on Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, 30-problem subset. $1,400 GMKtec EVO-X2. Not the model card.",
         "excerpt": "28/30 = 93% HumanEval on a $1,400 mini-PC. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Failures: 50 and 145. Raw log linked.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3. Night 4 addendum.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, assisted by GLM-5.3. Night 4 addendum.</small></p>
 <p>The number first: <strong>28/30 = 93% HumanEval</strong> on a <strong>$1,400</strong> GMKtec EVO-X2 (Ryzen AI Max+ 395, 96GB unified).</p>
 <p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. 262k context. K+V q4_0. Temp 0. Thinking off. Frozen 30-problem subset, seed 20260819. Failures: HumanEval/50 and HumanEval/145 (runtime errors in generated code). Passes finished in 10s or less with zero thinking tokens.</p>
 <p>This is not the Qwen card. The card is bf16, different temp, different harness. We optimized what we tested. n=30 on a subset is not a ceiling.</p>
@@ -1127,7 +1127,7 @@ BLOG_POSTS = [
         "meta_description": "Night 4 on a $1,400 mini-PC: 48 of 64 layers are Gated DeltaNet. That is why the 4-bit KV flip saved 4.3GB, not 15. And why a 198k prefix can be queried in 9-27s after a 30-minute load.",
         "excerpt": "The number first: this model is 75% not a transformer. 48 of 64 layers keep a running state. On a $1,400 rig, load 198k once (1818s), then query in 9-27s.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 4.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 4.</small></p>
 <p>The number first: <strong>this model is 75% not a transformer.</strong> 48 of its 64 layers run Gated DeltaNet: linear attention with a fixed-size running state. Only 16 layers do what you would call attention. The KV cache lives in those 16 layers only. That is why our 4-bit KV flip saved <strong>4.3GB</strong> at 262k, not the ~15GB dense-transformer math predicted.</p>
 <p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unified, <strong>$1,400</strong>. Model: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Native window 262,144 tokens.</p>
 
@@ -1157,7 +1157,7 @@ BLOG_POSTS = [
         "meta_description": 'Night 3 inversion: the degenerate-basin map was llama.cpp c7d8722. Post-revert remap: 6/6 exact retrieval at 198k. n=1. $1,400. No planted codes.',
         "excerpt": 'We published a basin. The serving binary was the hole. After the c7d8722 revert: 6/6 HIT at 198k. n=1 map of the fixed build.',
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Night 3 inversion, 2026-08-20. The first version of this note is still the URL. The map was wrong.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Night 3 inversion, 2026-08-20. The first version of this note is still the URL. The map was wrong.</small></p>
 <p>The number first: <strong>6/6 exact needle retrieval at ~198k after we reverted llama.cpp <code>c7d8722</code>.</strong> Same seed. Byte-identical planted codes. Every cell <code>finish_reason=stop</code>. Zero attractor outputs. The &ldquo;degenerate basin&rdquo; we shipped on 2026-08-19 was substantially a host-buffer bug on this integrated GPU, not a depth law of Qwen3.8-27B.</p>
 <p>Anchor pair, token-identical prompts, server <code>prompt_tokens=198,228</code> both nights: pre-revert miss (<code>ok</code>) → post-revert exact HIT. Only delta = the revert. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/README.md" rel="noopener">needle-format-2026-08-19/README.md</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/depth-remap-results.log" rel="noopener">depth-remap-results.log</a>.</p>
 
@@ -1211,7 +1211,7 @@ BLOG_POSTS = [
         "meta_description": "Night 2: a paired promotion gate flips the champion to 4-bit KV cache — GSM8K p=1.0, zero corruption flags at ~198k tokens, and the server counter that corrected our own estimate.",
         "excerpt": "The q8-to-q4 KV question from night 1 got its paired answer: same accuracy, zero tripwires, half the cache. Plus the label we had to correct in public when the server's counter beat our estimate.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 2 of the nightly lab notes. Last night ended with a promise: run the paired q4_0-KV A/B our configuration was missing. This is what came back.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 2 of the nightly lab notes. Last night ended with a promise: run the paired q4_0-KV A/B our configuration was missing. This is what came back.</small></p>
 <p>The number first: <strong>the champion now runs 4-bit KV cache — about 47% less KV memory (4.3GB saved) at the same context window &mdash; with zero measured accuracy cost and zero corruption flags.</strong> The promotion gate was paired, pre-registered, and self-executing: if the q4 arm matched the q8 arm's needle hits and posted zero tripwires, the unit file flips; anything less, the old champion restores itself.</p>
 
 <h2>The evidence stack</h2>
@@ -1248,7 +1248,7 @@ BLOG_POSTS = [
     "meta_description": "Night 1 of nightly lab notes: a paired Omni-MATH run on a $1,400 Strix Halo mini-PC — 512-token thinking caps statistically free (p=0.73), uncapped thinking dies on 26/50 problems, 367s vs 49s.",
     "excerpt": "A $1,400 mini-PC serving a 27B at 262k context asks one question: does capping thinking cost accuracy? The paired answer, the invalid first attempt it survived, and the doctrine that followed.",
     "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 1 of a nightly cadence: what ran, what broke, and what the numbers said.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3. Night 1 of a nightly cadence: what ran, what broke, and what the numbers said.</small></p>
 <p>The number first: <strong>a 512-token thinking cap bought the same measured accuracy as unlimited thinking tonight — at 7.5x faster turns.</strong> Its shadow number: left uncapped, the same model <strong>thought itself to death on 26 of 50 problems</strong>, reasoning until the output ceiling killed the answer. Both came out of one paired run. Neither was the night's real story. The real story is that the first version of this experiment measured nothing at all.</p>
 
 <h2>The setup</h2>
@@ -1298,7 +1298,7 @@ BLOG_POSTS = [
         "meta_description": "Tuning Qwen3.8-27B on a Ryzen AI Max+ 395 mini-PC: from a lying 4 tok/s stack to 59.7-64 tok/s cold, real chat 11-24 tok/s published first, a quant reversal on time-per-task, and an EC fan saga.",
         "excerpt": "A fully measured night-and-evening of tuning a 27B dense model on a Strix Halo mini-PC: the honest bands, the reversal, the crash doctrine, and the EC detective story.",
         "body": """
-<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3.</small></p>
+<p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (follow the build in public on <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), assisted by GLM-5.3.</small></p>
 <p>In roughly one night and one evening (2026-08-14/15), a solo operator with agent teammates took Qwen3.8-27B on a GMKtec EVO-X2 mini-PC (Ryzen AI Max+ 395, gfx1151, 91GB unified LPDDR5X) from a lying stack at ~4 tok/s to 59.7-64 tok/s cold with 3x the context — at/past the public frontier we found for the class (best unnamed public example: 56 tok/s; source not re-located) — then voluntarily published the numbers that make it look slower (real chat is 11-24 tok/s), reversed its own fastest configuration on a time-per-task argument, cut task tokens 36% with a caveman thinking style, solved a fan-control mystery that ended in the owner's own three-month-old code, and turned two crashes into permanent tests.</p>
 <p><strong>The differentiator was never the tok/s. It was the evidence.</strong></p>
 
@@ -1368,7 +1368,7 @@ BLOG_POSTS = [
   <li><strong>Character:</strong> a solo owner and his agent team publishing the numbers that hurt, reverting the fastest config on principle, and crediting everyone upstream.</li>
 </ol>
 <p>Everything is reproducible: the recipe, flags, bench suite, one-command reproducer, and the full experiment ledger live in the <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a> repo; the EC register map, traps, and daemon recipe live in the sibling <a href="https://github.com/KyaniteLabs/evo-x2-ec" rel="noopener">evo-x2-ec</a> repo. The raw gfx1151 throughput datapoints are published as a <a href="https://github.com/ggml-org/llama.cpp/discussions/27154" rel="noopener">llama.cpp discussion</a>. If you run the bench on your own Strix Halo box, post your numbers — inside or outside our bands, both are wanted.</p>
-<blockquote><p><strong>Attribution.</strong> Qwen3.8-27B — <a href="https://huggingface.co/Qwen/Qwen3.8-27B" rel="noopener">Qwen team</a> (Apache-2.0). Dynamic quants — <a href="https://github.com/unslothai/unsloth" rel="noopener">Unsloth</a>. llama.cpp runtime — <a href="https://github.com/ggml-org/llama.cpp" rel="noopener">its contributors</a> (measured on a b10435-era build, 9d57ce4). EC fan-control daemon and the DSDT-derived register map (Bosgame M5, same Sixunited AXB35-02 board as the EVO-X2) — nathanmarlor (<a href="https://github.com/nathanmarlor/strix-halo-fan-control" rel="noopener">strix-halo-fan-control</a>, MIT). EVO-X2 EC P-MODE register (0x31) reverse-engineering and the 30s enforcement timer (May 2026) — Simon Gonzalez de Cruz. WMI/FCMI prior art — <a href="https://github.com/MintyMods/ip3-power-switch" rel="noopener">MintyMods/ip3-power-switch</a>, <a href="https://github.com/pettijohn/corsair-ai-workstation-performance-level-linux" rel="noopener">pettijohn/corsair-ai-workstation-performance-level-linux</a>. Thinking-style skills — caveman origin <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a> (skill MIT); ponytail origin <a href="https://github.com/DietrichGebert/ponytail" rel="noopener">DietrichGebert/ponytail</a> (MIT); the fusion ships with full license notices in <a href="https://github.com/KyaniteLabs/context-kit" rel="noopener">KyaniteLabs/context-kit</a>.</p></blockquote>
+<blockquote><p><strong>Attribution.</strong> Qwen3.8-27B — <a href="https://huggingface.co/Qwen/Qwen3.8-27B" rel="noopener">Qwen team</a> (Apache-2.0). Dynamic quants — <a href="https://github.com/unslothai/unsloth" rel="noopener">Unsloth</a>. llama.cpp runtime — <a href="https://github.com/ggml-org/llama.cpp" rel="noopener">its contributors</a> (measured on a b10435-era build, 9d57ce4). EC fan-control daemon and the DSDT-derived register map (Bosgame M5, same Sixunited AXB35-02 board as the EVO-X2) — nathanmarlor (<a href="https://github.com/nathanmarlor/strix-halo-fan-control" rel="noopener">strix-halo-fan-control</a>, MIT). EVO-X2 EC P-MODE register (0x31) reverse-engineering and the 30s enforcement timer (May 2026) — Simon Gonzalez De Cruz. WMI/FCMI prior art — <a href="https://github.com/MintyMods/ip3-power-switch" rel="noopener">MintyMods/ip3-power-switch</a>, <a href="https://github.com/pettijohn/corsair-ai-workstation-performance-level-linux" rel="noopener">pettijohn/corsair-ai-workstation-performance-level-linux</a>. Thinking-style skills — caveman origin <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a> (skill MIT); ponytail origin <a href="https://github.com/DietrichGebert/ponytail" rel="noopener">DietrichGebert/ponytail</a> (MIT); the fusion ships with full license notices in <a href="https://github.com/KyaniteLabs/context-kit" rel="noopener">KyaniteLabs/context-kit</a>.</p></blockquote>
 <p><small>Measured on personally-owned hardware, 2026-08-14/15; your clocks will vary. Every number carries its validity label; single-run deltas are marked as such.</small></p>
 <p><strong>Update (2026-08-16):</strong> We re-measured the Wave-2 numbers on a fixed, fingerprinted harness (n=3+ per arm, every run ledger-fingerprinted); the current verdicts live in the <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo#re-baseline-update-2026-08-16" rel="noopener">repo&rsquo;s re-baseline section</a>, and this post keeps its original numbers below as published history, each with its label. The corrections cut both ways. Semantic reads (&ldquo;munch&rdquo;) got <strong>better</strong> under honest measurement: wall time <strong>-65% clean</strong> (27.9s to 9.8s median, 6/6 correct, n=3) — the staged number was conservative. Style steering is <strong>regime-conditional, not universal</strong>: the -51% single-run A/B above is retired (it stacked config changes), the -36%/-33% sustained figure holds in the server lane at default high effort, and the harness lane at low effort measured a +65% wall inversion — so the production harness now routes style per session (high-effort sessions only), which also preserves the prompt cache. The time-per-task battery is now n=3: 7.9-14.3s per correct task, median 11.3, a thermal-dependent band. And the EC fan daemon delta grows to <strong>-3.5 to -5.8 °C</strong> peak (n=3 probes: 93/92/94 °C vs the stock ledger&rsquo;s 97.5-97.8 °C; stock arm not re-run). Credit where due: these corrections exist because our own validity audit flagged the numbers first.</p>
 
@@ -1776,7 +1776,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Un 27B de uso diario y un 35B de razonamiento residentes juntos en una mini-PC AMD Strix Halo. Cada número emparejado, mismos problemas, misma máquina. Fracasos incluidos, logs crudos citados.',
         "excerpt": 'Un modelo de razonamiento de 35B ya corre junto a nuestro 27B diario en una caja de $1,400, al mismo tiempo. Cada número emparejado, mismos problemas, misma máquina. Los fracasos también están aquí.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (sigue la construcción en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), asistido por GLM-5.3. 2026-08-25. Cada número fue re-leído de archivos de resultados crudos en esta máquina antes de escribir.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (sigue la construcción en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), asistido por GLM-5.3. 2026-08-25. Cada número fue re-leído de archivos de resultados crudos en esta máquina antes de escribir.</small></p>
 <p><strong>Operamos un pequeño laboratorio de IA en hardware que cabe bajo un televisor: una mini-PC AMD Strix Halo con 64GB de memoria compartida.</strong> Un Qwen3.8-27B ha sido nuestro modelo principal y motor diario desde mediados de agosto. Esta semana hicimos una pregunta más difícil: ¿puede esta misma máquina correr también Ornith-1.5-35B, un modelo abierto más grande, al mismo tiempo, y es realmente bueno cuando lo mides con justicia?</p>
 <p>La respuesta es sí, con tres advertencias. Aquí está todo, incluido lo que falló. Un número abajo fue medido mal primero por nuestra propia herramienta. La historia, al final.</p>
 <h2>La configuración</h2>
@@ -1834,7 +1834,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Cuatro títulos que describen casi el mismo trabajo, con barras de código y dueños distintos. Un decodificador: qué cambia, qué no, y tres preguntas que revelan el rol real.',
         "excerpt": 'Cuatro títulos, una familia de trabajo, barras de código distintas. Un decodificador para leer cualquier vacante y saber en qué te estás metiendo.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Escrito para quien compara ofertas o vacantes a la 1am.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Escrito para quien compara ofertas o vacantes a la 1am.</small></p>
 <p><strong>Estos cuatro títulos describen casi el mismo trabajo: un ingeniero que trabaja cerca del cliente y logra que el producto funcione dentro de la realidad del cliente.</strong> Lo que cambia de verdad es la barra de código, dónde te sientas en el embudo de ventas y quién es dueño del resultado después del lanzamiento. En muchas empresas los títulos son intercambiables. En unas pocas, son carreras distintas. Este post te da el decodificador: qué señala cada título, qué no cambia, y las tres preguntas que revelan lo que una vacante realmente pide.</p>
 <p>Una nota sobre el contexto: los laboratorios de IA están contratando forward deployed engineers de forma agresiva, y las empresas empiezan a pedir el mismo perfil para IA que toca bancos, aseguradoras y aerolíneas. La inflación de títulos está garantizada. El decodificador importa más que el nombre.</p>
 <h2>La versión de un párrafo de cada título</h2>
@@ -1874,7 +1874,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Un forward deployed engineer lleva la IA adonde tiene que funcionar y se queda a cargo de la última milla. El trabajo demostrado en un mini-PC de $1.400, con evals públicas y números crudos.',
         "excerpt": 'La respuesta directa y luego los recibos: todo el trabajo de un FDE sobre un mini-PC de $1.400, con evals públicas.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Primero la respuesta directa, después los recibos.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-24. Primero la respuesta directa, después los recibos.</small></p>
 <p><strong>Un forward deployed engineer es el ingeniero que va adonde la IA tiene que funcionar de verdad, y logra que funcione ahí.</strong> No es quien entrena el modelo. Es quien toma un modelo que se ve bien en un benchmark y lo convierte en un sistema que un negocio real puede usar todos los días. El trabajo tiene tres partes: encontrar el punto de palanca en un flujo real, construir lo más pequeño que lo mueva, y quedarse a cargo en producción. El resto del post es esa frase desempacada, demostrada en un mini-PC de $1.400.</p>
 <p>El título suena fuerte ahora porque los laboratorios de IA están contratando gente para este puesto tan rápido como pueden. El trabajo es más viejo que el nombre. Cualquiera que haya instalado software en una sucursal bancaria, un hospital o una planta ha hecho trabajo forward deployed. Yo hice versiones de esto durante doce años en sistemas de aprendizaje empresariales. Hoy corro el trabajo completo en mi propio hardware, y cada número que vas a ver es público.</p>
 <h2>Parte uno: encontrar el punto de palanca</h2>
@@ -1911,7 +1911,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Arco cerrado: retrieval exacto en el techo de 262k, vision arreglada y validada upstream, spec verificado con paredes pareadas, trade de KV medido. $1.400, sin nube, logs crudos.',
         "excerpt": 'Cada dial medido, cada numero publico: la configuracion optima congelada para un 27B en un mini-PC de $1.400.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en publico en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Cierre del arco, 2026-08-21. Toda la historia, corregida en el registro.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en publico en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Cierre del arco, 2026-08-21. Toda la historia, corregida en el registro.</small></p>
 <p>Nos hicimos una pregunta simple: &iquest;puede un mini-PC de $1.400 servir un modelo 27B como los rigs grandes? Esta nota cierra el libro. Cada afirmacion de abajo tiene un log crudo detras, en el repo publico, con su metodologia.</p>
 <h2>El rig</h2>
 <p>AMD Strix Halo, 64 GB de memoria compartida, tooling abierto (llama.cpp), un modelo libre Apache-2.0. Sin nube, sin alquileres.</p>
@@ -1935,7 +1935,7 @@ BLOG_COPY_ES = {
         "meta_description": '20/30 = 67% LiveCodeBench-30 best-per-problem en Qwen3.8-27B Q4_K_XL. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. $1.400. No es la card oficial del set completo.',
         "excerpt": '20/30 = 67% LiveCodeBench-30 en un mini-PC de $1.400. IC Wilson 95% 49-81%. Easy 10/10, medium 8/10, hard 2/10. Subset n=30. No es la card.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-08-20. Canon: FACTS-PACK.</small></p>
 <p>El número primero: <strong>20/30 = 67%</strong> LiveCodeBench-30, best-per-problem entre brazos etiquetados, en un GMKtec EVO-X2 de <strong>$1.400</strong>. IC Wilson 95% <strong>[49%, 81%]</strong>. Cita siempre el intervalo. n=30 es chico; el intervalo es el número honesto.</p>
 <p>Split: <strong>easy 10/10, medium 8/10, hard 2/10</strong>. Campeón: Qwen3.8-27B UD-Q4_K_XL, K+V q4_0, temp 0, casos públicos livecodebench v6, estratificado 10/10/10, semilla 20260820.</p>
 <p>Una celda de un solo config (2048 tokens, thinking off) dio 13/30, reproducción 14/30, acuerdo per-problem 25/30. Eso es un <strong>piso de ruido de &plusmn;2 problemas a temp 0</strong>. No trates una corrida como exacta.</p>
@@ -1953,7 +1953,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Encontramos una regresión de llama.cpp (c7d8722, host buffers en iGPU HIP) y la arreglamos con un revert. n=6 VQA: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL en un mini-PC de $1.400.',
         "excerpt": 'Encontramos una regresión de llama.cpp y la revertimos. Batería n=6 en un rig de $1.400: 0/6 slashes antes, 5/6 después. Mismo Q4_K_XL. No es una historia de quant.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, con GLM-5.3.</small></p>
 <p>El número primero: <strong>5/6</strong> en una batería VQA de seis prompts después de un revert. Antes: 0/6, todo <code>//////</code> hasta length. Mismo Qwen3.8-27B Q4_K_XL, mismo mmproj-F16, mismo GMKtec EVO-X2 de <strong>$1.400</strong>.</p>
 <p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisectado en este hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>Qué probamos (n=6, thinking off):</p>
@@ -1980,7 +1980,7 @@ BLOG_COPY_ES = {
         "meta_description": '28/30 = 93% HumanEval en Qwen3.8-27B Q4_K_XL. Temp 0, thinking off, subset de 30. GMKtec EVO-X2 de $1.400. No es la card.',
         "excerpt": '28/30 = 93% HumanEval en un mini-PC de $1.400. Qwen3.8-27B Q4_K_XL. Temp 0, thinking off. Fallos: 50 y 145. Log crudo linkeado.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3. Addendum de la noche 4.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, con GLM-5.3. Addendum de la noche 4.</small></p>
 <p>El número primero: <strong>28/30 = 93% HumanEval</strong> en un GMKtec EVO-X2 de <strong>$1.400</strong> (Ryzen AI Max+ 395, 96GB unificados).</p>
 <p>Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Contexto 262k. K+V q4_0. Temp 0. Thinking off. Subset congelado de 30 problemas, semilla 20260819. Fallos: HumanEval/50 y HumanEval/145 (errores de runtime en el código generado). Los pases terminaron en 10s o menos, cero tokens de thinking.</p>
 <p>Esto no es la card de Qwen. La card es bf16, otra temp, otro harness. Optimizamos lo que medimos. n=30 en un subset no es un techo.</p>
@@ -1996,7 +1996,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Noche 4 en un mini-PC de $1.400: 48 de 64 capas son Gated DeltaNet. Por eso el flip KV a 4 bits ahorró 4.3GB, no 15. Y por eso un prefijo de 198k se consulta en 9-27s después de una carga de 30 min.',
         "excerpt": 'El número primero: este modelo es 75% no transformer. 48 de 64 capas guardan un estado. En un rig de $1.400, carga 198k una vez (1818s) y consulta en 9-27s.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 4.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 4.</small></p>
 <p>El número primero: <strong>este modelo es 75% no transformer.</strong> 48 de sus 64 capas corren Gated DeltaNet: atención lineal con un estado de tamaño fijo. Solo 16 capas hacen lo que llamarías atención. El KV cache vive solo en esas 16. Por eso el flip KV a 4 bits ahorró <strong>4.3GB</strong> a 262k, no los ~15GB que daba la aritmética de un transformer denso.</p>
 <p>Hardware: GMKtec EVO-X2, Ryzen AI Max+ 395, 96GB unificados, <strong>$1.400</strong>. Modelo: Qwen3.8-27B UD-Q4_K_XL. llama.cpp. Ventana nativa 262.144 tokens.</p>
 <h2>La curva KV fue plana porque el cache es chico</h2>
@@ -2019,7 +2019,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Inversión noche 3: el mapa de cuenca degenerada era llama.cpp c7d8722. Remap post-revert: 6/6 retrieval exacto a 198k. n=1. $1.400. Sin códigos plantados.',
         "excerpt": 'Publicamos una cuenca. El hueco era el binario. Tras revertir c7d8722: 6/6 HIT a 198k. Mapa n=1 del build arreglado.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Inversión de la noche 3, 2026-08-20. La URL sigue siendo la primera. El mapa estaba mal.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). Inversión de la noche 3, 2026-08-20. La URL sigue siendo la primera. El mapa estaba mal.</small></p>
 <p>El número primero: <strong>6/6 retrieval exacto de agujas a ~198k después de revertir llama.cpp <code>c7d8722</code>.</strong> Misma semilla. Códigos plantados byte-idénticos. Todas las celdas <code>finish_reason=stop</code>. Cero atractores. La «cuenca degenerada» que publicamos el 2026-08-19 era, en lo sustancial, un bug de host-buffer en esta iGPU, no una ley de profundidad de Qwen3.8-27B.</p>
 <p>Par ancla, prompts token-idénticos, server <code>prompt_tokens=198.228</code> las dos noches: miss pre-revert (<code>ok</code>) → HIT exacto post-revert. El único delta = el revert. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/README.md" rel="noopener">needle-format-2026-08-19/README.md</a> · <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/depth-remap-results.log" rel="noopener">depth-remap-results.log</a>.</p>
 
@@ -2069,7 +2069,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Noche 2: un gate pareado pasa el campeón a KV de 4 bits — GSM8K p=1.0, cero flags de corrupción a ~198k tokens, y el contador del server que corrigió nuestro estimado.',
         "excerpt": 'La pregunta q8-a-q4 del KV de la noche 1 ya tiene respuesta pareada: misma accuracy, cero tripwires, la mitad del cache. Y el label que tuvimos que corregir en público cuando el contador del server le ganó al estimado.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 2 de las notas de lab. Anoche cerré con una promesa: correr el A/B pareado de q4_0-KV que nos faltaba. Esto es lo que volvió.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 2 de las notas de lab. Anoche cerré con una promesa: correr el A/B pareado de q4_0-KV que nos faltaba. Esto es lo que volvió.</small></p>
 <p>El número primero: <strong>el campeón ahora corre cache KV de 4 bits — como 47% menos memoria KV (4.3GB ahorrados) en la misma ventana de contexto — con cero costo medido de accuracy y cero flags de corrupción.</strong> El gate de promoción fue pareado, pre-registrado y auto-ejecutable: si el brazo q4 empataba los hits de aguja de q8 y no disparaba tripwires, el unit file voltea; si no, el campeón viejo se restaura solo.</p>
 
 <h2>La pila de evidencia</h2>
@@ -2102,7 +2102,7 @@ BLOG_COPY_ES = {
         "meta_description": 'Noche 1: una corrida pareada de Omni-MATH en un mini-PC Strix Halo de $1.400 — el cap de 512 tokens es estadísticamente gratis (p=0,73), el thinking sin tope se muere en 26/50 problemas, 367 s vs 49 s.',
         "excerpt": 'Un mini-PC de $1.400 sirviendo un 27B a 262k de contexto hace una pregunta: ¿capear cuánto piensa el modelo te cuesta accuracy? La respuesta pareada, el primer intento inválido, y la doctrina que quedó.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 1 de un cadence diario: qué corrió, qué se rompió, y qué dijeron los números.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>), con GLM-5.3. Noche 1 de un cadence diario: qué corrió, qué se rompió, y qué dijeron los números.</small></p>
 <p>El número primero: <strong>un tope de thinking de 512 tokens compró la misma accuracy medida que el thinking sin límite — a 7,5× más rápido.</strong> Su número sombra: sin tope, el mismo modelo <strong>se pensó hasta morirse en 26 de 50 problemas</strong>, razonando hasta que el techo de output mató la respuesta. Los dos salieron de una corrida pareada. Ninguno era la historia real de la noche. La historia real es que la primera versión de este experimento no midió nada.</p>
 
 <h2>El setup</h2>
@@ -2148,7 +2148,7 @@ BLOG_COPY_ES = {
         "meta_description": "Afinar Qwen3.8-27B en un mini-PC Ryzen AI Max+ 395: de un stack que mentia a 4 tok/s a 59.7-64 tok/s en frio, chat real 11-24 tok/s publicados primero, una reversion de quant y la saga del EC de ventiladores.",
         "excerpt": "Una noche y una tarde de medicion afinando un modelo denso de 27B en un mini-PC Strix Halo: las bandas honestas, la reversion, la doctrina de crashes y la historia detectivesca del EC.",
         "body": """
-<p><small>Por Simon Gonzalez de Cruz, asistido por GLM-5.3.</small></p>
+<p><small>Por Simon Gonzalez De Cruz, asistido por GLM-5.3.</small></p>
 <p>En poco mas de una noche y una tarde (2026-08-14/15), un operador en solitario con companeros agenticos llevo Qwen3.8-27B en un mini-PC GMKtec EVO-X2 (Ryzen AI Max+ 395, gfx1151, 91GB de LPDDR5X unificada) desde un stack que mentia a ~4 tok/s hasta 59.7-64 tok/s en frio con 3x el contexto — al nivel de la frontera publica que encontramos para la clase o mas alla (mejor ejemplo publico sin nombre: 56 tok/s; fuente no re-localizada) — y despues publico voluntariamente los numeros que lo hacen verse mas lento (el chat real es 11-24 tok/s), revirtio su propia configuracion mas rapida por un argumento de tiempo-por-tarea, recorto 36% los tokens de tarea con un estilo de pensamiento caveman, resolvio un misterio de control de ventiladores que termino en el codigo de tres meses atras del propio dueno, y convirtio dos crashes en pruebas permanentes.</p>
 <p><strong>El diferenciador nunca fue el tok/s. Fue la evidencia.</strong></p>
 
@@ -2218,7 +2218,7 @@ BLOG_COPY_ES = {
   <li><strong>Caracter:</strong> un dueno en solitario y su equipo de agentes publicando los numeros que duelen, revirtiendo el config mas rapido por principio, y acreditando a todos los upstream.</li>
 </ol>
 <p>Todo es reproducible: la receta, los flags, la suite de bench, el reproducer de un comando y el ledger completo de experimentos viven en el repo <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo" rel="noopener">qwen38-27b-strix-halo</a>; el mapa de registros EC, las trampas y la receta del daemon viven en el repo hermano <a href="https://github.com/KyaniteLabs/evo-x2-ec" rel="noopener">evo-x2-ec</a>. Los datapoints crudos de throughput gfx1151 estan publicados como una <a href="https://github.com/ggml-org/llama.cpp/discussions/27154" rel="noopener">discusion en llama.cpp</a>. Si corres el bench en tu propia maquina Strix Halo, publica tus numeros — dentro o fuera de nuestras bandas, ambos son bienvenidos.</p>
-<blockquote><p><strong>Atribucion.</strong> Qwen3.8-27B — <a href="https://huggingface.co/Qwen/Qwen3.8-27B" rel="noopener">equipo Qwen</a> (Apache-2.0). Quants dinamicos — <a href="https://github.com/unslothai/unsloth" rel="noopener">Unsloth</a>. Runtime llama.cpp — <a href="https://github.com/ggml-org/llama.cpp" rel="noopener">sus contribuidores</a> (medido sobre un build de era b10435, 9d57ce4). Daemon de control EC de ventiladores y el mapa de registros derivado del DSDT (Bosgame M5, misma placa Sixunited AXB35-02 que la EVO-X2) — nathanmarlor (<a href="https://github.com/nathanmarlor/strix-halo-fan-control" rel="noopener">strix-halo-fan-control</a>, MIT). Reverese-engineering del registro EC P-MODE de la EVO-X2 (0x31) y el timer de ejecucion de 30s (mayo 2026) — Simon Gonzalez de Cruz. Trabajo previo WMI/FCMI — <a href="https://github.com/MintyMods/ip3-power-switch" rel="noopener">MintyMods/ip3-power-switch</a>, <a href="https://github.com/pettijohn/corsair-ai-workstation-performance-level-linux" rel="noopener">pettijohn/corsair-ai-workstation-performance-level-linux</a>. Skills de estilo de pensamiento — caveman origen <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a> (skill MIT); ponytail origen <a href="https://github.com/DietrichGebert/ponytail" rel="noopener">DietrichGebert/ponytail</a> (MIT); la fusion se distribuye con avisos de licencia completos en <a href="https://github.com/KyaniteLabs/context-kit" rel="noopener">KyaniteLabs/context-kit</a>.</p></blockquote>
+<blockquote><p><strong>Atribucion.</strong> Qwen3.8-27B — <a href="https://huggingface.co/Qwen/Qwen3.8-27B" rel="noopener">equipo Qwen</a> (Apache-2.0). Quants dinamicos — <a href="https://github.com/unslothai/unsloth" rel="noopener">Unsloth</a>. Runtime llama.cpp — <a href="https://github.com/ggml-org/llama.cpp" rel="noopener">sus contribuidores</a> (medido sobre un build de era b10435, 9d57ce4). Daemon de control EC de ventiladores y el mapa de registros derivado del DSDT (Bosgame M5, misma placa Sixunited AXB35-02 que la EVO-X2) — nathanmarlor (<a href="https://github.com/nathanmarlor/strix-halo-fan-control" rel="noopener">strix-halo-fan-control</a>, MIT). Reverese-engineering del registro EC P-MODE de la EVO-X2 (0x31) y el timer de ejecucion de 30s (mayo 2026) — Simon Gonzalez De Cruz. Trabajo previo WMI/FCMI — <a href="https://github.com/MintyMods/ip3-power-switch" rel="noopener">MintyMods/ip3-power-switch</a>, <a href="https://github.com/pettijohn/corsair-ai-workstation-performance-level-linux" rel="noopener">pettijohn/corsair-ai-workstation-performance-level-linux</a>. Skills de estilo de pensamiento — caveman origen <a href="https://github.com/JuliusBrussee/caveman" rel="noopener">JuliusBrussee/caveman</a> (skill MIT); ponytail origen <a href="https://github.com/DietrichGebert/ponytail" rel="noopener">DietrichGebert/ponytail</a> (MIT); la fusion se distribuye con avisos de licencia completos en <a href="https://github.com/KyaniteLabs/context-kit" rel="noopener">KyaniteLabs/context-kit</a>.</p></blockquote>
 <p><small>Medido en hardware de propiedad personal, 2026-08-14/15; tus relojes variaran. Cada numero lleva su etiqueta de validez; los deltas de corrida unica estan marcados como tales.</small></p>
 <p><strong>Actualizacion (2026-08-16):</strong> Remedimos los numeros de la Ola 2 en un harness corregido y con huella (n=3+ por brazo, cada corrida registrada en el ledger); los veredictos actuales viven en la <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo#re-baseline-update-2026-08-16" rel="noopener">seccion de re-baseline del repo</a>, y este post conserva sus numeros originales como historia publicada, cada uno con su etiqueta. Las correcciones van en ambas direcciones. Las lecturas semanticas (munch) <strong>mejoraron</strong> con la medicion honesta: tiempo de muro <strong>-65% limpio</strong> (27.9s a 9.8s mediana, 6/6 correctas, n=3) — el numero provisional era conservador. La direccion de estilo es <strong>condicional al regimen, no universal</strong>: el A/B de corrida unica de -51% queda retirado (apilaba cambios de configuracion), la cifra sostenida -36%/-33% sostiene en el carril del servidor a esfuerzo alto por defecto, y el carril del harness a esfuerzo bajo midio una inversion de +65% en muro — por eso el harness de produccion ahora enruta el estilo por sesion (solo sesiones de esfuerzo alto), lo que ademas preserva el prompt cache. La bateria de tiempo-por-tarea ahora es n=3: 7.9-14.3s por tarea correcta, mediana 11.3, banda dependiente de la temperatura. Y el delta del daemon EC de ventiladores crece a <strong>-3.5 a -5.8 °C</strong> de pico (sondas n=3: 93/92/94 °C contra las 97.5-97.8 °C del ledger stock; el brazo stock no se repitio). Credito donde corresponde: estas correcciones existen porque nuestra propia auditoria de validez senalo los numeros primero.</p>
 
@@ -2440,7 +2440,7 @@ BLOG_POSTS_ES_ORIGINALS = [
         "meta_description": 'El primer análisis en español de la Contribution Economy de ResonantDAO: 22 dimensiones, contextual authority, tokens que aún no existen y un producto real en GitHub. Con los recibos de lo que construí contra su alpha.',
         "excerpt": 'Lo contrario de un DAO normal: primero la contribución verificada, el token después. El primer análisis en español del movimiento, con recibos.',
         "body": """
-<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-02. Primero la respuesta directa, después los recibos.</small></p>
+<p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a> (el build en público en <a href="https://x.com/KyaniteLabs_" rel="noopener">X @KyaniteLabs_</a>). 2026-09-02. Primero la respuesta directa, después los recibos.</small></p>
 <p>La historia normal de un DAO nuevo: lanzar el token primero, mirar el precio y llamar a la comunidad a abrir la cartera. Es comprensible: el dinero es legible, la contribución no. Pero lo que no se puede medir, no se puede pagar.</p>
 <p>ResonantDAO hace lo contrario. Puso la Contribution Economy primero y el dinero después, mucho después. Su whitepaper lo dice plano: "The first phase is not a financial-token launch." Y hasta ahora cumplen: la fase 1 ya está en marcha y todavía no hay token en circulación.</p>
 <p>Si suena a otro experimento de gobernanza con palabras bonitas, sigue leyendo. Esta vez hay un producto real, repos públicos y un merge detrás.</p>
@@ -2955,13 +2955,13 @@ ABOUT_COPY = {
         "path": "/about",
         "alt_path": "/es/about",
         "alt_label": "ES",
-        "meta_title": "About Simon Gonzalez de Cruz — KyaniteLabs",
-        "meta_description": "About Simon Gonzalez de Cruz, founder of KyaniteLabs: open-source AI tools, MCP servers, agentic media, localization QA, and implementation help.",
+        "meta_title": "About Simon Gonzalez De Cruz — KyaniteLabs",
+        "meta_description": "About Simon Gonzalez De Cruz, founder of KyaniteLabs: open-source AI tools, MCP servers, agentic media, localization QA, and implementation help.",
         "eyebrow": "About the builder",
         "title": "A lab for tools that survive contact with real work.",
-        "lead": "I'm Simon Gonzalez de Cruz. KyaniteLabs is my creative development lab for MCP servers, AI media systems, localization QA, estimation tools, repo diagnostics, domain software, and the build notes that make the work inspectable.",
-        "portrait_alt": "Portrait of Simon Gonzalez de Cruz, founder of KyaniteLabs",
-        "portrait_label": "Simon Gonzalez de Cruz",
+        "lead": "I'm Simon Gonzalez De Cruz. KyaniteLabs is my creative development lab for MCP servers, AI media systems, localization QA, estimation tools, repo diagnostics, domain software, and the build notes that make the work inspectable.",
+        "portrait_alt": "Portrait of Simon Gonzalez De Cruz, founder of KyaniteLabs",
+        "portrait_label": "Simon Gonzalez De Cruz",
         "portrait_meta": "Founder / builder / systems translator",
         "body_title": "The lab grew out of the same habit that shaped my corporate work: find the broken handoff, make it visible, and leave behind a usable system.",
         "body": [
@@ -2998,13 +2998,13 @@ ABOUT_COPY = {
         "path": "/es/about",
         "alt_path": "/about",
         "alt_label": "EN",
-        "meta_title": "Sobre Simon Gonzalez de Cruz — KyaniteLabs",
-        "meta_description": "Sobre Simon Gonzalez de Cruz, fundador de KyaniteLabs: herramientas open source de IA, servidores MCP, medios agenticos e implementacion.",
+        "meta_title": "Sobre Simon Gonzalez De Cruz — KyaniteLabs",
+        "meta_description": "Sobre Simon Gonzalez De Cruz, fundador de KyaniteLabs: herramientas open source de IA, servidores MCP, medios agenticos e implementacion.",
         "eyebrow": "Sobre el builder",
         "title": "Un laboratorio para herramientas que sobreviven al trabajo real.",
-        "lead": "Soy Simon Gonzalez de Cruz. KyaniteLabs es mi laboratorio creativo para servidores MCP, sistemas de medios con IA, QA de localizacion, estimacion, diagnostico de repos, software de dominio y notas de construccion que vuelven inspeccionable el trabajo.",
-        "portrait_alt": "Retrato de Simon Gonzalez de Cruz, fundador de KyaniteLabs",
-        "portrait_label": "Simon Gonzalez de Cruz",
+        "lead": "Soy Simon Gonzalez De Cruz. KyaniteLabs es mi laboratorio creativo para servidores MCP, sistemas de medios con IA, QA de localizacion, estimacion, diagnostico de repos, software de dominio y notas de construccion que vuelven inspeccionable el trabajo.",
+        "portrait_alt": "Retrato de Simon Gonzalez De Cruz, fundador de KyaniteLabs",
+        "portrait_label": "Simon Gonzalez De Cruz",
         "portrait_meta": "Fundador / builder / traductor de sistemas",
         "body_title": "El laboratorio nacio del mismo habito que marco mi trabajo corporativo: encontrar el handoff roto, hacerlo visible y dejar un sistema usable.",
         "body": [
@@ -3209,7 +3209,7 @@ COMMON_ES_REPLACEMENTS = {
     "KyaniteLabs — Creative Dev Lab for AI Tools": "KyaniteLabs — Laboratorio creativo para herramientas de IA",
     "KyaniteLabs — Creative Dev Lab for AI Herramientas": "KyaniteLabs — Laboratorio creativo para herramientas de IA",
     "Open-source AI tools, MCP servers, media systems, learning experiments, products, and build notes.": "Herramientas de IA open source, servidores MCP, sistemas de medios, experimentos de aprendizaje, productos y notas de construccion.",
-    "KyaniteLabs is Simon Gonzalez de Cruz's creative development lab for open-source AI tools, MCP servers, media systems, learning experiments, products, and build notes.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez de Cruz para herramientas de IA open source, servidores MCP, sistemas de medios, experimentos de aprendizaje, productos y notas de construccion.",
+    "KyaniteLabs is Simon Gonzalez De Cruz's creative development lab for open-source AI tools, MCP servers, media systems, learning experiments, products, and build notes.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez De Cruz para herramientas de IA open source, servidores MCP, sistemas de medios, experimentos de aprendizaje, productos y notas de construccion.",
     "What does Kyanite implementation help include?": "Que incluye la ayuda de implementacion de Kyanite?",
     "It can include installing and configuring Kyanite tools, adapting workflows, advising on setup, writing docs and examples, and leaving a usable handoff.": "Puede incluir instalacion y configuracion de herramientas Kyanite, adaptacion de flujos, asesoria de setup, docs, ejemplos y un handoff usable.",
     "Who is implementation help for?": "Para quien es la ayuda de implementacion?",
@@ -3270,7 +3270,7 @@ LANDING_ES_REPLACEMENTS = {
     "Tool you need running, repo you need installed, video pipeline you need usable, Spanish QA you need trusted, diagnostic you need explained, or a build you need handed off. If it connects to Kyanite's tools and practice, bring the stuck result.": "Herramienta que necesitas ejecutar, repo que necesitas instalado, pipeline de video que necesitas usable, QA de espanol que necesitas confiar, diagnostico que necesitas explicar o build que necesitas entregar. Si conecta con las herramientas y practica de Kyanite, trae el resultado bloqueado.",
     "Best for builders who want a Kyanite tool working in their real environment.": "Ideal para builders que quieren una herramienta Kyanite funcionando en su entorno real.",
     "Which Kyanite tool or result do you want working? Include repo/demo URLs, your setup, current blocker, and what done would look like.": "Que herramienta o resultado Kyanite quieres hacer funcionar? Incluye URLs de repo/demo, tu setup, bloqueo actual y como se veria terminado.",
-    "KyaniteLabs is Simon Gonzalez de Cruz's creative development lab for building useful AI tools, MCP servers, media systems, domain software, and learning experiments.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez de Cruz para construir herramientas utiles de IA, servidores MCP, sistemas de medios, software de dominio y experimentos de aprendizaje.",
+    "KyaniteLabs is Simon Gonzalez De Cruz's creative development lab for building useful AI tools, MCP servers, media systems, domain software, and learning experiments.": "KyaniteLabs es el laboratorio creativo de Simon Gonzalez De Cruz para construir herramientas utiles de IA, servidores MCP, sistemas de medios, software de dominio y experimentos de aprendizaje.",
     "Most of the work is open source. The paid path is implementation and advising when someone wants help using a Kyanite tool without doing all the setup themselves.": "La mayor parte del trabajo es open source. La ruta pagada es implementacion y asesoria cuando alguien quiere usar una herramienta de Kyanite sin hacer todo el setup por su cuenta.",
     "MCP servers": "Servidores MCP",
     "agents can actually call": "que los agentes pueden llamar",
@@ -3990,7 +3990,7 @@ def ai_sitemap_json():
         ],
         "publicRepositories": PUBLIC_PROJECTS,
         "founder": {
-            "name": "Simon Gonzalez de Cruz",
+            "name": "Simon Gonzalez De Cruz",
             "url": f"{CANONICAL_BASE}/about",
             "spanishUrl": f"{CANONICAL_BASE}/es/about",
         },
@@ -4043,14 +4043,14 @@ def llms_txt():
 
 > Open-source proof and paid implementation help for getting AI tools working in real environments.
 
-KyaniteLabs is where Simon Gonzalez de Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
+KyaniteLabs is where Simon Gonzalez De Cruz turns AI tools, MCP servers, media systems, developer-learning experiments, domain software, and product notes into public proof. Most Kyanite products are open source. The paid path helps people install, adapt, understand, and hand off the tools in their real environment.
 
 KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_URL}). Kyanite is the public lab for tool implementation, while broader consulting belongs under PuenteWorks.
 
 ## Primary Pages
 
 - [Homepage]({CANONICAL_BASE}/): outcome-led overview, public GitHub proof, products, blog, and contact form.
-- [About Simon Gonzalez de Cruz]({CANONICAL_BASE}/about): founder page with Kyanite's builder story, principles, and brand boundary.
+- [About Simon Gonzalez De Cruz]({CANONICAL_BASE}/about): founder page with Kyanite's builder story, principles, and brand boundary.
 - [Blog]({CANONICAL_BASE}/blog): build notes, learning notes, agent-system essays, and tool implementation field notes.
 - [Implementation help]({CANONICAL_BASE}/implementation): paid help for getting Kyanite-built tools working in a real environment.
 - [Implementation intake]({CANONICAL_BASE}/implementation/intake): structured intake for implementation and advising work.
@@ -4170,7 +4170,7 @@ Parent business and broader consulting home: {PUENTEWORKS_URL}
 - Implementation intake: {CANONICAL_BASE}/implementation/intake
 - Shop: {CANONICAL_BASE}/shop
 - Spanish edition: blog, about, and implementation pages (translation parity in progress).
-- About Simon Gonzalez de Cruz: {CANONICAL_BASE}/about
+- About Simon Gonzalez De Cruz: {CANONICAL_BASE}/about
 - PuenteWorks parent business: {PUENTEWORKS_URL}
 - Sitemap: {CANONICAL_BASE}/sitemap.xml
 - Structured AI sitemap: {CANONICAL_BASE}/ai-sitemap.json
