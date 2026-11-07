@@ -678,11 +678,14 @@ class LandingSmokeTests(unittest.TestCase):
         for hreflang in ("es", "es-419", "x-default"):
             self.assertIn(f'hreflang="{hreflang}" href="{es_url}"', html)
 
-    def test_resonant_surfaces_survive_site_alignment(self) -> None:
-        for path in ("/", "/es/", "/llms.txt"):
+    def test_resonant_gift_names_are_not_on_public_surfaces(self) -> None:
+        banned = ("resonant-gifts", "resonant gifts", "resonant-constable", "resonant-authority", "ResonantOS Ecosystem")
+        for path in ("/", "/es/", "/shop", "/es/shop", "/llms.txt", "/sitemap.xml"):
             with self.subTest(path=path):
-                body = self.client.get(path).get_data(as_text=True).lower()
-                self.assertIn("resonant", body)
+                body = self.client.get(path).get_data(as_text=True)
+                folded = body.lower()
+                for name in banned:
+                    self.assertNotIn(name.lower(), folded)
 
     def test_sol_terra_luna_post_purged_404_both_languages(self) -> None:
         # Law 20 purge (2026-09-26): the post described unreleased model
