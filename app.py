@@ -588,6 +588,48 @@ PUBLIC_PROJECTS = [
     },
 ]
 
+SHOP_SKIP_URLS = {
+    "https://github.com/KyaniteLabs/liminal",
+    "https://github.com/KyaniteLabs/liminal-sites",
+}
+SHOP_SITE_URLS = {
+    "tastecheck": "https://kyanitelabs.github.io/tastecheck/",
+    "epoch": "https://kyanitelabs.github.io/Epoch/",
+    "checkyourself": "https://kyanitelabs.github.io/checkyourself/",
+    "elixis": "https://kyanitelabs.github.io/Elixis/",
+    "openglaze": "https://kyanitelabs.github.io/openglaze/",
+    "unstuck-coach": "https://unstuck.kyanitelabs.tech/",
+}
+SPONSORS_URL = "https://github.com/sponsors/KyaniteLabs"
+
+
+def shop_tool_slug(name):
+    return re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", name.strip().lower())).strip("-")
+
+
+def build_shop_tools():
+    tools = {}
+    for project in PUBLIC_PROJECTS:
+        if project["url"] in SHOP_SKIP_URLS:
+            continue
+        slug = shop_tool_slug(project["name"])
+        if slug in tools:
+            raise RuntimeError(f"shop tool slug collision: {slug}")
+        tools[slug] = {
+            "slug": slug,
+            "name": project["name"],
+            "description": project["description"],
+            "category": project["tag"],
+            "url": SHOP_SITE_URLS.get(slug, project["url"]),
+            "repo": project.get("repo") or project["url"],
+            "image": project.get("image"),
+            "tile_code": project["tile_code"],
+        }
+    return tools
+
+
+SHOP_TOOLS = build_shop_tools()
+
 BLOG_POSTS = [
     {
         "slug": 'gpt-6-sol-luna-astra-routing-guide',
@@ -2645,6 +2687,8 @@ PRODUCTS_ES = {
 # discovery surfaces only read these explicitly published maps.
 PUBLISHED_PRODUCTS = {}
 PUBLISHED_PRODUCTS_ES = {}
+if set(SHOP_TOOLS) & set(PRODUCTS):
+    raise RuntimeError("shop tools collided with unpublished paid products")
 
 PUBLIC_MAGNETS = [
     {
@@ -3150,6 +3194,15 @@ COMMON_ES_REPLACEMENTS = {
     "Work with Kyanite": "Trabajar con Kyanite",
     "Operator Assets": "Activos de operador",
     "No products are for sale yet. The tools stay free. A tip keeps the work going.": "Todavía no hay productos a la venta. Las herramientas siguen gratis. Una propina mantiene el trabajo.",
+    "Free tools. Pay what you want.": "Herramientas gratis. Paga lo que quieras.",
+    "These tools are free to install. A tip is optional. You type the amount on Ko-fi or GitHub Sponsors. Neither page sells a separate copy of the tool.": "Estas herramientas son gratis de instalar. La propina es opcional. Tú escribes el monto en Ko-fi o GitHub Sponsors. Ninguna de las dos vende una copia aparte de la herramienta.",
+    "Get the tool": "Obtener la herramienta",
+    "Tip what you want": "Propina lo que quieras",
+    "Free to install": "Gratis de instalar",
+    "You type the amount.": "Tú escribes el monto.",
+    "This page names the tool you are tipping. Ko-fi and GitHub Sponsors use one tip jar, so the payment is not split into a separate checkout per tool.": "Esta página nombra la herramienta que estás apoyando. Ko-fi y GitHub Sponsors usan un solo frasco, así que el pago no se divide en un checkout aparte por herramienta.",
+    "Free tools — pay what you want — KyaniteLabs": "Herramientas gratis — paga lo que quieras — KyaniteLabs",
+    "Open-source tools from KyaniteLabs. Install free. Tip any amount.": "Herramientas open source de KyaniteLabs. Instala gratis. Propina el monto que quieras.",
     "Sponsor on GitHub": "Apoyar en GitHub",
     "Tip on Ko-fi": "Propina en Ko-fi",
     "Get the Kyanite tool working in your environment.": "Haz que la herramienta Kyanite funcione en tu entorno.",
@@ -3862,6 +3915,8 @@ def sitemap_xml():
         ("/feed.xml", "0.6", "weekly"),
     ]
     pages.extend((magnet["path"], "0.78", "monthly") for magnet in PUBLIC_MAGNETS)
+    pages.extend((f"/shop/tip/{slug}", "0.6", "monthly") for slug in SHOP_TOOLS)
+    pages.extend((f"/es/shop/tip/{slug}", "0.6", "monthly") for slug in SHOP_TOOLS)
     pages.extend((f"/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS)
     pages.extend((f"/es/blog/{post['slug']}", "0.82", "monthly") for post in BLOG_POSTS_ES)
     urls = []
@@ -3982,6 +4037,15 @@ def ai_sitemap_json():
             },
         ],
         "products": [],
+        "shopTools": [
+            {
+                "name": tool["name"],
+                "url": f"{CANONICAL_BASE}/shop/tip/{tool['slug']}",
+                "installUrl": tool["url"],
+                "tip": "pay what you want",
+            }
+            for tool in SHOP_TOOLS.values()
+        ],
         "magnets": [
             {
                 "title": magnet["title"],
@@ -4056,7 +4120,7 @@ KyaniteLabs is operated by [Simon Gonzalez De Cruz / PuenteWorks]({PUENTEWORKS_U
 - [Blog]({CANONICAL_BASE}/blog): build notes, learning notes, agent-system essays, and tool implementation field notes.
 - [Implementation help]({CANONICAL_BASE}/implementation): paid help for getting Kyanite-built tools working in a real environment.
 - [Implementation intake]({CANONICAL_BASE}/implementation/intake): structured intake for implementation and advising work.
-- [Shop]({CANONICAL_BASE}/shop): no products currently listed; more tools are in development.
+- [Shop]({CANONICAL_BASE}/shop): free open-source tools. Each one has a pay-what-you-want tip page. The amount is typed on Ko-fi or GitHub Sponsors.
 - [PuenteWorks]({PUENTEWORKS_URL}): parent business, consulting, workflow, and broader AI operations home.
 - Spanish edition: blog, about, and implementation pages (translation parity in progress).
 - [Blog en español]({CANONICAL_BASE}/es/blog): the Spanish edition — translated notes plus Spanish-first interpretation pieces.
@@ -4184,7 +4248,7 @@ Parent business and broader consulting home: {PUENTEWORKS_URL}
 
 ## Products
 
-No paid products are currently listed. Tip the free tools at https://github.com/sponsors/KyaniteLabs or https://ko-fi.com/kyanitelabs.
+No paid products are currently listed. The shop lists the free tools, and each one links a pay-what-you-want tip: {CANONICAL_BASE}/shop
 
 ## Free Resources
 
@@ -4568,7 +4632,9 @@ def shop():
     html = render_template_file(
         "shop.html",
         products=PUBLISHED_PRODUCTS,
-        KOFI_URL=app.config["KOFI_URL"]
+        tools=SHOP_TOOLS,
+        KOFI_URL=app.config["KOFI_URL"],
+        SPONSORS_URL=SPONSORS_URL,
     )
     return add_hreflang(html, "/shop", "/es/shop")
 
@@ -4578,9 +4644,39 @@ def shop_es():
     html = render_template_file(
         "shop.html",
         products=PUBLISHED_PRODUCTS_ES,
-        KOFI_URL=app.config["KOFI_URL"]
+        tools=SHOP_TOOLS,
+        KOFI_URL=app.config["KOFI_URL"],
+        SPONSORS_URL=SPONSORS_URL,
     )
     return spanishify(html, "/shop", "/es/shop")
+
+
+@app.route("/shop/tip/<slug>")
+def shop_tip(slug):
+    tool = SHOP_TOOLS.get(slug)
+    if not tool:
+        return "Tool not found", 404
+    html = render_template_file(
+        "shop-tip.html",
+        tool=tool,
+        KOFI_URL=app.config["KOFI_URL"],
+        SPONSORS_URL=SPONSORS_URL,
+    )
+    return add_hreflang(html, f"/shop/tip/{slug}", f"/es/shop/tip/{slug}")
+
+
+@app.route("/es/shop/tip/<slug>")
+def shop_tip_es(slug):
+    tool = SHOP_TOOLS.get(slug)
+    if not tool:
+        return "Herramienta no encontrada", 404
+    html = render_template_file(
+        "shop-tip.html",
+        tool=tool,
+        KOFI_URL=app.config["KOFI_URL"],
+        SPONSORS_URL=SPONSORS_URL,
+    )
+    return spanishify(html, f"/shop/tip/{slug}", f"/es/shop/tip/{slug}")
 
 
 @app.route("/shop/<slug>")
