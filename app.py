@@ -436,36 +436,6 @@ PUBLIC_PROJECTS = [
         "proof_role": "Makes Spanish launch quality inspectable instead of treating localization as generic translation.",
     },
     {
-        "name": "resonant-gifts",
-        "url": "https://github.com/simongonzalezdc/resonant-gifts",
-        "description": "An honest index of the Resonant gift line: 19 open-source gifts built for the ResonantOS ecosystem — measurement benches, security tooling, local-service add-ons, and receipted knowledge.",
-        "tag": "ResonantOS Ecosystem",
-        "tile_code": "RG",
-        "language": None,
-        "updated": "2026-09-04",
-        "proof_role": "Indexes the full line — every gift public, licensed, and independently reviewed.",
-    },
-    {
-        "name": "resonant-constable",
-        "url": "https://github.com/simongonzalezdc/resonant-constable",
-        "description": "Injection defense + contest for the ResonantOS ecosystem: the doctrine, a labeled corpus of known public attack classes on synthetic fixtures, and a stdlib-only reference checker.",
-        "tag": "ResonantOS Ecosystem",
-        "tile_code": "IC",
-        "language": "Python",
-        "updated": "2026-09-03",
-        "proof_role": "The defense discipline behind a merged upstream security fix, made reusable.",
-    },
-    {
-        "name": "resonant-authority",
-        "url": "https://github.com/simongonzalezdc/resonant-authority",
-        "description": "The ResonantDAO whitepaper's contextual-authority mechanism as a self-contained add-on: weight from verified outcomes in exactly the dimensions a question declares salient.",
-        "tag": "ResonantOS Ecosystem",
-        "tile_code": "RA",
-        "language": "Shell",
-        "updated": "2026-09-02",
-        "proof_role": "The whitepaper's governance mechanism as working code — non-canonical, MIT.",
-    },
-    {
         "name": "liminal",
         "url": "https://github.com/KyaniteLabs/liminal",
         "description": "AI creative coding studio for p5.js, GLSL, Three.js, music, video, and model-agnostic generative art workflows.",
@@ -613,6 +583,9 @@ def build_shop_tools():
         if project["url"] in SHOP_SKIP_URLS:
             continue
         slug = shop_tool_slug(project["name"])
+        folded = re.sub(r"[^a-z0-9]+", "", project["name"].lower())
+        if folded.startswith("resonant") or "gift" in folded:
+            continue
         if slug in tools:
             raise RuntimeError(f"shop tool slug collision: {slug}")
         tools[slug] = {
