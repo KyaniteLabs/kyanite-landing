@@ -262,7 +262,6 @@ class LandingSmokeTests(unittest.TestCase):
             "Elixis": "2026-09-02",
             "Innerscape": "2026-09-02",
             "openglaze": "2026-09-02",
-            "Dev Learning Archaeologist": "2026-09-02",
             "achiote-food-memory-researcher": "2026-09-02",
             "unstuck-coach": "2026-09-01",
             "tradesflow": "2026-09-01",
@@ -272,10 +271,7 @@ class LandingSmokeTests(unittest.TestCase):
         for name, expected in expected_dates.items():
             with self.subTest(project=name):
                 self.assertEqual(projects[name]["updated"], expected)
-        self.assertEqual(
-            projects["Dev Learning Archaeologist"]["url"],
-            "https://github.com/simongonzalezdc/dev-learning-archaeologist",
-        )
+        self.assertNotIn("Dev Learning Archaeologist", projects)
         self.assertIn("site surfaces and public faces", projects["liminal-sites"]["description"].lower())
 
     def test_magnet_blog_links_only_target_published_slugs(self) -> None:

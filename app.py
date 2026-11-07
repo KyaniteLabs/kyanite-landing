@@ -491,17 +491,6 @@ PUBLIC_PROJECTS = [
         "proof_role": "Shows Kyanite can turn development history into evidence, not vibes.",
     },
     {
-        "name": "Dev Learning Archaeologist",
-        "url": "https://github.com/simongonzalezdc/dev-learning-archaeologist",
-        "description": "Forensic git-history learning diagnostic for AI-assisted developers that turns commit history into evidence-backed study plans and HTML reports.",
-        "tag": "Learning Diagnostics",
-        "tile_code": "DA",
-        "language": "JavaScript",
-        "updated": "2026-09-02",
-        "image": "/static/brand/projects/kyanite-project-dev-learning-archaeologist-1672x941.webp",
-        "proof_role": "Turns repo behavior into a readable diagnostic artifact.",
-    },
-    {
         "name": "achiote-food-memory-researcher",
         "url": "https://github.com/simongonzalezdc/achiote-food-memory-researcher",
         "description": "Folder-based AI food-memory researcher for investigating half-remembered family dishes from sound-alikes, smells, colors, and cultural memory.",
@@ -584,7 +573,7 @@ def build_shop_tools():
             continue
         slug = shop_tool_slug(project["name"])
         folded = re.sub(r"[^a-z0-9]+", "", project["name"].lower())
-        if folded.startswith("resonant") or "gift" in folded:
+        if folded.startswith("resonant") or "gift" in folded or "archaeologist" in folded:
             continue
         if slug in tools:
             raise RuntimeError(f"shop tool slug collision: {slug}")
@@ -597,6 +586,8 @@ def build_shop_tools():
             "repo": project.get("repo") or project["url"],
             "image": project.get("image"),
             "tile_code": project["tile_code"],
+            "language": project.get("language") or "",
+            "updated": project.get("updated") or "",
         }
     return tools
 

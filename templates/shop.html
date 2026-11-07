@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05070b">
   <title>Free tools — pay what you want — KyaniteLabs</title>
   <meta name="description" content="Open-source tools from KyaniteLabs. Install free. Tip any amount.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -41,79 +42,35 @@
   </header>
 
   <main id="main">
-    <section class="page-hero">
-      <div class="container page-hero-inner">
-        <div class="eyebrow">Open source</div>
-        <h1>Free tools. Pay what you want.</h1>
-        <p>These tools are free to install. A tip is optional. You type the amount on Ko-fi or GitHub Sponsors. Neither page sells a separate copy of the tool.</p>
-      </div>
-    </section>
-
-    <section>
+    <section class="proof-wall">
       <div class="container">
-        {% if products %}
-        <div class="grid-2">
-          {% for slug, p in products.items() %}
-          <article class="product-card fade-up">
-            {% if p.get('image') %}
-            <div class="artifact-cover artifact-cover-image">
-              <img src="{{ p.image }}" alt="{{ p.get('image_alt', p.name) }}" loading="lazy">
-            </div>
-            {% else %}
-            <div class="artifact-cover" aria-hidden="true">
-              <span>{{ p.category }}</span>
-              <strong>{{ p.name }}</strong>
-            </div>
-            {% endif %}
-            <div class="product-top">
-              <div>
-                <span class="mono-label">{{ p.category }}</span>
-                <span class="tile-code">{{ p.name[0] }}{{ loop.index }}</span>
-              </div>
-              <div class="product-price">${{ p.price }}</div>
-            </div>
-            <h3>{{ p.name }}</h3>
-            <p>{{ p.tagline }}</p>
-            <ul class="feature-list">
-              {% for f in p.features[:5] %}
-              <li>{{ f }}</li>
-              {% endfor %}
-              {% if p.features|length > 5 %}<li>{{ p.features|length - 5 }} more included</li>{% endif %}
-            </ul>
-            <div class="button-row">
-              <a class="btn btn-primary" href="/shop/{{ slug }}">See what's inside</a>
-            </div>
-          </article>
-          {% endfor %}
+        <div class="section-head">
+          <div class="section-label">Open source</div>
+          <h1 class="section-title">Free tools. Pay what you want.</h1>
+          <p class="section-sub">These tools are free to install. A tip is optional. You type the amount on Ko-fi or GitHub Sponsors. Neither page sells a separate copy of the tool.</p>
         </div>
-        {% endif %}
         {% if tools %}
-        <div class="grid-2">
+        <div class="grid-4">
           {% for slug, tool in tools.items() %}
-          <article class="product-card fade-up">
+          <article class="project-card fade-up">
             {% if tool.image %}
-            <div class="artifact-cover artifact-cover-image">
-              <img src="{{ tool.image }}" alt="" loading="lazy">
-            </div>
-            {% else %}
-            <div class="artifact-cover" aria-hidden="true">
-              <span>{{ tool.category }}</span>
-              <strong>{{ tool.tile_code }}</strong>
-            </div>
+            <figure class="project-visual" aria-hidden="true">
+              <img src="{{ tool.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async">
+            </figure>
             {% endif %}
-            <div class="product-top">
-              <div>
-                <span class="mono-label">{{ tool.category }}</span>
+            <span class="project-card-body">
+              <span class="project-card-kicker">
+                <span class="project-tag">{{ tool.category }}</span>
                 <span class="tile-code">{{ tool.tile_code }}</span>
-              </div>
-              <div class="product-price">Free to install</div>
-            </div>
-            <h3>{{ tool.name }}</h3>
-            <p>{{ tool.description }}</p>
-            <div class="button-row">
-              <a class="btn" href="{{ tool.url }}">Get the tool</a>
-              <a class="btn btn-primary" href="/shop/tip/{{ slug }}">Tip what you want</a>
-            </div>
+              </span>
+              <span class="project-name">{{ tool.name }}</span>
+              <span class="project-description">{{ tool.description }}</span>
+              <span class="repo-meta">{{ tool.language }} // updated {{ tool.updated }}</span>
+              <span class="hero-actions">
+                <a class="btn btn-secondary" href="{{ tool.url }}">Get the tool</a>
+                <a class="btn btn-primary" href="/shop/tip/{{ slug }}">Tip what you want</a>
+              </span>
+            </span>
           </article>
           {% endfor %}
         </div>
@@ -121,7 +78,7 @@
         <p class="section-sub">No products are for sale yet. The tools stay free. A tip keeps the work going.</p>
         <div class="button-row">
           <a class="btn btn-primary" href="{{ SPONSORS_URL }}">Sponsor on GitHub</a>
-          <a class="btn" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
+          <a class="btn btn-secondary" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
         </div>
         {% endif %}
       </div>

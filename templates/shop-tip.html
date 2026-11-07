@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05070b">
   <title>{{ tool.name }} — pay what you want — KyaniteLabs</title>
   <meta name="description" content="{{ tool.name }} is free to install. Tip any amount.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -22,18 +23,33 @@
     </nav>
   </header>
   <main id="main">
-    <section class="page-hero">
-      <div class="container page-hero-inner">
-        <div class="eyebrow">{{ tool.category }}</div>
-        <h1>{{ tool.name }}</h1>
-        <p>{{ tool.description }}</p>
-        <p>Free to install. You type the amount.</p>
-        <p>This page names the tool you are tipping. Ko-fi and GitHub Sponsors use one tip jar, so the payment is not split into a separate checkout per tool.</p>
-        <div class="button-row">
-          <a class="btn" href="{{ tool.url }}">Get the tool</a>
-          <a class="btn btn-primary" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
-          <a class="btn" href="{{ SPONSORS_URL }}">Sponsor on GitHub</a>
+    <section class="proof-wall">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-label">{{ tool.category }}</div>
+          <h1 class="section-title">{{ tool.name }}</h1>
+          <p class="section-sub">{{ tool.description }}</p>
         </div>
+        <article class="project-card">
+          {% if tool.image %}
+          <figure class="project-visual" aria-hidden="true">
+            <img src="{{ tool.image }}" alt="" width="1672" height="941" loading="lazy" decoding="async">
+          </figure>
+          {% endif %}
+          <span class="project-card-body">
+            <span class="project-card-kicker">
+              <span class="project-tag">Free to install</span>
+              <span class="tile-code">{{ tool.tile_code }}</span>
+            </span>
+            <span class="project-description">You type the amount.</span>
+            <span class="project-description">This page names the tool you are tipping. Ko-fi and GitHub Sponsors use one tip jar, so the payment is not split into a separate checkout per tool.</span>
+            <span class="hero-actions">
+              <a class="btn btn-secondary" href="{{ tool.url }}">Get the tool</a>
+              <a class="btn btn-primary" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
+              <a class="btn btn-secondary" href="{{ SPONSORS_URL }}">Sponsor on GitHub</a>
+            </span>
+          </span>
+        </article>
       </div>
     </section>
   </main>
