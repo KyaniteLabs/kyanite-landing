@@ -18,6 +18,7 @@ from app import (
     PUBLIC_PROJECTS,
     PRODUCTS,
     PUENTEWORKS_URL,
+    SHOP_TOOLS,
     TIKTOK_SITE_VERIFICATION_BODY,
     TIKTOK_SITE_VERIFICATION_FILENAME,
     app,
@@ -190,20 +191,33 @@ class LandingSmokeTests(unittest.TestCase):
     def test_ceo_ordered_take_downs_are_unpublished_but_reversible(self) -> None:
         self.assertEqual(set(PRODUCTS), {"ai-coding-agent-blueprint", "claude-code-productivity-pack"})
 
-        for path, empty_state in [
-            ("/shop", "No products are for sale yet. The tools stay free. A tip keeps the work going."),
-            ("/es/shop", "Todavía no hay productos a la venta. Las herramientas siguen gratis. Una propina mantiene el trabajo."),
+        for path, heading in [
+            ("/shop", "Free tools. Pay what you want."),
+            ("/es/shop", "Herramientas gratis. Paga lo que quieras."),
         ]:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 body = response.get_data(as_text=True)
                 self.assertEqual(response.status_code, 200)
-                self.assertIn(empty_state, body)
+                self.assertIn(heading, body)
                 self.assertIn("https://github.com/sponsors/KyaniteLabs", body)
                 self.assertIn("https://ko-fi.com/kyanitelabs", body)
+                self.assertIn("/shop/tip/kinocut", body)
+                self.assertNotIn("liminal-sites", body)
                 for slug, product in PRODUCTS.items():
                     self.assertNotIn(slug, body)
                     self.assertNotIn(product["name"], body)
+                for tool in SHOP_TOOLS.values():
+                    self.assertIn(tool["name"], body)
+
+        tip = self.client.get("/shop/tip/kinocut")
+        tip_body = tip.get_data(as_text=True)
+        self.assertEqual(tip.status_code, 200)
+        self.assertIn("You type the amount.", tip_body)
+        self.assertIn("https://ko-fi.com/kyanitelabs", tip_body)
+        self.assertIn("https://github.com/sponsors/KyaniteLabs", tip_body)
+        self.assertEqual(self.client.get("/shop/tip/not-a-tool").status_code, 404)
+        self.assertEqual(self.client.get("/es/shop/tip/kinocut").status_code, 200)
 
         self.assertEqual(self.client.get("/rutile").status_code, 404)
         for slug in PRODUCTS:
@@ -688,7 +702,8 @@ class LandingSmokeTests(unittest.TestCase):
         index = self.client.get("/es/blog").get_data(as_text=True)
 
         self.assertNotIn("Operator Activos", shop)
-        self.assertIn("Activos de operador", shop)
+        self.assertIn("Herramientas gratis — paga lo que quieras — KyaniteLabs", shop)
+        self.assertNotIn("Operator assets", shop)
         self.assertNotIn("your environment", impl)
         self.assertNotIn("Implementation path", impl)
         self.assertIn("Ruta de implementación", impl)

@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Operator Assets — KyaniteLabs</title>
-  <meta name="description" content="Downloadable operator assets from KyaniteLabs: Claude Code workflows, agent prompts, repo structures, and implementation templates for AI builders.">
+  <title>Free tools — pay what you want — KyaniteLabs</title>
+  <meta name="description" content="Open-source tools from KyaniteLabs. Install free. Tip any amount.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-  <meta property="og:title" content="Operator Assets — KyaniteLabs">
-  <meta property="og:description" content="Downloadable systems for people building with AI agents: prompts, repo structures, Claude Code workflows, and implementation templates.">
+  <meta property="og:title" content="Free tools — pay what you want — KyaniteLabs">
+  <meta property="og:description" content="Open-source tools from KyaniteLabs. Install free. Tip any amount.">
   <meta property="og:image" content="https://kyanitelabs.tech/static/brand/kyanitelabs-mark-primary-transparent-v2.png">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kyanitelabs.tech/shop">
@@ -43,9 +43,9 @@
   <main id="main">
     <section class="page-hero">
       <div class="container page-hero-inner">
-        <div class="eyebrow">Operator assets</div>
-        <h1>Operator assets for people building with agents.</h1>
-        <p>Downloadable workflows, repo structures, and implementation templates from the same Kyanite practice behind the public tools. Small artifacts for builders who want a sharper starting point.</p>
+        <div class="eyebrow">Open source</div>
+        <h1>Free tools. Pay what you want.</h1>
+        <p>These tools are free to install. A tip is optional. You type the amount on Ko-fi or GitHub Sponsors. Neither page sells a separate copy of the tool.</p>
       </div>
     </section>
 
@@ -86,11 +86,42 @@
           </article>
           {% endfor %}
         </div>
-        {% else %}
+        {% endif %}
+        {% if tools %}
+        <div class="grid-2">
+          {% for slug, tool in tools.items() %}
+          <article class="product-card fade-up">
+            {% if tool.image %}
+            <div class="artifact-cover artifact-cover-image">
+              <img src="{{ tool.image }}" alt="" loading="lazy">
+            </div>
+            {% else %}
+            <div class="artifact-cover" aria-hidden="true">
+              <span>{{ tool.category }}</span>
+              <strong>{{ tool.name }}</strong>
+            </div>
+            {% endif %}
+            <div class="product-top">
+              <div>
+                <span class="mono-label">{{ tool.category }}</span>
+                <span class="tile-code">{{ tool.tile_code }}</span>
+              </div>
+              <div class="product-price">Free to install</div>
+            </div>
+            <h3>{{ tool.name }}</h3>
+            <p>{{ tool.description }}</p>
+            <div class="button-row">
+              <a class="btn" href="{{ tool.url }}">Get the tool</a>
+              <a class="btn btn-primary" href="/shop/tip/{{ slug }}">Tip what you want</a>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        {% elif not products %}
         <p class="section-sub">No products are for sale yet. The tools stay free. A tip keeps the work going.</p>
         <div class="button-row">
-          <a class="btn btn-primary" href="https://github.com/sponsors/KyaniteLabs">Sponsor on GitHub</a>
-          <a class="btn" href="https://ko-fi.com/kyanitelabs">Tip on Ko-fi</a>
+          <a class="btn btn-primary" href="{{ SPONSORS_URL }}">Sponsor on GitHub</a>
+          <a class="btn" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
         </div>
         {% endif %}
       </div>
