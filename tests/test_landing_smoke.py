@@ -191,14 +191,16 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertEqual(set(PRODUCTS), {"ai-coding-agent-blueprint", "claude-code-productivity-pack"})
 
         for path, empty_state in [
-            ("/shop", "More tools in development."),
-            ("/es/shop", "Más herramientas en desarrollo."),
+            ("/shop", "No products are for sale yet. The tools stay free. A tip keeps the work going."),
+            ("/es/shop", "Todavía no hay productos a la venta. Las herramientas siguen gratis. Una propina mantiene el trabajo."),
         ]:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 body = response.get_data(as_text=True)
                 self.assertEqual(response.status_code, 200)
                 self.assertIn(empty_state, body)
+                self.assertIn("https://github.com/sponsors/KyaniteLabs", body)
+                self.assertIn("https://ko-fi.com/kyanitelabs", body)
                 for slug, product in PRODUCTS.items():
                     self.assertNotIn(slug, body)
                     self.assertNotIn(product["name"], body)

@@ -3149,7 +3149,9 @@ COMMON_ES_REPLACEMENTS = {
     "Something went wrong. Email info@kyanitelabs.tech.": "Algo salio mal. Escribe a info@kyanitelabs.tech.",
     "Work with Kyanite": "Trabajar con Kyanite",
     "Operator Assets": "Activos de operador",
-    "More tools in development.": "Más herramientas en desarrollo.",
+    "No products are for sale yet. The tools stay free. A tip keeps the work going.": "Todavía no hay productos a la venta. Las herramientas siguen gratis. Una propina mantiene el trabajo.",
+    "Sponsor on GitHub": "Apoyar en GitHub",
+    "Tip on Ko-fi": "Propina en Ko-fi",
     "Get the Kyanite tool working in your environment.": "Haz que la herramienta Kyanite funcione en tu entorno.",
     "Implementation path": "Ruta de implementación",
     "Send the implementation brief": "Enviar el brief de implementación",
@@ -4182,7 +4184,7 @@ Parent business and broader consulting home: {PUENTEWORKS_URL}
 
 ## Products
 
-No paid products are currently listed. More tools are in development.
+No paid products are currently listed. Tip the free tools at https://github.com/sponsors/KyaniteLabs or https://ko-fi.com/kyanitelabs.
 
 ## Free Resources
 
