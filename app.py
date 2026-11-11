@@ -25,6 +25,7 @@ from email.utils import format_datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
+from enum import Enum
 from urllib.parse import quote, urlencode
 from flask import Flask, request, jsonify, render_template_string, Response, redirect
 from werkzeug.exceptions import RequestEntityTooLarge
@@ -103,6 +104,186 @@ SECURITY_HEADERS = {
     "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=()",
     "Content-Security-Policy": CONTENT_SECURITY_POLICY,
 }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# LIFECYCLES (explicit state machines)
+#
+# Every persisted lifecycle in this service is named here, once. Routes never
+# write a status / timestamp / flag directly: they call the transition helpers
+# below, which refuse illegal moves. Persisted values are unchanged (same
+# columns, same stored strings), and readers stay tolerant of legacy values.
+# ═══════════════════════════════════════════════════════════════════════════════
+class IllegalTransition(Exception):
+    """A lifecycle move that is not allowed from the current state."""
+
+
+class InconsistentState(ValueError):
+    """Stored columns combine into a state no transition can produce."""
+
+
+# ── Newsletter consent (sqlite newsletter_subscribers.consent_status) ─────────
+#
+#   (new) ──subscribe──▶ SUBSCRIBED ──unsubscribe──▶ UNSUBSCRIBED
+#                          ▲    ⟲ subscribe            │  ⟲ unsubscribe
+#                          └──────── subscribe ────────┘
+#
+# Both moves are idempotent on purpose: a re-submitted form or a second click
+# on an unsubscribe link must succeed, not error.
+class NewsletterConsent(str, Enum):
+    SUBSCRIBED = "subscribed"
+    UNSUBSCRIBED = "unsubscribed"
+
+
+class NewsletterEvent(str, Enum):
+    SUBSCRIBE = "subscribe"
+    UNSUBSCRIBE = "unsubscribe"
+
+
+NEWSLETTER_TRANSITIONS = {
+    (None, NewsletterEvent.SUBSCRIBE): NewsletterConsent.SUBSCRIBED,
+    (NewsletterConsent.SUBSCRIBED, NewsletterEvent.SUBSCRIBE): NewsletterConsent.SUBSCRIBED,
+    (NewsletterConsent.UNSUBSCRIBED, NewsletterEvent.SUBSCRIBE): NewsletterConsent.SUBSCRIBED,
+    (NewsletterConsent.SUBSCRIBED, NewsletterEvent.UNSUBSCRIBE): NewsletterConsent.UNSUBSCRIBED,
+    (NewsletterConsent.UNSUBSCRIBED, NewsletterEvent.UNSUBSCRIBE): NewsletterConsent.UNSUBSCRIBED,
+}
+
+
+def parse_newsletter_consent(raw):
+    """Read a stored consent_status. Tolerates case/whitespace drift."""
+    value = str(raw or "").strip().lower()
+    try:
+        return NewsletterConsent(value)
+    except ValueError:
+        raise InconsistentState(f"unknown newsletter consent_status {raw!r}") from None
+
+
+def next_newsletter_consent(current, event):
+    """current is None for a subscriber that does not exist yet."""
+    event = NewsletterEvent(event)
+    key = (current, event)
+    if key not in NEWSLETTER_TRANSITIONS:
+        raise IllegalTransition(f"newsletter: cannot {event.value} from {current}")
+    return NEWSLETTER_TRANSITIONS[key]
+
+
+# ── Cerafica order (postgres cerafica_orders) ────────────────────────────────
+#
+# Stored as one status column ('pending' | 'paid') plus two timestamps. The
+# stage is DERIVED from all three; the columns are never interpreted alone.
+#
+#   PENDING ──payment_completed──▶ PAID ──shipped──▶ SHIPPED ──ugc_requested──▶ UGC_REQUESTED
+#
+# No other move exists. Each move is a guarded UPDATE whose WHERE clause is the
+# source stage, so a duplicate Stripe webhook or a double-clicked admin action
+# cannot re-apply it.
+class OrderStatus(str, Enum):
+    """Values persisted in cerafica_orders.status."""
+    PENDING = "pending"
+    PAID = "paid"
+
+
+class OrderStage(str, Enum):
+    PENDING = "pending"
+    PAID = "paid"
+    SHIPPED = "shipped"
+    UGC_REQUESTED = "ugc_requested"
+
+
+class OrderEvent(str, Enum):
+    PAYMENT_COMPLETED = "payment_completed"
+    SHIPPED = "shipped"
+    UGC_REQUESTED = "ugc_requested"
+
+
+ORDER_TRANSITIONS = {
+    OrderEvent.PAYMENT_COMPLETED: (OrderStage.PENDING, OrderStage.PAID),
+    OrderEvent.SHIPPED: (OrderStage.PAID, OrderStage.SHIPPED),
+    OrderEvent.UGC_REQUESTED: (OrderStage.SHIPPED, OrderStage.UGC_REQUESTED),
+}
+
+# SQL predicate (over cerafica_orders columns) that holds exactly when a row is
+# in the given stage. Transition UPDATEs use the source stage's predicate.
+ORDER_STAGE_SQL = {
+    OrderStage.PENDING: "COALESCE(status, 'pending') = 'pending' AND shipped_at IS NULL AND ugc_requested_at IS NULL",
+    OrderStage.PAID: "status = 'paid' AND shipped_at IS NULL AND ugc_requested_at IS NULL",
+    OrderStage.SHIPPED: "status = 'paid' AND shipped_at IS NOT NULL AND ugc_requested_at IS NULL",
+    OrderStage.UGC_REQUESTED: "status = 'paid' AND shipped_at IS NOT NULL AND ugc_requested_at IS NOT NULL",
+}
+
+
+def parse_order_status(raw):
+    """Read a stored status. NULL means the column default ('pending')."""
+    value = str(raw or OrderStatus.PENDING.value).strip().lower()
+    try:
+        return OrderStatus(value)
+    except ValueError:
+        raise InconsistentState(f"unknown cerafica order status {raw!r}") from None
+
+
+def derive_order_stage(status, shipped_at, ugc_requested_at):
+    status = parse_order_status(status)
+    shipped = bool(shipped_at)
+    ugc = bool(ugc_requested_at)
+    if status is OrderStatus.PENDING:
+        if shipped or ugc:
+            raise InconsistentState("cerafica order is pending but has shipping/UGC timestamps")
+        return OrderStage.PENDING
+    if ugc and not shipped:
+        raise InconsistentState("cerafica order has a UGC request but was never shipped")
+    if ugc:
+        return OrderStage.UGC_REQUESTED
+    if shipped:
+        return OrderStage.SHIPPED
+    return OrderStage.PAID
+
+
+def next_order_stage(current, event):
+    event = OrderEvent(event)
+    source, target = ORDER_TRANSITIONS[event]
+    if current is not source:
+        raise IllegalTransition(f"cerafica order: cannot apply {event.value} from {current.value}")
+    return target
+
+
+# ── Cerafica waitlist entry (postgres cerafica_waitlist.notified_at) ──────────
+#
+#   WAITING ──notified (email actually sent)──▶ NOTIFIED
+class WaitlistStage(str, Enum):
+    WAITING = "waiting"
+    NOTIFIED = "notified"
+
+
+def derive_waitlist_stage(notified_at):
+    return WaitlistStage.NOTIFIED if notified_at else WaitlistStage.WAITING
+
+
+def next_waitlist_stage(current, email_sent):
+    if current is not WaitlistStage.WAITING:
+        raise IllegalTransition("cerafica waitlist: entry was already notified")
+    if not email_sent:
+        raise IllegalTransition("cerafica waitlist: cannot mark notified without a sent email")
+    return WaitlistStage.NOTIFIED
+
+
+# ── Cerafica blog post publication (postgres cerafica_blog_posts.published) ───
+#
+#   DRAFT ──publish──▶ PUBLISHED      (regenerating content never unpublishes)
+#     ⟲ save draft       ⟲ save / publish
+class PublicationState(str, Enum):
+    DRAFT = "draft"
+    PUBLISHED = "published"
+
+
+def derive_publication_state(published):
+    return PublicationState.PUBLISHED if published else PublicationState.DRAFT
+
+
+def next_publication_state(current, publish):
+    """current is None for a post that does not exist yet."""
+    if current is PublicationState.PUBLISHED or publish:
+        return PublicationState.PUBLISHED
+    return PublicationState.DRAFT
 
 
 def record_form_submission(kind, payload):
@@ -294,6 +475,9 @@ def upsert_newsletter_subscriber(data):
     source_page = clean_text_field(data.get("source_page") or request.referrer or "/", 240)
     token = newsletter_unsubscribe_token(email)
     now = current_timestamp()
+    # SUBSCRIBE lands on the same state from every source (incl. a new row),
+    # so the upsert needs no read-before-write.
+    consent = next_newsletter_consent(None, NewsletterEvent.SUBSCRIBE).value
 
     conn = newsletter_connect()
     try:
@@ -302,12 +486,12 @@ def upsert_newsletter_subscriber(data):
                 email, name, interest, source_page, consent_status, unsubscribe_token,
                 created_at, updated_at, user_agent, remote_addr
             )
-            VALUES (?, ?, ?, ?, 'subscribed', ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(email) DO UPDATE SET
                 name = excluded.name,
                 interest = excluded.interest,
                 source_page = excluded.source_page,
-                consent_status = 'subscribed',
+                consent_status = excluded.consent_status,
                 unsubscribe_token = excluded.unsubscribe_token,
                 updated_at = excluded.updated_at,
                 user_agent = excluded.user_agent,
@@ -317,6 +501,7 @@ def upsert_newsletter_subscriber(data):
             name,
             interest,
             source_page,
+            consent,
             token,
             now,
             now,
@@ -4394,9 +4579,14 @@ def newsletter_unsubscribe():
                 "That unsubscribe link was not found. Email info@kyanitelabs.tech if you still need help.",
                 status=404,
             )
+        try:
+            current = parse_newsletter_consent(row["consent_status"])
+        except InconsistentState:
+            current = NewsletterConsent.SUBSCRIBED  # unknown legacy value: honor the opt-out
+        consent = next_newsletter_consent(current, NewsletterEvent.UNSUBSCRIBE)
         conn.execute(
-            "UPDATE newsletter_subscribers SET consent_status = 'unsubscribed', updated_at = ? WHERE unsubscribe_token = ?",
-            (now, token),
+            "UPDATE newsletter_subscribers SET consent_status = ?, updated_at = ? WHERE unsubscribe_token = ?",
+            (consent.value, now, token),
         )
         conn.commit()
     finally:
@@ -4975,7 +5165,7 @@ def cerafica_checkout():
             subtotal_cents,
             shipping_cents,
             subtotal_cents + shipping_cents,
-            "pending"
+            OrderStatus.PENDING.value,
         ))
         conn.commit()
         cur.close()
@@ -5023,25 +5213,94 @@ def cerafica_webhook():
     if event.get("type") == "checkout.session.completed":
         session_obj = event.get("data", {}).get("object", {})
         conn = get_pg_conn()
-        cur = conn.cursor()
-        cur.execute("""
-            UPDATE cerafica_orders
-            SET status = %s,
-                paid_at = NOW(),
-                stripe_payment_intent_id = %s,
-                customer_email = COALESCE(NULLIF(customer_email, ''), %s)
-            WHERE stripe_session_id = %s
-        """, (
-            "paid",
-            session_obj.get("payment_intent", ""),
-            session_obj.get("customer_email", ""),
-            session_obj.get("id", "")
-        ))
-        conn.commit()
-        cur.close()
-        conn.close()
+        try:
+            cur = conn.cursor()
+            # Stripe retries webhooks: a duplicate delivery matches no PENDING
+            # row and is a no-op instead of rewriting paid_at.
+            cerafica_order_mark_paid(cur, session_obj)
+            conn.commit()
+            cur.close()
+        finally:
+            conn.close()
 
     return jsonify({"ok": True})
+
+
+def cerafica_order_mark_paid(cur, session_obj):
+    """PENDING -> PAID, keyed by Stripe session. Returns True if a row moved."""
+    source, _target = ORDER_TRANSITIONS[OrderEvent.PAYMENT_COMPLETED]
+    cur.execute(f"""
+        UPDATE cerafica_orders
+        SET status = %s,
+            paid_at = NOW(),
+            stripe_payment_intent_id = %s,
+            customer_email = COALESCE(NULLIF(customer_email, ''), %s)
+        WHERE stripe_session_id = %s AND {ORDER_STAGE_SQL[source]}
+    """, (
+        OrderStatus.PAID.value,
+        session_obj.get("payment_intent", ""),
+        session_obj.get("customer_email", ""),
+        session_obj.get("id", ""),
+    ))
+    return cur.rowcount == 1
+
+
+# Column each post-payment move stamps. Status stays 'paid' (persisted format).
+ORDER_EVENT_TIMESTAMP_COLUMN = {
+    OrderEvent.SHIPPED: "shipped_at",
+    OrderEvent.UGC_REQUESTED: "ugc_requested_at",
+}
+
+
+def cerafica_order_stamp(cur, order_id, event):
+    """PAID -> SHIPPED or SHIPPED -> UGC_REQUESTED. Returns True if the row moved."""
+    event = OrderEvent(event)
+    source, _target = ORDER_TRANSITIONS[event]
+    column = ORDER_EVENT_TIMESTAMP_COLUMN[event]
+    cur.execute(
+        f"UPDATE cerafica_orders SET {column} = NOW() WHERE id = %s AND {ORDER_STAGE_SQL[source]}",
+        (order_id,),
+    )
+    return cur.rowcount == 1
+
+
+def cerafica_order_post_purchase(order_id, event, subject, build_email):
+    """Shared body of the notify-shipped / request-ugc admin actions.
+
+    Checks the move is legal, sends the email, and only then records the
+    transition, so a failed send can be retried and a sent one cannot repeat.
+    """
+    conn = get_pg_conn()
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT customer_email, customer_name, items, status, shipped_at, ugc_requested_at
+            FROM cerafica_orders WHERE id = %s
+        """, (order_id,))
+        row = cur.fetchone()
+        if not row:
+            return jsonify({"error": "Order not found"}), 404
+
+        email, name, items_json, status, shipped_at, ugc_requested_at = row
+        try:
+            stage = derive_order_stage(status, shipped_at, ugc_requested_at)
+            next_order_stage(stage, event)
+        except (IllegalTransition, InconsistentState) as e:
+            return jsonify({"error": str(e)}), 409
+
+        items = json.loads(items_json) if isinstance(items_json, str) else items_json
+        html, text = build_email(name, items)
+        if not cerafica_send_email(email, subject, html, text):
+            return jsonify({"error": "Email could not be sent; order state unchanged."}), 502
+
+        if not cerafica_order_stamp(cur, order_id, event):
+            conn.rollback()
+            return jsonify({"error": "Order changed state concurrently"}), 409
+        conn.commit()
+        cur.close()
+        return None
+    finally:
+        conn.close()
 
 
 @app.route("/api/cerafica/orders", methods=["GET"])
@@ -5070,7 +5329,7 @@ def calculate_shipping(subtotal_cents: int) -> int:
     return 0 if subtotal_cents >= FREE_SHIPPING_THRESHOLD else FLAT_SHIPPING_RATE
 
 
-def cerafica_cerafica_send_email(to_email, subject, html_body, text_body=None):
+def cerafica_send_email(to_email, subject, html_body, text_body=None):
     """Send email via internal SMTP relay."""
     try:
         msg = MIMEMultipart("alternative")
@@ -5302,13 +5561,15 @@ Cerafica — Long Beach, CA
 
         sent = 0
         for email in emails:
+            # WAITING -> NOTIFIED only for addresses that were actually emailed;
+            # failed sends stay WAITING so the next notify call retries them.
             if cerafica_send_email(email, subject, html, text):
+                next_waitlist_stage(WaitlistStage.WAITING, email_sent=True)
+                cur.execute("""
+                    UPDATE cerafica_waitlist SET notified_at = NOW()
+                    WHERE email = %s AND product_id = %s AND notified_at IS NULL
+                """, (email, product_id))
                 sent += 1
-
-        cur.execute("""
-            UPDATE cerafica_waitlist SET notified_at = NOW()
-            WHERE product_id = %s AND notified_at IS NULL
-        """, (product_id,))
         conn.commit()
         cur.close()
         conn.close()
@@ -5328,65 +5589,33 @@ Cerafica — Long Beach, CA
 
 @app.route("/api/cerafica/orders/<int:order_id>/notify-shipped", methods=["POST"])
 def notify_shipped(order_id):
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     tracking_url = data.get("tracking_url", "")
-
     try:
-        conn = get_pg_conn()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT customer_email, customer_name, items, status
-            FROM cerafica_orders WHERE id = %s
-        """, (order_id,))
-        row = cur.fetchone()
-        if not row:
-            return jsonify({"error": "Order not found"}), 404
-
-        email, name, items_json, status = row
-        if status != "paid":
-            return jsonify({"error": "Order must be paid before shipping"}), 400
-
-        items = json.loads(items_json) if isinstance(items_json, str) else items_json
-        html, text = shipping_notification_email(name, items, tracking_url)
-        cerafica_send_email(email, "Your Cerafica order has shipped", html, text)
-
-        cur.execute("UPDATE cerafica_orders SET shipped_at = NOW() WHERE id = %s", (order_id,))
-        conn.commit()
-        cur.close()
-        conn.close()
+        error = cerafica_order_post_purchase(
+            order_id,
+            OrderEvent.SHIPPED,
+            "Your Cerafica order has shipped",
+            lambda name, items: shipping_notification_email(name, items, tracking_url),
+        )
+        if error:
+            return error
         return jsonify({"ok": True, "message": "Shipping notification sent."})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-
 @app.route("/api/cerafica/orders/<int:order_id>/request-ugc", methods=["POST"])
 def request_ugc(order_id):
     try:
-        conn = get_pg_conn()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT customer_email, customer_name, items, shipped_at, ugc_requested_at
-            FROM cerafica_orders WHERE id = %s
-        """, (order_id,))
-        row = cur.fetchone()
-        if not row:
-            return jsonify({"error": "Order not found"}), 404
-
-        email, name, items_json, shipped_at, ugc_requested_at = row
-        if not shipped_at:
-            return jsonify({"error": "Order must be shipped before UGC request"}), 400
-        if ugc_requested_at:
-            return jsonify({"error": "UGC already requested for this order"}), 400
-
-        items = json.loads(items_json) if isinstance(items_json, str) else items_json
-        html, text = ugc_request_email(name, items)
-        cerafica_send_email(email, "Show us your piece in the wild", html, text)
-
-        cur.execute("UPDATE cerafica_orders SET ugc_requested_at = NOW() WHERE id = %s", (order_id,))
-        conn.commit()
-        cur.close()
-        conn.close()
+        error = cerafica_order_post_purchase(
+            order_id,
+            OrderEvent.UGC_REQUESTED,
+            "Show us your piece in the wild",
+            ugc_request_email,
+        )
+        if error:
+            return error
         return jsonify({"ok": True, "message": "UGC request sent."})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -5396,6 +5625,27 @@ def request_ugc(order_id):
 # ═══════════════════════════════════════════════════════════════════════════════
 # CERAFICA CONTENT ROUTES
 # ═══════════════════════════════════════════════════════════════════════════════
+
+def upsert_cerafica_blog_post(cur, slug, product_id, title, html, markdown, meta, publish):
+    """The single write path for cerafica_blog_posts.
+
+    Applies next_publication_state in SQL: DRAFT -> PUBLISHED when publish is
+    requested, PUBLISHED stays PUBLISHED. Returns the resulting state.
+    """
+    cur.execute("""
+        INSERT INTO cerafica_blog_posts (slug, product_id, title, html_content, markdown_content, meta_description, published)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (slug) DO UPDATE SET
+            html_content = EXCLUDED.html_content,
+            markdown_content = EXCLUDED.markdown_content,
+            meta_description = EXCLUDED.meta_description,
+            updated_at = NOW(),
+            published = EXCLUDED.published OR cerafica_blog_posts.published
+        RETURNING published
+    """, (slug, product_id, title, html, markdown, meta, bool(publish)))
+    row = cur.fetchone()
+    return derive_publication_state(row[0] if row else publish)
+
 
 @app.route("/api/cerafica/content/generate-blog", methods=["POST"])
 def generate_blog():
@@ -5417,20 +5667,13 @@ def generate_blog():
 
     try:
         conn = get_pg_conn()
-        cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO cerafica_blog_posts (slug, product_id, title, html_content, markdown_content, meta_description, published)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-            ON CONFLICT (slug) DO UPDATE SET
-                html_content = EXCLUDED.html_content,
-                markdown_content = EXCLUDED.markdown_content,
-                meta_description = EXCLUDED.meta_description,
-                updated_at = NOW(),
-                published = EXCLUDED.published OR cerafica_blog_posts.published
-        """, (slug, product_id, title, html, markdown, meta, publish))
-        conn.commit()
-        cur.close()
-        conn.close()
+        try:
+            cur = conn.cursor()
+            state = upsert_cerafica_blog_post(cur, slug, product_id, title, html, markdown, meta, publish)
+            conn.commit()
+            cur.close()
+        finally:
+            conn.close()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -5438,7 +5681,7 @@ def generate_blog():
         "ok": True,
         "slug": slug,
         "title": title,
-        "published": publish,
+        "published": state is PublicationState.PUBLISHED,
         "html_preview": html[:500] + "..."
     })
 
@@ -5453,19 +5696,13 @@ def generate_all_blogs():
         slug, title, html, markdown, meta = generate_blog_post(product)
         try:
             conn = get_pg_conn()
-            cur = conn.cursor()
-            cur.execute("""
-                INSERT INTO cerafica_blog_posts (slug, product_id, title, html_content, markdown_content, meta_description, published)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                ON CONFLICT (slug) DO UPDATE SET
-                    html_content = EXCLUDED.html_content,
-                    markdown_content = EXCLUDED.markdown_content,
-                    meta_description = EXCLUDED.meta_description,
-                    updated_at = NOW()
-            """, (slug, product.get("id"), title, html, markdown, meta, True))
-            conn.commit()
-            cur.close()
-            conn.close()
+            try:
+                cur = conn.cursor()
+                upsert_cerafica_blog_post(cur, slug, product.get("id"), title, html, markdown, meta, publish=True)
+                conn.commit()
+                cur.close()
+            finally:
+                conn.close()
             created.append({"slug": slug, "title": title})
         except Exception as e:
             print(f"[BLOG ERROR] {product.get('id')}: {e}")
