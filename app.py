@@ -14,6 +14,8 @@ import smtplib
 import sqlite3
 import subprocess
 import tempfile
+import time
+import urllib.request
 try:
     import psycopg2
     import psycopg2.extras
@@ -77,6 +79,12 @@ INDEXNOW_KEY = "a4b0d2c3f1e94887a256c44b9e2c6f10"
 TIKTOK_SITE_VERIFICATION_FILENAME = "tiktokuizIkj1wDJXH5viSolnBjshmsH3xQAW3.txt"
 TIKTOK_SITE_VERIFICATION_BODY = (
     "tiktok-developers-site-verification=uizIkj1wDJXH5viSolnBjshmsH3xQAW3"
+)
+# Cerafica operator routes: order data, bulk emails, content generation.
+# They sit behind the same bearer-token gate as ADMIN_API_PATHS.
+CERAFICA_ADMIN_PATH = re.compile(
+    r"^/api/cerafica/(orders(/\d+/(notify-shipped|request-ugc))?"
+    r"|waitlist/notify|content/generate-blog|content/generate-all-blogs)/?$"
 )
 ADMIN_API_PATHS = {
     "/api/sales/stats",
@@ -5007,6 +5015,8 @@ def guard_disabled_cerafica_db_routes():
         return admin_api_gate()
     if request.path.startswith("/api/cerafica/") and not app.config.get("ENABLE_CERAFICA_PUBLIC_API"):
         return jsonify({"error": "Not found"}), 404
+    if CERAFICA_ADMIN_PATH.match(request.path):
+        return admin_api_gate()
     if request.method == "OPTIONS":
         return None
     if request.path == "/api/cerafica/health":
@@ -5188,22 +5198,10 @@ def cerafica_webhook():
     if not CERAFICA_WEBHOOK_SECRET:
         return jsonify({"error": "Webhook secret not configured"}), 500
 
-    # Verify webhook signature via Stripe API
-    try:
-        verify_resp = http_requests.post(
-            "https://api.stripe.com/v1/webhook_endpoints/verify",
-            auth=(CERAFICA_STRIPE_KEY, ""),
-            data={
-                "payload": payload,
-                "sig_header": sig_header,
-                "secret": CERAFICA_WEBHOOK_SECRET,
-            }
-        )
-        if verify_resp.status_code != 200:
-            return jsonify({"error": "Invalid signature"}), 400
-    except Exception:
-        # Fallback: just parse and proceed (webhooks are from Stripe servers)
-        pass
+    # Fail closed: an event is processed only when its Stripe-Signature
+    # verifies locally against the endpoint secret. Any error -> 400.
+    if not verify_stripe_signature(payload, sig_header, CERAFICA_WEBHOOK_SECRET):
+        return jsonify({"error": "Invalid signature"}), 400
 
     try:
         event = json.loads(payload)
@@ -5224,6 +5222,36 @@ def cerafica_webhook():
             conn.close()
 
     return jsonify({"ok": True})
+
+
+STRIPE_SIGNATURE_TOLERANCE_SECONDS = 300
+
+
+def verify_stripe_signature(payload, sig_header, secret, tolerance=STRIPE_SIGNATURE_TOLERANCE_SECONDS, now=None):
+    """Stripe webhook signature check (scheme v1), done locally.
+
+    Header: ``t=<unix>,v1=<hex hmac>[,v1=...]``. The signed payload is
+    ``f"{t}.{body}"`` HMAC-SHA256'd with the endpoint secret. Returns False on
+    ANY problem (missing/garbled header, stale timestamp, no matching v1), so
+    callers can only fail closed.
+    """
+    try:
+        if not secret or not sig_header:
+            return False
+        parts = [p.split("=", 1) for p in sig_header.split(",") if "=" in p]
+        timestamps = [v for k, v in parts if k.strip() == "t"]
+        signatures = [v.strip() for k, v in parts if k.strip() == "v1"]
+        if len(timestamps) != 1 or not signatures:
+            return False
+        ts = int(timestamps[0])
+        current = int(time.time() if now is None else now)
+        if abs(current - ts) > tolerance:
+            return False
+        body = payload if isinstance(payload, str) else payload.decode("utf-8")
+        expected = hmac.new(secret.encode(), f"{ts}.{body}".encode(), hashlib.sha256).hexdigest()
+        return any(hmac.compare_digest(expected, sig) for sig in signatures)
+    except Exception:
+        return False
 
 
 def cerafica_order_mark_paid(cur, session_obj):
@@ -5355,8 +5383,14 @@ def format_currency(cents):
     return f"${cents / 100:.2f}"
 
 
+PRODUCTS_URL = os.environ.get("CERAFICA_PRODUCTS_URL", "")
+
+
 def get_products():
-    """Fetch products.json from the live site."""
+    """Fetch products.json from the Cerafica storefront (CERAFICA_PRODUCTS_URL)."""
+    if not PRODUCTS_URL:
+        print("[PRODUCTS] CERAFICA_PRODUCTS_URL is not set")
+        return []
     try:
         with urllib.request.urlopen(PRODUCTS_URL, timeout=10) as response:
             return json.loads(response.read().decode())
@@ -5645,6 +5679,33 @@ def upsert_cerafica_blog_post(cur, slug, product_id, title, html, markdown, meta
     """, (slug, product_id, title, html, markdown, meta, bool(publish)))
     row = cur.fetchone()
     return derive_publication_state(row[0] if row else publish)
+
+
+def generate_blog_post(product):
+    """Build a product blog post. Returns (slug, title, html, markdown, meta).
+
+    Every product field is escaped: products.json is remote data.
+    """
+    pid = str(product.get("id") or "").strip()
+    name = str(product.get("name") or pid or "A Cerafica piece").strip()
+    description = str(product.get("description") or "").strip()
+    slug = re.sub(r"[^a-z0-9]+", "-", (pid or name).lower()).strip("-") or "cerafica-piece"
+    title = f"{name}: the story behind the piece"
+    meta = (description or f"Meet {name}, a handmade Cerafica ceramic piece.")[:155]
+    price = product.get("price")
+    try:
+        price_text = f"${float(price):.2f}" if price is not None else ""
+    except (TypeError, ValueError):
+        price_text = ""
+    esc = html_lib.escape
+    paragraphs = [p.strip() for p in description.split("\n") if p.strip()] or [
+        f"{name} is handmade in small batches in the Cerafica studio."]
+    html_parts = [f"<h1>{esc(title)}</h1>"] + [f"<p>{esc(p)}</p>" for p in paragraphs]
+    md_parts = [f"# {title}", ""] + [f"{p}\n" for p in paragraphs]
+    if price_text:
+        html_parts.append(f"<p><strong>Price:</strong> {esc(price_text)}</p>")
+        md_parts.append(f"**Price:** {price_text}\n")
+    return slug, title, "\n".join(html_parts), "\n".join(md_parts).rstrip() + "\n", meta
 
 
 @app.route("/api/cerafica/content/generate-blog", methods=["POST"])
