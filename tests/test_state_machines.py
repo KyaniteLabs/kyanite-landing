@@ -137,10 +137,13 @@ class CeraficaDbCase(unittest.TestCase):
         self.sent: list[tuple[str, str]] = []
         self.fail_emails: set[str] = set()
         self._config = {
-            k: app.config.get(k) for k in ("ENABLE_CERAFICA_DB", "ENABLE_CERAFICA_PUBLIC_API")
+            k: app.config.get(k) for k in ("ENABLE_CERAFICA_DB", "ENABLE_CERAFICA_PUBLIC_API", "ADMIN_API_TOKEN")
         }
         app.config["ENABLE_CERAFICA_DB"] = True
         app.config["ENABLE_CERAFICA_PUBLIC_API"] = True
+        # operator routes are behind the admin gate; these tests act as the operator
+        app.config["ADMIN_API_TOKEN"] = "test-admin-token"
+        self.client.environ_base["HTTP_AUTHORIZATION"] = "Bearer test-admin-token"
 
         def fake_send(to_email, subject, html_body, text_body=None):
             if to_email in self.fail_emails:
@@ -191,11 +194,17 @@ class CeraficaDbCase(unittest.TestCase):
             "data": {"object": {"id": session, "payment_intent": payment_intent,
                                 "customer_email": "buyer@example.com"}},
         })
-        ok = mock.Mock(status_code=200)
-        with mock.patch.object(app_module, "CERAFICA_WEBHOOK_SECRET", "whsec_test"), \
-                mock.patch.object(app_module.http_requests, "post", return_value=ok):
+        with mock.patch.object(app_module, "CERAFICA_WEBHOOK_SECRET", "whsec_test"):
             return self.client.post("/api/cerafica/webhook", data=body,
-                                    headers={"Content-Type": "application/json"})
+                                    headers={"Content-Type": "application/json",
+                                             "Stripe-Signature": stripe_signature(body, "whsec_test")})
+
+
+def stripe_signature(body: str, secret: str, ts: int | None = None) -> str:
+    import hashlib, hmac, time
+    ts = int(time.time()) if ts is None else ts
+    sig = hmac.new(secret.encode(), f"{ts}.{body}".encode(), hashlib.sha256).hexdigest()
+    return f"t={ts},v1={sig}"
 
 
 # ── Newsletter consent ───────────────────────────────────────────────────────
