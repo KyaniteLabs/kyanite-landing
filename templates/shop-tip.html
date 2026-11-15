@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ tool.name }} — pay what you want — KyaniteLabs</title>
+  <meta name="description" content="{{ tool.name }} is free to install. Tip any amount.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="https://kyanitelabs.tech/shop/tip/{{ tool.slug }}">
+  <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <nav class="nav container" aria-label="Primary">
+      <a class="brand-mark" href="/"><img src="/static/brand/kyanite-icon-voronoi-64x64.png" alt="" width="64" height="64" aria-hidden="true">KyaniteLabs</a>
+      <div class="nav-links">
+        <a href="/shop">Shop</a>
+        <a class="language-link" href="/es/shop/tip/{{ tool.slug }}" hreflang="es" lang="es">ES</a>
+      </div>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="page-hero">
+      <div class="container page-hero-inner">
+        <div class="eyebrow">{{ tool.category }}</div>
+        <h1>{{ tool.name }}</h1>
+        <p>{{ tool.description }}</p>
+        <p>Free to install. You type the amount.</p>
+        <p>This page names the tool you are tipping. Ko-fi and GitHub Sponsors use one tip jar, so the payment is not split into a separate checkout per tool.</p>
+        <div class="button-row">
+          <a class="btn" href="{{ tool.url }}">Get the tool</a>
+          <a class="btn btn-primary" href="{{ KOFI_URL }}">Tip on Ko-fi</a>
+          <a class="btn" href="{{ SPONSORS_URL }}">Sponsor on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

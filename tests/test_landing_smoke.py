@@ -191,8 +191,8 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertEqual(set(PRODUCTS), {"ai-coding-agent-blueprint", "claude-code-productivity-pack"})
 
         for path, empty_state in [
-            ("/shop", "More tools in development."),
-            ("/es/shop", "Más herramientas en desarrollo."),
+            ("/shop", "Free tools. Pay what you want."),
+            ("/es/shop", "Herramientas gratis. Paga lo que quieras."),
         ]:
             with self.subTest(path=path):
                 response = self.client.get(path)
@@ -686,7 +686,7 @@ class LandingSmokeTests(unittest.TestCase):
         index = self.client.get("/es/blog").get_data(as_text=True)
 
         self.assertNotIn("Operator Activos", shop)
-        self.assertIn("Activos de operador", shop)
+        self.assertIn("Herramientas gratis. Paga lo que quieras.", shop)
         self.assertNotIn("your environment", impl)
         self.assertNotIn("Implementation path", impl)
         self.assertIn("Ruta de implementación", impl)
