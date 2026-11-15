@@ -380,6 +380,37 @@ def newsletter_response_page(title, message, status=200):
 </html>"""
     return Response(html, status=status, mimetype="text/html")
 
+HERMES_PLUGINS = [
+    {"name": "Kinocut", "slug": "kinocut", "tag": "Video",
+     "line": "Local video editing for your agent: trim, caption, reformat and check quality with FFmpeg.",
+     "repo": "https://github.com/KyaniteLabs/kinocut"},
+    {"name": "Epoch", "slug": "epoch", "tag": "Estimates",
+     "line": "Calibrated time estimates on the Kanban board. Each finished run feeds the next estimate.",
+     "repo": "https://github.com/KyaniteLabs/Epoch"},
+    {"name": "UNBL0CK", "slug": "unbl0ck", "tag": "Attention",
+     "line": "One queue of everything blocked on you: agent prompts, blocked cards and chats that ask you something.",
+     "repo": "https://github.com/KyaniteLabs/unbl0ck"},
+    {"name": "AG4TE", "slug": "ag4te", "tag": "Git history",
+     "line": "Read a repo's git history as strata in Hermes Desktop: eras, hotspots, people, agents and bots.",
+     "repo": "https://github.com/KyaniteLabs/ag4te"},
+    {"name": "Selenite", "slug": "selenite", "tag": "Friction",
+     "line": "Takes friction off the person: flags steps, waits and checks that don't earn their cost to you.",
+     "repo": "https://github.com/KyaniteLabs/selenite"},
+    {"name": "Innerscape", "slug": "innerscape", "tag": "Check-ins",
+     "line": "Gentle check-ins, journaling and an unstuck coach. Nothing is saved until you approve the exact text.",
+     "repo": "https://github.com/KyaniteLabs/Innerscape"},
+    {"name": "Iolite", "slug": "iolite", "tag": "Model choice",
+     "line": "Pick the cheapest LLM that is smart enough, from a bundled 621-model catalog that works offline.",
+     "repo": "https://github.com/KyaniteLabs/llm-3d-viz"},
+]
+for _plugin in HERMES_PLUGINS:
+    _plugin["icon"] = f"/static/brand/plugins/{_plugin['slug']}-192.webp"
+    _plugin["catalog"] = (
+        "https://github.com/NousResearch/hermes-agent/blob/main/plugin-catalog/"
+        f"{_plugin['slug']}.yaml"
+    )
+
+
 PUBLIC_PROJECTS = [
     {
         "name": "Kinocut",
@@ -3425,6 +3456,36 @@ COMMON_ES_REPLACEMENTS = {
 }
 
 LANDING_ES_REPLACEMENTS = {
+    'KyaniteLabs — Plugins for Hermes Agent': 'KyaniteLabs — Plugins para Hermes Agent',
+    'Seven KyaniteLabs plugins in the official Hermes Agent catalog: video editing, calibrated estimates, one queue of what is blocked on you, git history, friction review, check-ins and model choice.': 'Siete plugins de KyaniteLabs en el catálogo oficial de Hermes Agent: edición de video, estimaciones calibradas, una cola de lo que espera por ti, historial de git, revisión de fricción, check-ins y elección de modelo.',
+    'Hermes Plugins': 'Plugins de Hermes',
+    'Plugins for Hermes Agent': 'Plugins para Hermes Agent',
+    'Seven plugins in the official Hermes Agent catalog.': 'Siete plugins en el catálogo oficial de Hermes Agent.',
+    'Each one installs with one command, at the exact commit the catalog reviewed. Each is open source and says plainly what it reads and what it sends.': 'Cada uno se instala con un comando, en el commit exacto que revisó el catálogo. Todos son de código abierto y dicen claramente qué leen y qué envían.',
+    'Browse the plugins': 'Ver los plugins',
+    'Get one working': 'Ponlo a funcionar',
+    'in the official catalog': 'en el catálogo oficial',
+    'One command': 'Un comando',
+    'to install': 'para instalar',
+    'pinned to reviewed commits': 'fijados a commits revisados',
+    'Hermes Agent plugins': 'Plugins de Hermes Agent',
+    'Seven plugins, one install command.': 'Siete plugins, un comando de instalación.',
+    'Every plugin is listed in the Hermes Agent plugin catalog. Browse it from Hermes with': 'Todos están en el catálogo de plugins de Hermes Agent. Explóralo desde Hermes con',
+    'Catalog entry': 'Entrada del catálogo',
+    'Need a hand?': '¿Necesitas ayuda?',
+    'Want one set up on your machine, or a plugin built for your workflow?': '¿Quieres uno instalado en tu máquina, o un plugin hecho para tu flujo de trabajo?',
+    'Local video editing for your agent: trim, caption, reformat and check quality with FFmpeg.': 'Edición de video local para tu agente: recorta, subtitula, cambia formato y revisa calidad con FFmpeg.',
+    'Calibrated time estimates on the Kanban board. Each finished run feeds the next estimate.': 'Estimaciones de tiempo calibradas en el tablero Kanban. Cada ejecución terminada alimenta la siguiente estimación.',
+    'One queue of everything blocked on you: agent prompts, blocked cards and chats that ask you something.': 'Una cola de todo lo que espera por ti: preguntas de agentes, tarjetas bloqueadas y chats que te piden algo.',
+    "Read a repo&#39;s git history as strata in Hermes Desktop: eras, hotspots, people, agents and bots.": 'Lee el historial de git de un repo como estratos en Hermes Desktop: eras, zonas calientes, personas, agentes y bots.',
+    "Takes friction off the person: flags steps, waits and checks that don&#39;t earn their cost to you.": 'Le quita fricción a la persona: señala pasos, esperas y verificaciones que no valen lo que te cuestan.',
+    'Gentle check-ins, journaling and an unstuck coach. Nothing is saved until you approve the exact text.': 'Check-ins suaves, diario y un coach para desatorarte. Nada se guarda hasta que apruebas el texto exacto.',
+    'Pick the cheapest LLM that is smart enough, from a bundled 621-model catalog that works offline.': 'Elige el LLM más barato que sea suficientemente capaz, de un catálogo incluido de 621 modelos que funciona sin conexión.',
+    '>Estimates<': '>Estimaciones<',
+    '>Attention<': '>Atención<',
+    '>Git history<': '>Historial de git<',
+    '>Friction<': '>Fricción<',
+    '>Model choice<': '>Elección de modelo<',
     "Implementation help for useful AI tools": "Ayuda de implementacion para herramientas de IA utiles",
     "Get the build working without losing days to setup, integration, and handoff.": "Haz funcionar el build sin perder dias en setup, integracion y handoff.",
     "KyaniteLabs turns open-source AI tools, MCP servers, media systems, localization QA, and repo diagnostics into usable working setups.": "KyaniteLabs convierte herramientas de IA open source, servidores MCP, sistemas de medios, QA de localizacion y diagnosticos de repos en setups funcionales y usables.",
@@ -3693,6 +3754,7 @@ def index():
             "landing-v2.html",
             public_projects=PUBLIC_PROJECTS,
             blog_posts=BLOG_POSTS,
+            hermes_plugins=HERMES_PLUGINS,
             canonical_base=CANONICAL_BASE,
         )
         return add_hreflang(html, "/", "/es/")
@@ -3708,6 +3770,7 @@ def index_es():
         "landing-v2.html",
         public_projects=PUBLIC_PROJECTS_ES,
         blog_posts=BLOG_POSTS_ES,
+        hermes_plugins=HERMES_PLUGINS,
         canonical_base=CANONICAL_BASE,
     )
     return spanishify(html, "/", "/es/")

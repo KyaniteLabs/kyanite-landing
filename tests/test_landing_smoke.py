@@ -116,6 +116,29 @@ class LandingSmokeTests(unittest.TestCase):
                 html = self.client.get(path).get_data(as_text=True)
                 self.assertNotIn("#tools", html)
 
+    def test_homepage_leads_with_hermes_plugins(self) -> None:
+        from pathlib import Path
+        from app import HERMES_PLUGINS
+
+        root = Path(__file__).resolve().parents[1]
+        self.assertEqual(len(HERMES_PLUGINS), 7)
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertIn("<title>KyaniteLabs — Plugins for Hermes Agent</title>", html)
+        self.assertLess(html.index('id="plugins"'), html.index('id="proof"'))
+        for plugin in HERMES_PLUGINS:
+            with self.subTest(plugin=plugin["slug"]):
+                self.assertIn(f"hermes plugins install {plugin['slug']}", html)
+                self.assertIn(plugin["catalog"], html)
+                self.assertTrue((root / plugin["icon"].lstrip("/")).is_file())
+        es = self.client.get("/es/").get_data(as_text=True)
+        self.assertIn("Siete plugins en el catálogo oficial de Hermes Agent.", es)
+        for line in ("Lee el historial de git de un repo", "Le quita fricción a la persona", "Elige el LLM más barato"):
+            self.assertIn(line, es)
+        self.assertNotIn("Read a repo", es)
+        self.assertNotIn("Takes friction off", es)
+        self.assertIn("hermes plugins install kinocut", es)
+        self.assertNotIn("Seven plugins, one install command.", es)
+
     def test_homepage_images_have_accessible_alt_text(self) -> None:
         html = self.client.get("/").get_data(as_text=True)
         image_tags = re.findall(r"<img\b[^>]*>", html)
