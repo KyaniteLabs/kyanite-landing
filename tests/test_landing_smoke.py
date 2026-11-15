@@ -501,6 +501,8 @@ class LandingSmokeTests(unittest.TestCase):
         body = essay.get_data(as_text=True)
         self.assertIn("One demo, once", body)
         self.assertNotIn("Want this working in your environment?", body)
+        for gone in ("VALID", "Opus 5.5", "approved every draft", "keeps the researchers up"):
+            self.assertNotIn(gone, body)
 
         other = self.client.get("/blog/why-kinocut-matters")
         self.assertIn("Want this working in your environment?", other.get_data(as_text=True))
