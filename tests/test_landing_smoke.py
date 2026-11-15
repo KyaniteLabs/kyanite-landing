@@ -495,6 +495,16 @@ class LandingSmokeTests(unittest.TestCase):
                     leftover.append(body[max(0, match.start() - 40) : match.end() + 40].strip())
                 self.assertEqual(leftover, [], msg=f"stale mcp-video on marketing surface {path}")
 
+    def test_essay_post_has_no_sales_band(self) -> None:
+        essay = self.client.get("/blog/one-demo-once")
+        self.assertEqual(essay.status_code, 200)
+        body = essay.get_data(as_text=True)
+        self.assertIn("One demo, once", body)
+        self.assertNotIn("Want this working in your environment?", body)
+
+        other = self.client.get("/blog/why-kinocut-matters")
+        self.assertIn("Want this working in your environment?", other.get_data(as_text=True))
+
     def test_kinocut_blog_slug_is_current_and_old_slug_redirects(self) -> None:
         current = self.client.get("/blog/why-kinocut-matters")
         self.assertEqual(current.status_code, 200)

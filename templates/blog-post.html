@@ -112,6 +112,7 @@
       </article>
     </section>
 
+    {% if not post.get('no_sales_band') %}
     <section class="band">
       <div class="container split-panel">
         <div class="card">
@@ -129,6 +130,7 @@
         </div>
       </div>
     </section>
+    {% endif %}
 
     <section class="band">
       <div class="container">

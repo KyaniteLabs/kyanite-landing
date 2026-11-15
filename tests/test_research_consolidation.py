@@ -14,7 +14,7 @@ class ResearchConsolidationTests(unittest.TestCase):
         self.client = app.test_client()
 
     def test_exact_research_identity_and_existing_blog_preserved(self):
-        self.assertEqual(len(BLOG_POSTS), 31)
+        self.assertEqual(len(BLOG_POSTS), 32)
         self.assertEqual(len({p["slug"] for p in BLOG_POSTS}), len(BLOG_POSTS))
         for slug in SLUGS:
             post = BLOG_POSTS_BY_SLUG[slug]

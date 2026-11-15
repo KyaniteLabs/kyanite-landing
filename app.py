@@ -639,6 +639,45 @@ SHOP_TOOLS = build_shop_tools()
 
 BLOG_POSTS = [
     {
+        "slug": "one-demo-once",
+        "title": "One demo, once",
+        "category": "Essay",
+        "date": "2026-11-14",
+        "date_modified": "2026-11-14",
+        "read_time": "2 min",
+        "primary_keyword": "One demo, once",
+        "seo_title": "One demo, once",
+        "meta_description": "Everything you see online, everywhere, is one demo, once. That's not production quality.",
+        "excerpt": "Everything you see online, everywhere, is one demo, once. That's not production quality.",
+        "author_name": "Simon Gonzalez De Cruz",
+        "author_type": "Person",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "no_sales_band": True,
+        "body": """
+<p>"Why am I the one catching all the mistakes and gaps on work that you yourself planned, reviewed, approved, completed and executed?"</p>
+<p>Every time I put a new model to do code review and pre-launch checks, it finds things.</p>
+<ul>
+<li>"How am I supposed to trust you that there is nothing else wrong?"</li>
+<li>"Make sure your predecessor was truly rigorous and did not mess up that bench. Make sure it's VALID."</li>
+<li>"Make sure you don't have tests that are too easy, with too small a sample size, or bad confounders."</li>
+<li>"I want you to do a preemptive prediction, and then compare to the reality after we ship."</li>
+<li>"What about a retroactive audit for all the 'done' cards that shipped slop and trash?"</li>
+<li>"I need you to detect all of the gaps, all of the things that I have been failing at properly diagnosing, sniffing out, or explaining to the AI coding agents."</li>
+</ul>
+<p>Everything you see online, everywhere, is one demo, once. That's not production quality. Production has to be repeatable and instill trust.</p>
+<p>It needs to work consistently for weeks and months without updates, changes or fixes. Otherwise no one on the team will know how to use it, because it's a moving target. It also needs to be intuitive to people.</p>
+<h2>An assumption that broke</h2>
+<p>When I asked agents to literally make LLMs from scratch, I wasn't sure the models would know enough about the topics to fill my gaps.</p>
+<p>The depths of the looping, and all the times I had to ask multiple different models the same prompt in multiple ways to get to the bottom of something, got me obsessed with hill climbing and exhausting the design space.</p>
+<h2>What I'd work on</h2>
+<p>If it's all math, where exactly are the edges of the full design space, and how much of that is humans' limited view and understanding, and unfounded assumptions?</p>
+<p>I want to find out what keeps the researchers up at night. Not so much from a security standpoint, but the "I can't get my head around this problem" or "I can't sleep until this gets understood and solved" kind.</p>
+<p>Anthropic models, especially Opus 5.5, are consistently the most efficient, smartest and least wasteful for these things I just mentioned.</p>
+<p>I led the research, the topics and the blog outlines for my posts, and approved every draft.</p>
+""",
+    },
+    {
         "slug": "play1-numbers",
         "title": "Play-1: the acceptance-inversion result",
         "category": "Measured Research / Speculative Decoding",
