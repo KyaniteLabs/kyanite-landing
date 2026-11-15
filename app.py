@@ -1011,7 +1011,7 @@ BLOG_POSTS = [
 <h2>Phase two: own the whole stack, then measure it</h2>
 <p>The modern version of the job needs AI-specific skills. I built them in public, on my own hardware, because that removes every excuse. The rig is a $1,400 GMKtec EVO-X2 mini-PC running a 27B model locally. Everything below is linked and reproducible.</p>
 <ul>
-<li><strong>Serving in production.</strong> The model runs always-on with watchdogs, restart recovery, and queue discipline. The complete measured serving story, with the upstream llama.cpp bug we caught, bisected, and validated the fix for, is <a href="/blog/qwen-27b-strix-halo-complete">on this blog</a>.</li>
+<li><strong>Serving in production.</strong> The model runs always-on with watchdogs, restart recovery, and queue discipline. The complete measured serving story, with the upstream llama.cpp bug we caught, reproduced, and validated the fix for, is <a href="/blog/qwen-27b-strix-halo-complete">on this blog</a>.</li>
 <li><strong>Benchmarking with intervals.</strong> <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81). Published with conditions, seeds, and raw logs.</li>
 <li><strong>An eval with my name on it.</strong> <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>: 495 trials, 29 cells, certified floors, a sabotage cell, walk-away certification. This artifact does more work than any title. Details in <a href="/blog/evals-are-the-fde-skill">evals are the FDE skill nobody lists</a>.</li>
 <li><strong>Shipped open source people actually use.</strong> A video-editing MCP server, <a href="https://github.com/simongonzalezdc" rel="noopener">Kinocut</a>, with merged upstream contributions. Integration glue is the daily texture of forward deployed work.</li>
@@ -1048,7 +1048,7 @@ BLOG_POSTS = [
 <p>There is a sabotage cell: a planted bad instruction that the system must refuse. And a decision table where every green carries its floor printed on it, so a non-engineer can read the verdict without knowing what a confidence interval is.</p>
 <h2>The part everyone skips: judging the judge</h2>
 <p>The hardest layer of an eval is not testing the model. It is testing your grader. Our first automated judges failed two cells. Reading the raw answers showed the model was right and our judges were wrong. One broke on a Spanish accent. One could not tell "mentioned the false number in order to reject it" from "repeated it as fact." Both bugs are now permanent regression cases in the repo.</p>
-<p>This is the skill in one story. A customer's deployment "fails" and the question is: model, pipeline, or measurement? The eval builder is the person who can answer, because they built all three layers and tested each. When long context and vision silently broke on my rig, the eval discipline was what caught it: bisected to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix 9/9 paired. Without evals, that failure is invisible until a customer finds it.</p>
+<p>This is the skill in one story. A customer's deployment "fails" and the question is: model, pipeline, or measurement? The eval builder is the person who can answer, because they built all three layers and tested each. When long context and vision silently broke on my rig, the eval discipline was what caught it: traced to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix 9/9 paired. Without evals, that failure is invisible until a customer finds it.</p>
 <h2>The honest misses, published</h2>
 <p>Giant documents around 130k tokens are impractical on this rig. The ceiling is measured and the product now fast-fails with an estimate instead of hanging. Tiny-text transcription drops one letter in long email addresses: 12/15, labeled as such. Publishing the misses is not a weakness in an eval. It is the eval.</p>
 <h2>How to start building this skill</h2>
@@ -1125,7 +1125,7 @@ BLOG_POSTS = [
 <p>The coding skill underneath that is measurable too: <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset, seed published) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81, always cite the interval) on the same $1,400 box.</p>
 <h2>Part three: own it in production</h2>
 <p>This is the part that separates the title from the demo. The system runs unattended. It is always on, with automated watchdogs, restart recovery, and queue discipline. When it breaks, the FDE is the pager.</p>
-<p>A real production story from this rig: mid-project, long context and vision silently broke. The easy read was "the model got worse." We did not take the easy read. We bisected nights of changes to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix on our silicon with 9/9 identical paired answers. Then we re-ran the frozen benchmarks to confirm nothing moved. That is the job. The <a href="/blog/qwen-27b-strix-halo-complete">full serving story</a> is on this blog with raw logs.</p>
+<p>A real production story from this rig: mid-project, long context and vision silently broke. The easy read was "the model got worse." We did not take the easy read. We traced it to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix on our silicon with 9/9 identical paired answers. Then we re-ran the frozen benchmarks to confirm nothing moved. That is the job. The <a href="/blog/qwen-27b-strix-halo-complete">full serving story</a> is on this blog with raw logs.</p>
 <h2>The actual FDE skills list</h2>
 <p>People search for "fde skills" and find wish lists. Here is the honest one, each skill proven by an artifact above:</p>
 <ul>
@@ -1143,6 +1143,7 @@ BLOG_POSTS = [
 },
     {
         "slug": 'the-delegation-card',
+        "no_sales_band": True,
         "title": "The Delegation Card: we asked a $1,400 mini-PC to take our jobs",
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-22',
@@ -1196,7 +1197,7 @@ BLOG_POSTS = [
 <h2>The ceiling</h2>
 <p>Exact needle retrieval at every tested depth, two seeds, up to <strong>261,130 of 262,144 tokens &mdash; 99.6% of the window</strong>, the literal ceiling. Warm follow-ups on a loaded 198k-token document: exact quote in <strong>23.8s</strong>, yes/no in <strong>10.0s</strong>, one-line summary in <strong>17.5s</strong>. Format does not matter: prose or code, exact either way; described-in-words, every part comes back in order. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
 <h2>The bug we owed you</h2>
-<p>Mid-arc, long-context and vision silently broke on this GPU class. Our first read blamed the model &mdash; wrong. We bisected it to one upstream change (<code>c7d8722</code>), confirmed it on the upstream report, fixed it locally, and validated the upstream fix on our silicon: <strong>9/9 identical answers, paired</strong>. The correction is in the repo, on the record. Degeneration was the instrument, not the model. Raw: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<p>Mid-arc, long-context and vision silently broke on this GPU class. Our first read blamed the model &mdash; wrong. We traced it to one upstream change (<code>c7d8722</code>), matched it to the upstream report, fixed it locally, and validated the upstream fix on our silicon: <strong>9/9 identical answers, paired</strong>. The correction is in the repo, on the record. Degeneration was the instrument, not the model. Raw: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
 <h2>The frozen config</h2>
 <p>Weights Q4. KV cache light (<code>q4_0</code>) &mdash; after measuring the trade: the heavy option buys up to ~3 seconds on follow-up questions (sub-second to 2.8s measured at the half window) for ~4 GB; we kept the room. Speculation: the shipped setup, verified fastest of four by paired walls (<strong>15.1s per 200-word answer vs 17.8s with it off</strong>). Context: the full 262,144. Thinking: off by default, hard problems think &mdash; measured across three difficulty bands. Vision: works, 6/6 on real browser screenshots. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
 <h2>What this proves</h2>
@@ -1262,7 +1263,7 @@ BLOG_POSTS = [
         "body": """
 <p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, assisted by GLM-5.3.</small></p>
 <p>The number first: <strong>5/6</strong> on a six-prompt VQA battery after one git revert. Before the revert: 0/6, all <code>//////</code> to length. Same Qwen3.8-27B Q4_K_XL, same mmproj-F16, same <strong>$1,400</strong> GMKtec EVO-X2.</p>
-<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisected on this hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (reported on the same gfx1151 chip), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>What we tested (n=6, thinking off):</p>
 <table>
 <thead><tr><th>Prompt</th><th>Before</th><th>After</th><th>Time</th></tr></thead>
@@ -1331,6 +1332,7 @@ BLOG_POSTS = [
     },
 {
         "slug": 'lab-notes-degenerate-basin',
+        "no_sales_band": True,
         "title": "Lab Notes: the basin was a bug",
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-19',
@@ -1422,6 +1424,7 @@ BLOG_POSTS = [
     },
 {
     "slug": "lab-notes-verdict-night",
+    "no_sales_band": True,
     "title": "Lab Notes: verdict night",
     "category": "Local LLM / Benchmarks",
     "date": "2026-08-18",
@@ -2071,7 +2074,7 @@ BLOG_COPY_ES = {
 <p>La habilidad de código debajo de eso también es medible. <a href="/es/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, subset congelado, semilla publicada) y <a href="/es/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, intervalo Wilson 95% de 49 a 81). Siempre cita el intervalo. Misma caja de $1.400.</p>
 <h2>Parte tres: quedarse a cargo en producción</h2>
 <p>Esta es la parte que separa el título del demo. El sistema corre sin atención. Está siempre encendido, con watchdogs automáticos, recuperación de reinicios y disciplina de cola. Cuando se rompe, el FDE es el pager.</p>
-<p>Una historia real de producción de este rig: a mitad de proyecto, el contexto largo y la visión se rompieron en silencio. La lectura fácil era "el modelo empeoró". No nos quedamos con la lectura fácil. Hicimos bisect de noches de cambios hasta un commit upstream de llama.cpp, reprodujimos de forma independiente el <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, lo arreglamos local y validamos el fix upstream en nuestro silicio con 9/9 respuestas idénticas pareadas. Después re-corrimos los benchmarks congelados para confirmar que nada se movió. Ese es el trabajo. La <a href="/es/blog/qwen-27b-strix-halo-complete">historia completa de serving</a> está en este blog con logs crudos.</p>
+<p>Una historia real de producción de este rig: a mitad de proyecto, el contexto largo y la visión se rompieron en silencio. La lectura fácil era "el modelo empeoró". No nos quedamos con la lectura fácil. Rastreamos el fallo hasta un commit upstream de llama.cpp, reprodujimos de forma independiente el <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, lo arreglamos local y validamos el fix upstream en nuestro silicio con 9/9 respuestas idénticas pareadas. Después re-corrimos los benchmarks congelados para confirmar que nada se movió. Ese es el trabajo. La <a href="/es/blog/qwen-27b-strix-halo-complete">historia completa de serving</a> está en este blog con logs crudos.</p>
 <h2>La lista real de habilidades FDE</h2>
 <p>La gente busca "habilidades fde" y encuentra listas de deseos. Esta es la honesta, cada habilidad probada con un artefacto de arriba:</p>
 <ul>
@@ -2102,7 +2105,7 @@ BLOG_COPY_ES = {
 <h2>El techo</h2>
 <p>Retrieval exacto de agujas en cada profundidad probada, dos semillas, hasta <strong>261.130 de 262.144 tokens &mdash; el 99.6% de la ventana</strong>, el techo literal. Follow-ups en caliente sobre un documento cargado de 198k tokens: cita exacta en <strong>23.8s</strong>, si/no en <strong>10.0s</strong>, resumen de una linea en <strong>17.5s</strong>. El formato no importa: prosa o codigo, exacto en ambos casos; descrito en palabras, cada parte vuelve en orden. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
 <h2>El bug que les debiamos</h2>
-<p>A mitad del arco, el contexto largo y la vision se rompieron en silencio en esta clase de GPU. Nuestra primera lectura culpo al modelo &mdash; mal. Hicimos bisect a un cambio upstream (<code>c7d8722</code>), lo confirmamos en el reporte upstream, lo arreglamos local y despues validamos el fix upstream en nuestro silicio: <strong>9/9 respuestas identicas, pareadas</strong>. La correccion esta en el repo, en el registro. La degeneracion era el instrumento, no el modelo. Crudo: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<p>A mitad del arco, el contexto largo y la vision se rompieron en silencio en esta clase de GPU. Nuestra primera lectura culpo al modelo &mdash; mal. Lo rastreamos hasta un cambio upstream (<code>c7d8722</code>), lo cotejamos con el reporte upstream, lo arreglamos local y despues validamos el fix upstream en nuestro silicio: <strong>9/9 respuestas identicas, pareadas</strong>. La correccion esta en el repo, en el registro. La degeneracion era el instrumento, no el modelo. Crudo: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
 <h2>La configuracion congelada</h2>
 <p>Pesos Q4. KV cache liviano (<code>q4_0</code>) &mdash; despues de medir el trade: la opcion pesada compra hasta ~3 segundos en follow-ups (sub-segundo a 2.8s medido en la media ventana) por ~4 GB; nos quedamos con el espacio. Especulacion: la configuracion en servicio, verificada la mas rapida de cuatro con paredes pareadas (<strong>15.1s por respuesta de 200 palabras vs 17.8s sin ella</strong>). Contexto: los 262.144 completos. Thinking: apagado por defecto, los problemas dificiles piensan &mdash; medido en tres bandas de dificultad. Vision: funciona, 6/6 en screenshots reales de navegador. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
 <h2>Que prueba esto</h2>
@@ -2139,7 +2142,7 @@ BLOG_COPY_ES = {
         "body": """
 <p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez de Cruz</a>, con GLM-5.3.</small></p>
 <p>El número primero: <strong>5/6</strong> en una batería VQA de seis prompts después de un revert. Antes: 0/6, todo <code>//////</code> hasta length. Mismo Qwen3.8-27B Q4_K_XL, mismo mmproj-F16, mismo GMKtec EVO-X2 de <strong>$1.400</strong>.</p>
-<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisectado en este hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (reportado en el mismo chip gfx1151), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>Qué probamos (n=6, thinking off):</p>
 <table>
 <thead><tr><th>Prompt</th><th>Antes</th><th>Después</th><th>Tiempo</th></tr></thead>

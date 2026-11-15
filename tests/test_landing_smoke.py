@@ -24,6 +24,8 @@ from app import (
 )
 
 
+NO_BAND_POSTS = ("the-delegation-card", "lab-notes-verdict-night", "lab-notes-degenerate-basin")
+
 class LandingSmokeTests(unittest.TestCase):
     def setUp(self) -> None:
         self.client = app.test_client()
@@ -504,6 +506,11 @@ class LandingSmokeTests(unittest.TestCase):
         for gone in ("VALID", "Opus 5.5", "approved every draft", "keeps the researchers up"):
             self.assertNotIn(gone, body)
 
+        for slug in NO_BAND_POSTS:
+            linked = self.client.get(f"/blog/{slug}").get_data(as_text=True)
+            self.assertNotIn("Want this working in your environment?", linked, msg=slug)
+            self.assertNotIn("bisect", linked.lower(), msg=slug)
+
         other = self.client.get("/blog/why-kinocut-matters")
         self.assertIn("Want this working in your environment?", other.get_data(as_text=True))
 
@@ -568,7 +575,10 @@ class LandingSmokeTests(unittest.TestCase):
                 en_html = en.get_data(as_text=True)
                 self.assertIn(expected_h1[slug], es_html)
                 self.assertNotIn("Want this working in your environment?", es_html)
-                self.assertIn("¿Quieres que esto funcione en tu entorno?", es_html)
+                if slug in NO_BAND_POSTS:
+                    self.assertNotIn("¿Quieres que esto funcione en tu entorno?", es_html)
+                else:
+                    self.assertIn("¿Quieres que esto funcione en tu entorno?", es_html)
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
@@ -655,7 +665,8 @@ class LandingSmokeTests(unittest.TestCase):
                     self.assertIn("~47% (4.3GB ahorrados)", es_html)
                 self.assertIn(f'hreflang="es-419" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="x-default" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
-                self.assertIn("Want this working in your environment?", en_html)
+                if slug not in NO_BAND_POSTS:
+                    self.assertIn("Want this working in your environment?", en_html)
                 self.assertNotIn(expected_h1[slug], en_html)
         sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
         for slug in slugs:
