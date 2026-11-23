@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KyaniteLabs — Get AI Tools Working in Real Workflows</title>
-  <meta name="description" content="KyaniteLabs helps builders and teams get open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics working in their real environment.">
+  <title>KyaniteLabs — Plugins for Hermes Agent</title>
+  <meta name="description" content="Seven KyaniteLabs plugins in the official Hermes Agent catalog: video editing, calibrated estimates, one queue of what is blocked on you, git history, friction review, check-ins and model choice.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="author" content="KyaniteLabs">
   <meta name="theme-color" content="#05070b">
@@ -14,8 +14,8 @@
   <link rel="alternate" type="text/plain" title="KyaniteLabs full AI-readable context" href="https://kyanitelabs.tech/llms-full.txt">
   <link rel="alternate" type="application/rss+xml" title="KyaniteLabs Blog Feed" href="https://kyanitelabs.tech/feed.xml">
   <meta property="og:site_name" content="KyaniteLabs">
-  <meta property="og:title" content="KyaniteLabs — Get AI Tools Working">
-  <meta property="og:description" content="Open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics made usable in real workflows.">
+  <meta property="og:title" content="KyaniteLabs — Plugins for Hermes Agent">
+  <meta property="og:description" content="Seven KyaniteLabs plugins in the official Hermes Agent catalog: video editing, calibrated estimates, one queue of what is blocked on you, git history, friction review, check-ins and model choice.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://kyanitelabs.tech/">
   <meta property="og:image" content="https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png">
@@ -23,8 +23,8 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="KyaniteLabs glass crystal K mark">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="KyaniteLabs — Get AI Tools Working">
-  <meta name="twitter:description" content="Open-source AI tools, MCP systems, media pipelines, localization QA, and repo diagnostics made usable in real workflows.">
+  <meta name="twitter:title" content="KyaniteLabs — Plugins for Hermes Agent">
+  <meta name="twitter:description" content="Seven KyaniteLabs plugins in the official Hermes Agent catalog: video editing, calibrated estimates, one queue of what is blocked on you, git history, friction review, check-ins and model choice.">
   <meta name="twitter:image" content="https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png">
   <script type="application/ld+json">
   {
@@ -106,7 +106,7 @@
   </script>
   <link rel="icon" type="image/png" href="/static/brand/kyanite-icon-voronoi-64x64.png">
   <link rel="apple-touch-icon" href="/static/brand/kyanite-icon-voronoi-180x180.png">
-  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20260601-structure-pass">
+  <link rel="stylesheet" href="/static/css/kyanite-system.css?v=20261114-hermes-plugins">
   <link rel="stylesheet" href="/static/liminal-sites/liminal-sensorium.css" data-liminal-sites-sensorium="kyanitelabs-home-sensorium-20260528">
   <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/posthog.js';document.body.appendChild(s);},0);},{once:true});</script>
   <script>window.addEventListener('load',function(){window.setTimeout(function(){var s=document.createElement('script');s.src='/static/js/kyanite-nav.js?v=20260601-public-projects';document.body.appendChild(s);},0);},{once:true});</script>
@@ -121,11 +121,11 @@
           KyaniteLabs
         </a>
         <div class="nav-links">
+          <a href="#plugins">Plugins</a>
           <a href="#proof">Projects</a>
           <a href="/implementation">Implementation</a>
           <a href="/blog">Lab Notes</a>
           <a href="/magnets">Free Resources</a>
-          <a href="#newsletter">Subscribe</a>
           <a href="/shop">Shop</a>
           <a href="/about">About</a>
           <a href="#contact">Contact</a>
@@ -137,6 +137,7 @@
       </nav>
     </header>
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <a href="#plugins" onclick="closeMenu()">Plugins</a>
       <a href="#proof" onclick="closeMenu()">Projects</a>
       <a href="/implementation">Implementation</a>
       <a href="/blog">Lab Notes</a>
@@ -154,18 +155,18 @@
       <section class="hero">
         <div class="container hero-grid">
           <div class="hero-inner fade-up">
-            <div class="eyebrow">Implementation help for public AI tools</div>
+            <div class="eyebrow">Plugins for Hermes Agent</div>
             <h1><span class="brand-hero-word">KyaniteLabs</span></h1>
-            <div class="hero-line">Turn public repos into working AI systems.</div>
-            <p class="lead"><strong>Bring the Kyanite repo, MCP server, media pipeline, localization pass, or diagnostic you want running.</strong> Kyanite helps install it, adapt it to your setup, document the tradeoffs, and leave you with commands you can use again.</p>
+            <div class="hero-line">Seven plugins in the official Hermes Agent catalog.</div>
+            <p class="lead">Each one installs with one command, at the exact commit the catalog reviewed. Each is open source and says plainly what it reads and what it sends.</p>
             <div class="hero-actions">
-              <a class="btn btn-primary" href="/implementation/intake">Get a tool working</a>
-              <a class="btn btn-secondary" href="#proof">Inspect the public proof</a>
+              <a class="btn btn-primary" href="#plugins">Browse the plugins</a>
+              <a class="btn btn-secondary" href="/implementation/intake">Get one working</a>
             </div>
             <div class="hero-proof" aria-label="Kyanite proof points">
-              <span><strong>Working setup</strong> instead of repo archaeology</span>
-              <span><strong>Clear handoff</strong> after install and adaptation</span>
-              <span><strong>Open source</strong> proof people can inspect</span>
+              <span><strong>7 plugins</strong> in the official catalog</span>
+              <span><strong>One command</strong> to install</span>
+              <span><strong>Open source</strong>, pinned to reviewed commits</span>
             </div>
           </div>
           <div class="hero-logo-stage hero-instrument fade-up" aria-label="KyaniteLabs brand instrument">
@@ -188,6 +189,40 @@
                 <span class="hi-receipt">MEASURE · FAULT · PROOF</span>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plugins" class="plugin-shelf">
+        <div class="container">
+          <div class="section-head center">
+            <div class="section-label">Hermes Agent plugins</div>
+            <h2 class="section-title">Seven plugins, one install command.</h2>
+            <p class="section-sub">Every plugin is listed in the Hermes Agent plugin catalog. Browse it from Hermes with <code>hermes plugins catalog</code>.</p>
+          </div>
+          <div class="plugin-grid">
+            {% for plugin in hermes_plugins %}
+            <article class="plugin-card fade-up" id="plugin-{{ plugin.slug }}">
+              <div class="plugin-card-head">
+                <img class="plugin-icon" src="{{ plugin.icon }}" alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
+                <div>
+                  <h3 class="plugin-name">{{ plugin.name }}</h3>
+                  <span class="project-tag">{{ plugin.tag }}</span>
+                </div>
+              </div>
+              <p class="plugin-line">{{ plugin.line }}</p>
+              <code class="plugin-install">hermes plugins install {{ plugin.slug }}</code>
+              <div class="plugin-links">
+                <a href="{{ plugin.repo }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="{{ plugin.catalog }}" target="_blank" rel="noopener noreferrer">Catalog entry</a>
+              </div>
+            </article>
+            {% endfor %}
+            <article class="plugin-card plugin-card-cta fade-up">
+              <h3 class="plugin-name">Need a hand?</h3>
+              <p class="plugin-line">Want one set up on your machine, or a plugin built for your workflow?</p>
+              <a class="btn btn-primary" href="/implementation/intake">Start intake</a>
+            </article>
           </div>
         </div>
       </section>

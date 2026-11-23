@@ -28,7 +28,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import UTC, datetime
 from enum import Enum
-from urllib.parse import quote, urlencode
+from urllib.parse import quote
 from flask import Flask, request, jsonify, render_template_string, Response, redirect
 from werkzeug.exceptions import RequestEntityTooLarge
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -572,6 +572,37 @@ def newsletter_response_page(title, message, status=200):
 </html>"""
     return Response(html, status=status, mimetype="text/html")
 
+HERMES_PLUGINS = [
+    {"name": "Kinocut", "slug": "kinocut", "tag": "Video",
+     "line": "Local video editing for your agent: trim, caption, reformat and check quality with FFmpeg.",
+     "repo": "https://github.com/KyaniteLabs/kinocut"},
+    {"name": "Epoch", "slug": "epoch", "tag": "Estimates",
+     "line": "Calibrated time estimates on the Kanban board. Each finished run feeds the next estimate.",
+     "repo": "https://github.com/KyaniteLabs/Epoch"},
+    {"name": "UNBL0CK", "slug": "unbl0ck", "tag": "Attention",
+     "line": "One queue of everything blocked on you: agent prompts, blocked cards and chats that ask you something.",
+     "repo": "https://github.com/KyaniteLabs/unbl0ck"},
+    {"name": "AG4TE", "slug": "ag4te", "tag": "Git history",
+     "line": "Read a repo's git history as strata in Hermes Desktop: eras, hotspots, people, agents and bots.",
+     "repo": "https://github.com/KyaniteLabs/ag4te"},
+    {"name": "Selenite", "slug": "selenite", "tag": "Friction",
+     "line": "Takes friction off the person: flags steps, waits and checks that don't earn their cost to you.",
+     "repo": "https://github.com/KyaniteLabs/selenite"},
+    {"name": "Innerscape", "slug": "innerscape", "tag": "Check-ins",
+     "line": "Gentle check-ins, journaling and an unstuck coach. Nothing is saved until you approve the exact text.",
+     "repo": "https://github.com/KyaniteLabs/Innerscape"},
+    {"name": "Iolite", "slug": "iolite", "tag": "Model choice",
+     "line": "Pick the cheapest LLM that is smart enough, from a bundled 621-model catalog that works offline.",
+     "repo": "https://github.com/KyaniteLabs/llm-3d-viz"},
+]
+for _plugin in HERMES_PLUGINS:
+    _plugin["icon"] = f"/static/brand/plugins/{_plugin['slug']}-192.webp"
+    _plugin["catalog"] = (
+        "https://github.com/NousResearch/hermes-agent/blob/main/plugin-catalog/"
+        f"{_plugin['slug']}.yaml"
+    )
+
+
 PUBLIC_PROJECTS = [
     {
         "name": "Kinocut",
@@ -587,17 +618,19 @@ PUBLIC_PROJECTS = [
     },
     {
         "name": "tastecheck",
-        "url": "https://github.com/KyaniteLabs/tastecheck",
-        "description": "20 craft skills for AI coding agents that fix AI-website sameness: interviews you into a real design system before code, then gates every frontend ship on evidence — typography, OKLCH color, states, forms, charts, a11y, anti-slop.",
+        "url": "https://kyanitelabs.github.io/tastecheck/",
+        "repo": "https://github.com/KyaniteLabs/tastecheck",
+        "description": "Design review skills and recorded evidence for typography, color, spacing, accessibility, interface states, and frontend ship decisions. Judgments are scoped assessments, not an effectiveness guarantee.",
         "tag": "Frontend Craft",
         "tile_code": "TC",
         "language": "Markdown",
         "updated": "2026-09-04",
-        "proof_role": "The pack's own landing page is the proof — every demo on it gated by the skills it ships.",
+        "proof_role": "The public landing page shows the review workflow and example systems; release evidence and effectiveness are separate claims.",
     },
     {
         "name": "Epoch",
-        "url": "https://github.com/KyaniteLabs/Epoch",
+        "url": "https://kyanitelabs.github.io/Epoch/",
+        "repo": "https://github.com/KyaniteLabs/Epoch",
         "description": "Time estimation MCP server for PERT, COCOMO II, Monte Carlo, sprint forecasting, token-to-time mapping, cost estimation, and schedule risk tools.",
         "tag": "Estimation MCP",
         "tile_code": "EP",
@@ -608,8 +641,9 @@ PUBLIC_PROJECTS = [
     },
     {
         "name": "checkyourself",
-        "url": "https://github.com/KyaniteLabs/checkyourself",
-        "description": "Local-first production-readiness system for AI-built apps: read-only audits, evidence scores, guided fixes, learning plans, dashboards, CLI, and MCP.",
+        "url": "https://kyanitelabs.github.io/checkyourself/",
+        "repo": "https://github.com/KyaniteLabs/checkyourself",
+        "description": "Local completion-evidence review for AI-built apps: read-only audits, verifier challenges, bounded scores, guided fixes, learning plans, CLI, and MCP. Scores do not certify production safety.",
         "tag": "Readiness Audit",
         "tile_code": "CY",
         "language": "Python",
@@ -797,6 +831,141 @@ def build_shop_tools():
 SHOP_TOOLS = build_shop_tools()
 
 BLOG_POSTS = [
+    {
+        "slug": "one-demo-once",
+        "title": "One demo, once",
+        "category": "Essay",
+        "date": "2026-11-14",
+        "date_modified": "2026-11-14",
+        "read_time": "2 min",
+        "primary_keyword": "One demo, once",
+        "seo_title": "One demo, once",
+        "meta_description": "Everything you see online is one demo, once. That's not production quality.",
+        "excerpt": "Everything you see online is one demo, once. That's not production quality.",
+        "author_name": "Simon Gonzalez De Cruz",
+        "author_type": "Person",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "no_sales_band": True,
+        "body": """
+<p>"Why am I the one catching all the mistakes and gaps on work that you yourself planned, reviewed, approved, completed and executed?"</p>
+<p>Every time I put a new model on code review and pre-launch checks, it finds things. So my prompts changed:</p>
+<ul>
+<li>Make sure your predecessor was truly rigorous and did not mess up that bench.</li>
+<li>Make sure you don't have tests that are too easy, with too small a sample size, or bad confounders.</li>
+<li>Do a preemptive prediction, then compare it to reality after we ship.</li>
+</ul>
+<p>Everything you see online is one demo, once. That's not production quality. Production has to be repeatable and instill trust.</p>
+<p>It needs to work consistently for weeks and months without updates, changes or fixes. Otherwise no one on the team will know how to use it, because it's a moving target. It also needs to be intuitive to people.</p>
+<p>When I asked agents to make LLMs from scratch, I wasn't sure the models would know enough about the topics to fill my gaps. I had to ask multiple different models the same prompt in multiple ways to get to the bottom of things. That looping got me obsessed with hill climbing and exhausting the design space.</p>
+<p>If it's all math, where exactly are the edges of the full design space? How much of what we think we know is humans' limited view and unfounded assumptions?</p>
+<p><em>I wrote this. Claude fixed typos and punctuation.</em></p>
+""",
+    },
+    {
+        "slug": "play1-numbers",
+        "title": "Play-1: the acceptance-inversion result",
+        "category": "Measured Research / Speculative Decoding",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "3 min",
+        "primary_keyword": "Play-1 speculative decoding acceptance",
+        "seo_title": "Play-1: the acceptance-inversion result",
+        "meta_description": "The measured nmax2 acceptance inversion: 72.2% versus 22.7% for the draft-12 control. Throughput and engine comparisons, with single-lab limits.",
+        "excerpt": "The measured nmax2 acceptance inversion: 72.2% versus 22.7% for the draft-12 control. Throughput and engine comparisons, with single-lab limits.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-play1-numbers.html",
+        "research_origin_sha256": "90583226daa0b87a048eb0980971d11a4859656abc62760263917a82f9052ea2",
+        "body": """
+<p><strong>The nmax2 drafter accepted 72.2% against 22.7% for the draft-12 control in this measured workload.</strong> Acceptance is one result. The throughput figures and the limits belong beside it.</p>
+<h2>The reported measurements</h2>
+<ul>
+<li>Draft-12 control: <strong>17.5 tokens per second</strong>.</li>
+<li>nmax2-np2: <strong>25.4 tokens per second</strong>.</li>
+<li>nmax3: <strong>28.5 tokens per second</strong>.</li>
+<li>nmax4: <strong>23.9 tokens per second</strong>.</li>
+<li>Engine comparison on the same box: <strong>HIP 20.8 tokens per second; Vulkan 9.2</strong>.</li>
+</ul>
+<p>The nmax3 figure is higher than nmax2-np2 in the reported run. That does not turn this short report into a universal configuration ranking. The original report does not supply sample counts, confidence intervals, every comparison table or a full reproduction recipe.</p>
+<h2>What backs these numbers</h2>
+<p>The September 28 report states that every figure was dual-verified. Its named verification record is <code>research/floor-optimization/window4/W4-VERIFICATION-RECEIPT-20260925.md</code>. That is the original report's provenance statement; this page does not claim a new independent verification of the underlying experiment.</p>
+<h2>Limits</h2>
+<p>One lab, one box class and the lab's own workloads. No external reproduction is claimed. Acceptance percentages are not tokens per second, and these figures do not establish a general speedup for other hardware or models.</p>
+<p>This edition preserves the already-public measurements. It adds no new experimental result.</p>
+""",
+    },
+    {
+        "slug": "adversarial-custody-chains",
+        "title": "Adversarial custody chains: keep the attacks in the record",
+        "category": "Measured Research / Evidence Custody",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "4 min",
+        "primary_keyword": "adversarial custody chains research evidence",
+        "seo_title": "Adversarial custody chains: keep the attacks in the record",
+        "meta_description": "Signed permissions and hash-chained receipts catch real bypasses. Two acceptance-path defects were still open in the source report.",
+        "excerpt": "Signed permissions and hash-chained receipts catch real bypasses. Two acceptance-path defects were still open in the source report.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-adversarial-custody-chains.html",
+        "research_origin_sha256": "9d5357f46ed772f5c37b5aa8e08ff81c8b2d87f37da96dd44fe212cf5781ff78",
+        "body": """
+<p><strong>A lab that generates its own test data needs to show how its evidence can fail.</strong> The September 28 report records attacks against a small lab's custody chain and the defenses those attacks forced.</p>
+<h2>The attack ledger</h2>
+<ul>
+<li><strong>Forged permissions.</strong> Fabricated authorization attempted to admit test-pool items. The reported defense uses signed permission from a key held outside the producing system and an issuer ratified by the organization.</li>
+<li><strong>Fake receipts.</strong> Outputs were claimed without generation. Append-only, hash-chained indexes and per-item content hashes make acceptance depend on resolving the chain.</li>
+<li><strong>Frozen-field replacement.</strong> A verified record could still be mutated through language-level escape hatches. The proposed repair re-derives the registry from signed canonical bytes inside the trust boundary.</li>
+<li><strong>Marker forgery.</strong> A reachable module marker allowed an attacker key to construct an accepted state. The proposed repair removes caller-constructible acceptance paths.</li>
+</ul>
+<h2>Two defects remained open</h2>
+<p>The source explicitly marks frozen-field replacement and marker forgery as open, with repairs under review. This historical report does not establish that either repair later passed. A new verdict would need its own evidence.</p>
+<h2>The method worth copying</h2>
+<p>Separate producer and reviewer custody. Pin artifact hashes when outputs are created. Run probes that construct bypasses, then require the repaired path to refuse those same probes. Keep failed runs and rejected claims in the record.</p>
+<h2>Limits</h2>
+<p>One team and one measurement program. The reviewer was separate from the producer, but was not an independent organization. No external red team, external audit or proof of unforgeability is claimed.</p>
+<p>The report offers an attack ledger and a repeatable method. It leaves open defects visible rather than treating internal review as a security certification.</p>
+""",
+    },
+    {
+        "slug": "local-image-stack-measured",
+        "title": "Local image generation, measured on a consumer APU",
+        "category": "Measured Research / Local Image Generation",
+        "date": "2026-09-28",
+        "date_modified": "2026-09-30",
+        "read_time": "4 min",
+        "primary_keyword": "local image generation consumer APU measurements",
+        "seo_title": "Local image generation, measured on a consumer APU",
+        "meta_description": "Measured sampler costs, guidance timing and model reload overhead. Quality judgments remain single-judge observations, not a leaderboard.",
+        "excerpt": "Measured sampler costs, guidance timing and model reload overhead. Quality judgments remain single-judge observations, not a leaderboard.",
+        "author_name": "KyaniteLabs Research",
+        "author_type": "Organization",
+        "author_url": "https://kyanitelabs.tech/",
+        "language": "en",
+        "research_origin_url": "https://kyanitelabs.github.io/blog/posts/2026-09-28-local-image-stack-measured.html",
+        "research_origin_sha256": "a0f106a748324627cb2a937fa92bf468d8cf58889c3868e328f701c5f1d61332",
+        "body": """
+<p><strong>The useful question is what this image stack actually did on this machine.</strong> The September 28 report describes an approximately $1,000 consumer APU, an 8-core Strix Halo, 80 GiB of GTT shared memory and a 7B diffusion transformer in Q4_K.</p>
+<h2>Measured timing and memory</h2>
+<ul>
+<li><strong>Co-residency:</strong> 5.84–5.88 seconds per iteration across the measured memory modes, with both resident LLM services live. Peak GTT was 58.8 GiB out of 80, with approximately 15.5 GiB RAM free.</li>
+<li><strong>Sampler cost:</strong> at 30 steps, euler and euler-a were speed-identical. dpm++2m added 5.6% at guidance 4 and 15.9% at guidance 6. At 6 and 10 steps, the report found no speed separation.</li>
+<li><strong>Guidance timing:</strong> 191.7 seconds at guidance 4 versus 211.4 at guidance 6 per 768×512 image, with n=10+10. That is a timing comparison; paired quality assessment remained pending.</li>
+<li><strong>Reload overhead:</strong> approximately 15–20 seconds per fresh CLI invocation. A 20-image batch spent about 6 minutes of roughly 65 minutes reloading. The suggested approximately 9% throughput improvement was an estimate, not a measured adoption result.</li>
+<li><strong>Full-quality run:</strong> roughly 3.2 minutes per 768×512 image at about 54 W GPU-package power. The reported CPU-only comparison was roughly 29 minutes per image and failed under sustained load.</li>
+</ul>
+<h2>Quality was a human judgment</h2>
+<p>One internal human judge preferred dpm++2m at 30 steps and found it usable at 6 steps. The same judge reported successful stitched lettering. Those are labeled single-judge observations. An empty OCR result on those images was reported as an instrument artifact; this page does not extend that finding to other images.</p>
+<h2>Limits and unresolved work</h2>
+<p>One machine class, one model family, no blind scoring and no inter-rater statistics. The source still listed paired guidance-quality judgments and like-for-like comparison cells as unresolved. These historical findings are not a current model ranking, a hardware guarantee or permission to use particular weights commercially.</p>
+<p>The transferable method is a frozen run plan, paired seeds, append-only indexes, per-image sidecars and exact output hashes. The numbers stay attached to the conditions that produced them.</p>
+""",
+    },
     {
         "slug": 'gpt-6-sol-luna-astra-routing-guide',
         "title": "GPT-6 Sol vs. Luna vs. Astra: a routing policy for coding agents — and when local still wins",
@@ -1035,7 +1204,7 @@ BLOG_POSTS = [
 <h2>Phase two: own the whole stack, then measure it</h2>
 <p>The modern version of the job needs AI-specific skills. I built them in public, on my own hardware, because that removes every excuse. The rig is a $1,400 GMKtec EVO-X2 mini-PC running a 27B model locally. Everything below is linked and reproducible.</p>
 <ul>
-<li><strong>Serving in production.</strong> The model runs always-on with watchdogs, restart recovery, and queue discipline. The complete measured serving story, with the upstream llama.cpp bug we caught, bisected, and validated the fix for, is <a href="/blog/qwen-27b-strix-halo-complete">on this blog</a>.</li>
+<li><strong>Serving in production.</strong> The model runs always-on with watchdogs, restart recovery, and queue discipline. The complete measured serving story, with the upstream llama.cpp bug we caught, reproduced, and validated the fix for, is <a href="/blog/qwen-27b-strix-halo-complete">on this blog</a>.</li>
 <li><strong>Benchmarking with intervals.</strong> <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81). Published with conditions, seeds, and raw logs.</li>
 <li><strong>An eval with my name on it.</strong> <a href="https://github.com/KyaniteLabs/delegation-bench" rel="noopener">delegation-bench</a>: 495 trials, 29 cells, certified floors, a sabotage cell, walk-away certification. This artifact does more work than any title. Details in <a href="/blog/evals-are-the-fde-skill">evals are the FDE skill nobody lists</a>.</li>
 <li><strong>Shipped open source people actually use.</strong> A video-editing MCP server, <a href="https://github.com/simongonzalezdc" rel="noopener">Kinocut</a>, with merged upstream contributions. Integration glue is the daily texture of forward deployed work.</li>
@@ -1072,7 +1241,7 @@ BLOG_POSTS = [
 <p>There is a sabotage cell: a planted bad instruction that the system must refuse. And a decision table where every green carries its floor printed on it, so a non-engineer can read the verdict without knowing what a confidence interval is.</p>
 <h2>The part everyone skips: judging the judge</h2>
 <p>The hardest layer of an eval is not testing the model. It is testing your grader. Our first automated judges failed two cells. Reading the raw answers showed the model was right and our judges were wrong. One broke on a Spanish accent. One could not tell "mentioned the false number in order to reject it" from "repeated it as fact." Both bugs are now permanent regression cases in the repo.</p>
-<p>This is the skill in one story. A customer's deployment "fails" and the question is: model, pipeline, or measurement? The eval builder is the person who can answer, because they built all three layers and tested each. When long context and vision silently broke on my rig, the eval discipline was what caught it: bisected to one upstream llama.cpp commit, independently reproduced the already-open <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> on a second machine, fixed and validated 9/9 paired. Without evals, that failure is invisible until a customer finds it.</p>
+<p>This is the skill in one story. A customer's deployment "fails" and the question is: model, pipeline, or measurement? The eval builder is the person who can answer, because they built all three layers and tested each. When long context and vision silently broke on my rig, the eval discipline was what caught it: traced to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix 9/9 paired. Without evals, that failure is invisible until a customer finds it.</p>
 <h2>The honest misses, published</h2>
 <p>Giant documents around 130k tokens are impractical on this rig. The ceiling is measured and the product now fast-fails with an estimate instead of hanging. Tiny-text transcription drops one letter in long email addresses: 12/15, labeled as such. Publishing the misses is not a weakness in an eval. It is the eval.</p>
 <h2>How to start building this skill</h2>
@@ -1149,7 +1318,7 @@ BLOG_POSTS = [
 <p>The coding skill underneath that is measurable too: <a href="/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, frozen subset, seed published) and <a href="/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, Wilson 95% interval 49 to 81, always cite the interval) on the same $1,400 box.</p>
 <h2>Part three: own it in production</h2>
 <p>This is the part that separates the title from the demo. The system runs unattended. It is always on, with automated watchdogs, restart recovery, and queue discipline. When it breaks, the FDE is the pager.</p>
-<p>A real production story from this rig: mid-project, long context and vision silently broke. The easy read was "the model got worse." We did not take the easy read. We bisected nights of changes to one upstream llama.cpp commit, independently reproduced the already-open <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> on our hardware, fixed it locally, and validated the upstream fix on our silicon with 9/9 identical paired answers. Then we re-ran the frozen benchmarks to confirm nothing moved. That is the job. The <a href="/blog/qwen-27b-strix-halo-complete">full serving story</a> is on this blog with raw logs.</p>
+<p>A real production story from this rig: mid-project, long context and vision silently broke. The easy read was "the model got worse." We did not take the easy read. We traced it to one upstream llama.cpp commit, independently reproduced <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, fixed it locally, and validated the upstream fix on our silicon with 9/9 identical paired answers. Then we re-ran the frozen benchmarks to confirm nothing moved. That is the job. The <a href="/blog/qwen-27b-strix-halo-complete">full serving story</a> is on this blog with raw logs.</p>
 <h2>The actual FDE skills list</h2>
 <p>People search for "fde skills" and find wish lists. Here is the honest one, each skill proven by an artifact above:</p>
 <ul>
@@ -1167,6 +1336,7 @@ BLOG_POSTS = [
 },
     {
         "slug": 'the-delegation-card',
+        "no_sales_band": True,
         "title": "The Delegation Card: we asked a $1,400 mini-PC to take our jobs",
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-22',
@@ -1220,7 +1390,7 @@ BLOG_POSTS = [
 <h2>The ceiling</h2>
 <p>Exact needle retrieval at every tested depth, two seeds, up to <strong>261,130 of 262,144 tokens &mdash; 99.6% of the window</strong>, the literal ceiling. Warm follow-ups on a loaded 198k-token document: exact quote in <strong>23.8s</strong>, yes/no in <strong>10.0s</strong>, one-line summary in <strong>17.5s</strong>. Format does not matter: prose or code, exact either way; described-in-words, every part comes back in order. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
 <h2>The bug we owed you</h2>
-<p>Mid-arc, long-context and vision silently broke on this GPU class. Our first read blamed the model &mdash; wrong. We bisected it to one upstream change (<code>c7d8722</code>), reported it, fixed it locally, and validated the upstream fix on our silicon: <strong>9/9 identical answers, paired</strong>. The correction is in the repo, on the record. Degeneration was the instrument, not the model. Raw: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<p>Mid-arc, long-context and vision silently broke on this GPU class. Our first read blamed the model &mdash; wrong. We traced it to one upstream change (<code>c7d8722</code>), matched it to the upstream report, fixed it locally, and validated the upstream fix on our silicon: <strong>9/9 identical answers, paired</strong>. The correction is in the repo, on the record. Degeneration was the instrument, not the model. Raw: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
 <h2>The frozen config</h2>
 <p>Weights Q4. KV cache light (<code>q4_0</code>) &mdash; after measuring the trade: the heavy option buys up to ~3 seconds on follow-up questions (sub-second to 2.8s measured at the half window) for ~4 GB; we kept the room. Speculation: the shipped setup, verified fastest of four by paired walls (<strong>15.1s per 200-word answer vs 17.8s with it off</strong>). Context: the full 262,144. Thinking: off by default, hard problems think &mdash; measured across three difficulty bands. Vision: works, 6/6 on real browser screenshots. Raw: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
 <h2>What this proves</h2>
@@ -1286,7 +1456,7 @@ BLOG_POSTS = [
         "body": """
 <p><small>By <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, assisted by GLM-5.3.</small></p>
 <p>The number first: <strong>5/6</strong> on a six-prompt VQA battery after one git revert. Before the revert: 0/6, all <code>//////</code> to length. Same Qwen3.8-27B Q4_K_XL, same mmproj-F16, same <strong>$1,400</strong> GMKtec EVO-X2.</p>
-<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisected on this hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>We found a llama.cpp regression and fixed it with a revert. Commit <code>c7d8722</code> restored host-buffer use on HIP integrated GPUs. Prompts over ~2k tokens split across decode calls, produced NaN logits, and Qwen sampled <code>/</code> forever. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (reported on the same gfx1151 chip), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>What we tested (n=6, thinking off):</p>
 <table>
 <thead><tr><th>Prompt</th><th>Before</th><th>After</th><th>Time</th></tr></thead>
@@ -1355,6 +1525,7 @@ BLOG_POSTS = [
     },
 {
         "slug": 'lab-notes-degenerate-basin',
+        "no_sales_band": True,
         "title": "Lab Notes: the basin was a bug",
         "category": 'Local LLM / Benchmarks',
         "date": '2026-08-19',
@@ -1446,6 +1617,7 @@ BLOG_POSTS = [
     },
 {
     "slug": "lab-notes-verdict-night",
+    "no_sales_band": True,
     "title": "Lab Notes: verdict night",
     "category": "Local LLM / Benchmarks",
     "date": "2026-08-18",
@@ -1910,7 +2082,7 @@ PROJECT_COPY_ES = {
         "proof_role": "Convierte la incertidumbre de planificacion en herramientas de pronostico que un agente puede llamar.",
     },
     "checkyourself": {
-        "description": "Sistema local-first de preparacion para produccion en apps creadas con IA: auditorias, puntajes con evidencia, fixes guiados, dashboard, CLI y MCP.",
+        "description": "Revision local de evidencia de finalizacion para apps creadas con IA: auditorias de solo lectura, desafios de verificacion, puntajes acotados, fixes guiados, planes de aprendizaje, CLI y MCP. Los puntajes no certifican seguridad en produccion.",
         "tag": "Auditoria de readiness",
         "proof_role": "Hace inspeccionables la calidad, seguridad y riesgo de lanzamiento antes de enviar una app creada con IA.",
     },
@@ -2095,7 +2267,7 @@ BLOG_COPY_ES = {
 <p>La habilidad de código debajo de eso también es medible. <a href="/es/blog/lab-notes-humaneval-93">93% HumanEval</a> (28/30, subset congelado, semilla publicada) y <a href="/es/blog/lab-notes-livecodebench-30">67% LiveCodeBench-30</a> (20/30, intervalo Wilson 95% de 49 a 81). Siempre cita el intervalo. Misma caja de $1.400.</p>
 <h2>Parte tres: quedarse a cargo en producción</h2>
 <p>Esta es la parte que separa el título del demo. El sistema corre sin atención. Está siempre encendido, con watchdogs automáticos, recuperación de reinicios y disciplina de cola. Cuando se rompe, el FDE es el pager.</p>
-<p>Una historia real de producción de este rig: a mitad de proyecto, el contexto largo y la visión se rompieron en silencio. La lectura fácil era "el modelo empeoró". No nos quedamos con la lectura fácil. Hicimos bisect de noches de cambios hasta un commit upstream de llama.cpp, reprodujimos de forma independiente el <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> ya abierto, lo arreglamos local y validamos el fix upstream en nuestro silicio con 9/9 respuestas idénticas pareadas. Después re-corrimos los benchmarks congelados para confirmar que nada se movió. Ese es el trabajo. La <a href="/es/blog/qwen-27b-strix-halo-complete">historia completa de serving</a> está en este blog con logs crudos.</p>
+<p>Una historia real de producción de este rig: a mitad de proyecto, el contexto largo y la visión se rompieron en silencio. La lectura fácil era "el modelo empeoró". No nos quedamos con la lectura fácil. Rastreamos el fallo hasta un commit upstream de llama.cpp, reprodujimos de forma independiente el <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a>, lo arreglamos local y validamos el fix upstream en nuestro silicio con 9/9 respuestas idénticas pareadas. Después re-corrimos los benchmarks congelados para confirmar que nada se movió. Ese es el trabajo. La <a href="/es/blog/qwen-27b-strix-halo-complete">historia completa de serving</a> está en este blog con logs crudos.</p>
 <h2>La lista real de habilidades FDE</h2>
 <p>La gente busca "habilidades fde" y encuentra listas de deseos. Esta es la honesta, cada habilidad probada con un artefacto de arriba:</p>
 <ul>
@@ -2126,7 +2298,7 @@ BLOG_COPY_ES = {
 <h2>El techo</h2>
 <p>Retrieval exacto de agujas en cada profundidad probada, dos semillas, hasta <strong>261.130 de 262.144 tokens &mdash; el 99.6% de la ventana</strong>, el techo literal. Follow-ups en caliente sobre un documento cargado de 198k tokens: cita exacta en <strong>23.8s</strong>, si/no en <strong>10.0s</strong>, resumen de una linea en <strong>17.5s</strong>. El formato no importa: prosa o codigo, exacto en ambos casos; descrito en palabras, cada parte vuelve en orden. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/needle-format-2026-08-19/nativemax-results.log" rel="noopener">nativemax-results.log</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/lcb-100-2026-08-20/quote-rerun-results.log" rel="noopener">quote-rerun-results.log</a>.</p>
 <h2>El bug que les debiamos</h2>
-<p>A mitad del arco, el contexto largo y la vision se rompieron en silencio en esta clase de GPU. Nuestra primera lectura culpo al modelo &mdash; mal. Hicimos bisect a un cambio upstream (<code>c7d8722</code>), lo reportamos, lo arreglamos local y despues validamos el fix upstream en nuestro silicio: <strong>9/9 respuestas identicas, pareadas</strong>. La correccion esta en el repo, en el registro. La degeneracion era el instrumento, no el modelo. Crudo: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
+<p>A mitad del arco, el contexto largo y la vision se rompieron en silencio en esta clase de GPU. Nuestra primera lectura culpo al modelo &mdash; mal. Lo rastreamos hasta un cambio upstream (<code>c7d8722</code>), lo cotejamos con el reporte upstream, lo arreglamos local y despues validamos el fix upstream en nuestro silicio: <strong>9/9 respuestas identicas, pareadas</strong>. La correccion esta en el repo, en el registro. La degeneracion era el instrumento, no el modelo. Crudo: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">issue 26209</a> &middot; <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/tree/main/results/pr25863-validation-2026-08-21" rel="noopener">pr25863-validation</a>.</p>
 <h2>La configuracion congelada</h2>
 <p>Pesos Q4. KV cache liviano (<code>q4_0</code>) &mdash; despues de medir el trade: la opcion pesada compra hasta ~3 segundos en follow-ups (sub-segundo a 2.8s medido en la media ventana) por ~4 GB; nos quedamos con el espacio. Especulacion: la configuracion en servicio, verificada la mas rapida de cuatro con paredes pareadas (<strong>15.1s por respuesta de 200 palabras vs 17.8s sin ella</strong>). Contexto: los 262.144 completos. Thinking: apagado por defecto, los problemas dificiles piensan &mdash; medido en tres bandas de dificultad. Vision: funciona, 6/6 en screenshots reales de navegador. Crudo: <a href="https://github.com/KyaniteLabs/qwen38-27b-strix-halo/blob/main/results/config-27b-2026-08-21/README.md" rel="noopener">config-27b-2026-08-21</a>.</p>
 <h2>Que prueba esto</h2>
@@ -2163,7 +2335,7 @@ BLOG_COPY_ES = {
         "body": """
 <p><small>Por <a href="https://x.com/KyaniteLabs_" rel="noopener">Simon Gonzalez De Cruz</a>, con GLM-5.3.</small></p>
 <p>El número primero: <strong>5/6</strong> en una batería VQA de seis prompts después de un revert. Antes: 0/6, todo <code>//////</code> hasta length. Mismo Qwen3.8-27B Q4_K_XL, mismo mmproj-F16, mismo GMKtec EVO-X2 de <strong>$1.400</strong>.</p>
-<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (bisectado en este hardware), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
+<p>Encontramos una regresión de llama.cpp y la arreglamos con un revert. El commit <code>c7d8722</code> reactivó host buffers en GPUs integradas HIP. Prompts de más de ~2k tokens se partían entre decode calls, salían NaN logits, y Qwen muestreaba <code>/</code> para siempre. Upstream: <a href="https://github.com/ggml-org/llama.cpp/issues/26209" rel="noopener">#26209</a> (reportado en el mismo chip gfx1151), <a href="https://github.com/ggml-org/llama.cpp/issues/23577" rel="noopener">#23577</a>.</p>
 <p>Qué probamos (n=6, thinking off):</p>
 <table>
 <thead><tr><th>Prompt</th><th>Antes</th><th>Después</th><th>Tiempo</th></tr></thead>
@@ -3359,7 +3531,10 @@ COMMON_ES_REPLACEMENTS = {
     "Something went wrong. Email info@kyanitelabs.tech.": "Algo salio mal. Escribe a info@kyanitelabs.tech.",
     "Work with Kyanite": "Trabajar con Kyanite",
     "Operator Assets": "Activos de operador",
+    "More tools in development.": "Más herramientas en desarrollo.",
     "No products are for sale yet. The tools stay free. A tip keeps the work going.": "Todavía no hay productos a la venta. Las herramientas siguen gratis. Una propina mantiene el trabajo.",
+    "Sponsor on GitHub": "Apoyar en GitHub",
+    "Tip on Ko-fi": "Propina en Ko-fi",
     "Free tools. Pay what you want.": "Herramientas gratis. Paga lo que quieras.",
     "These tools are free to install. A tip is optional. You type the amount on Ko-fi or GitHub Sponsors. Neither page sells a separate copy of the tool.": "Estas herramientas son gratis de instalar. La propina es opcional. Tú escribes el monto en Ko-fi o GitHub Sponsors. Ninguna de las dos vende una copia aparte de la herramienta.",
     "Get the tool": "Obtener la herramienta",
@@ -3369,8 +3544,6 @@ COMMON_ES_REPLACEMENTS = {
     "This page names the tool you are tipping. Ko-fi and GitHub Sponsors use one tip jar, so the payment is not split into a separate checkout per tool.": "Esta página nombra la herramienta que estás apoyando. Ko-fi y GitHub Sponsors usan un solo frasco, así que el pago no se divide en un checkout aparte por herramienta.",
     "Free tools — pay what you want — KyaniteLabs": "Herramientas gratis — paga lo que quieras — KyaniteLabs",
     "Open-source tools from KyaniteLabs. Install free. Tip any amount.": "Herramientas open source de KyaniteLabs. Instala gratis. Propina el monto que quieras.",
-    "Sponsor on GitHub": "Apoyar en GitHub",
-    "Tip on Ko-fi": "Propina en Ko-fi",
     "Get the Kyanite tool working in your environment.": "Haz que la herramienta Kyanite funcione en tu entorno.",
     "Implementation path": "Ruta de implementación",
     "Send the implementation brief": "Enviar el brief de implementación",
@@ -3445,6 +3618,36 @@ COMMON_ES_REPLACEMENTS = {
 }
 
 LANDING_ES_REPLACEMENTS = {
+    'KyaniteLabs — Plugins for Hermes Agent': 'KyaniteLabs — Plugins para Hermes Agent',
+    'Seven KyaniteLabs plugins in the official Hermes Agent catalog: video editing, calibrated estimates, one queue of what is blocked on you, git history, friction review, check-ins and model choice.': 'Siete plugins de KyaniteLabs en el catálogo oficial de Hermes Agent: edición de video, estimaciones calibradas, una cola de lo que espera por ti, historial de git, revisión de fricción, check-ins y elección de modelo.',
+    'Hermes Plugins': 'Plugins de Hermes',
+    'Plugins for Hermes Agent': 'Plugins para Hermes Agent',
+    'Seven plugins in the official Hermes Agent catalog.': 'Siete plugins en el catálogo oficial de Hermes Agent.',
+    'Each one installs with one command, at the exact commit the catalog reviewed. Each is open source and says plainly what it reads and what it sends.': 'Cada uno se instala con un comando, en el commit exacto que revisó el catálogo. Todos son de código abierto y dicen claramente qué leen y qué envían.',
+    'Browse the plugins': 'Ver los plugins',
+    'Get one working': 'Ponlo a funcionar',
+    'in the official catalog': 'en el catálogo oficial',
+    'One command': 'Un comando',
+    'to install': 'para instalar',
+    'pinned to reviewed commits': 'fijados a commits revisados',
+    'Hermes Agent plugins': 'Plugins de Hermes Agent',
+    'Seven plugins, one install command.': 'Siete plugins, un comando de instalación.',
+    'Every plugin is listed in the Hermes Agent plugin catalog. Browse it from Hermes with': 'Todos están en el catálogo de plugins de Hermes Agent. Explóralo desde Hermes con',
+    'Catalog entry': 'Entrada del catálogo',
+    'Need a hand?': '¿Necesitas ayuda?',
+    'Want one set up on your machine, or a plugin built for your workflow?': '¿Quieres uno instalado en tu máquina, o un plugin hecho para tu flujo de trabajo?',
+    'Local video editing for your agent: trim, caption, reformat and check quality with FFmpeg.': 'Edición de video local para tu agente: recorta, subtitula, cambia formato y revisa calidad con FFmpeg.',
+    'Calibrated time estimates on the Kanban board. Each finished run feeds the next estimate.': 'Estimaciones de tiempo calibradas en el tablero Kanban. Cada ejecución terminada alimenta la siguiente estimación.',
+    'One queue of everything blocked on you: agent prompts, blocked cards and chats that ask you something.': 'Una cola de todo lo que espera por ti: preguntas de agentes, tarjetas bloqueadas y chats que te piden algo.',
+    "Read a repo&#39;s git history as strata in Hermes Desktop: eras, hotspots, people, agents and bots.": 'Lee el historial de git de un repo como estratos en Hermes Desktop: eras, zonas calientes, personas, agentes y bots.',
+    "Takes friction off the person: flags steps, waits and checks that don&#39;t earn their cost to you.": 'Le quita fricción a la persona: señala pasos, esperas y verificaciones que no valen lo que te cuestan.',
+    'Gentle check-ins, journaling and an unstuck coach. Nothing is saved until you approve the exact text.': 'Check-ins suaves, diario y un coach para desatorarte. Nada se guarda hasta que apruebas el texto exacto.',
+    'Pick the cheapest LLM that is smart enough, from a bundled 621-model catalog that works offline.': 'Elige el LLM más barato que sea suficientemente capaz, de un catálogo incluido de 621 modelos que funciona sin conexión.',
+    '>Estimates<': '>Estimaciones<',
+    '>Attention<': '>Atención<',
+    '>Git history<': '>Historial de git<',
+    '>Friction<': '>Fricción<',
+    '>Model choice<': '>Elección de modelo<',
     "Implementation help for useful AI tools": "Ayuda de implementacion para herramientas de IA utiles",
     "Get the build working without losing days to setup, integration, and handoff.": "Haz funcionar el build sin perder dias en setup, integracion y handoff.",
     "KyaniteLabs turns open-source AI tools, MCP servers, media systems, localization QA, and repo diagnostics into usable working setups.": "KyaniteLabs convierte herramientas de IA open source, servidores MCP, sistemas de medios, QA de localizacion y diagnosticos de repos en setups funcionales y usables.",
@@ -3628,7 +3831,6 @@ EXTRA_ES_REPLACEMENTS = {
     "Start from a workflow that actually hurts or fascinates: video editing, estimating time, localization, glaze math, learning from commits.": "Empieza desde un flujo que de verdad duele o fascina: edicion de video, estimacion de tiempo, localizacion, matematicas de esmaltes o aprendizaje desde commits.",
     "Shape the MCP, CLI, app, README, examples, screenshots, tests, metadata, and AI-readable discovery layer so the work can survive outside the chat.": "Da forma al MCP, CLI, app, README, ejemplos, capturas, pruebas, metadata y capa legible para IA para que el trabajo sobreviva fuera del chat.",
     "Keep the tools open where possible, sell practical implementation help when someone wants the setup, adaptation, or advising done with them.": "Mantener abiertas las herramientas cuando sea posible y vender ayuda practica de implementacion cuando alguien quiere setup, adaptacion o asesoria hecha con ellos.",
-    "Servidores MCP, CLIs, domain tools, experiments, and build notes that you can inspect, install, fork, learn from, or use as starting points.": "Servidores MCP, CLIs, herramientas de dominio, experimentos y notas de construccion que puedes inspeccionar, instalar, bifurcar, estudiar o usar como punto de partida.",
     "Tool you need running, repo you need installed, video pipeline you need usable, Spanish QA you need trusted, diagnostic you need explained, or a build you need handed off. If it connects to Kyanite's tools and practice, bring the blocker.": "Herramienta que necesitas corriendo, repo que necesitas instalado, pipeline de video que necesitas usable, QA de espanol que necesitas confiable, diagnostico que necesitas explicado o build que necesitas entregar. Si conecta con las herramientas y practica de Kyanite, trae el bloqueo.",
     "© 2026 KyaniteLabs. All rights reserved.": "© 2026 KyaniteLabs. Todos los derechos reservados.",
     "&copy; 2026 KyaniteLabs. All rights reserved.": "&copy; 2026 KyaniteLabs. Todos los derechos reservados.",
@@ -3714,10 +3916,11 @@ def index():
             "landing-v2.html",
             public_projects=PUBLIC_PROJECTS,
             blog_posts=BLOG_POSTS,
+            hermes_plugins=HERMES_PLUGINS,
             canonical_base=CANONICAL_BASE,
         )
         return add_hreflang(html, "/", "/es/")
-    except Exception as e:
+    except Exception:
         # Fallback to old HTML if v2 fails
         return render_template_string(HTML, KOFI_URL=app.config["KOFI_URL"])
 
@@ -3729,6 +3932,7 @@ def index_es():
         "landing-v2.html",
         public_projects=PUBLIC_PROJECTS_ES,
         blog_posts=BLOG_POSTS_ES,
+        hermes_plugins=HERMES_PLUGINS,
         canonical_base=CANONICAL_BASE,
     )
     return spanishify(html, "/", "/es/")
@@ -5354,7 +5558,7 @@ def cerafica_orders():
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def calculate_shipping(subtotal_cents: int) -> int:
-    return 0 if subtotal_cents >= FREE_SHIPPING_THRESHOLD else FLAT_SHIPPING_RATE
+    return 0 if subtotal_cents >= CERAFICA_FREE_SHIPPING_THRESHOLD else CERAFICA_FLAT_SHIPPING
 
 
 def cerafica_send_email(to_email, subject, html_body, text_body=None):

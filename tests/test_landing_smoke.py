@@ -25,6 +25,8 @@ from app import (
 )
 
 
+NO_BAND_POSTS = ("the-delegation-card", "lab-notes-verdict-night", "lab-notes-degenerate-basin")
+
 class LandingSmokeTests(unittest.TestCase):
     def setUp(self) -> None:
         self.client = app.test_client()
@@ -114,6 +116,29 @@ class LandingSmokeTests(unittest.TestCase):
             with self.subTest(path=path):
                 html = self.client.get(path).get_data(as_text=True)
                 self.assertNotIn("#tools", html)
+
+    def test_homepage_leads_with_hermes_plugins(self) -> None:
+        from pathlib import Path
+        from app import HERMES_PLUGINS
+
+        root = Path(__file__).resolve().parents[1]
+        self.assertEqual(len(HERMES_PLUGINS), 7)
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertIn("<title>KyaniteLabs — Plugins for Hermes Agent</title>", html)
+        self.assertLess(html.index('id="plugins"'), html.index('id="proof"'))
+        for plugin in HERMES_PLUGINS:
+            with self.subTest(plugin=plugin["slug"]):
+                self.assertIn(f"hermes plugins install {plugin['slug']}", html)
+                self.assertIn(plugin["catalog"], html)
+                self.assertTrue((root / plugin["icon"].lstrip("/")).is_file())
+        es = self.client.get("/es/").get_data(as_text=True)
+        self.assertIn("Siete plugins en el catálogo oficial de Hermes Agent.", es)
+        for line in ("Lee el historial de git de un repo", "Le quita fricción a la persona", "Elige el LLM más barato"):
+            self.assertIn(line, es)
+        self.assertNotIn("Read a repo", es)
+        self.assertNotIn("Takes friction off", es)
+        self.assertIn("hermes plugins install kinocut", es)
+        self.assertNotIn("Seven plugins, one install command.", es)
 
     def test_homepage_images_have_accessible_alt_text(self) -> None:
         html = self.client.get("/").get_data(as_text=True)
@@ -511,6 +536,23 @@ class LandingSmokeTests(unittest.TestCase):
                     leftover.append(body[max(0, match.start() - 40) : match.end() + 40].strip())
                 self.assertEqual(leftover, [], msg=f"stale mcp-video on marketing surface {path}")
 
+    def test_essay_post_has_no_sales_band(self) -> None:
+        essay = self.client.get("/blog/one-demo-once")
+        self.assertEqual(essay.status_code, 200)
+        body = essay.get_data(as_text=True)
+        self.assertIn("One demo, once", body)
+        self.assertNotIn("Want this working in your environment?", body)
+        for gone in ("VALID", "Opus 5.5", "approved every draft", "keeps the researchers up"):
+            self.assertNotIn(gone, body)
+
+        for slug in NO_BAND_POSTS:
+            linked = self.client.get(f"/blog/{slug}").get_data(as_text=True)
+            self.assertNotIn("Want this working in your environment?", linked, msg=slug)
+            self.assertNotIn("bisect", linked.lower(), msg=slug)
+
+        other = self.client.get("/blog/why-kinocut-matters")
+        self.assertIn("Want this working in your environment?", other.get_data(as_text=True))
+
     def test_kinocut_blog_slug_is_current_and_old_slug_redirects(self) -> None:
         current = self.client.get("/blog/why-kinocut-matters")
         self.assertEqual(current.status_code, 200)
@@ -572,7 +614,10 @@ class LandingSmokeTests(unittest.TestCase):
                 en_html = en.get_data(as_text=True)
                 self.assertIn(expected_h1[slug], es_html)
                 self.assertNotIn("Want this working in your environment?", es_html)
-                self.assertIn("¿Quieres que esto funcione en tu entorno?", es_html)
+                if slug in NO_BAND_POSTS:
+                    self.assertNotIn("¿Quieres que esto funcione en tu entorno?", es_html)
+                else:
+                    self.assertIn("¿Quieres que esto funcione en tu entorno?", es_html)
                 self.assertIn('"inLanguage": "es-419"', es_html)
                 self.assertIn(f'hreflang="en" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="es" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
@@ -659,7 +704,8 @@ class LandingSmokeTests(unittest.TestCase):
                     self.assertIn("~47% (4.3GB ahorrados)", es_html)
                 self.assertIn(f'hreflang="es-419" href="https://kyanitelabs.tech/es/blog/{slug}"', es_html)
                 self.assertIn(f'hreflang="x-default" href="https://kyanitelabs.tech/blog/{slug}"', es_html)
-                self.assertIn("Want this working in your environment?", en_html)
+                if slug not in NO_BAND_POSTS:
+                    self.assertIn("Want this working in your environment?", en_html)
                 self.assertNotIn(expected_h1[slug], en_html)
         sitemap = self.client.get("/sitemap.xml").get_data(as_text=True)
         for slug in slugs:
@@ -707,6 +753,7 @@ class LandingSmokeTests(unittest.TestCase):
         self.assertNotIn("Operator Activos", shop)
         self.assertIn("Herramientas gratis — paga lo que quieras — KyaniteLabs", shop)
         self.assertNotIn("Operator assets", shop)
+        self.assertIn("Herramientas gratis. Paga lo que quieras.", shop)
         self.assertNotIn("your environment", impl)
         self.assertNotIn("Implementation path", impl)
         self.assertIn("Ruta de implementación", impl)
