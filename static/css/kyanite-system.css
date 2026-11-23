@@ -4088,6 +4088,34 @@ body::after {
   }
 }
 
+/* Use the existing compact menu when the actual link row cannot fit. */
+.page-hero .post-meta {
+  color: var(--muted);
+}
+
+.page-hero .eyebrow {
+  max-width: 100%;
+}
+
+.page-hero .eyebrow > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.nav.nav--measured .nav-links a {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav.nav--compact .nav-links {
+  display: none;
+}
+
+.nav.nav--compact .menu-button {
+  display: inline-grid;
+  place-items: center;
+}
+
 @media (max-width: 760px) {
   .hero {
     padding: 88px 0 50px;
@@ -4383,4 +4411,75 @@ body::after {
   aspect-ratio: 1200 / 630;
   object-fit: cover;
   display: block;
+}
+
+/* Hermes plugin shelf (2026-11-14) */
+.plugin-shelf { padding: 72px 0 40px; }
+.plugin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+  gap: 18px;
+}
+.plugin-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-fill);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 18px 48px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease;
+}
+.plugin-card:hover { border-color: rgba(0, 255, 230, 0.4); }
+.plugin-card-head { display: flex; align-items: center; gap: 16px; }
+.plugin-icon {
+  width: 72px;
+  height: 72px;
+  flex: none;
+  border-radius: 14px;
+  object-fit: cover;
+  background: var(--void);
+}
+.plugin-name {
+  margin: 0 0 6px;
+  font-family: var(--display-font);
+  font-size: 1.35rem;
+  line-height: 1.1;
+  color: var(--text);
+}
+.plugin-line { margin: 0; color: var(--muted); line-height: 1.55; flex: 1; }
+.plugin-install {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  font-family: var(--mono-font);
+  font-size: 0.82rem;
+  color: var(--cyan);
+  white-space: normal;
+  line-height: 1.5;
+}
+.plugin-links { display: flex; gap: 18px; font-size: 0.9rem; }
+.plugin-links a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(0, 255, 230, 0.5); }
+.plugin-links a:hover { color: var(--cyan); }
+.plugin-card-cta { justify-content: center; border-style: dashed; }
+.plugin-card-cta .btn { align-self: flex-start; }
+.section-sub code { font-family: var(--mono-font); color: var(--cyan); font-size: 0.92em; }
+@media (max-width: 460px) {
+  .plugin-shelf { padding: 48px 0 24px; }
+  .plugin-card { padding: 18px; }
+  .plugin-icon { width: 60px; height: 60px; }
+}
+
+/* Nav: labels stay on one line; switch to the menu button before the bar overflows. */
+.nav-links a { white-space: nowrap; }
+@media (min-width: 761px) {
+  .nav-links { gap: 2px; }
+  .nav-links a { padding: 8px 7px; }
+}
+@media (max-width: 1360px) and (min-width: 761px) {
+  .nav:has(.menu-button) .nav-links { display: none; }
+  .nav .menu-button { display: inline-grid; place-items: center; }
 }

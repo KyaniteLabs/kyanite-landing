@@ -35,13 +35,13 @@
         "description": "{{ post.get('meta_description', post.excerpt) }}",
         "datePublished": "{{ post.date }}",
         "dateModified": "{{ post.get('date_modified', post.date) }}",
-        "inLanguage": "en-US",
+        "inLanguage": {{ post.get('language', 'en-US') | tojson }},
         "keywords": "{{ post.get('primary_keyword', '') }}",
         "image": {"@type": "ImageObject", "url": "{{ post.get('og_image', 'https://kyanitelabs.tech/static/brand/kyanite-open-graph-generated-original-1200x630.png') }}", "width": 1200, "height": 630},
         "author": {
-          "@type": "Person",
-          "name": "Simon Gonzalez De Cruz",
-          "url": "https://kyanitelabs.tech/about"
+          "@type": {{ post.get('author_type', 'Person') | tojson }},
+          "name": {{ post.get('author_name', 'Simon Gonzalez De Cruz') | tojson }},
+          "url": {{ post.get('author_url', 'https://kyanitelabs.tech/about') | tojson }}
         },
         "publisher": {
           "@type": "Organization",
@@ -94,7 +94,7 @@
   <main id="main">
     <section class="page-hero">
       <div class="container page-hero-inner">
-        <div class="eyebrow">{{ post.category }}</div>
+        <div class="eyebrow"><span>{{ post.category }}</span></div>
         <h1>{{ post.title }}</h1>
         <p>{{ post.excerpt }}</p>
         <div class="post-meta"><span>{{ post.date }}</span><span>{{ post.read_time }}</span><span>{{ post.primary_keyword }}</span></div>
@@ -102,11 +102,17 @@
     </section>
 
     <section>
-      <article class="article fade-up">
+      <article class="article fade-up" lang="{{ post.get('language', 'en') }}">
+        {% if post.get('research_origin_url') %}
+        <p><small>Research report in English · KyaniteLabs Research. First published September 28, 2026.
+        <a href="{{ post.research_origin_url }}" rel="noopener">Original public report</a>.
+        This edition consolidates the report and preserves its original limits.</small></p>
+        {% endif %}
         {{ post.body | safe }}
       </article>
     </section>
 
+    {% if not post.get('no_sales_band') %}
     <section class="band">
       <div class="container split-panel">
         <div class="card">
@@ -124,6 +130,7 @@
         </div>
       </div>
     </section>
+    {% endif %}
 
     <section class="band">
       <div class="container">
