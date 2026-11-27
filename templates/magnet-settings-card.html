@@ -125,7 +125,7 @@
                 <tr>
                   <td>Weights</td>
                   <td><span class="cfg-value">Qwen3.8-27B Q4_K_XL</span><br><span class="cfg-label">Unsloth dynamic quant</span></td>
-                  <td>Q3_K_XL won the raw tok/s ladder but lost on time-per-task: its reasoning ran ~2&times; more verbose, so Q4 finished identical correct tasks 35&ndash;50% faster. Faster tokens are not better if the tokens are dumber.</td>
+                  <td>Q3_K_XL won the raw decode ladder but lost on time-per-task: its reasoning ran ~2&times; more verbose, so Q4 finished identical correct tasks 35&ndash;50% faster. Faster tokens are not better if the tokens are dumber.</td>
                 </tr>
                 <tr>
                   <td>Context</td>
@@ -193,14 +193,14 @@
             </table>
 
             <h2>The speed regimes — honest bands</h2>
-            <p>Decode tok/s is not task latency, and warm numbers are not chat numbers. These are the bands we publish instead of a single hero figure:</p>
+            <p>Decode rate is not task latency, and warm numbers are not chat numbers. These are the bands we publish instead of a single hero figure; the cold and warm rows are stream events/s, not token rates:</p>
             <table class="magnet-table">
               <thead><tr><th>Regime</th><th>Band</th><th>Label</th></tr></thead>
               <tbody>
-                <tr><td>Cold decode</td><td><span class="num">59.7&ndash;64 tok/s</span></td><td>The benchmark-band number.</td></tr>
+                <tr><td>Cold decode</td><td><span class="num">59.7&ndash;64 stream events/s</span></td><td>The benchmark-band number. A stream-event rate, not a validated tok/s.</td></tr>
                 <tr><td>Real chat (novel prose)</td><td><span class="num">11&ndash;24 tok/s</span></td><td>The traffic that actually flows. Published first by us.</td></tr>
                 <tr><td>Code</td><td><span class="num">~29&ndash;40 tok/s</span></td><td>Structured generation.</td></tr>
-                <tr><td>Warm repeats</td><td><span class="num">148&ndash;163 tok/s</span></td><td><span class="warn-chip">artifact</span> ngram repetition effect — real on repeated structured output, meaningless as a chat claim.</td></tr>
+                <tr><td>Warm repeats</td><td><span class="num">148&ndash;163 stream events/s</span></td><td><span class="warn-chip">artifact</span> ngram repetition effect — same stream-event unit as the cold row, so also not a validated tok/s — real on repeated structured output, meaningless as a chat claim.</td></tr>
                 <tr><td>200-word answer (wall)</td><td><span class="num">15.1 s</span></td><td>With the shipped speculation stack (17.8 s without).</td></tr>
               </tbody>
             </table>
